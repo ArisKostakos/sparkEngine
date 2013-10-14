@@ -6,6 +6,8 @@
 
 package org.gamepl.coreservices.services.std.display.renderers.core;
 import org.gamepl.coreservices.services.std.display.renderers.interfaces.IRenderer;
+import org.gamepl.coreservices.services.std.display.interfaces.IScene;
+import org.gamepl.coreservices.services.std.display.interfaces.IObject;
 
 /**
  * ...
@@ -13,20 +15,19 @@ import org.gamepl.coreservices.services.std.display.renderers.interfaces.IRender
  */
 class ARenderer implements IRenderer
 {
-	public var rendererType( default, null ):String;
-	
-	public var posX( default, null ):Int;
-	public var posY( default, null ):Int;
-	public var width( default, null ):Int;
-	public var height( default, null ):Int;
-	
-	private function new(p_rendererType:String, p_posX:Int, p_posY:Int, p_width:Int, p_height:Int) 
+	public var sceneSet( default, null ):Array<IScene>;
+	public var scenePointerSet( default, null ):Map<IScene,Dynamic>;
+	public var objectPointerSet( default, null ):Map<IObject,Dynamic>;
+	/*
+	function addScene(scene:IScene, index:Int):Void;
+	function removeScene(scene:IScene):Void;
+	function update();
+	*/
+	private function new() 
 	{
-		rendererType = p_rendererType;
-		posX = p_posX;
-		posY = p_posY;
-		width = p_width;
-		height = p_height;
+		//interfaces are done!
+		//Display is done
+		//do this
+		//move on to Scene and Object
 	}
-	
 }

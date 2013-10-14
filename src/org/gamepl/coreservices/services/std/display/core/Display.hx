@@ -6,23 +6,27 @@
 
 package org.gamepl.coreservices.services.std.display.core;
 
-import awe6.core.Context;
 import awe6.interfaces.IKernel;
-import flash.display.Bitmap;
-import flash.geom.Rectangle;
 import org.gamepl.coreservices.interfaces.IDisplay;
 import org.gamepl.coreservices.core.AService;
+import org.gamepl.coreservices.services.std.display.interfaces.IObject;
+import org.gamepl.coreservices.services.std.display.interfaces.IRenderer;
 import org.gamepl.coreservices.services.std.display.interfaces.IScene;
-import org.gamepl.coreservices.services.std.display.core.Scene;
-import flash.Lib;
+import org.gamepl.coreservices.services.std.display.renderers.core.OpenFlRenderer;  //todo: remove this. Use Reflection
+
 /**
  * ...
  * @author Aris Kostakos
  */
 class Display extends AService implements IDisplay
 {
-	public var sceneSet( default, null ):Array<IScene>;
+	public var rendererSet( default, null ):Array<IRenderer>;
 
+	//todo: somewhere here, add a filtering mechanism for choosing the appropriate renderer
+	//do this by enumerating all the available renderers added for the current platform
+	//and start disqualifing renderers due to platform requirements and restrictions
+	//order by gRenderer request, then chose the top one
+	
 	public function new(p_kernel:IKernel) 
 	{
 		super(p_kernel);
@@ -33,9 +37,43 @@ class Display extends AService implements IDisplay
 	private function _init():Void
 	{
 		Console.log("Init Display std Service...");
-		sceneSet = new Array<IScene>();
+		rendererSet = new Array<IRenderer>();
 	}
 	
+	public function createRenderer():IRenderer
+	{
+		//@todo: Reflection needed here!!! See above todo
+		return new OpenFlRenderer();
+	}
+	
+	public function createScene():IScene
+	{
+		return new Scene();
+	}
+	
+	public function createObject():IObject
+	{
+		return new Object();
+	}
+	
+	public function addRenderer(renderer:IRenderer, index:Int):Void
+	{
+		rendererSet.push(renderer);
+	}
+	
+	public function removeRenderer(renderer:IRenderer):Void
+	{
+		rendererSet.remove(renderer);
+	}
+	public function update():Void
+	{
+		for (renderer in rendererSet)
+		{
+			renderer.update();
+		}
+	}
+	
+	/*
 	public function createScene(p_rendererType:String, p_posX:Int, p_posY:Int, p_width:Int, p_height:Int):IScene
 	{
 		var scene:IScene = new Scene(p_rendererType, p_posX, p_posY, p_width, p_height);
@@ -45,7 +83,7 @@ class Display extends AService implements IDisplay
 	
 	//remove us when done
 	//okaaaayy?? good!
-	/*
+	
 	private var _testBitmap:Bitmap;
 	
 	public function test():Void

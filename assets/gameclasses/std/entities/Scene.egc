@@ -15,7 +15,7 @@
 			<Event>Created</Event>
 			<Scripts>
 				<Script>me.gameStateSet.get('Scene').value=Display.createScene("openFl",0,0,100,100);</Script>
-				<!--<Script>Display.warn(me.gameStateSet.get('Scene').value.renderer.rendererType);</Script>-->
+				<Script>Display.warn(me.gameStateSet.get('Scene').value.renderer.rendererType);</Script>
 			</Scripts>
 		</Trigger>
 	</Triggers>

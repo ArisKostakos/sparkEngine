@@ -5,15 +5,20 @@
  */
 
 package org.gamepl.coreservices.services.std.display.renderers.interfaces;
+import org.gamepl.coreservices.services.std.display.interfaces.IScene;
+import org.gamepl.coreservices.services.std.display.interfaces.IObject;
+
 /**
  * ...
  * @author Aris Kostakos
  */
 interface IRenderer
 {
-	var rendererType( default, null ):String;
-	var posX( default, null ):Int;
-	var posY( default, null ):Int;
-	var width( default, null ):Int;
-	var height( default, null ):Int;
+	var sceneSet( default, null ):Array<IScene>;
+	var scenePointerSet( default, null ):Map<IScene,Dynamic>;
+	var objectPointerSet( default, null ):Map<IObject,Dynamic>;
+	
+	function addScene(scene:IScene, index:Int):Void;
+	function removeScene(scene:IScene):Void;
+	function update();
 }

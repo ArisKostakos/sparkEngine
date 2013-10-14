@@ -62,7 +62,10 @@ class GDE extends Entity implements IGDE
 		Game.event.update();
 		
 		//Logic Update
-		if (rootGameEntity!=null) rootGameEntity.doActions();
+		if (rootGameEntity != null) rootGameEntity.doActions();
+		
+		//Display Update
+		Game.display.update();
 	}
 	
 	override private function _disposer():Void 

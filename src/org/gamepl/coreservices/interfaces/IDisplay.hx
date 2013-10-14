@@ -5,7 +5,8 @@
  */
 
 package org.gamepl.coreservices.interfaces;
-import awe6.core.Context;
+import org.gamepl.coreservices.services.std.display.interfaces.IObject;
+import org.gamepl.coreservices.services.std.display.interfaces.IRenderer;
 import org.gamepl.coreservices.services.std.display.interfaces.IScene;
 
 /**
@@ -14,10 +15,15 @@ import org.gamepl.coreservices.services.std.display.interfaces.IScene;
  */
 interface IDisplay extends IService
 {
-	var sceneSet( default, null ):Array<IScene>;
+	var rendererSet( default, null ):Array<IRenderer>;
 	
-	function createScene(p_rendererType:String, p_posX:Int, p_posY:Int, p_width:Int, p_height:Int):IScene;
+	function createRenderer():IRenderer;
+	function createScene():IScene;
+	function createObject():IObject;
 	
+	function addRenderer(renderer:IRenderer, index:Int):Void;
+	function removeRenderer(renderer:IRenderer):Void;
+	function update():Void;
 	
 	function log(message:String):Void;
 	function info(message:String):Void;

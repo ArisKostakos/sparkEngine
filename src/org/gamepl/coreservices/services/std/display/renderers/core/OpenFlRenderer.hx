@@ -14,19 +14,9 @@ import flash.display.Sprite;
  */
 class OpenFlRenderer extends ARenderer
 {
-	public function new(p_rendererType:String, p_posX:Int, p_posY:Int, p_width:Int, p_height:Int) 
+	public function new() 
 	{
-		super(p_rendererType, p_posX, p_posY, p_width, p_height);
+		super();
 		Console.debug("OpenFl Renderer Initiated");
-		
-		var l_sprite:Sprite = new Sprite();
-		l_sprite.x = posX;
-		l_sprite.y = posY;
-		l_sprite.width = width;
-		l_sprite.height = height;
-		Lib.current.stage.addChild(l_sprite);
-		
-		
 	}
-	
 }
