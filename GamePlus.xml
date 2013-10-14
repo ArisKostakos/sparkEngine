@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="GamePlus" package="org.gamepl" version="1.0.0" company="Aris Kostakos" />
+	<app main="Main" path="export" file="GamePlus" />
+	
+	<window width="1200" height="400" fps="20" orientation="landscape" resizable="true" if="target_flash" />
+	<window width="1200" height="400" fps="20" orientation="landscape" resizable="true" unless="target_flash" />
+ 	
+	<source path="src" />
+	<source path="C:\HaxeToolkit\haxe\lib\haxe-three" />
+	<haxelib name="openfl" />
+	<haxelib name="awe6" />
+	<haxelib name="hscript" />
+	<haxelib name="mconsole" />
+	<assets path="assets" rename="assets" include="*" exclude="_exclude|*.ogg" if="flash" />
+	<assets path="assets" rename="assets" include="*" exclude="_exclude" unless="flash" />
+	
+	<icon name="assets/_exclude/openfl.svg" />
+	
+	<haxeflag name="--flash-strict" if="flash" />
+	<!-- <haxeflag name="--dead-code-elimination" if="html5" /> IE9 says not yet -->
+	
+	<compilerflag name="-resource assets/_exclude/config.xml@config" />
+	
+</project>

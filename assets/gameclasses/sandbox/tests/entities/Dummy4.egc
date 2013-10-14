@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<States>
+		<State><Id>malakas</Id><Value>true</Value><Type>Boolean</Type></State>
+		<State><Id>poustis</Id><Value>true</Value><Type>Boolean</Type></State>
+	</States>
+	<Form>
+		<Space/>
+	</Form>
+	
+	<_States>
+		<_State id="kariolis"><Id>poutanakos</Id><Value>false</Value><Type>Boolean</Type></_State>
+	</_States>
+		
+	<Triggers>
+		<Trigger>
+			<Event>Created</Event>
+			<Scripts>
+				<Script>trace("hello"); true;</Script>
+			</Scripts>
+		</Trigger>
+		<Trigger extends="std.triggers.Dummy"/>
+	</Triggers>
+</Entity>

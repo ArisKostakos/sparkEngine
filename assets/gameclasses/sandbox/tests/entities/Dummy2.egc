@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<_Form>
+		<_Space>
+			<_Entities>
+				<Entity extends="std.entities.Simple">
+					<States><State extends="std.states.Dummy" /></States>
+				</Entity>
+			</_Entities>
+		</_Space>
+	</_Form>
+</Entity>

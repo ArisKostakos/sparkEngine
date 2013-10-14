@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity extends="std.entities.Game">
+	<_Form>
+		<_Space>
+			<_Entities>
+				<Entity extends="sandbox.myWorld"/>
+				<Entity extends="sandbox.myUserInterface"/>
+			</_Entities>
+		</_Space>
+	</_Form>
+</Entity>

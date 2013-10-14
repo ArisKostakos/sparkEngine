@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity extends="std.entities.UserInterface">
+	<_Form>
+		<_Space>
+			<_Entities>
+				<Entity extends="std.entities.Widget"/>
+			</_Entities>
+		</_Space>
+	</_Form>
+</Entity>

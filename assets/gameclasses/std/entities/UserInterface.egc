@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity extends="std.entities.Scene">
+	<_Triggers>
+		<Trigger>
+			<Event>Created</Event>
+			<Scripts>
+				<Script>Display.debug("Creating UserInterface-Scene");</Script>
+			</Scripts>
+		</Trigger>
+	</_Triggers>
+</Entity>

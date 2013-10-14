@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<States>
+		<State>
+			<Id>Health</Id>
+			<Type>Integer</Type>
+			<Value>100</Value>
+		</State>
+	</States>
+	<Form extends="std.forms.Dummy">
+		<_Space>
+			<_Entities>
+				<Entity>
+					<_Actions>
+						<Action extends="std.actions.Dummy"/>
+					</_Actions>
+					<Form>
+						<Space>
+							<Entities>
+								<Entity>
+									<Form extends="std.forms.Dummy"/>
+								</Entity>
+							</Entities>
+						</Space>
+					</Form>
+				</Entity>
+			</_Entities>
+		</_Space>
+	</Form>
+	<Actions>
+		<Action>
+			<Id>HelloWorld2</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>/*better not run as individually. Copy as somewhere temporary and run all the script Tags in Scripts together. so vars from different script tags can be used interchangably*/true;</Script>
+				<Script>/*Game.display.dummyDisplay();*/true;</Script>
+			</Scripts>
+		</Action>
+	</Actions>
+	
+	<Triggers>
+		<Trigger>
+			<Event>Created</Event>
+			<Scripts>
+				<Script>trace("hello"); true;</Script>
+			</Scripts>
+		</Trigger>
+		<Trigger extends="std.triggers.Dummy"/>
+	</Triggers>
+</Entity>

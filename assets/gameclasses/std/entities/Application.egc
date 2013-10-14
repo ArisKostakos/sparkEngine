@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<Form><Space/></Form>
+	<Triggers>
+		<Trigger>
+			<Event>Created</Event>
+			<Scripts>
+				<Script>Display.debug("Application Started");</Script>
+			</Scripts>
+		</Trigger>
+	</Triggers>
+</Entity>

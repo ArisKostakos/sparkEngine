@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity extends="std.entities.Object">
+	<Triggers>
+		<Trigger>
+			<Event>Created</Event>
+			<Scripts>
+				<Script>Display.debug("Creating Widget");</Script>
+			</Scripts>
+		</Trigger>
+	</Triggers>
+</Entity>
