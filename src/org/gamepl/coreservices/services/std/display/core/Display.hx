@@ -44,6 +44,7 @@ class Display extends AService implements IDisplay
 	}
 	
 	//remove us when done
+	//okaaaayy?? good!
 	/*
 	private var _testBitmap:Bitmap;
 	
