@@ -43,6 +43,7 @@ class Display extends AService implements IDisplay
 		return scene;
 	}
 	
+	//remove us when done
 	/*
 	private var _testBitmap:Bitmap;
 	
