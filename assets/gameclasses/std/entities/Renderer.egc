@@ -6,11 +6,11 @@
 		<State>
 			<Id>gp_Type</Id>
 			<Type>Text</Type>
-			<Value>Object</Value>
+			<Value>Renderer</Value>
 		</State>
 		
 		<State>
-			<Id>gp_Object</Id>
+			<Id>gp_Renderer</Id>
 			<Type>Dynamic</Type>
 			<Value>null</Value>
 		</State>
@@ -20,8 +20,7 @@
 		<Trigger>
 			<Event>Created</Event>
 			<Scripts>
-				<Script>Display.warn("Creating Object...");</Script>
-				<Script>me.gameStateSet.get('gp_Object').value=Display.createObject();</Script>
+				<Script>me.gameStateSet.get('gp_Renderer').value=Display.createRenderer();</Script>
 			</Scripts>
 		</Trigger>
 	</Triggers>

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Entity extends="std.entities.Application">
+<Entity extends="std.entities.Renderer">
 
 </Entity>

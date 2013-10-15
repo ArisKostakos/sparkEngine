@@ -22,6 +22,7 @@ import org.gamepl.coreservices.services.std.logic.interpreter.interfaces.IInterp
  */
 class Logic extends AService implements ILogic
 {
+	public var rootGameEntity( default, default ):IGameEntity;
 	public var interpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
 	
@@ -41,6 +42,11 @@ class Logic extends AService implements ILogic
 		
 		//Create GameFactory
 		gameFactory = new GameFactory(_kernel.getConfig( "settings.gameClassPackage" ));
+	}
+	
+	public function update():Void
+	{
+		if (rootGameEntity != null) rootGameEntity.doActions();
 	}
 	
 	public function startAction(entity:IGameEntity, actionId:String):Bool

@@ -20,5 +20,5 @@ interface IRenderer
 	
 	function addScene(scene:IScene, index:Int):Void;
 	function removeScene(scene:IScene):Void;
-	function update();
+	function update():Void;
 }

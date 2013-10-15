@@ -18,14 +18,4 @@ interface IScene
 	
 	function addObject(object:IObject):Void;
 	function removeObject(object:IObject):Void;
-	
-	/*
-	var rendererType( default, null ):String;
-	var renderer( default, null ):IRenderer;
-	
-	var posX( default, null ):Int;
-	var posY( default, null ):Int;
-	var width( default, null ):Int;
-	var height( default, null ):Int;
-	*/
 }

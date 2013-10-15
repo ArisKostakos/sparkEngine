@@ -5,9 +5,10 @@
  */
 
 package org.gamepl.coreservices.interfaces;
-import org.gamepl.coreservices.services.std.display.interfaces.IObject;
-import org.gamepl.coreservices.services.std.display.interfaces.IRenderer;
 import org.gamepl.coreservices.services.std.display.interfaces.IScene;
+import org.gamepl.coreservices.services.std.display.interfaces.IObject;
+import org.gamepl.coreservices.services.std.display.renderers.interfaces.IRenderer;
+
 
 /**
  * ...

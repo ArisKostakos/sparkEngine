@@ -13,5 +13,5 @@ import awe6.interfaces.IEntity;
  */
 interface IGDE extends IEntity
 {
-	var rootGameEntity( default, null ):IGameEntity;
+	
 }

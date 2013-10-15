@@ -19,13 +19,9 @@ import org.gamepl.coreservices.core.Game;
 	
 class GDE extends Entity implements IGDE
 {	
-	//private var _context:Context;
-	public var rootGameEntity( default, null ):IGameEntity;
-	
 	public function new( p_kernel:IKernel ) 
 	{
-		//_context = new Context();
-		super( p_kernel);// , _context );
+		super( p_kernel);
 	}
 	
 	override private function _init():Void 
@@ -35,9 +31,9 @@ class GDE extends Entity implements IGDE
 		
 		
 		//Create Root GameEntity
-		rootGameEntity = Game.logic.gameFactory.createGameEntity(_kernel.getConfig( "settings.rootGameEntity" ));
+		Game.logic.rootGameEntity = Game.logic.gameFactory.createGameEntity(_kernel.getConfig( "settings.rootGameEntity" ));
 		
-		if (rootGameEntity == null)
+		if (Game.logic.rootGameEntity == null)
 		{
 			Console.error("Root Game Entity could not be created!");
 		}
@@ -55,17 +51,8 @@ class GDE extends Entity implements IGDE
 		super._updater( p_deltaTime );
 		// extend here
 		
-		//Input Update
-		Game.input.update();
-		
-		//Event Update
-		Game.event.update();
-		
-		//Logic Update
-		if (rootGameEntity != null) rootGameEntity.doActions();
-		
-		//Display Update
-		Game.display.update();
+		//S.L.I.C.E.D. Update
+		Game.update();
 	}
 	
 	override private function _disposer():Void 

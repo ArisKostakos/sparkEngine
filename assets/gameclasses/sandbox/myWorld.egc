@@ -3,7 +3,7 @@
 	<_Form>
 		<_Space>
 			<_Entities>
-				<Entity extends="std.entities.Body"/>
+				<!--<Entity extends="sandbox.myBody"/>-->
 			</_Entities>
 		</_Space>
 	</_Form>

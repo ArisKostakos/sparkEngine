@@ -35,4 +35,20 @@ class Game
 		event = p_event;
 		display = p_display;
 	}
+	
+	//@todo: maybe inline all the update functions?
+	inline public static function update():Void
+	{
+		//Input Update
+		Game.input.update();
+		
+		//Event Update
+		Game.event.update();
+		
+		//Logic Update
+		Game.logic.update();
+		
+		//Display Update
+		Game.display.update();
+	}
 }

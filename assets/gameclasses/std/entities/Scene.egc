@@ -4,7 +4,13 @@
 
 	<States>
 		<State>
-			<Id>Scene</Id>
+			<Id>gp_Type</Id>
+			<Type>Text</Type>
+			<Value>Scene</Value>
+		</State>
+		
+		<State>
+			<Id>gp_Scene</Id>
 			<Type>Dynamic</Type>
 			<Value>null</Value>
 		</State>
@@ -14,11 +20,29 @@
 		<Trigger>
 			<Event>Created</Event>
 			<Scripts>
-				<Script>me.gameStateSet.get('Scene').value=Display.createScene("openFl",0,0,100,100);</Script>
-				<Script>Display.warn(me.gameStateSet.get('Scene').value.renderer.rendererType);</Script>
+				<Script>me.gameStateSet.get('gp_Scene').value=Display.createScene();</Script>
+				<Script>me.startAction('gp_AddChildren');</Script>
 			</Scripts>
 		</Trigger>
 	</Triggers>
 	
-
+	<Actions>
+		<Action>
+			<Id>gp_AddChildren</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.stopAction('gp_AddChildren');
+					for (gameEntity in me.gameForm.gameSpace.gameEntitySet)
+					{
+						if (gameEntity.gameStateSet.get('gp_Type').value=='Object')
+						{
+							Display.warn('Adding Object child to scene...');
+							me.gameStateSet.get('gp_Scene').value.addObject(gameEntity.gameStateSet.get('gp_Object').value);
+						}
+					}
+				</Script>
+			</Scripts>
+		</Action>
+	</Actions>
 </Entity>

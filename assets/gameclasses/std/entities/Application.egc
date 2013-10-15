@@ -1,12 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
 	<Form><Space/></Form>
+
+	<States>
+		<State>
+			<Id>gp_Type</Id>
+			<Type>Text</Type>
+			<Value>Application</Value>
+		</State>
+	</States>
+	
 	<Triggers>
 		<Trigger>
 			<Event>Created</Event>
 			<Scripts>
-				<Script>Display.debug("Application Started");</Script>
+				<Script>me.startAction('gp_AddChildren');</Script>
 			</Scripts>
 		</Trigger>
 	</Triggers>
+	
+	<Actions>
+		<Action>
+			<Id>gp_AddChildren</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.stopAction('gp_AddChildren');
+					var renderer;
+					var scene;
+					
+					for (gameEntity in me.gameForm.gameSpace.gameEntitySet)
+					{
+						if (gameEntity.gameStateSet.get('gp_Type').value=='Renderer')
+							renderer=gameEntity.gameStateSet.get('gp_Renderer').value;
+						else if (gameEntity.gameStateSet.get('gp_Type').value=='Scene')
+							scene=gameEntity.gameStateSet.get('gp_Scene').value;
+					}
+					
+					Display.addRenderer(renderer,0);
+					renderer.addScene(scene,0);
+				</Script>
+			</Scripts>
+		</Action>
+	</Actions>
 </Entity>
