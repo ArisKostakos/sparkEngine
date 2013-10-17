@@ -13,8 +13,14 @@ import org.gamepl.coreservices.services.std.display.interfaces.IObject;
  */
 class Object implements IObject
 {
+	public var mesh( default, default ):Dynamic;
+	public var meshUrl( default, default ):String;
+	
+	public var posX( default, default ):Int;
+	public var posY( default, default ):Int;
+
 	public var objectSet( default, null ):Array<IObject>;
-	public var modifiedLastUpdate:Bool;
+	public var modifiedLastUpdate( default, default ):Bool;
 	
 	public function new() 
 	{

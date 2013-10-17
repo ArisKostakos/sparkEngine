@@ -12,8 +12,11 @@ package org.gamepl.coreservices.services.std.display.interfaces;
  */
 interface IScene
 {
+	var posX( default, default ):Int;
+	var posY( default, default ):Int;
+	
 	var objectSet( default, null ):Array<IObject>;
-	var modifiedLastUpdate:Bool;
+	var modifiedLastUpdate( default, default ):Bool;
 	//camera?
 	
 	function addObject(object:IObject):Void;

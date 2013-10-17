@@ -14,8 +14,11 @@ import org.gamepl.coreservices.services.std.display.interfaces.IObject;
  */
 class Scene implements IScene
 {
+	public var posX( default, default ):Int;
+	public var posY( default, default ):Int;
+	
 	public var objectSet( default, null ):Array<IObject>;
-	public var modifiedLastUpdate:Bool;
+	public var modifiedLastUpdate( default, default ):Bool;
 	//camera?
 	
 	public function new() 

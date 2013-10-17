@@ -69,6 +69,11 @@ class Input extends AService implements IInput
 		}
 	}
 	
+	public function isKeyDown( type:EKey ):Bool
+	{
+		return _kernel.inputs.keyboard.getIsKeyDown(type);
+	}
+	
 	public function isKeyPressed( type:EKey ):Bool
 	{
 		return _kernel.inputs.keyboard.getIsKeyPress(type);

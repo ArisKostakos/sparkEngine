@@ -49,25 +49,30 @@ class ARenderer implements IRenderer
 	{
 		for (scene in sceneSet)
 		{
-			_renderScene(scene);
+			//if (scenePointerSet.exists(scene) == false || scene.modifiedLastUpdate == true)
+			_updateScene(scene);
 		}
 	}
 	
 	//Should be overriden
-	private function _renderScene(scene:IScene):Void
+	private function _updateScene(p_scene:IScene):Void
 	{
-		for (object in scene.objectSet)
+		//override here...
+		
+		for (f_object in p_scene.objectSet)
 		{
-			_renderObject(object);
+			_updateObject(scenePointerSet.get(p_scene), f_object);
 		}
 	}
 	
 	//Should be overriden
-	private function _renderObject(object:IObject):Void
+	private function _updateObject(parent:Dynamic, p_object:IObject):Void
 	{
-		for (object in object.objectSet)
+		//override here...
+		
+		for (f_object in p_object.objectSet)
 		{
-			_renderObject(object);
+			_updateObject(objectPointerSet.get(p_object), f_object);
 		}
 	}
 }

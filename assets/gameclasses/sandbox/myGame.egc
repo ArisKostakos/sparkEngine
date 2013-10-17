@@ -8,13 +8,4 @@
 			</_Entities>
 		</_Space>
 	</_Form>
-		
-	<_Triggers>
-		<Trigger>
-			<Event>KeyPressed_1</Event>
-			<Scripts>
-				<Script>Display.info("patises to 1 malaka mou!!!!");</Script>
-			</Scripts>
-		</Trigger>
-	</_Triggers>
 </Entity>

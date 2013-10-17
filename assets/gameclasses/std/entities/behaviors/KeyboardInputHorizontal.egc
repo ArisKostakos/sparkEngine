@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<_Triggers>
+		<Trigger>
+			<Event>KeyPressed_A</Event>
+			<Scripts>
+				<Script>me.startAction("GoLeft");</Script>
+			</Scripts>
+		</Trigger>
+		<Trigger>
+			<Event>KeyPressed_D</Event>
+			<Scripts>
+				<Script>me.startAction("GoRight");</Script>
+			</Scripts>
+		</Trigger>
+		<Trigger>
+			<Event>KeyReleased_A</Event>
+			<Scripts>
+				<Script>me.stopAction("GoLeft");</Script>
+			</Scripts>
+		</Trigger>
+		<Trigger>
+			<Event>KeyReleased_D</Event>
+			<Scripts>
+				<Script>me.stopAction("GoRight");</Script>
+			</Scripts>
+		</Trigger>
+		
+	</_Triggers>
+</Entity>

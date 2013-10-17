@@ -13,8 +13,14 @@ package org.gamepl.coreservices.services.std.display.interfaces;
  */
 interface IObject
 {
+	var mesh( default, default ):Dynamic;
+	var meshUrl( default, default ):String;
+	
+	var posX( default, default ):Int;
+	var posY( default, default ):Int;
+	
 	var objectSet( default, null ):Array<IObject>;
-	var modifiedLastUpdate:Bool;
+	var modifiedLastUpdate( default, default ):Bool;
 	
 	function addObject(object:IObject):Void;
 	function removeObject(object:IObject):Void;

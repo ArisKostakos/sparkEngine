@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<_States>
+		<State>
+			<Id>gp_WalkSpeed</Id>
+			<Type>Integer</Type>
+			<Value>1</Value>
+		</State>
+		<State>
+			<Id>gp_RunSpeed</Id>
+			<Type>Integer</Type>
+			<Value>5</Value>
+		</State>
+	</_States>
+		
+	<_Actions>
+		<Action>
+			<Id>GoLeft</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.gameStateSet.get('gp_update').value=true;
+					if (Input.isKeyDown(Key.SHIFT)==true)
+						me.gameStateSet.get('gp_posX').value-=me.gameStateSet.get('gp_RunSpeed').value;
+					else
+						me.gameStateSet.get('gp_posX').value-=me.gameStateSet.get('gp_WalkSpeed').value;
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoRight</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.gameStateSet.get('gp_update').value=true;
+					if (Input.isKeyDown(Key.SHIFT)==true)
+						me.gameStateSet.get('gp_posX').value+=me.gameStateSet.get('gp_RunSpeed').value;
+					else
+						me.gameStateSet.get('gp_posX').value+=me.gameStateSet.get('gp_WalkSpeed').value;
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoUp</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.gameStateSet.get('gp_update').value=true;
+					if (Input.isKeyDown(Key.SHIFT)==true)
+						me.gameStateSet.get('gp_posY').value-=me.gameStateSet.get('gp_RunSpeed').value;
+					else
+						me.gameStateSet.get('gp_posY').value-=me.gameStateSet.get('gp_WalkSpeed').value;
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoDown</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.gameStateSet.get('gp_update').value=true;
+					if (Input.isKeyDown(Key.SHIFT)==true)
+						me.gameStateSet.get('gp_posY').value+=me.gameStateSet.get('gp_RunSpeed').value;
+					else
+						me.gameStateSet.get('gp_posY').value+=me.gameStateSet.get('gp_WalkSpeed').value;
+				</Script>
+			</Scripts>
+		</Action>
+	</_Actions>
+</Entity>

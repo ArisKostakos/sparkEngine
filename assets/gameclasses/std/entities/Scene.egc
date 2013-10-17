@@ -14,14 +14,40 @@
 			<Type>Dynamic</Type>
 			<Value>null</Value>
 		</State>
+		
+		<State>
+			<Id>gp_posX</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>gp_posY</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>gp_update</Id>
+			<Type>Boolean</Type>
+			<Value>False</Value>
+		</State>
 	</States>
 	
 	<Triggers>
 		<Trigger>
 			<Event>Created</Event>
 			<Scripts>
-				<Script>me.gameStateSet.get('gp_Scene').value=Display.createScene();</Script>
-				<Script>me.startAction('gp_AddChildren');</Script>
+				<Script>
+					var scene = Display.createScene();
+					scene.posX=me.gameStateSet.get('gp_posX').value;
+					scene.posY=me.gameStateSet.get('gp_posY').value;
+					
+					me.gameStateSet.get('gp_Scene').value=scene;
+					
+					me.startAction('gp_AddChildren');
+					me.startAction('gp_CheckUpdate');
+				</Script>
 			</Scripts>
 		</Trigger>
 	</Triggers>
@@ -37,10 +63,26 @@
 					{
 						if (gameEntity.gameStateSet.get('gp_Type').value=='Object')
 						{
-							Display.warn('Adding Object child to scene...');
 							me.gameStateSet.get('gp_Scene').value.addObject(gameEntity.gameStateSet.get('gp_Object').value);
 						}
 					}
+				</Script>
+			</Scripts>
+		</Action>
+		
+		<Action>
+			<Id>gp_CheckUpdate</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					if (me.gameStateSet.get('gp_update').value==true)
+					{
+						me.gameStateSet.get('gp_Scene').value.posX=me.gameStateSet.get('gp_posX').value;
+						me.gameStateSet.get('gp_Scene').value.posY=me.gameStateSet.get('gp_posY').value;
+					}
+					
+					me.gameStateSet.get('gp_Scene').value.modifiedLastUpdate=me.gameStateSet.get('gp_update').value;
+					me.gameStateSet.get('gp_update').value=false;
 				</Script>
 			</Scripts>
 		</Action>

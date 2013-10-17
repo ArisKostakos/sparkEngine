@@ -20,50 +20,82 @@ class OpenFlRenderer extends ARenderer
 	public function new() 
 	{
 		super();
-		Console.debug("OpenFl Renderer Initiated");
+		Console.log("OpenFl Renderer Initiated");
 	}
 	
 	//Should be overriden
-	override private function _renderScene(scene:IScene):Void
+	override private function _updateScene(p_scene:IScene):Void
 	{
-		if (scenePointerSet.exists(scene)==false)
+		//Console.debug("OpenFl Renderer: Rendering Scene...");
+		
+		if (scenePointerSet.exists(p_scene)==false)
 		{
-			Console.debug("OpenFl Renderer: Creating Scene as flash.Sprite...");
-			
 			var sprite:Sprite = new Sprite();
+			
+			//Add to stage
 			Lib.current.stage.addChild(sprite);
 			
-			//set x,y,width,height
+			//Let's play
+			sprite.x = p_scene.posX;
+			sprite.y = p_scene.posY;
 			
-			scenePointerSet.set(scene, sprite);
+
+			//sprite.scaleX = 2;
+			//sprite.scaleY = 2;
+			//sprite.rotation = -60;
+			//sprite.width = 100;
+			//sprite.height = 100;
+			//set x,y,width,height
+			//Console.warn('Sprite width: ' + sprite.width + ' and Sprite height: ' + sprite.height);
+			scenePointerSet.set(p_scene, sprite);
+		}
+		else
+		{
+			//Let's play
+			scenePointerSet.get(p_scene).x = p_scene.posX;
+			scenePointerSet.get(p_scene).y = p_scene.posY;
+			//Console.debug("OpenFl Renderer: X: " + p_scene.posX + ", Y: " + p_scene.posY);
 		}
 		
-		super._renderScene(scene);
+		super._updateScene(p_scene);
 	}
 	
 	//Should be overriden
-	override private function _renderObject(object:IObject):Void
+	override private function _updateObject(parent:Dynamic, p_object:IObject):Void
 	{
-		if (objectPointerSet.exists(object)==false)
+		if (objectPointerSet.exists(p_object)==false)
 		{
-			Console.debug("OpenFl Renderer: Creating Object as flash.Sprite...");
+			//Console.debug("OpenFl Renderer: Creating Object as flash.Sprite...");
 			
 			var sprite:Sprite = new Sprite();
-			Lib.current.stage.addChild(sprite);  //fix me!
+			
+			//Add to parent
+			parent.addChild(sprite);
 			
 			//Let's play
-			var bitmap:Bitmap = new Bitmap(openfl.Assets.getBitmapData( "assets/overlay/buttons/BackOver.png" ));
-			sprite.addChild(bitmap);
-			sprite.x = 100;
-			sprite.y = 100;
+			//if (p_object.meshUrl == null) p_object.meshUrl = "assets/overlay/buttons/BackOver.png";
+			p_object.mesh = new Bitmap(openfl.Assets.getBitmapData(p_object.meshUrl));
+			
+			sprite.addChild(p_object.mesh);
+			sprite.x = p_object.posX;
+			sprite.y = p_object.posY;
+			
+			//sprite.rotation = 60;
 			//set x,y,width,height
 			
 			
-			objectPointerSet.set(object, sprite);
+			objectPointerSet.set(p_object, sprite);
+		}
+		else
+		{
+			//Let's play
+			objectPointerSet.get(p_object).x = p_object.posX;
+			objectPointerSet.get(p_object).y = p_object.posY;
+			p_object.mesh.bitmapData = openfl.Assets.getBitmapData(p_object.meshUrl);
+			//Console.debug("OpenFl Renderer: X: " + p_scene.posX + ", Y: " + p_scene.posY);
 		}
 		
-		
-		super._renderObject(object);
+		super._updateObject(parent, p_object);
 	}
 }
 

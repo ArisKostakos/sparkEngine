@@ -153,7 +153,22 @@ class GameClassInstantiator implements IGameClassInstantiator
 		l_gameState.type = _xmlStateNameToType[p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TYPE]).next().firstChild().nodeValue];
 		
 		//Create the State's Value
-		l_gameState.value = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.VALUE]).next().firstChild().nodeValue;
+		var l_valueInString:String = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.VALUE]).next().firstChild().nodeValue;
+		//Typecast it
+		switch(l_gameState.type)
+		{
+			case EStateType.BOOLEAN:
+				l_gameState.value = (l_valueInString == "true" || l_valueInString == "True" || l_valueInString == "t" || l_valueInString == "T");
+			case EStateType.DECIMAL:
+				l_gameState.value = Std.parseFloat(l_valueInString);
+			case EStateType.INTEGER:
+				l_gameState.value = Std.parseInt(l_valueInString);
+			case EStateType.TEXT:
+				l_gameState.value = l_valueInString;
+			case EStateType.DYNAMIC:
+				l_gameState.value = null;
+		}
+		
 		
 		return l_gameState;
 	}

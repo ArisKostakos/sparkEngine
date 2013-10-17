@@ -14,15 +14,85 @@
 			<Type>Dynamic</Type>
 			<Value>null</Value>
 		</State>
+		
+		<State>
+			<Id>gp_posX</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>gp_posY</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>gp_update</Id>
+			<Type>Boolean</Type>
+			<Value>False</Value>
+		</State>
+		
+		<State>
+			<Id>gp_tempMeshUrl</Id>
+			<Type>Text</Type>
+			<Value>assets/overlay/buttons/BackOver.png</Value>
+		</State>
 	</States>
 	
-	<Triggers>
+	<Triggers>	
 		<Trigger>
 			<Event>Created</Event>
 			<Scripts>
-				<Script>Display.warn("Creating Object...");</Script>
-				<Script>me.gameStateSet.get('gp_Object').value=Display.createObject();</Script>
+				<Script>
+					var object = Display.createObject();
+					object.posX=me.gameStateSet.get('gp_posX').value;
+					object.posY=me.gameStateSet.get('gp_posY').value;
+					object.meshUrl=me.gameStateSet.get('gp_tempMeshUrl').value;
+					
+					me.gameStateSet.get('gp_Object').value=object;
+					
+					me.startAction('gp_AddChildren');
+					me.startAction('gp_CheckUpdate');
+				</Script>
 			</Scripts>
 		</Trigger>
 	</Triggers>
+	
+	<Actions>
+		<Action>
+			<Id>gp_AddChildren</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.stopAction('gp_AddChildren');
+					for (gameEntity in me.gameForm.gameSpace.gameEntitySet)
+					{
+						if (gameEntity.gameStateSet.get('gp_Type').value=='Object')
+						{
+							me.gameStateSet.get('gp_Object').value.addObject(gameEntity.gameStateSet.get('gp_Object').value);
+						}
+					}
+				</Script>
+			</Scripts>
+		</Action>
+		
+		<Action>
+			<Id>gp_CheckUpdate</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					if (me.gameStateSet.get('gp_update').value==true)
+					{
+						me.gameStateSet.get('gp_Object').value.posX=me.gameStateSet.get('gp_posX').value;
+						me.gameStateSet.get('gp_Object').value.posY=me.gameStateSet.get('gp_posY').value;
+						me.gameStateSet.get('gp_Object').value.meshUrl=me.gameStateSet.get('gp_tempMeshUrl').value;
+					}
+					
+					me.gameStateSet.get('gp_Object').value.modifiedLastUpdate=me.gameStateSet.get('gp_update').value;
+					me.gameStateSet.get('gp_update').value=false;
+				</Script>
+			</Scripts>
+		</Action>
+	</Actions>
 </Entity>

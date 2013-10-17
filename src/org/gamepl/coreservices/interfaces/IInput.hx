@@ -17,4 +17,5 @@ interface IInput extends IService
 	function isKeyPressed( type:EKey ):Bool;
 	function isKeyReleased( type:EKey ):Bool;
 	function registerKeyEvent(p_keyCode:Int, p_keyDown: Bool):Void;
+	function isKeyDown( type:EKey ):Bool;
 }

@@ -14,18 +14,18 @@
 		<Trigger>
 			<Event>Created</Event>
 			<Scripts>
-				<Script>me.startAction('gp_AddChildren');</Script>
+				<Script>me.startAction('gp_AddSingleSceneToSingleRenderer');</Script>
 			</Scripts>
 		</Trigger>
 	</Triggers>
 	
 	<Actions>
 		<Action>
-			<Id>gp_AddChildren</Id>
+			<Id>gp_AddSingleSceneToSingleRenderer</Id>
 			<Concurrency>Persistent</Concurrency>
 			<Scripts>
 				<Script>
-					me.stopAction('gp_AddChildren');
+					me.stopAction('gp_AddSingleSceneToSingleRenderer');
 					var renderer;
 					var scene;
 					

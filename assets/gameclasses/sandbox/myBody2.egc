@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity extends="std.entities.Body">
+	<Extends>
+		<Entity extends="std.entities.behaviors.PlatformMovement" >
+			<_States>
+				<_State id="gp_WalkSpeed">
+					<Value>10</Value>
+				</_State>
+				<_State id="gp_RunSpeed">
+					<Value>20</Value>
+				</_State>
+			</_States>
+		</Entity>
+		<Entity extends="std.entities.behaviors.KeyboardInput" />
+	</Extends>
+	
+	<_States>
+		<_State id="gp_posX">
+			<Value>450</Value>
+		</_State>
+		
+		<_State id="gp_posY">
+			<Value>50</Value>
+		</_State>
+	</_States>
+</Entity>
