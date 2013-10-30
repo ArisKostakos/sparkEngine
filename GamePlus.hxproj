@@ -11,23 +11,24 @@
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="FFFFFF" />
+    <movie background="#FFFFFF" />
     <movie preferredSDK=";3;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
+    <class path="C:\HaxeToolkit\haxe\lib\away3d-html5" />
     <class path="src" />
     <class path="C:\HaxeToolkit\haxe\lib\haxe-three" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\1,0,5" />
-    <class path="export\flash\haxe" />
+    <class path="C:\wamp\www\html5\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1&#xA;openfl_ver=1.0.5&#xA;openfl&#xA;display&#xA;web" />
+    <option directives="tools=1&#xA;openfl_ver=1.0.5&#xA;openfl&#xA;display&#xA;html5&#xA;web&#xA;js-classic&#xA;html5&#xA;html" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;--flash-strict&#xA;-resource assets/_exclude/config.xml@config&#xA;-swf-version 11&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;-resource assets/_exclude/config.xml@config&#xA;--remap flash:flash" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

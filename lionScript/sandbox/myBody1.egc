@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity extends="std.entities.Body">
+	
 	<Extends>
 		<Entity extends="std.entities.behaviors.PlatformMovement" >
 			<_States>
@@ -14,6 +15,7 @@
 		<Entity extends="std.entities.behaviors.KeyboardInputHorizontal" />
 	</Extends>
 	
+	
 	<_States>
 		<_State id="gp_posX">
 			<Value>0</Value>
@@ -24,7 +26,7 @@
 		</_State>
 			
 		<_State id="gp_tempMeshUrl">
-			<Value>assets/bitmaps/lion/frame1.png</Value>
+			<Value>assets/bitmaps/lion/frame1R.png</Value>
 		</_State>
 			
 			
@@ -73,12 +75,14 @@
 		<_Action id="GoLeft">
 			<_Scripts>
 				<Script>me.gameStateSet.get('Direction').value="L"</Script>
+				<!--<Script>Display.info("Moving Left");</Script>-->
 			</_Scripts>
 		</_Action>
 			
 		<_Action id="GoRight">
 			<_Scripts>
 				<Script>me.gameStateSet.get('Direction').value="R"</Script>
+				<!--<Script>Display.info("Moving Right");</Script>-->
 			</_Scripts>
 		</_Action>
 			

@@ -6,7 +6,7 @@
 		</assets>
 		<font name="assets_fonts_orbitron_ttf" />
 		<rootGameEntity>sandbox.myGame</rootGameEntity>
-		<gameClassPackage>assets.gameclasses</gameClassPackage>
+		<gameClassPackage>LionScript</gameClassPackage>
 	</settings>
 	
 	<services>

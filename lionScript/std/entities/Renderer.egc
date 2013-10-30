@@ -14,13 +14,19 @@
 			<Type>Dynamic</Type>
 			<Value>null</Value>
 		</State>
+		
+		<State>
+			<Id>gp_RendererType</Id>
+			<Type>Text</Type>
+			<Value>openFl</Value>
+		</State>
 	</States>
 	
 	<Triggers>
 		<Trigger>
 			<Event>Created</Event>
 			<Scripts>
-				<Script>me.gameStateSet.get('gp_Renderer').value=Display.createRenderer();</Script>
+				<Script>me.gameStateSet.get('gp_Renderer').value=Display.createRenderer(me.gameStateSet.get('gp_RendererType').value);</Script>
 			</Scripts>
 		</Trigger>
 	</Triggers>

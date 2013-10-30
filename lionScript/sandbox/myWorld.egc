@@ -3,7 +3,7 @@
 	<_Form>
 		<_Space>
 			<_Entities>
-				<Entity extends="sandbox.myBody1"/>
+				<!--<Entity extends="sandbox.myBody1"/>-->
 				<Entity extends="sandbox.myBody2"/>
 			</_Entities>
 		</_Space>

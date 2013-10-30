@@ -18,7 +18,7 @@ interface IDisplay extends IService
 {
 	var rendererSet( default, null ):Array<IRenderer>;
 	
-	function createRenderer():IRenderer;
+	function createRenderer(rendererName:String):IRenderer;
 	function createScene():IScene;
 	function createObject():IObject;
 	

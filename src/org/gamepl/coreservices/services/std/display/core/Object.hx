@@ -13,8 +13,8 @@ import org.gamepl.coreservices.services.std.display.interfaces.IObject;
  */
 class Object implements IObject
 {
-	public var mesh( default, default ):Dynamic;
-	public var meshUrl( default, default ):String;
+	public var mesh( default, default ):Dynamic;	//this should be an array, or split to meshUrl2d, meshUrl3d at least
+	public var meshUrl( default, default ):String;  //this should be an array, or split to meshUrl2d, meshUrl3d at least
 	
 	public var posX( default, default ):Int;
 	public var posY( default, default ):Int;

@@ -4,6 +4,7 @@
 		<_Space>
 			<_Entities>
 				<Entity extends="sandbox.myRenderer"/>
+				<!--<Entity extends="sandbox.myThreeJsRenderer"/>-->
 				<Entity extends="sandbox.myWorld"/>
 			</_Entities>
 		</_Space>

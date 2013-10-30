@@ -13,6 +13,7 @@ import org.gamepl.coreservices.services.std.display.interfaces.IScene;
 import org.gamepl.coreservices.services.std.display.interfaces.IObject;
 import org.gamepl.coreservices.services.std.display.renderers.interfaces.IRenderer;
 import org.gamepl.coreservices.services.std.display.renderers.core.OpenFlRenderer;  //todo: remove this. Use Reflection
+import org.gamepl.coreservices.services.std.display.renderers.core.ThreeJsRenderer;  //todo: remove this. Use Reflection
 
 /**
  * ...
@@ -40,10 +41,19 @@ class Display extends AService implements IDisplay
 		rendererSet = new Array<IRenderer>();
 	}
 	
-	public function createRenderer():IRenderer
+	public function createRenderer(rendererName:String):IRenderer
 	{
 		//@todo: Reflection needed here!!! See above todo
-		return new OpenFlRenderer();
+		var l_renderer:IRenderer;
+		
+		if (rendererName=="openFl")
+			l_renderer= new OpenFlRenderer();
+		else if (rendererName == "threeJs")
+			l_renderer = new ThreeJsRenderer();
+		else
+			l_renderer = null;
+		
+		return l_renderer;
 	}
 	
 	//@think: this is a nice way to check if a new scene has been created, instead of itterating the logical world. The Renderer may find this useful.

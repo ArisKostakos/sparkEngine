@@ -13,8 +13,8 @@ package org.gamepl.coreservices.services.std.display.interfaces;
  */
 interface IObject
 {
-	var mesh( default, default ):Dynamic;
-	var meshUrl( default, default ):String;
+	var mesh( default, default ):Dynamic;  //this should be an array, or split to meshUrl2d, meshUrl3d at least
+	var meshUrl( default, default ):String;  //this should be an array, or split to meshUrl2d, meshUrl3d at least
 	
 	var posX( default, default ):Int;
 	var posY( default, default ):Int;

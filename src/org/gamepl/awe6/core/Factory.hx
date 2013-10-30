@@ -44,7 +44,7 @@ class Factory extends AFactory
 			height = 400;
 			bgColor = 0xFF999999;
 			startingSceneType = GAME;
-			targetFramerate = 20;
+			targetFramerate = 60;
 			isFixedUpdates = true;
 		}
 	}

@@ -48,14 +48,14 @@ class GameClassParser implements IGameClassParser
 	private var _isNodeTargetMergable:Map<ENodeType,Bool>;
 	private var _isNodeArray:Map<ENodeType,Bool>;
 	
-	static inline private var _XMLELEMENT_EXTENDS:String = "Extends";
-	static inline private var _XMLATTRIBUTE_EXTENDS:String = "extends";
+	inline static private var _XMLELEMENT_EXTENDS:String = "Extends";
+	inline static private var _XMLATTRIBUTE_EXTENDS:String = "extends";
 	
-	static inline private var _XMLELEMENT_TARGETMERGE:String = "Id";
-	static inline private var _XMLATTRIBUTE_TARGETMERGE:String = "id";
+	inline static private var _XMLELEMENT_TARGETMERGE:String = "Id";
+	inline static private var _XMLATTRIBUTE_TARGETMERGE:String = "id";
 	
-	static inline private var _XMLNODEMODIFIER_MERGE:String = "_";
-	static inline private var _MERGEWIDTH:Int = 1;
+	inline static private var _XMLNODEMODIFIER_MERGE:String = "_";
+	inline static private var _MERGEWIDTH:Int = 1;
 	
 	public function new(p_gameclassPackage:String) 
 	{
@@ -750,17 +750,26 @@ class GameClassParser implements IGameClassParser
 		Console.info('Extending ' + p_gameNode.nodeName + ' Node...');
 		if (_extendGameNode(p_gameNode))
 		{
+			//Display the full Node after extending it
+			//Console.debug(p_gameNode);
+			Console.info('Extending ' + p_gameNode.nodeName + ' Node COMPLETED');
+			
 			//merge
 			Console.info('Merging ' + p_gameNode.nodeName + ' Node...');
 			_mergeGameNode(p_gameNode);
 
-			//Display the full Node with inheritance applied
+			//Display the full Node after merging it
 			//Console.debug(p_gameNode);
+			Console.info('Merging ' + p_gameNode.nodeName + ' Node COMPLETED');
 			
 			//Validate
 			Console.info('Validating ' + p_gameNode.nodeName + ' Node...');
 			if (_validateGameNode(p_gameNode))
 			{
+				//Display the full Node after validating it
+				//Console.debug(p_gameNode);
+				Console.info('Validating ' + p_gameNode.nodeName + ' Node COMPLETED');
+				
 				return true;
 			}
 			else
@@ -943,8 +952,13 @@ class GameClassParser implements IGameClassParser
 	
 	inline private function _moveChildren(p_gameNode:Xml, p_superNode:Xml):Void
 	{
+		//Solution to html5 bug
+		var childrenArray:Array<Xml> = new Array<Xml>();
+		for (elt in p_superNode.elements())
+			childrenArray.push(elt);
+		
 		//For all Elements of supernode
-		for ( elt in p_superNode.elements() ) 
+		for (elt in childrenArray)
 		{
 			//If a node with the same name does not exist in p_gameNode
 			if (p_gameNode.elementsNamed(elt.nodeName).hasNext() == false)
@@ -1003,8 +1017,13 @@ class GameClassParser implements IGameClassParser
 	
 	inline private function _mergeSingleGameNode(p_gameNode:Xml):Void
 	{
+		//Solution to html5 bug
+		var childrenArray:Array<Xml> = new Array<Xml>();
+		for (elt in p_gameNode.elements())
+			childrenArray.push(elt);
+			
 		//For all Elements
-		for ( elt in p_gameNode.elements() ) 
+		for ( elt in childrenArray ) 
 		{
 			//If element is a mergeNode
 			if (elt.nodeName.substr(0,_MERGEWIDTH) == _XMLNODEMODIFIER_MERGE)
@@ -1095,17 +1114,22 @@ class GameClassParser implements IGameClassParser
 	
 	inline private function _mergeChildren(mergeNode:Xml, cleanNode:Xml):Void
 	{
+		//Solution to html5 bug
+		var childrenArray:Array<Xml> = new Array<Xml>();
+		for (elt in mergeNode.elements())
+			childrenArray.push(elt);
+			
 		//If the element is an array node
 		if (_isNodeArray[_xmlNodeNameToNodeType[cleanNode.nodeName]])
 		{
 			//Move children of merge node to the clean node
-			for ( mergeNodeChild in mergeNode.elements() )
+			for ( mergeNodeChild in childrenArray )
 				cleanNode.addChild(mergeNodeChild);
 		}
 		else
 		{
 			//Move children of merge node to the clean node
-			for ( mergeNodeChild in mergeNode.elements() ) 
+			for ( mergeNodeChild in childrenArray ) 
 			{
 				if (mergeNodeChild.nodeName.substr(0,_MERGEWIDTH) != _XMLNODEMODIFIER_MERGE) //If the child is clean
 					if (cleanNode.elementsNamed(mergeNodeChild.nodeName).hasNext()) //If a clean child with that name already exists in the non-array clean node
@@ -1129,7 +1153,7 @@ class GameClassParser implements IGameClassParser
 			return null;
 		}
 	}
-	
+
 	inline private function _getClassUrl(p_gameClassPackage:String, p_gameEntityClassName:String, p_fileExtension:String):String
 	{
 		return StringTools.replace(p_gameClassPackage,".","/") + "/" + StringTools.replace(p_gameEntityClassName,".","/") + "." + p_fileExtension;
@@ -1148,6 +1172,7 @@ class GameClassParser implements IGameClassParser
 		{
 			//@todo: _the function below may throw an exception(no it won't). in this case, throw one here too, and a trace saying the class file is not well-formed. Also, return null.
 			l_gameClassNode = _parseEmbeddedStringAsset(_getClassUrl(_gameclassPackage, p_gameClassName, _xmlGameTypeToFileExtension[p_expectedGameType]));
+
 			if (l_gameClassNode != null) l_gameClassNode = l_gameClassNode.firstElement();
 		}
 		else if (p_gameClassNode != null)

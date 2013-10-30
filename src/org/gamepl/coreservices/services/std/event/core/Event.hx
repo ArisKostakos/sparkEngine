@@ -68,22 +68,24 @@ class Event extends AService implements IEvent
 	
 	//i may also need a eeventprefab TO EEventType converter
 	
-	inline private static var _NO_FILTER:String = "NO FILTER";
+	//inline private static var _NO_FILTER:String = "NO FILTER";
+	//private var _NO_FILTER:String = "NO FILTER";
 	
 	private var _eventTypeFilterFlags:Map < EEventType, ObjectMap < Dynamic, Bool >> ;
 	private var _eventTypeFilterTriggers:Map < EEventType, ObjectMap < Dynamic, Array<IGameTrigger> >> ;
 	
-	inline private static var _FILTER_VARIABLE_USER_ENTITY:String = "USER ENTITY VARIABLE";
+	//@note: There are dumb objects that will serve as keys to the filter arrays above. I just needed something to give a unique pointer
+		//Btw, a String would not work since in JavaScript a string is apparently a primitive, not an object. So Empty arrays should do the trick
+	private var _NO_FILTER:Array<Dynamic>;
+	private var _FILTER_VARIABLE_USER_ENTITY:Array<Dynamic>;
 	
 	private var _prefabConvertToType:Map<EEventPrefab,EEventType>;
 	private var _prefabConvertToFilter:Map<EEventPrefab,Dynamic>;
 	
-	
-	
 	public function new(p_kernel:IKernel) 
 	{
 		super(p_kernel);
-	
+		
 		_init();
 	}
 	
@@ -91,10 +93,11 @@ class Event extends AService implements IEvent
 	{
 		Console.log("Init Event std Service...");
 		
+		_NO_FILTER = new Array<Dynamic>();
+		_FILTER_VARIABLE_USER_ENTITY = new Array<Dynamic>();
+		
 		_eventTypeFilterFlags = new Map < EEventType, ObjectMap < Dynamic, Bool >> ();
 		_eventTypeFilterTriggers = new Map < EEventType, ObjectMap < Dynamic, Array<IGameTrigger> >> ();
-		//_eventFlags = new Map<EEventType, Bool>();
-		//_triggers = new Map<EEventType,Array<IGameTrigger>>();
 		
 		_initPrefabConvertToTypeMap();
 		_initPrefabConvertToFilterMap();
@@ -131,9 +134,7 @@ class Event extends AService implements IEvent
 	{
 		if (p_eventFilter == null)
 			p_eventFilter = _NO_FILTER;
-		
-		//_eventFlags[p_eventType] = true;
-		
+			
 		//Create a slot for the raised eventType
 		if (_eventTypeFilterFlags.exists(p_eventType) == false)
 			_eventTypeFilterFlags[p_eventType] = new ObjectMap < Dynamic, Bool > ();
@@ -146,7 +147,7 @@ class Event extends AService implements IEvent
 	
 	inline private function _doTriggers(p_eventType:EEventType, p_eventFilter:Dynamic):Void
 	{
-		//Console.debug("Activating triggers for: " + p_eventType);
+		//Console.info("Activating triggers for: " + p_eventType);
 		
 		if (_eventTypeFilterTriggers.exists(p_eventType))
 		{

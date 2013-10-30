@@ -2,11 +2,21 @@
 <project>
 	
 	<meta title="GamePlus" package="org.gamepl" version="1.0.0" company="Aris Kostakos" />
-	<app main="Main" path="export" file="GamePlus" />
+	<app main="Main" path="export" file="GamePlus" unless="html5"/>
+	<app main="Main" path="C:\wamp\www" file="GamePlus" if="html5"/>
 	
-	<window width="1200" height="400" fps="20" orientation="landscape" resizable="true" if="target_flash" />
-	<window width="1200" height="400" fps="20" orientation="landscape" resizable="true" unless="target_flash" />
+	<window hardware="true" allow-shaders="true" width="1200" height="400" fps="60" orientation="landscape" resizable="true" if="flash" />
+	<window width="1200" height="400" fps="60" background="#00FFFFFF" orientation="landscape" resizable="true" unless="flash" />
  	
+	
+	
+	<!-- Away3D Flash-->
+	<source path="C:\HaxeToolkit\haxe\lib\away3d-flash" if="flash"/>
+	<haxeflag name="-swf-lib" value="C:\HaxeToolkit\haxe\lib\away3d-flash\vendor\Away3d.swc" if="flash" />
+
+	<!-- Away3D Html5-->
+	<source path="C:\HaxeToolkit\haxe\lib\away3d-html5" if="html5"/>
+	
 	<source path="src" />
 	<source path="C:\HaxeToolkit\haxe\lib\haxe-three" />
 	<haxelib name="openfl" />
@@ -15,10 +25,17 @@
 	<haxelib name="mconsole" />
 	<assets path="assets" rename="assets" include="*" exclude="_exclude|*.ogg" if="flash" />
 	<assets path="assets" rename="assets" include="*" exclude="_exclude" unless="flash" />
+	<assets path="lionScript" rename="LionScript" include="*" type="text"/>
 	
 	<icon name="assets/_exclude/openfl.svg" />
 	
 	<haxeflag name="--flash-strict" if="flash" />
+	
+	
+	
+	<!--<haxeflag name="-D noEmbedJS"/>-->
+	<haxeflag name="-D js-classic"/>
+	
 	<!-- <haxeflag name="--dead-code-elimination" if="html5" /> IE9 says not yet -->
 	
 	<compilerflag name="-resource assets/_exclude/config.xml@config" />

@@ -13,7 +13,7 @@
 		</Entity>
 		<Entity extends="std.entities.behaviors.KeyboardInput" />
 	</Extends>
-	
+
 	<_States>
 		<_State id="gp_posX">
 			<Value>450</Value>

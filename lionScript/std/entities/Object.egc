@@ -53,7 +53,7 @@
 					me.gameStateSet.get('gp_Object').value=object;
 					
 					me.startAction('gp_AddChildren');
-					me.startAction('gp_CheckUpdate');
+					//me.startAction('gp_CheckUpdate');
 				</Script>
 			</Scripts>
 		</Trigger>

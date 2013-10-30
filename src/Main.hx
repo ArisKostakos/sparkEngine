@@ -27,9 +27,19 @@ class Main
 		
 		//Init Console
 		Console.start();
-		Console.logLevel = LogLevel.info;
+		Console.logLevel = LogLevel.log;
 		
 		//Create awe6 Factory
 		var l_awe6Factory:Factory = new Factory( Lib.current, l_isDebug, Resource.getString( "config" ) );
+		
+		//Testing
+		//TestThreeJsRaw.start();
+		//TestHelloWorld.start();
+		//new TestAway3dFlash();
+		//new TestAway3dHtml5();
+		
+		/*
+		 * FIX THE 4 THINGS THAT PREVENT STAGE3D FROM RENDERING IN THE BACK
+		 */
 	}
 }
