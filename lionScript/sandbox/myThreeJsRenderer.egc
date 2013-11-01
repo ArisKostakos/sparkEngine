@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Entity extends="std.entities.Renderer">
-	<_States>
-		<_State id="gp_RendererType">
-			<Value>threeJs</Value>
-		</_State>
-	</_States>
-</Entity>
