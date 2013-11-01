@@ -11,7 +11,7 @@ import co.gamep.sliced.services.std.logic.gde.interfaces.IGameBase;
  * ...
  * @author Aris Kostakos
  */
-class AGameBase implements IGameBase
+@:keepSub class AGameBase implements IGameBase
 {
 
 	private function new() 

@@ -10,7 +10,7 @@ package co.gamep;
  * ...
  * @author Aris Kostakos
  */
-class Console
+@:keep class Console
 {
 #if (debug || flambe_keep_logs)
 	inline public static function log(p_message:String):Void

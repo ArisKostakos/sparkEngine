@@ -12,7 +12,7 @@ import co.gamep.sliced.interfaces.IService;
  * ...
  * @author Aris Kostakos
  */
-class AService implements IService
+@:keepSub class AService implements IService
 {
 	private function new() 
 	{

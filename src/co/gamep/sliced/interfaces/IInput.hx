@@ -5,7 +5,7 @@
  */
 
 package co.gamep.sliced.interfaces;
-//import awe6.interfaces.EKey;
+import flambe.input.Key;
 
 /**
  * ...
@@ -14,8 +14,7 @@ package co.gamep.sliced.interfaces;
 interface IInput extends IService
 {
 	function update():Void;
-	//function isKeyPressed( type:EKey ):Bool;
-	//function isKeyReleased( type:EKey ):Bool;
-	//function registerKeyEvent(p_keyCode:Int, p_keyDown: Bool):Void;
-	//function isKeyDown( type:EKey ):Bool;
+	function isKeyPressed( type:Key ):Bool;
+	function isKeyReleased( type:Key ):Bool;
+	function isKeyDown( type:Key ):Bool;
 }

@@ -1,9 +1,19 @@
+/* Copyright © Game Plus Studios - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Aris Kostakos <a.kostakos@gmail.com>, October 2013
+ */
+
 package co.gamep;
 
 import co.gamep.sliced.core.Sliced;
 import flambe.asset.AssetPack;
 import flambe.System;
 
+/**
+ * ...
+ * @author Aris Kostakos
+ */
 class Main
 {
 	private static function main()
@@ -23,6 +33,9 @@ class Main
 		
 		//Init Sliced
 		Sliced.init();
+		
+		//Create Game
+		System.root.add(new Game());
     }
 
 }

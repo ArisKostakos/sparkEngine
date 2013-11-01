@@ -26,8 +26,8 @@ import co.gamep.sliced.services.dummy.Comms;
 
 //Std
 import co.gamep.sliced.services.std.logic.core.Logic;
-//import co.gamep.sliced.services.std.input.core.Input;
-//import co.gamep.sliced.services.std.event.core.Event;
+import co.gamep.sliced.services.std.input.core.Input;
+import co.gamep.sliced.services.std.event.core.Event;
 //import co.gamep.sliced.services.std.display.core.Display;
 
 /**
@@ -51,9 +51,9 @@ class ServiceFactory implements IServiceFactory
 	{
 		var l_soundService:ISound = _reflectService("sliced.sound");
 		var l_logicService:ILogic = _reflectService("sliced.logic");
-		var l_inputService:IInput = null;//_reflectService("sliced.input");
+		var l_inputService:IInput = _reflectService("sliced.input");
 		var l_commsService:IComms = _reflectService("sliced.comms");
-		var l_eventService:IEvent = null;//_reflectService("sliced.event");
+		var l_eventService:IEvent = _reflectService("sliced.event");
 		var l_displayService:IDisplay = null;//_reflectService("sliced.display");
 		
 		Sliced.assignServices(l_soundService, l_logicService, l_inputService, l_commsService, l_eventService, l_displayService);

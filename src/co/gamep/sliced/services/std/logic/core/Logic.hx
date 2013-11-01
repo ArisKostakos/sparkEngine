@@ -18,7 +18,7 @@ import co.gamep.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
  * ...
  * @author Aris Kostakos
  */
-@:keep class Logic extends AService implements ILogic
+class Logic extends AService implements ILogic
 {
 	public var rootGameEntity( default, default ):IGameEntity;
 	public var interpreter( default, null ):IInterpreter;

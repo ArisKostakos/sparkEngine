@@ -13,7 +13,7 @@ import co.gamep.sliced.core.AService;
  * ...
  * @author Aris Kostakos
  */
-@:keep class Sound extends AService implements ISound
+class Sound extends AService implements ISound
 {
 	public function new() 
 	{

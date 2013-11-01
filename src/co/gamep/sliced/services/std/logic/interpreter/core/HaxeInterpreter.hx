@@ -38,7 +38,8 @@ class HaxeInterpreter extends AInterpreter
 		_interpreter.variables.set("Input", Sliced.input); // share the Input class
 		_interpreter.variables.set("Comms", Sliced.comms); // share the Comms class
 		_interpreter.variables.set("Display", Sliced.display); // share the Display class
-		_interpreter.variables.set("Key", Key); // share the EKey enum
+		_interpreter.variables.set("Key", Key); // share the Key enum
+		_interpreter.variables.set("Console", Console); // share the Console
 	}
 	
 	override public function run(hashId:Int, parameters:Map<String,Dynamic>):Bool
@@ -58,8 +59,8 @@ class HaxeInterpreter extends AInterpreter
 		_interpreter.variables.set("Input", Sliced.input); // share the Input class
 		_interpreter.variables.set("Comms", Sliced.comms); // share the Comms class
 		_interpreter.variables.set("Display", Sliced.display); // share the Display class
-		_interpreter.variables.set("Key", Key); // share the EKey enum
-		
+		_interpreter.variables.set("Key", Key); // share the Key enum
+		_interpreter.variables.set("Console", Console); // share the Console
 		
 		//Dynamic Variables
 		for (varName in parameters.keys())

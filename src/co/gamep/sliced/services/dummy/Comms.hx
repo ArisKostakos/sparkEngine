@@ -13,7 +13,7 @@ import co.gamep.sliced.core.AService;
  * ...
  * @author Aris Kostakos
  */
-@:keep class Comms extends AService implements IComms
+class Comms extends AService implements IComms
 {
 	public function new() 
 	{
