@@ -55,8 +55,6 @@ class Sliced
 		Sliced.logic.update();
 		
 		//Display Update
-		//Sliced.display.update();
-		
-		//Console.log("Sliced Update");
+		Sliced.display.update();
 	}
 }

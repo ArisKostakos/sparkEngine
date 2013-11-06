@@ -5,9 +5,7 @@
  */
 
 package co.gamep.sliced.interfaces;
-//import co.gamep.sliced.services.std.display.interfaces.IScene;
-//import co.gamep.sliced.services.std.display.interfaces.IObject;
-//import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalSpace;
 
 
 /**
@@ -16,6 +14,8 @@ package co.gamep.sliced.interfaces;
  */
 interface IDisplay extends IService
 {
+	var logicalSpace( default, default ):ILogicalSpace;
+
 	//var rendererSet( default, null ):Array<IRenderer>;
 	
 	//function createRenderer(rendererName:String):IRenderer;
