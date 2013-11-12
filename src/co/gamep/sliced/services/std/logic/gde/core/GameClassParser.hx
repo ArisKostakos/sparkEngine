@@ -5,6 +5,7 @@
  */
 
 package co.gamep.sliced.services.std.logic.gde.core;
+import co.gamep.framework.Assets;
 import co.gamep.sliced.services.std.logic.gde.interfaces.EGameType;
 import co.gamep.sliced.services.std.logic.gde.interfaces.ENodeType;
 import co.gamep.sliced.services.std.logic.gde.interfaces.EConcurrencyType;

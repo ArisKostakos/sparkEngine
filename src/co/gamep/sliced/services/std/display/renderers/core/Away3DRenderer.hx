@@ -4,17 +4,27 @@
  * Written by Aris Kostakos <a.kostakos@gmail.com>, November 2013
  */
 
-package co.gamep.sliced.services.std.display.renderers.interfaces;
+ package co.gamep.sliced.services.std.display.renderers.core;
+
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-interface IRenderer
+class Away3DRenderer extends ARenderer
 {
-	var logicalViewSet( default, null ):Array<ILogicalView>;
-	var uses3dEngine( default, null ):Bool;
-	
-	function render ( logicalView:ILogicalView):Void;
+	public function new()
+	{
+		super();
+		
+		_init();
+	}
+
+	inline private function _init():Void
+	{
+		Console.info("Creating Away3D Renderer...");
+		uses3dEngine = true;
+	}
 }

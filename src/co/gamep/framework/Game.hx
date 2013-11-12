@@ -4,7 +4,7 @@
  * Written by Aris Kostakos <a.kostakos@gmail.com>, October 2013
  */
 
-package co.gamep;
+package co.gamep.framework;
 
 import co.gamep.sliced.core.Sliced;
 import flambe.Component;

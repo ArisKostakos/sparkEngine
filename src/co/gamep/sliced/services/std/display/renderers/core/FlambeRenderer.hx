@@ -4,17 +4,27 @@
  * Written by Aris Kostakos <a.kostakos@gmail.com>, November 2013
  */
 
-package co.gamep.sliced.services.std.display.renderers.interfaces;
+ package co.gamep.sliced.services.std.display.renderers.core;
+
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-interface IRenderer
+class FlambeRenderer extends ARenderer
 {
-	var logicalViewSet( default, null ):Array<ILogicalView>;
-	var uses3dEngine( default, null ):Bool;
+	public function new() 
+	{
+		super();
+		
+		_init();
+	}
 	
-	function render ( logicalView:ILogicalView):Void;
+	inline private function _init():Void
+	{
+		Console.info("Creating Flambe Renderer...");
+		uses3dEngine = false;
+	}
 }

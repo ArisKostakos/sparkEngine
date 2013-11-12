@@ -4,7 +4,7 @@
  * Written by Aris Kostakos <a.kostakos@gmail.com>, October 2013
  */
 
-package co.gamep;
+package co.gamep.framework;
 
 import flambe.System;
 import flambe.asset.AssetPack;
@@ -28,6 +28,7 @@ class Assets
 {
 	public static var config( default, null ):AssetPack;
 	public static var lionscript( default, null ):AssetPack;
+	public static var images( default, null ):AssetPack;
 	public static var assetsLoaded( default, null ):Signal0 = new Signal0(); 
 	
 	public static function init():Void
@@ -54,6 +55,15 @@ class Assets
 	private static function _onLionscriptLoaded(pack:AssetPack)
     {
 		lionscript = pack;
+		
+        var l_manifest:Manifest = Manifest.build("images");
+        var l_loader:Promise<AssetPack> = System.loadAssetPack(l_manifest);
+        l_loader.get(_onImagesLoaded);
+    }
+	
+	private static function _onImagesLoaded(pack:AssetPack)
+    {
+		images = pack;
 		
 		assetsLoaded.emit();
     }

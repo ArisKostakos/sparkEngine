@@ -25,12 +25,5 @@ class ALogicalPositionable extends ALogicalComponent implements ILogicalPosition
 	private function new() 
 	{
 		super();
-		
-		_init();
-	}
-	
-	inline private function _init():Void
-	{
-		
 	}
 }

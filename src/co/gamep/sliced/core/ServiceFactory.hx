@@ -5,6 +5,7 @@
  */
 
 package co.gamep.sliced.core;
+import co.gamep.framework.Config;
 import co.gamep.sliced.interfaces.IServiceFactory;
 import co.gamep.sliced.interfaces.ISound;
 import co.gamep.sliced.interfaces.ILogic;

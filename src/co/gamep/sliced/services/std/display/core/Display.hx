@@ -6,9 +6,12 @@
 
 package co.gamep.sliced.services.std.display.core;
 
+import co.gamep.framework.Framework;
 import co.gamep.sliced.interfaces.IDisplay;
 import co.gamep.sliced.core.AService;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalSpace;
+import co.gamep.sliced.services.std.display.renderers.core.FlambeRenderer;
+import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 /**
  * ...
@@ -26,6 +29,7 @@ class Display extends AService implements IDisplay
 	//instead of itterating the virtual world. The Renderer may find this useful.
 
 	public var logicalSpace( default, default ):ILogicalSpace;
+	public var rendererSet( default, null ):Array<IRenderer>;
 	
 	public function new() 
 	{
@@ -37,10 +41,9 @@ class Display extends AService implements IDisplay
 	private function _init():Void
 	{
 		Console.log("Init Display std Service...");
-		//rendererSet = new Array<IRenderer>();
+		rendererSet = new Array<IRenderer>();
 	}
 	
-	/* INTERFACE co.gamep.sliced.interfaces.IDisplay */
 	
 	public function update():Void 
 	{
