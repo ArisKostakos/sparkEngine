@@ -59,7 +59,7 @@ class GameFactory implements IGameFactory
 			else
 			{
 				Console.error('Game Entity could not be parsed');
-				//Console.debug(l_gameNode);
+				Console.debug(l_gameNode.toString());
 				return null;
 			}
 		}

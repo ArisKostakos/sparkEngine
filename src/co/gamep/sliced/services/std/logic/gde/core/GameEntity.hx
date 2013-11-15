@@ -116,4 +116,16 @@ class GameEntity extends AGameBase implements IGameEntity
 			return false;
 		}
 	}
+	
+	// Set/Get State Value
+	public function getState(p_stateId:String):Dynamic
+	{
+		return gameStateSet.get(p_stateId).value;
+	}
+	
+	public function setState(p_stateId:String, p_value:Dynamic):Dynamic
+	{
+		gameStateSet.get(p_stateId).value = p_value;
+		return gameStateSet.get(p_stateId).value;
+	}
 }

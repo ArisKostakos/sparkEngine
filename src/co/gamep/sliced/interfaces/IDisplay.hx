@@ -5,7 +5,14 @@
  */
 
 package co.gamep.sliced.interfaces;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalLight;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalMesh;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalSpace;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStage;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 /**
@@ -18,12 +25,20 @@ interface IDisplay extends IService
 
 	var rendererSet( default, null ):Array<IRenderer>;
 	
-	//function createRenderer(rendererName:String):IRenderer;
-	//function createScene():IScene;
-	//function createObject():IObject;
+	var logicalViewsOrder (default, null ):Array<ILogicalView>;
+	var logicalViewRendererAssignments (default, null ):Map<ILogicalView,IRenderer>;
 	
-	//function addRenderer(renderer:IRenderer, index:Int):Void;
-	//function removeRenderer(renderer:IRenderer):Void;
+	function setSpace( p_space:ILogicalSpace ):Void;
+	
+	function createSpace():ILogicalSpace;
+	function createStage():ILogicalStage;
+	function createScene():ILogicalScene;
+	function createCamera():ILogicalCamera;
+	function createView():ILogicalView;
+	function createEntity():ILogicalEntity;
+	function createMesh():ILogicalMesh;
+	function createLight():ILogicalLight;
+	
 	function update():Void;
 	
 	function log(message:String):Void;

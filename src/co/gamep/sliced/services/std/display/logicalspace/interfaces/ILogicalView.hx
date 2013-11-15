@@ -21,5 +21,5 @@ interface ILogicalView extends ILogicalComponent
 	var width( default, default ):Int;
 	var height( default, default ):Int;
 	var zIndex( default, default ):Int;
-	var requests3dEngine( default, default ):Bool;
+	var requests3DEngine( default, default ):Bool;
 }

@@ -18,12 +18,5 @@ class LogicalMesh extends LogicalEntity implements ILogicalMesh
 	public function new() 
 	{
 		super();
-		
-		_init();
-	}
-	
-	inline private function _init():Void
-	{
-		
 	}
 }

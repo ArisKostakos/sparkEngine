@@ -14,7 +14,10 @@ package co.gamep.sliced.services.std.display.logicalspace.interfaces;
  */
 interface ILogicalStage extends ILogicalComponent
 {
-	var logicalViewSet( default, null ):Array<ILogicalView>;
+	var logicalViewSet( default, null ):Map<String,ILogicalView>;
 	var width( default, default ):Int;
 	var height( default, default ):Int;
+	
+	function addView( p_view:ILogicalView ):Void;
+	function removeView( p_view:ILogicalView ):Void;
 }

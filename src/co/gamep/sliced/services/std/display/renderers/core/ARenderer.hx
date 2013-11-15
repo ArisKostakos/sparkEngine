@@ -16,14 +16,25 @@ import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 class ARenderer implements IRenderer
 {
 	public var logicalViewSet( default, null ):Array<ILogicalView>;
-	public var uses3dEngine( default, null ):Bool;
+	public var uses3DEngine( default, null ):Bool;
 	
 	private function new() 
 	{
-		
+		_aRendererInit();
 	}
 
-	public function render ( logicalView:ILogicalView):Void
+	inline private function _aRendererInit():Void
+	{
+		logicalViewSet = new Array<ILogicalView>();
+	}
+	
+	public function render ( p_logicalView:ILogicalView):Void
+	{
+		//override...
+		
+	}
+	
+	public function update ():Void
 	{
 		//override...
 		

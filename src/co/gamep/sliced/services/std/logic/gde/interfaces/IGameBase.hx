@@ -12,5 +12,5 @@ package co.gamep.sliced.services.std.logic.gde.interfaces;
  */
 interface IGameBase
 {
-	
+	var parentEntity( default, default ):IGameEntity;
 }

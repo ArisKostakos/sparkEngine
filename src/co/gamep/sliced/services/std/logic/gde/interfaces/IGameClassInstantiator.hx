@@ -12,10 +12,10 @@ package co.gamep.sliced.services.std.logic.gde.interfaces;
  */
 interface IGameClassInstantiator
 {
-	function instantiateEntity(p_gameNode:Xml):IGameEntity;
-	function instantiateForm(p_gameNode:Xml):IGameForm;
-	function instantiateSpace(p_gameNode:Xml):IGameSpace;
-	function instantiateState(p_gameNode:Xml):IGameState;
-	function instantiateAction(p_gameNode:Xml):IGameAction;
-	function instantiateTrigger(p_gameNode:Xml):IGameTrigger;
+	function instantiateEntity(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameEntity;
+	function instantiateForm(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameForm;
+	function instantiateSpace(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameSpace;
+	function instantiateState(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameState;
+	function instantiateAction(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameAction;
+	function instantiateTrigger(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameTrigger;
 }

@@ -16,9 +16,7 @@ interface IGameAction extends IGameBase
 	var gameStateSet( default, null ):Map<String,IGameState>;
 	var concurrency( default, default ):EConcurrencyType;
 	var scriptSet( default, null ):Array<Int>;
-	var userEntity( default, default ):IGameEntity;
-	
-	//var userEntity( default, null ):IGameEntity;
+
 	//var targetEntity( default, null ):IGameEntity;
 	//var targetSet( default, null ):Map<String,IGameEntity>;
 	

@@ -18,12 +18,5 @@ class LogicalLight extends LogicalEntity implements ILogicalLight
 	public function new() 
 	{
 		super();
-		
-		_init();
-	}
-	
-	inline private function _init():Void
-	{
-		
 	}
 }

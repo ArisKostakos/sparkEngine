@@ -14,7 +14,8 @@ import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView
 interface IRenderer
 {
 	var logicalViewSet( default, null ):Array<ILogicalView>;
-	var uses3dEngine( default, null ):Bool;
+	var uses3DEngine( default, null ):Bool;
 	
-	function render ( logicalView:ILogicalView):Void;
+	function render ( p_logicalView:ILogicalView):Void;
+	function update ():Void;
 }

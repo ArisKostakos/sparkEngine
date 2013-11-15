@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<_States>
+		<State>
+			<Id>std_x</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>std_y</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>std_z</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>std_yaw</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>std_pitch</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>std_roll</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+	</_States>
+</Entity>

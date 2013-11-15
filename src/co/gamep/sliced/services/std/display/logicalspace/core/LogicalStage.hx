@@ -15,7 +15,7 @@ import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView
  */
 class LogicalStage extends ALogicalComponent implements ILogicalStage
 {
-	public var logicalViewSet( default, null ):Array<ILogicalView>;
+	public var logicalViewSet( default, null ):Map<String,ILogicalView>;
 	public var width( default, default ):Int;
 	public var height( default, default ):Int;
 	
@@ -28,6 +28,17 @@ class LogicalStage extends ALogicalComponent implements ILogicalStage
 	
 	inline private function _init():Void
 	{
-		logicalViewSet = new Array<ILogicalView>();
+		logicalViewSet = new Map<String,ILogicalView>();
+	}
+	
+	public function addView( p_view:ILogicalView ):Void
+	{
+		p_view.parent = this;
+		logicalViewSet[p_view.name]=p_view;
+	}
+	
+	public function removeView( p_view:ILogicalView ):Void
+	{
+		logicalViewSet.remove(p_view.name);
 	}
 }

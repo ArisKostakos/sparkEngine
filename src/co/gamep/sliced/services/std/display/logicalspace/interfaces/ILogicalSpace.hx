@@ -15,7 +15,17 @@ package co.gamep.sliced.services.std.display.logicalspace.interfaces;
 interface ILogicalSpace extends ILogicalComponent
 {
 	var logicalStage( default, default ):ILogicalStage;
-	var logicalSceneSet( default, null ):Array<ILogicalScene>;
-	var logicalCameraSet( default, null ):Array<ILogicalCamera>;
+	var logicalSceneSet( default, null ):Map<String,ILogicalScene>;
+	var logicalCameraSet( default, null ):Map<String,ILogicalCamera>;
 	//var assets and primitives?????(neccessary for shared objects between scenes and memory conservation)
+	
+	function setStage( p_stage:ILogicalStage ):Void;
+	
+	function addScene( p_scene:ILogicalScene ):Void;
+	function removeScene( p_scene:ILogicalScene ):Void;
+	function getScene( p_sceneName:String ):ILogicalScene;
+	
+	function addCamera( p_camera:ILogicalCamera ):Void;
+	function removeCamera( p_camera:ILogicalCamera ):Void;
+	function getCamera( p_cameraName:String ):ILogicalCamera;
 }

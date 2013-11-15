@@ -23,17 +23,10 @@ class LogicalView extends ALogicalComponent implements ILogicalView
 	public var width( default, default ):Int;
 	public var height( default, default ):Int;
 	public var zIndex( default, default ):Int;
-	public var requests3dEngine( default, default ):Bool;
+	public var requests3DEngine( default, default ):Bool;
 	
 	public function new() 
 	{
 		super();
-		
-		_init();
-	}
-	
-	inline private function _init():Void
-	{
-		
 	}
 }

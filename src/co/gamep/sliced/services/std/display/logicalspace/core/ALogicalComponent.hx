@@ -13,6 +13,9 @@ import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalComp
  */
 @:keepSub class ALogicalComponent implements ILogicalComponent
 {
+	public var name( default, default ):String;
+	public var parent( default, default ):ILogicalComponent;
+	
 	//Abstract class, private constructor
 	private function new() 
 	{

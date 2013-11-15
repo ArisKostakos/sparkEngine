@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<Extends>
+		<Entity extends="std.entities.components.Component">
+			<_States>
+				<_State id="std_name">
+					<Value>View Name</Value>
+				</_State>
+				<_State id="std_type">
+					<Value>View</Value>
+				</_State>
+			</_States>
+		</Entity>
+		
+		<Entity extends="std.entities.components.Constructor">
+			<_Actions>
+				<_Action id="std_Constructor">
+					<_Scripts>
+						<Script>
+							//Create Logical Object
+							var view = Display.createView();
+							
+							//Component Properties
+							view.name=me.getState('std_name');
+							
+							//View Properties
+							view.logicalScene = Display.logicalSpace.getScene(me.getState('std_SceneName'));
+							view.logicalCamera = Display.logicalSpace.getCamera(me.getState('std_CameraName'));
+							view.x = me.getState('std_x');
+							view.y = me.getState('std_y');
+							view.width = me.getState('std_width');
+							view.height = me.getState('std_height');
+							view.zIndex = me.getState('std_zIndex');
+							view.requests3DEngine = me.getState('std_requests3DEngine');
+							
+							//Store Pointer
+							me.setState('std_object',view);
+							
+							//Add to parent
+							parent.getState('std_object').addView(view);
+						</Script>
+					</_Scripts>
+				</_Action>
+			</_Actions>
+		</Entity>
+	</Extends>
+	
+	<Form><Space/></Form>
+
+	<States>
+		<State>
+			<Id>std_SceneName</Id>
+			<Type>Text</Type>
+			<Value>MainScene</Value>
+		</State>
+		
+		<State>
+			<Id>std_CameraName</Id>
+			<Type>Text</Type>
+			<Value>MainCamera</Value>
+		</State>
+		
+		<State>
+			<Id>std_x</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>std_y</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>std_width</Id>
+			<Type>Integer</Type>
+			<Value>640</Value>
+		</State>
+		
+		<State>
+			<Id>std_height</Id>
+			<Type>Integer</Type>
+			<Value>480</Value>
+		</State>
+		
+		<State>
+			<Id>std_zIndex</Id>
+			<Type>Integer</Type>
+			<Value>0</Value>
+		</State>
+		
+		<State>
+			<Id>std_requests3DEngine</Id>
+			<Type>Boolean</Type>
+			<Value>true</Value>
+		</State>
+	</States>
+</Entity>

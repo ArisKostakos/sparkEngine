@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<_Actions>
+		<Action>
+			<Id>GoLeft</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.setState('std_yaw',me.getState('std_yaw')+1);
+					me.getState('std_object').yaw=me.getState('std_yaw');
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoRight</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.setState('std_yaw',me.getState('std_yaw')-1);
+					me.getState('std_object').yaw=me.getState('std_yaw');
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoUp</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.setState('std_pitch',me.getState('std_pitch')+1);
+					me.getState('std_object').pitch=me.getState('std_pitch');
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoDown</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.setState('std_pitch',me.getState('std_pitch')-1);
+					me.getState('std_object').pitch=me.getState('std_pitch');
+				</Script>
+			</Scripts>
+		</Action>
+	</_Actions>
+</Entity>

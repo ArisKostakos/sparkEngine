@@ -14,7 +14,6 @@ interface IGameTrigger extends IGameBase
 {
 	var eventPrefab( default, default ):EEventPrefab;
 	var scriptSet( default, null ):Array<Int>;
-	var userEntity( default, default ):IGameEntity;
 
 	
 	

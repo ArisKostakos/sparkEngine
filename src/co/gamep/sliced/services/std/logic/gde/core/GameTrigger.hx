@@ -19,7 +19,6 @@ class GameTrigger extends AGameBase implements IGameTrigger
 	//Properties
 	public var eventPrefab( default, default ):EEventPrefab;
 	public var scriptSet( default, null ):Array<Int>;
-	public var userEntity( default, default ):IGameEntity;
 	
 	
 	//Constructor
@@ -46,7 +45,7 @@ class GameTrigger extends AGameBase implements IGameTrigger
 		{
 			//if (Sliced.logic.interpreter.run(hashId) == false)
 				//Console.warn('Trigger $event:HashId $hashId returned false');
-			Sliced.logic.interpreter.run(hashId, [ "me"=>userEntity ]);
+			Sliced.logic.interpreter.run(hashId, [ "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
 		}
 	}
 }

@@ -6,6 +6,7 @@
 
 package co.gamep.sliced.services.std.logic.gde.core;
 import co.gamep.sliced.services.std.logic.gde.interfaces.IGameBase;
+import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -13,7 +14,8 @@ import co.gamep.sliced.services.std.logic.gde.interfaces.IGameBase;
  */
 @:keepSub class AGameBase implements IGameBase
 {
-
+	public var parentEntity( default, default ):IGameEntity;
+	
 	private function new() 
 	{
 

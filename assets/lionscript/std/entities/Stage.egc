@@ -4,10 +4,10 @@
 		<Entity extends="std.entities.components.Component">
 			<_States>
 				<_State id="std_name">
-					<Value>Scene Name</Value>
+					<Value>Stage Name</Value>
 				</_State>
 				<_State id="std_type">
-					<Value>Scene</Value>
+					<Value>Stage</Value>
 				</_State>
 			</_States>
 		</Entity>
@@ -18,16 +18,20 @@
 					<_Scripts>
 						<Script>
 							//Create Logical Object
-							var scene = Display.createScene();
+							var stage = Display.createStage();
 							
 							//Component Properties
-							scene.name=me.getState('std_name');
+							stage.name=me.getState('std_name');
+							
+							//Camera Properties
+							stage.width=me.getState('std_width');
+							stage.height=me.getState('std_height');
 							
 							//Store Pointer
-							me.setState('std_object',scene);
+							me.setState('std_object',stage);
 							
 							//Add to parent
-							parent.getState('std_object').addScene(scene);
+							parent.getState('std_object').setStage(stage);
 						</Script>
 					</_Scripts>
 				</_Action>
@@ -38,14 +42,28 @@
 	<Form>
 		<Space>
 			<Entities>
-				<Entity extends="std.entities.Mesh">
+				<Entity extends="std.entities.View">
 					<_States>
 						<_State id="std_name">
-							<Value>MainEntity</Value>
+							<Value>MainView</Value>
 						</_State>
 					</_States>
 				</Entity>
 			</Entities>
 		</Space>
 	</Form>
+
+	<States>
+		<State>
+			<Id>std_width</Id>
+			<Type>Integer</Type>
+			<Value>640</Value>
+		</State>
+		
+		<State>
+			<Id>std_height</Id>
+			<Type>Integer</Type>
+			<Value>480</Value>
+		</State>
+	</States>
 </Entity>

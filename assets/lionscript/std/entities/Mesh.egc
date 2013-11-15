@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<Extends>
+		<Entity extends="std.entities.components.Component">
+			<_States>
+				<_State id="std_name">
+					<Value>Mesh Name</Value>
+				</_State>
+				<_State id="std_type">
+					<Value>Mesh</Value>
+				</_State>
+			</_States>
+		</Entity>
+		<Entity extends="std.entities.components.Positionable">
+			<_States>
+
+			</_States>
+		</Entity>
+		
+		<Entity extends="std.entities.components.KeyboardInput"/>
+		<Entity extends="std.entities.components.Rotatable"/>
+		
+		
+		<Entity extends="std.entities.components.Constructor">
+			<_Actions>
+				<_Action id="std_Constructor">
+					<_Scripts>
+						<Script>
+							//Create Logical Object
+							var mesh = Display.createMesh();
+							
+							//Component Properties
+							mesh.name=me.getState('std_name');
+							
+							//Positionable Properties
+							mesh.x=me.getState('std_x');
+							mesh.y=me.getState('std_y');
+							mesh.z=me.getState('std_z');
+							mesh.yaw=me.getState('std_yaw');
+							mesh.pitch=me.getState('std_pitch');
+							mesh.roll=me.getState('std_roll');
+							
+							//Entity Properties
+							
+							//Mesh Properties
+							
+							//Store Pointer
+							me.setState('std_object',mesh);
+							
+							//Add to parent
+							parent.getState('std_object').addEntity(mesh);
+						</Script>
+					</_Scripts>
+				</_Action>
+			</_Actions>
+		</Entity>
+	</Extends>
+	
+	<Form><Space/></Form>
+
+	<States>
+		<State>
+			<Id>std_FieldOfView</Id>
+			<Type>Integer</Type>
+			<Value>90</Value>
+		</State>
+	</States>
+</Entity>

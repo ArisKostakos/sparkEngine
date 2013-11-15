@@ -19,12 +19,5 @@ class LogicalCamera extends ALogicalPositionable implements ILogicalCamera
 	public function new() 
 	{
 		super();
-		
-		_init();
-	}
-	
-	inline private function _init():Void
-	{
-		
 	}
 }

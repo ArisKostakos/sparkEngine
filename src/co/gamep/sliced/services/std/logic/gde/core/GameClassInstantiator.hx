@@ -48,12 +48,15 @@ class GameClassInstantiator implements IGameClassInstantiator
 		
 	
 	
-	public function instantiateEntity(p_gameNode:Xml):IGameEntity
+	public function instantiateEntity(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameEntity
 	{
 		var l_gameEntity:IGameEntity = new GameEntity();
 		
+		//Parent Entity
+		l_gameEntity.parentEntity = p_parentEntity;
+		
 		//Create the Entity's Form
-		l_gameEntity.gameForm = instantiateForm(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.FORM]).next());
+		l_gameEntity.gameForm = instantiateForm(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.FORM]).next(),l_gameEntity);
 		
 		//Create the Entity's States
 		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
@@ -63,7 +66,7 @@ class GameClassInstantiator implements IGameClassInstantiator
 			var states:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).next();
 			for ( state in  states.elements()) 
 			{
-				l_gameEntity.addState(instantiateState(state));
+				l_gameEntity.addState(instantiateState(state,l_gameEntity));
 			}
 		}
 		
@@ -75,8 +78,7 @@ class GameClassInstantiator implements IGameClassInstantiator
 			var actions:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ACTIONS]).next();
 			for ( action in actions.elements()) 
 			{
-				var f_gameAction:IGameAction = instantiateAction(action);
-				f_gameAction.userEntity = l_gameEntity;
+				var f_gameAction:IGameAction = instantiateAction(action, l_gameEntity);
 				
 				l_gameEntity.addAction(f_gameAction);
 			}
@@ -90,8 +92,7 @@ class GameClassInstantiator implements IGameClassInstantiator
 			var triggers:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TRIGGERS]).next();
 			for ( trigger in triggers.elements()) 
 			{
-				var f_gameTrigger:IGameTrigger = instantiateTrigger(trigger);
-				f_gameTrigger.userEntity = l_gameEntity;
+				var f_gameTrigger:IGameTrigger = instantiateTrigger(trigger,l_gameEntity);
 				
 				Sliced.event.addTrigger(f_gameTrigger);
 			}
@@ -101,9 +102,12 @@ class GameClassInstantiator implements IGameClassInstantiator
 		return l_gameEntity;
 	}
 	
-	public function instantiateForm(p_gameNode:Xml):IGameForm
+	public function instantiateForm(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameForm
 	{
 		var l_gameForm:IGameForm = new GameForm();
+		
+		//Parent Entity
+		l_gameForm.parentEntity = p_parentEntity;
 		
 		//Create the Form's States
 		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
@@ -113,19 +117,22 @@ class GameClassInstantiator implements IGameClassInstantiator
 			var states:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).next();
 			for ( state in  states.elements()) 
 			{
-				l_gameForm.addState(instantiateState(state));
+				l_gameForm.addState(instantiateState(state,p_parentEntity));
 			}
 		}
 		
 		//Create the Form's Space
-		l_gameForm.gameSpace = instantiateSpace(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SPACE]).next());
+		l_gameForm.gameSpace = instantiateSpace(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SPACE]).next(),p_parentEntity);
 		
 		return l_gameForm;
 	}
 	
-	public function instantiateSpace(p_gameNode:Xml):IGameSpace
+	public function instantiateSpace(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameSpace
 	{
 		var l_gameSpace:IGameSpace = new GameSpace();
+		
+		//Parent Entity
+		l_gameSpace.parentEntity = p_parentEntity;
 		
 		//Create the Space's Entities
 		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
@@ -135,16 +142,19 @@ class GameClassInstantiator implements IGameClassInstantiator
 			var entities:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ENTITIES]).next();
 			for ( entity in  entities.elements()) 
 			{
-				l_gameSpace.gameEntitySet.push(instantiateEntity(entity));
+				l_gameSpace.gameEntitySet.push(instantiateEntity(entity,p_parentEntity));
 			}
 		}
 		
 		return l_gameSpace;
 	}
 	
-	public function instantiateState(p_gameNode:Xml):IGameState
+	public function instantiateState(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameState
 	{
 		var l_gameState:IGameState = new GameState();
+		
+		//Parent Entity
+		l_gameState.parentEntity = p_parentEntity;
 		
 		//Create the State's Id
 		l_gameState.id = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ID]).next().firstChild().nodeValue;
@@ -173,9 +183,12 @@ class GameClassInstantiator implements IGameClassInstantiator
 		return l_gameState;
 	}
 	
-	public function instantiateAction(p_gameNode:Xml):IGameAction
+	public function instantiateAction(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameAction
 	{
 		var l_gameAction:IGameAction = new GameAction();
+		
+		//Parent Entity
+		l_gameAction.parentEntity = p_parentEntity;
 		
 		//Create the Action's Id
 		l_gameAction.id = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ID]).next().firstChild().nodeValue;
@@ -198,16 +211,19 @@ class GameClassInstantiator implements IGameClassInstantiator
 			var states:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).next();
 			for ( state in states.elements()) 
 			{
-				l_gameAction.addState(instantiateState(state));
+				l_gameAction.addState(instantiateState(state,p_parentEntity));
 			}
 		}		
 		
 		return l_gameAction;
 	}
 	
-	public function instantiateTrigger(p_gameNode:Xml):IGameTrigger
+	public function instantiateTrigger(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameTrigger
 	{
 		var l_gameTrigger:IGameTrigger = new GameTrigger();
+		
+		//Parent Entity
+		l_gameTrigger.parentEntity = p_parentEntity;
 		
 		//Create the Trigger's Event Type
 		l_gameTrigger.eventPrefab = _xmlEventNameToPrefab[p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EVENT]).next().firstChild().nodeValue];

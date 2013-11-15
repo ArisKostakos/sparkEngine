@@ -15,6 +15,7 @@ import away3d.primitives.PlaneGeometry;
 import co.gamep.sliced.core.Sliced;
 import co.gamep.sliced.services.std.display.renderers.core.Away3DRenderer;
 import co.gamep.sliced.services.std.display.renderers.core.FlambeRenderer;
+import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flambe.display.Sprite;
 import flambe.Entity;
 import flambe.platform.flash.FlashPlatform;
@@ -95,15 +96,23 @@ class Subgraphics
 			//for each LogicalView
 				//query Display what renderer has it
 					//renderer.render(logicalView)
-		
+					
+		if (Sliced.display!=null)
+		{
+			for (logicalView in Sliced.display.logicalViewsOrder)
+			{
+				var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];
+				renderer.render(logicalView);
+			}
+		}
 		// Render the Flambe layer
-		_flambeRender(false);
+		//_flambeRender(false);
 		
 		// Render the Away3D layer
 		//_away3dView.render();
 
 		// Render the Flambe layer
-		_flambeRender(true);
+		//_flambeRender(true);
 		
 		
 		renderer.didRender();

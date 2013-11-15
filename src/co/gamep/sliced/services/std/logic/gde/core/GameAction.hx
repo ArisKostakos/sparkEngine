@@ -22,7 +22,6 @@ class GameAction extends AGameBase implements IGameAction
 	public var gameStateSet( default, null ):Map<String,IGameState>;
 	public var concurrency( default, default ):EConcurrencyType;
 	public var scriptSet( default, null ):Array<Int>;
-	public var userEntity( default, default ):IGameEntity;
 	
 	//Constructor
 	
@@ -56,7 +55,7 @@ class GameAction extends AGameBase implements IGameAction
 		{
 			//if (Sliced.logic.interpreter.run(hashId) == false)
 			//	Console.warn('Action $id:HashId $hashId returned false');
-			Sliced.logic.interpreter.run(hashId, [ "me"=>userEntity ]);
+			Sliced.logic.interpreter.run(hashId, [ "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
 		}
 	}
 }

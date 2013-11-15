@@ -25,6 +25,18 @@ class FlambeRenderer extends ARenderer
 	inline private function _init():Void
 	{
 		Console.info("Creating Flambe Renderer...");
-		uses3dEngine = false;
+		uses3DEngine = false;
+	}
+	
+	override public function update ():Void
+	{
+		//update 'dirty' views
+		
+	}
+	
+	override public function render ( p_logicalView:ILogicalView):Void
+	{
+		//render a view
+		
 	}
 }

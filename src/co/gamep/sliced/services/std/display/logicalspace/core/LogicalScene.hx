@@ -28,4 +28,15 @@ class LogicalScene extends ALogicalComponent implements ILogicalScene
 	{
 		logicalEntitySet = new Array<ILogicalEntity>();
 	}
+	
+	public function addEntity( p_entity:ILogicalEntity ):Void
+	{
+		p_entity.parent = this;
+		logicalEntitySet.push(p_entity);
+	}
+	
+	public function removeEntity( p_entity:ILogicalEntity ):Void
+	{
+		logicalEntitySet.remove(p_entity);
+	}
 }

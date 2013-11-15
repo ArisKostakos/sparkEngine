@@ -14,5 +14,6 @@ package co.gamep.sliced.services.std.display.logicalspace.interfaces;
  */
 interface ILogicalComponent
 {
-	
+	var name( default, default ):String;
+	var parent( default, default ):ILogicalComponent;
 }

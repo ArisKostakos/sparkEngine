@@ -61,7 +61,7 @@ class Event extends AService implements IEvent
 		//Replace Filter with an appropriate variable if needed
 		if (l_eventFilter == _FILTER_VARIABLE_USER_ENTITY)
 		{
-			l_eventFilter = p_gameTrigger.userEntity;
+			l_eventFilter = p_gameTrigger.parentEntity;
 		}
 		
 		//Add additional filter variable changes here
