@@ -69,6 +69,7 @@ class Display extends AService implements IDisplay
 	
 	//temp
 	private var _renderer3dcapable:IRenderer;
+	private var _renderer2dcapable:IRenderer;
 	
 	public function update():Void 
 	{
@@ -96,6 +97,19 @@ class Display extends AService implements IDisplay
 				}
 			}
 		}
+		
+		//Find 2dcapable renderer
+		if (_renderer2dcapable == null)
+		{
+			for (renderer in rendererSet)
+			{
+				if (renderer.uses3DEngine == false)
+				{
+					_renderer2dcapable = renderer;
+					break;
+				}
+			}
+		}
 			
 		//poll for 'dirty' views. actually you poll for 'dirty' stages here... and 'dirty' space of course
 		for (logicalView in logicalSpace.logicalStage.logicalViewSet)
@@ -109,6 +123,16 @@ class Display extends AService implements IDisplay
 						//assign view to renderer
 						_renderer3dcapable.logicalViewSet.push(logicalView);
 						logicalViewRendererAssignments.set(logicalView, _renderer3dcapable);
+						logicalViewsOrder.push(logicalView);
+					}
+				}
+				else
+				{
+					if (_renderer2dcapable != null)
+					{
+						//assign view to renderer
+						_renderer2dcapable.logicalViewSet.push(logicalView);
+						logicalViewRendererAssignments.set(logicalView, _renderer2dcapable);
 						logicalViewsOrder.push(logicalView);
 					}
 				}

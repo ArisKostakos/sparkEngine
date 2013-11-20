@@ -5,7 +5,7 @@
  */
 
 package co.gamep.framework.platform.html.away3d;
-import co.gamep.sliced.services.std.display.renderers.core.Away3DRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.Away3DHtmlRenderer;
 import co.gamep.sliced.services.std.display.renderers.core.FlambeRenderer;
 import co.gamep.sliced.core.Sliced;
 
@@ -22,7 +22,7 @@ class Subgraphics
 		Sliced.display.rendererSet.push(new FlambeRenderer());
 		
 		//Create Away3D Renderer
-		Sliced.display.rendererSet.push(new Away3DRenderer());
+		Sliced.display.rendererSet.push(new Away3DHtmlRenderer());
 	}
 	
 	public static function init():Void

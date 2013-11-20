@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
 	<Extends>
-		<Entity extends="std.entities.components.Component">
-			<_States>
-				<_State id="std_name">
-					<Value>Mesh Name</Value>
-				</_State>
-				<_State id="std_type">
-					<Value>Mesh</Value>
-				</_State>
-			</_States>
-		</Entity>
-		<Entity extends="std.entities.components.Positionable">
-			<_States>
-
-			</_States>
-		</Entity>
+		<Entity extends="std.entities.components.LogicalComponent"/>
 		
-		<Entity extends="std.entities.components.KeyboardInput"/>
-		<Entity extends="std.entities.components.Rotatable"/>
-		
+		<Entity extends="std.entities.components.Positionable"/>
 		
 		<Entity extends="std.entities.components.Constructor">
 			<_Actions>
@@ -56,13 +40,15 @@
 		</Entity>
 	</Extends>
 	
-	<Form><Space/></Form>
-
 	<States>
-		<State>
-			<Id>std_FieldOfView</Id>
-			<Type>Integer</Type>
-			<Value>90</Value>
-		</State>
+		<_State id="std_name">
+			<Value>Mesh Name</Value>
+		</_State>
+			
+		<_State id="std_type">
+			<Value>Mesh</Value>
+		</_State>
 	</States>
+	
+	<Form><Space/></Form>
 </Entity>

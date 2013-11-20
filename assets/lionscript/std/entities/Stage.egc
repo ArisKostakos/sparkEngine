@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
 	<Extends>
-		<Entity extends="std.entities.components.Component">
-			<_States>
-				<_State id="std_name">
-					<Value>Stage Name</Value>
-				</_State>
-				<_State id="std_type">
-					<Value>Stage</Value>
-				</_State>
-			</_States>
-		</Entity>
+		<Entity extends="std.entities.components.LogicalComponent"/>
 		
 		<Entity extends="std.entities.components.Constructor">
 			<_Actions>
@@ -38,22 +29,16 @@
 			</_Actions>
 		</Entity>
 	</Extends>
-	
-	<Form>
-		<Space>
-			<Entities>
-				<Entity extends="std.entities.View">
-					<_States>
-						<_State id="std_name">
-							<Value>MainView</Value>
-						</_State>
-					</_States>
-				</Entity>
-			</Entities>
-		</Space>
-	</Form>
 
 	<States>
+		<_State id="std_name">
+			<Value>Stage Name</Value>
+		</_State>
+		
+		<_State id="std_type">
+			<Value>Stage</Value>
+		</_State>
+		
 		<State>
 			<Id>std_width</Id>
 			<Type>Integer</Type>

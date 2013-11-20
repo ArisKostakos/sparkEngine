@@ -16,8 +16,8 @@ haxe_flags: -lib hscript
 extra_paths:
   assets: C:\Users\LLaffer\Documents\GamePlus_Projects\TestGame\assets
 #   libs: dir1 dir2
-#   src: C:\HaxeToolkit\haxe\lib\away3d-flash
-#   web: ["dir1 with spaces", "dir2"]
+#   src: ../dir1 ../dir2
+  web: ["web_flash_2d"]
 
 # The initial orientation and fullscreen state
 orientation: portrait

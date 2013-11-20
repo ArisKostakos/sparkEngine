@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-	<Form>
-		<Space>
-			<Entities>
-				<Entity extends="std.entities.Space">
-					<_States>
-						<_State id="std_name">
-							<Value>GameSpace</Value>
-						</_State>
-					</_States>
-				</Entity>
-			</Entities>
-		</Space>
-	</Form>
+	
 </Entity>

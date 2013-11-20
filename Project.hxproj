@@ -16,7 +16,7 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="..\..\..\..\..\HaxeToolkit\haxe\lib\away3d-flash" />
+    <class path="..\..\..\..\..\HaxeToolkit\haxe\lib\away3d-html" />
     <class path="..\..\..\..\..\HaxeToolkit\haxe\lib\aris-hacks" />
   </classpaths>
   <!-- Build options -->

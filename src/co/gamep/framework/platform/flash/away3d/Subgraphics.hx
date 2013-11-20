@@ -13,12 +13,13 @@ import away3d.entities.Mesh;
 import away3d.events.Stage3DEvent;
 import away3d.primitives.PlaneGeometry;
 import co.gamep.sliced.core.Sliced;
-import co.gamep.sliced.services.std.display.renderers.core.Away3DRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.Away3DFlashRenderer;
 import co.gamep.sliced.services.std.display.renderers.core.FlambeRenderer;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flambe.display.Sprite;
 import flambe.Entity;
 import flambe.platform.flash.FlashPlatform;
+import flambe.platform.flash.Stage3DRenderer;
 import flambe.platform.Renderer;
 import flambe.System;
 import flash.events.Event;
@@ -42,7 +43,7 @@ class Subgraphics
 		Sliced.display.rendererSet.push(new FlambeRenderer());
 		
 		//Create Away3D Renderer
-		Sliced.display.rendererSet.push(new Away3DRenderer());
+		Sliced.display.rendererSet.push(new Away3DFlashRenderer());
 	}
 	
 	public static function init():Void
@@ -70,8 +71,12 @@ class Subgraphics
 	
 	private static function _onContextCreated(event : Stage3DEvent) : Void 
 	{
+		//Safe casting since we have already made sure we're on the flash platform
+			//so the Renderer interface MUST be implemented by the Stage3DRenderer
+		var stage3dRenderer:Stage3DRenderer = cast(FlashPlatform.instance.getRenderer(),Stage3DRenderer);
+		
 		//pass Context to Flambe
-		FlashPlatform.instance.getRenderer().onContext3DImport(_stage3DProxy.stage3D);
+		stage3dRenderer.onContext3DImport(_stage3DProxy.stage3D);
 		
 		//The Render Call  (Event.ENTER_FRAME, OR Event.RENDER?)
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);

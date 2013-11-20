@@ -17,7 +17,7 @@ extra_paths:
   assets: C:\Users\LLaffer\Documents\GamePlus_Projects\TestGame\assets
 #   libs: dir1 dir2
 #   src: ../dir1 ../dir2
-#   web: ["dir1 with spaces", "dir2"]
+  web: ["web_html_2d"]
 
 # The initial orientation and fullscreen state
 orientation: portrait

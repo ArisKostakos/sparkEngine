@@ -10,14 +10,14 @@ main: co.gamep.Main
 default_platform: html
 
 # Additional flags to pass to the Haxe compiler
-haxe_flags: -lib hscript
+haxe_flags: -lib hscript -D includeAway3D
 
 # Additional paths to include in the build
 extra_paths:
   assets: C:\Users\LLaffer\Documents\GamePlus_Projects\TestGame\assets
 #   libs: dir1 dir2
-#   src: ../dir1 ../dir2
-#   web: ["dir1 with spaces", "dir2"]
+  src: C:\HaxeToolkit\haxe\lib\away3d-html
+  web: ["web_html_3d"]
 
 # The initial orientation and fullscreen state
 orientation: portrait

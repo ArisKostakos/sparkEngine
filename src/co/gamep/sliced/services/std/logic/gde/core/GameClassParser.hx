@@ -757,7 +757,7 @@ class GameClassParser implements IGameClassParser
 		if (_extendGameNode(p_gameNode))
 		{
 			//Display the full Node after extending it
-			//Console.debug(p_gameNode);
+			//Console.debug(p_gameNode.toString());
 			Console.info('Extending ' + p_gameNode.nodeName + ' Node COMPLETED');
 			
 			//merge
@@ -765,7 +765,7 @@ class GameClassParser implements IGameClassParser
 			_mergeGameNode(p_gameNode);
 
 			//Display the full Node after merging it
-			//Console.debug(p_gameNode);
+			//Console.debug(p_gameNode.toString());
 			Console.info('Merging ' + p_gameNode.nodeName + ' Node COMPLETED');
 			
 			//Validate
@@ -773,7 +773,7 @@ class GameClassParser implements IGameClassParser
 			if (_validateGameNode(p_gameNode))
 			{
 				//Display the full Node after validating it
-				//Console.debug(p_gameNode);
+				//Console.debug(p_gameNode.toString());
 				Console.info('Validating ' + p_gameNode.nodeName + ' Node COMPLETED');
 				
 				return true;

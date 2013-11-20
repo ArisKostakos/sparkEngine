@@ -9,38 +9,42 @@
 import away3d.cameras.Camera3D;
 import away3d.containers.Scene3D;
 import away3d.containers.View3D;
-import away3d.core.managers.Stage3DManager;
-import away3d.debug.AwayStats;
 import away3d.entities.Mesh;
 import away3d.primitives.SphereGeometry;
+import away3d.entities.Entity;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene; 
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
-import away3d.entities.Entity;
-import flash.Lib;
+
+#if flash
+	import flash.Lib;
+	import away3d.core.managers.Stage3DManager;
+	import away3d.debug.AwayStats;
+#end
+
 /**
  * ...
  * @author Aris Kostakos
  */
-class Away3DRenderer extends ARenderer
+class AAway3DRenderer extends ARenderer
 {
 	private var _viewPointerSet:Map<ILogicalView,View3D>;
 	private var _scenePointerSet:Map<ILogicalScene,Scene3D>;
 	private var _entityPointerSet:Map<ILogicalEntity,Entity>;
 	private var _cameraPointerSet:Map<ILogicalCamera,Camera3D>;
 	
-	public function new()
+	private function new()
 	{
+		//Abstract class, private constructor
 		super();
 		
-		_init();
+		_aAway3dRendererinit();
 	}
 
-	inline private function _init():Void
+	inline private function _aAway3dRendererinit():Void
 	{
-		Console.info("Creating Away3D Renderer...");
 		uses3DEngine = true;
 		
 		_viewPointerSet = new Map<ILogicalView,View3D>();
@@ -51,16 +55,10 @@ class Away3DRenderer extends ARenderer
 	
 	override public function update ():Void
 	{
-		//Console.info("away3d update request");
-		
-		//update 'dirty' views
-		for (logicalView in logicalViewSet)
-		{
-			_updateView(logicalView);
-		}
+		super.update();
 	}
 	
-	private function _updateView(p_logicalView:ILogicalView):Void
+	override private function _updateView(p_logicalView:ILogicalView):Void
 	{
 		//UPDATE SCENE
 		
@@ -92,24 +90,26 @@ class Away3DRenderer extends ARenderer
 			_viewPointerSet[p_logicalView].width = p_logicalView.width;
 			_viewPointerSet[p_logicalView].height = p_logicalView.height;
 
-			//standard settings
-			var stage3Dmanager:Stage3DManager = Stage3DManager.getInstance(Lib.current.stage);
+			#if flash
+				//standard settings
+				var stage3Dmanager:Stage3DManager = Stage3DManager.getInstance(Lib.current.stage);
+				
+				_viewPointerSet[p_logicalView].stage3DProxy = stage3Dmanager.getStage3DProxy(0);
+				_viewPointerSet[p_logicalView].shareContext = true;
+				
+				//temp add childs
+				Lib.current.stage.addChild(_viewPointerSet[p_logicalView]);
 			
-			_viewPointerSet[p_logicalView].stage3DProxy = stage3Dmanager.getStage3DProxy(0);
-			_viewPointerSet[p_logicalView].shareContext = true;
-			
-			//temp add childs
-			Lib.current.stage.addChild(_viewPointerSet[p_logicalView]);
-		
-			//debug
-			Lib.current.stage.addChild(new AwayStats(_viewPointerSet[p_logicalView]));
+				//debug
+				Lib.current.stage.addChild(new AwayStats(_viewPointerSet[p_logicalView]));
+			#end
 		}
 			
 		//UPDATE IT
 		
 	}
 	
-	private function _updateScene(p_logicalScene:ILogicalScene):Void
+	override private function _updateScene(p_logicalScene:ILogicalScene):Void
 	{
 		//CREATE IT
 		if (_scenePointerSet.exists(p_logicalScene) == false)
@@ -126,7 +126,7 @@ class Away3DRenderer extends ARenderer
 		
 	}
 	
-	private function _updateCamera(p_logicalCamera:ILogicalCamera):Void
+	override private function _updateCamera(p_logicalCamera:ILogicalCamera):Void
 	{
 		//CREATE IT
 		if (_cameraPointerSet.exists(p_logicalCamera) == false)
@@ -144,7 +144,7 @@ class Away3DRenderer extends ARenderer
 		_cameraPointerSet.get(p_logicalCamera).roll(p_logicalCamera.roll);
 	}
 	
-	private function _updateEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void
+	override private function _updateEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void
 	{
 		//CREATE IT
 		if (_entityPointerSet.exists(p_logicalEntity) == false)

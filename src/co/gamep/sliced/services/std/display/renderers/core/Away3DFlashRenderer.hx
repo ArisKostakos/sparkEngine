@@ -7,24 +7,14 @@
  package co.gamep.sliced.services.std.display.renderers.core;
 
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
-import flambe.Entity;
-
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class FlambeRenderer extends ARenderer
+class Away3DFlashRenderer extends AAway3DRenderer
 {
-	private var _viewPointerSet:Map<ILogicalView,Entity>;
-	private var _scenePointerSet:Map<ILogicalScene,Entity>;
-	private var _entityPointerSet:Map<ILogicalEntity,Entity>;
-	private var _cameraPointerSet:Map<ILogicalCamera,Entity>;
-	
 	public function new() 
 	{
 		super();
@@ -34,8 +24,7 @@ class FlambeRenderer extends ARenderer
 	
 	inline private function _init():Void
 	{
-		Console.info("Creating Flambe Renderer...");
-		uses3DEngine = false;
+		Console.info("Creating Away3D Flash Renderer...");
 	}
 	
 	override public function update ():Void
@@ -43,9 +32,11 @@ class FlambeRenderer extends ARenderer
 		super.update();
 	}
 	
+	/*
 	override public function render ( p_logicalView:ILogicalView):Void
 	{
 		//render a view
 		
 	}
+	*/
 }

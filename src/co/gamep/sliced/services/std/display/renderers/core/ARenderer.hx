@@ -6,6 +6,9 @@
 
  package co.gamep.sliced.services.std.display.renderers.core;
 
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
@@ -35,6 +38,33 @@ class ARenderer implements IRenderer
 	}
 	
 	public function update ():Void
+	{
+		//update 'dirty' views
+		for (logicalView in logicalViewSet)
+		{
+			_updateView(logicalView);
+		}
+	}
+	
+	private function _updateView(p_logicalView:ILogicalView):Void
+	{
+		//override...
+		
+	}
+	
+	private function _updateScene(p_logicalScene:ILogicalScene):Void
+	{
+		//override...
+		
+	}
+	
+	private function _updateCamera(p_logicalCamera:ILogicalCamera):Void
+	{
+		//override...
+		
+	}
+	
+	private function _updateEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void
 	{
 		//override...
 		
