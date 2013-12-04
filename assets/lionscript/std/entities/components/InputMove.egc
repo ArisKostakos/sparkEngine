@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+	<_Actions>
+		<Action>
+			<Id>GoLeft</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.setState('std_x',me.getState('std_x')-1);
+					me.getState('std_object').x=me.getState('std_x');
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoRight</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.setState('std_x',me.getState('std_x')+1);
+					me.getState('std_object').x=me.getState('std_x');
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoUp</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.setState('std_y',me.getState('std_y')-1);
+					me.getState('std_object').y=me.getState('std_y');
+				</Script>
+			</Scripts>
+		</Action>
+		<Action>
+			<Id>GoDown</Id>
+			<Concurrency>Persistent</Concurrency>
+			<Scripts>
+				<Script>
+					me.setState('std_y',me.getState('std_y')+1);
+					me.getState('std_object').y=me.getState('std_y');
+				</Script>
+			</Scripts>
+		</Action>
+	</_Actions>
+</Entity>

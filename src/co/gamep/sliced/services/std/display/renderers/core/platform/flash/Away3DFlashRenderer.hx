@@ -1,0 +1,56 @@
+/* Copyright © Lazy Studios - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Aris Kostakos <a.kostakos@gmail.com>, November 2013
+ */
+
+ package co.gamep.sliced.services.std.display.renderers.core.platform.flash;
+
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.renderers.core.platform.AAway3DRenderer;
+import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
+import flash.Lib;
+import away3d.core.managers.Stage3DManager;
+import away3d.debug.AwayStats;
+
+/**
+ * ...
+ * @author Aris Kostakos
+ */
+class Away3DFlashRenderer extends AAway3DRenderer
+{
+	public function new() 
+	{
+		super();
+		
+		_away3DFlashRendererInit();
+	}
+	
+	inline private function _away3DFlashRendererInit():Void
+	{
+		Console.info("Creating Away3D Flash Renderer...");
+	}
+	
+	
+	override private function _createView(p_logicalView:ILogicalView):Void
+	{
+		super._createView(p_logicalView);
+		
+		//Add to flash's Stage3D
+		
+		//standard settings
+		var stage3Dmanager:Stage3DManager = Stage3DManager.getInstance(Lib.current.stage);
+		
+		_viewPointerSet[p_logicalView].stage3DProxy = stage3Dmanager.getStage3DProxy(0);
+		_viewPointerSet[p_logicalView].shareContext = true;
+		
+		//@TODO: WHAT DOES THIS DO??????????
+		//_viewPointerSet[p_logicalView].layeredView = true; //only enable it if you really tihnk u need it. apparently, if enabled you don't need to clear() or present() the stage3DProxy
+		
+		//temp add childs
+		Lib.current.stage.addChild(_viewPointerSet[p_logicalView]);
+	
+		//debug
+		Lib.current.stage.addChild(new AwayStats(_viewPointerSet[p_logicalView]));
+	}
+}

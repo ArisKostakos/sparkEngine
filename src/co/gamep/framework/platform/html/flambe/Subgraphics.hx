@@ -6,7 +6,10 @@
 
 package co.gamep.framework.platform.html.flambe;
 import co.gamep.sliced.core.Sliced;
-import co.gamep.sliced.services.std.display.renderers.core.FlambeRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.platform.html.Flambe2DHtmlRenderer;
+import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
+import flambe.platform.Renderer;
+import flambe.platform.html.HtmlPlatform;
 
 /**
  * ...
@@ -14,17 +17,42 @@ import co.gamep.sliced.services.std.display.renderers.core.FlambeRenderer;
  */
 class Subgraphics
 {	
+	private static var _flambeDisplaySystem:Renderer;
+	
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new FlambeRenderer());
+		Sliced.display.rendererSet.push(new Flambe2DHtmlRenderer());
 	}
 	
 	
 	public static function init():Void
 	{
-
+		//Flambe Init
+		_flambeDisplaySystem = HtmlPlatform.instance.getRenderer();
 	}
 	
 
+	public static function onRender():Void
+	{
+		//Flambe Prepare Render
+		_flambeDisplaySystem.willRender();
+		
+		//query display for views in order (far away first)
+		if (Sliced.display!=null)
+		{
+			//for each LogicalView
+			for (logicalView in Sliced.display.logicalViewsOrder)
+			{
+				//query Display what renderer has it
+				var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];
+				
+				//renderer.render(logicalView)
+				renderer.render(logicalView);
+			}
+		}
+		
+		//Flambe Finish Render
+		_flambeDisplaySystem.didRender();
+	}
 }

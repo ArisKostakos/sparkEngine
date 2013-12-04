@@ -5,25 +5,17 @@
  */
 
 package co.gamep.framework.platform.flash.away3d;
-import away3d.containers.View3D;
 import away3d.core.managers.Stage3DManager;
 import away3d.core.managers.Stage3DProxy;
-import away3d.debug.AwayStats;
-import away3d.entities.Mesh;
 import away3d.events.Stage3DEvent;
-import away3d.primitives.PlaneGeometry;
 import co.gamep.sliced.core.Sliced;
-import co.gamep.sliced.services.std.display.renderers.core.Away3DFlashRenderer;
-import co.gamep.sliced.services.std.display.renderers.core.FlambeRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.platform.flash.Away3DFlashRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.platform.flash.Flambe2DFlashRenderer;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
-import flambe.display.Sprite;
-import flambe.Entity;
 import flambe.platform.flash.FlashPlatform;
 import flambe.platform.flash.Stage3DRenderer;
 import flambe.platform.Renderer;
-import flambe.System;
 import flash.events.Event;
-import flash.geom.Vector3D;
 import flash.Lib;
 
 /**
@@ -35,12 +27,12 @@ class Subgraphics
 	// Stage manager and proxy instances
 	private static var _stage3DManager : Stage3DManager;
 	private static var _stage3DProxy : Stage3DProxy;
-	private static var _away3dView:View3D;
+	private static var _flambeDisplaySystem:Renderer;
 	
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new FlambeRenderer());
+		Sliced.display.rendererSet.push(new Flambe2DFlashRenderer());
 		
 		//Create Away3D Renderer
 		Sliced.display.rendererSet.push(new Away3DFlashRenderer());
@@ -51,6 +43,10 @@ class Subgraphics
 		//If Away3d code is inside, it will be responsible for
 		//drawing things, instead of flambe
 		
+		//Flambe Init
+		_flambeDisplaySystem = FlashPlatform.instance.getRenderer();
+		
+		//Away3d Init
 		_initProxies();
 	}
 	
@@ -87,155 +83,33 @@ class Subgraphics
 	*/
 	private static function _onEnterFrame(event : Event) : Void 
 	{
-		var renderer:Renderer = FlashPlatform.instance.getRenderer();
-        var graphics = renderer.graphics;
-		
-		
 		// Clear the Context3D object
 		_stage3DProxy.clear();
 
-		
-		renderer.willRender();
+		//Flambe Prepare Render
+		_flambeDisplaySystem.willRender();
 		
 		//query display for views in order (far away first)
-			//for each LogicalView
-				//query Display what renderer has it
-					//renderer.render(logicalView)
-					
 		if (Sliced.display!=null)
 		{
+			//for each LogicalView
 			for (logicalView in Sliced.display.logicalViewsOrder)
 			{
+				//query Display what renderer has it
 				var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];
+				
+				//renderer.render(logicalView)
 				renderer.render(logicalView);
 			}
 		}
-		// Render the Flambe layer
-		//_flambeRender(false);
 		
-		// Render the Away3D layer
-		//_away3dView.render();
-
-		// Render the Flambe layer
-		//_flambeRender(true);
-		
-		
-		renderer.didRender();
+		//Flambe Finish Render
+		_flambeDisplaySystem.didRender();
 
 		// Present the Context3D object to Stage3D
 		_stage3DProxy.present();
 	}
 	
-	/**
-	* The main rendering loop
-	*/
-	private static function _flambeRender(first:Bool) : Void 
-	{
-		var renderer:Renderer = FlashPlatform.instance.getRenderer();
-		
-        var graphics = renderer.graphics;
-		
-		var child:Entity =System.root.firstChild;
-		
-		if (child != null)
-		{
-			if (!first) child = child.next;
-			
-			if (graphics != null) 
-			{
-				Sprite.render(child, graphics);
-			}
-		}
-		
-		/*
-		//Console.warn("Iterating children: START");
-		var child:Entity = System.root.firstChild;
-		while (child != null) 
-		{
-			var next:Entity = child.next; 
-			
-			// do something with child here
-			if (graphics != null) 
-			{
-				renderer.willRender();
-				Sprite.render(child, graphics);
-				renderer.didRender();
-			}
-			
-			//Console.info("hiiiiiiiiiiiiiiiii");
-			
-			child = next;
-		}
-		
-		//Console.warn("Iterating children: END");
-		
-		*/
-	}
 	
-	
-	
-	/**
-	 
-	 
-	private static function _initAway3D() : Void
-	{
-		// Create the first Away3D view which holds the cube objects.
-		_away3dView = new View3D();
-		_away3dView.stage3DProxy = _stage3DProxy;
-		_away3dView.shareContext = true;
-	  
-		//hoverController = new HoverController(away3dView.camera, null, 45, 30, 1200, 5, 89.999);
 
-		Lib.current.stage.addChild(_away3dView);
-	  
-		Lib.current.stage.addChild(new AwayStats(_away3dView));
-		
-		
-		//setup the camera
-		_away3dView.camera.z = -600;
-		_away3dView.camera.y = 500;
-		_away3dView.camera.lookAt(new Vector3D());
-		
-		//setup the scene
-		_plane = new Mesh(new PlaneGeometry(700, 700));
-		_away3dView.scene.addChild(_plane);
-		
-		Lib.current.stage.addEventListener(Event.ENTER_FRAME, _updateAway3dView);
-	}
-	
-	private static var _plane:Mesh;
-	
-	private static function _updateAway3dView(e:Event):Void
-	{
-		_plane.rotationY += 1;
-	}
-	*/
-	
-	
-	
-		/*
-		Console.warn("Stage 3d free: " + Std.string(Stage3DManager.getInstance(Lib.current.stage).numProxySlotsFree));
-		Console.warn("Stage 3d used: " + Std.string(Stage3DManager.getInstance(Lib.current.stage).numProxySlotsUsed));
-		
-		for (stage3d in Lib.current.stage.stage3Ds)
-		{
-			Console.warn("Stage3d: " + stage3d.context3D);
-		}
-		*/
-		
-		
-		/*
-		// Use the first available Stage3D
-		var poutsa:Int = 0;
-        var stage = flash.Lib.current.stage;
-        for (stage3D in stage.stage3Ds) 
-		{
-            if (stage3D.context3D != null) 
-			{
-               poutsa += 1;
-            }
-        }
-		
-		Console.warn("Stage3ds: " + poutsa);
-		*/
 }

@@ -25,7 +25,6 @@ import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScen
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalSpace;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStage;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
-import co.gamep.sliced.services.std.display.renderers.core.FlambeRenderer;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 /**
@@ -112,6 +111,8 @@ class Display extends AService implements IDisplay
 		}
 			
 		//poll for 'dirty' views. actually you poll for 'dirty' stages here... and 'dirty' space of course
+		var l_temp_spaceInvalidated:Bool = false;	//temp value until i do proper invalidation
+		
 		for (logicalView in logicalSpace.logicalStage.logicalViewSet)
 		{
 			if (logicalViewRendererAssignments.exists(logicalView) == false)
@@ -124,6 +125,7 @@ class Display extends AService implements IDisplay
 						_renderer3dcapable.logicalViewSet.push(logicalView);
 						logicalViewRendererAssignments.set(logicalView, _renderer3dcapable);
 						logicalViewsOrder.push(logicalView);
+						l_temp_spaceInvalidated = true;	//temp value until i do proper invalidation 
 					}
 				}
 				else
@@ -134,10 +136,24 @@ class Display extends AService implements IDisplay
 						_renderer2dcapable.logicalViewSet.push(logicalView);
 						logicalViewRendererAssignments.set(logicalView, _renderer2dcapable);
 						logicalViewsOrder.push(logicalView);
+						l_temp_spaceInvalidated = true;	//temp value until i do proper invalidation 
 					}
 				}
 			}
 		}
+		
+		//after updating the 'dirty' space, always re-order the Views correctly
+		if (l_temp_spaceInvalidated)
+		{
+			logicalViewsOrder.sort(_orderViews);
+			
+			for (logicalView in logicalViewsOrder)
+			{
+				Console.debug("View: " + logicalView.name);
+			}
+		}
+		
+
 		
 		//after the Display.update, the platform.subgraphics system will request a render() for each view from their assigned renderer, in the order 
 		
@@ -149,6 +165,27 @@ class Display extends AService implements IDisplay
 		{
 			renderer.update();
 		}
+	}
+	
+	
+	/**
+		Sorts [this] Array according to the comparison function [f], where
+		[f(x,y)] returns 0 if x == y, a positive Int if x > y and a
+		negative Int if x < y.
+		
+		This operation modifies [this] Array in place.
+		
+		The sort operation is not guaranteed to be stable, which means that the
+		order of equal elements may not be retained. For a stable Array sorting
+		algorithm, haxe.ds.sort.MergeSort.sort() can be used instead.
+		
+		If [f] is null, the result is unspecified.
+	**/
+	private function _orderViews(view1:ILogicalView, view2:ILogicalView):Int
+	{
+		if (view1.zIndex>view2.zIndex) return 1;
+		else if (view1.zIndex < view2.zIndex) return -1;
+		else return 0;
 	}
 	
 	public function setSpace( p_space:ILogicalSpace ):Void

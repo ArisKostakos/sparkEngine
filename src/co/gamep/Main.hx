@@ -12,9 +12,6 @@ import co.gamep.framework.Framework;
 import co.gamep.framework.Assets;
 import co.gamep.framework.Config;
 import co.gamep.framework.Game;
-import flambe.display.BlendMode;
-import flambe.display.ImageSprite;
-import flambe.Entity;
 import flambe.System;
 
 
@@ -47,34 +44,6 @@ class Main
 		
 		//Create Game
 		System.root.add(new Game());
-		
-		///REMOVE ALL THIS!!!!
-		/*
-		
-		var firstChild:Entity = new Entity();
-		var secondChild:Entity = new Entity();
-		System.root.addChild(firstChild);
-		System.root.addChild(secondChild);
-		
-		//first child
-		firstChild.addChild(new Entity().add(new ImageSprite(Assets.images.getTexture("ball")))); // add on top of stage
-		
-		var myImage:ImageSprite = new ImageSprite(Assets.images.getTexture("lion"));
-		myImage.setScale(0.1);
-		myImage.blendMode = BlendMode.Copy;
-		firstChild.addChild(new Entity().add(myImage)); // add on top of stage
-		
-		
-		//second child
-		var myImage2:ImageSprite = new ImageSprite(Assets.images.getTexture("lion"));
-		myImage2.setScale(3.5);
-		secondChild.addChild(new Entity().add(myImage2)); // add on top of stage
-		
-		var myImage3:ImageSprite = new ImageSprite(Assets.images.getTexture("lion"));
-		myImage3.setScale(0.1);
-		myImage3.blendMode = BlendMode.Copy;
-		secondChild.addChild(new Entity().add(myImage3)); // add on top of stage
-		*/
     }
 
 }

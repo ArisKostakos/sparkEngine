@@ -48,7 +48,7 @@ class GameFactory implements IGameFactory
 				
 				if (l_gameEntity != null)
 				{
-					Console.debug(l_gameNode.toString());
+					//Console.debug(l_gameNode.toString());
 					return l_gameEntity;
 				}
 				else

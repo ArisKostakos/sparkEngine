@@ -31,12 +31,6 @@ class ARenderer implements IRenderer
 		logicalViewSet = new Array<ILogicalView>();
 	}
 	
-	public function render ( p_logicalView:ILogicalView):Void
-	{
-		//override...
-		
-	}
-	
 	public function update ():Void
 	{
 		//update 'dirty' views
@@ -48,25 +42,106 @@ class ARenderer implements IRenderer
 	
 	private function _updateView(p_logicalView:ILogicalView):Void
 	{
-		//override...
+		//UPDATE SCENE
 		
+		//assert scene
+		if (p_logicalView.logicalScene == null) {
+			Console.error("nothing to render...");
+			return; }
+			
+		_updateScene(p_logicalView.logicalScene);
+		
+		
+		//UPDATE CAMERA
+		
+		//assert camera
+		if (p_logicalView.logicalCamera == null) {
+			Console.error("no way to render...");
+			return; }
+		
+		_updateCamera(p_logicalView.logicalCamera);
+		
+		
+		//UPDATE VIEW
+		
+		//CREATE IT
+		if (_hasView(p_logicalView) == false)
+		{
+			_createView(p_logicalView);
+		}
+		
+		//VALIDATE IT
+		_validateView(p_logicalView);
 	}
 	
 	private function _updateScene(p_logicalScene:ILogicalScene):Void
 	{
-		//override...
+		//CREATE IT
+		if (_hasScene(p_logicalScene) == false)
+		{
+			_createScene(p_logicalScene);
+		}
+		
+		//VALIDATE IT
+		_validateScene(p_logicalScene);
+		
+		
+		//UPDATE CHILDREN
+		for (f_logicalEntity in p_logicalScene.logicalEntitySet)
+		{
+			_updateEntity(f_logicalEntity, p_logicalScene);
+		}
 		
 	}
 	
 	private function _updateCamera(p_logicalCamera:ILogicalCamera):Void
 	{
-		//override...
+		//CREATE IT
+		if (_hasCamera(p_logicalCamera) == false)
+		{
+			_createCamera(p_logicalCamera);
+		}
 		
+		
+		//VALIDATE IT
+		_validateCamera(p_logicalCamera);
+		
+		
+		//UPDATE CHILDREN
+		//???????
 	}
 	
+	//@todo: parent may be an entity too not just a scene. Also, update children, like u do in scene
 	private function _updateEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void
 	{
-		//override...
+		//CREATE IT
+		if (_hasEntity(p_logicalEntity) == false)
+		{
+			_createEntity(p_logicalEntity, p_logicalScene);
+		}
 		
+		//VALIDATE IT
+		_validateEntity(p_logicalEntity, p_logicalScene);
+		
+
 	}
+	
+	//override functions
+	public function render ( p_logicalView:ILogicalView):Void { }
+	
+	private function _hasView(p_logicalView:ILogicalView):Bool { return false; }
+	private function _createView(p_logicalView:ILogicalView):Void { }
+	private function _validateView(p_logicalView:ILogicalView):Void { }
+	
+	private function _hasScene(p_logicalScene:ILogicalScene):Bool { return false; }
+	private function _createScene(p_logicalScene:ILogicalScene):Void { }
+	private function _validateScene(p_logicalScene:ILogicalScene):Void { }
+	
+	private function _hasCamera(p_logicalCamera:ILogicalCamera):Bool { return false; }
+	private function _createCamera(p_logicalCamera:ILogicalCamera):Void { }
+	private function _validateCamera(p_logicalCamera:ILogicalCamera):Void { }
+	
+	private function _hasEntity(p_logicalEntity:ILogicalEntity):Bool { return false; }
+	private function _createEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void { }
+	private function _validateEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void { }
 }
