@@ -14,8 +14,7 @@ import away3d.primitives.SphereGeometry;
 import away3d.entities.Entity;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
-import co.gamep.sliced.services.std.display.renderers.core.ARenderer;
-import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.A3DRenderer;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene; 
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
 
@@ -23,7 +22,7 @@ import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEnti
  * ...
  * @author Aris Kostakos
  */
-class AAway3DRenderer extends ARenderer
+class AAway3DRenderer extends A3DRenderer
 {
 	private var _viewPointerSet:Map<ILogicalView,View3D>;
 	private var _scenePointerSet:Map<ILogicalScene,Scene3D>;
@@ -40,8 +39,6 @@ class AAway3DRenderer extends ARenderer
 
 	inline private function _aAway3dRendererInit():Void
 	{
-		uses3DEngine = true;
-		
 		_viewPointerSet = new Map<ILogicalView,View3D>();
 		_scenePointerSet = new Map<ILogicalScene,Scene3D>();
 		_entityPointerSet = new Map<ILogicalEntity,Entity>();

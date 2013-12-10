@@ -10,24 +10,30 @@ import hscript.Parser;
 import co.gamep.sliced.core.Sliced;
 import flambe.input.Key;
 import hscript.Expr;
+import haxe.io.Bytes;
+import haxe.crypto.Crc32;
+import co.gamep.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
+
 /**
  * ...
  * @author Aris Kostakos
  */
-class HaxeInterpreter extends AInterpreter
+class HaxeInterpreter implements IInterpreter
 {
-	var _parser:Parser;
-	var _interpreter:Interp;
-		
+	private var _hashTable:Map<Int,Expr>;
+	private var _parser:Parser;
+	private var _interpreter:Interp;
+	
 	public function new() 
 	{
-		super();
 		Console.log("Init Haxe Interpreter...");
 		_init();
 	}
 	
 	private function _init():Void
 	{
+		_hashTable = new Map<Int,Expr>();
+		
 		_parser =  new hscript.Parser();
 		_interpreter = new hscript.Interp();
 		
@@ -42,16 +48,16 @@ class HaxeInterpreter extends AInterpreter
 		_interpreter.variables.set("Console", Console); // share the Console
 	}
 	
-	override public function run(hashId:Int, parameters:Map<String,Dynamic>):Bool
+	public function run(hashId:Int, parameters:Map<String,Dynamic>):Bool
 	{
 		//@todo: V.EASY/IMPORTANT/ASAP: don't create a new parser and interpenter EVERY SINGLE TIME!!!!
 		//Console.time("interpreting");
 		
 		//@todo: PARSE EVERYTHING IN THE HASH ONCE AND STORE DUMMY!
-		var program:Expr = _parser.parseString(_get(hashId));
+		var program:Expr = _get(hashId);
 		
 		
-		_interpreter = new hscript.Interp();
+		//_interpreter = new hscript.Interp();
 		//Static variables
 		_interpreter.variables.set("Game", Sliced); // share the Game class
 		_interpreter.variables.set("Sound", Sliced.sound); // share the Sound class
@@ -62,6 +68,7 @@ class HaxeInterpreter extends AInterpreter
 		_interpreter.variables.set("Key", Key); // share the Key enum
 		_interpreter.variables.set("Console", Console); // share the Console
 		
+		
 		//Dynamic Variables
 		for (varName in parameters.keys())
 		{
@@ -71,5 +78,45 @@ class HaxeInterpreter extends AInterpreter
 		//Console.timeEnd("interpreting");
 		//Console.warn("Interpenter Executing: " + hashId);
 		return _interpreter.execute(program);
+	}
+	
+	
+	public function hash(script:String):Int
+	{
+		return _store(_parser.parseString(script), Crc32.make(Bytes.ofString(script)));
+	}
+	
+	
+	inline private function _get(hashId:Int):Expr
+	{
+		var script:Expr = _hashTable[hashId];
+		
+		if (script == null)
+			Console.error('Script not found on address [$hashId]');
+		
+		return script;
+	}
+	
+	private function _store(script:Expr, hashId: Int):Int
+	{
+		if (_hashTable[hashId] != null)
+		{
+			if (Std.string(script) == Std.string(_hashTable[hashId]))
+			{
+				Console.log('Same Script found: [$script] in hashId: [$hashId]');
+				return hashId;
+			}
+			else
+			{
+				Console.warn('Collision detected with hashId: [$hashId] and script [$script]. Previous Stored Entry Script: ' + _hashTable[hashId]);
+				return _store(script, ++hashId);
+			}
+		}
+		else
+		{
+			Console.log('Entering hashId: [$hashId] with Script: $script');
+			_hashTable[hashId] = script;
+			return hashId;
+		}
 	}
 }
