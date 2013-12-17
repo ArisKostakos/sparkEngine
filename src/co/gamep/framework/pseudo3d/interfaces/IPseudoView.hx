@@ -13,7 +13,7 @@ package co.gamep.framework.pseudo3d.interfaces;
 interface IPseudoView
 {
 	var camera( default, default ):IPseudoCamera;
-	var scene( default, set ):IPseudoScene;
+	var scene( default, default ):IPseudoScene;
 	var x( default, default ):Int;
 	var y( default, default ):Int;
 	var width( default, default ):Int;

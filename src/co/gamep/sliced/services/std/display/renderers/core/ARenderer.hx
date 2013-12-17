@@ -85,7 +85,7 @@ class ARenderer implements IRenderer
 		//VALIDATE IT
 		_validateScene(p_logicalScene);
 		
-		
+		//return;
 		//UPDATE CHILDREN
 		for (f_logicalEntity in p_logicalScene.logicalEntitySet)
 		{
@@ -105,10 +105,6 @@ class ARenderer implements IRenderer
 		
 		//VALIDATE IT
 		_validateCamera(p_logicalCamera);
-		
-		
-		//UPDATE CHILDREN
-		//???????
 	}
 	
 	//@todo: parent may be an entity too not just a scene. Also, update children, like u do in scene
@@ -123,7 +119,8 @@ class ARenderer implements IRenderer
 		//VALIDATE IT
 		_validateEntity(p_logicalEntity, p_logicalScene);
 		
-
+		//UPDATE CHILDREN
+		//???????
 	}
 	
 	//override functions

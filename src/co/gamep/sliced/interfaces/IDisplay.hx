@@ -15,6 +15,8 @@ import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStag
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
+
+
 /**
  * ...
  * @author Aris Kostakos
@@ -22,7 +24,7 @@ import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 interface IDisplay extends IService
 {
 	var logicalSpace( default, default ):ILogicalSpace;
-
+	
 	var rendererSet( default, null ):Array<IRenderer>;
 	
 	var logicalViewsOrder (default, null ):Array<ILogicalView>;

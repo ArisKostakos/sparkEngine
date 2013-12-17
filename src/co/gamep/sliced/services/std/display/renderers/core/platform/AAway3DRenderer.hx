@@ -9,10 +9,23 @@
 import away3d.cameras.Camera3D;
 import away3d.containers.Scene3D;
 import away3d.containers.View3D;
+import away3d.core.base.Geometry;
 import away3d.entities.Mesh;
+
+#if flash
+	import flash.geom.Vector3D;
+#else
+	import away3d.core.geom.Vector3D;
+#end
+
+import away3d.lights.DirectionalLight;
+import away3d.materials.ColorMaterial;
+import away3d.materials.lightpickers.StaticLightPicker;
+import away3d.materials.MaterialBase;
 import away3d.primitives.SphereGeometry;
 import away3d.entities.Entity;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
+import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalMesh;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
 import co.gamep.sliced.services.std.display.renderers.core.A3DRenderer;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene; 
@@ -59,9 +72,12 @@ class AAway3DRenderer extends A3DRenderer
 		_viewPointerSet.set(p_logicalView, new View3D());
 		_viewPointerSet[p_logicalView].scene = _scenePointerSet[p_logicalView.logicalScene];
 		_viewPointerSet[p_logicalView].camera = _cameraPointerSet[p_logicalView.logicalCamera];
-		_viewPointerSet[p_logicalView].width = p_logicalView.width;
-		_viewPointerSet[p_logicalView].height = p_logicalView.height;
-		//WHAT ABOUT X AND Y??????????
+		
+		//away3d ts bug?
+		_viewPointerSet[p_logicalView].x = 0;// p_logicalView.x;
+		_viewPointerSet[p_logicalView].y = 0;// p_logicalView.y;
+		_viewPointerSet[p_logicalView].width = 640;// p_logicalView.width;
+		_viewPointerSet[p_logicalView].height = 480;// p_logicalView.height;
 	}
 	
 	override private function _validateView(p_logicalView:ILogicalView):Void
@@ -90,15 +106,67 @@ class AAway3DRenderer extends A3DRenderer
 		_cameraPointerSet.get(p_logicalCamera).x = p_logicalCamera.x;
 		_cameraPointerSet.get(p_logicalCamera).y = p_logicalCamera.y;
 		_cameraPointerSet.get(p_logicalCamera).z = p_logicalCamera.z;
-		_cameraPointerSet.get(p_logicalCamera).yaw(p_logicalCamera.yaw);
-		_cameraPointerSet.get(p_logicalCamera).pitch( p_logicalCamera.pitch);
-		_cameraPointerSet.get(p_logicalCamera).roll(p_logicalCamera.roll);
+		_cameraPointerSet.get(p_logicalCamera).lookAt(new Vector3D(0, 0, 0));
+		//_cameraPointerSet.get(p_logicalCamera).yaw(p_logicalCamera.pitch);
+		//_cameraPointerSet.get(p_logicalCamera).pitch( p_logicalCamera.pitch);
+		//_cameraPointerSet.get(p_logicalCamera).roll(p_logicalCamera.roll);
 	}
+	
+	private var _deleteMeMainLight:DirectionalLight;
+	private var _deleteMeMainLightpicker:StaticLightPicker;
+	
+	private function _deletemeCreateLight(p_logicalScene:ILogicalScene):Void
+	{
+		var directionalLight:DirectionalLight = new DirectionalLight();
+		directionalLight.ambientColor = 0xFFFFFF;
+		directionalLight.color = 0xFFFFFF;
+		directionalLight.ambient = 0.39;
+		directionalLight.castsShadows = false;
+		//directionalLight.shaderPickingDetails = false;
+		directionalLight.specular = 0.8;
+		directionalLight.diffuse = 0.6;
+		directionalLight.name = "MainLight";
+		directionalLight.direction = new Vector3D(-0.7376268918178536, -0.4171149406714452, -0.5309629881034924);
+		_scenePointerSet[p_logicalScene].addChild(directionalLight);
+		
+		_deleteMeMainLight = directionalLight;
+		
+		_deleteMeMainLightpicker = new StaticLightPicker([_deleteMeMainLight]);
+	}
+	
 	
 	//@todo: parent may be an entity too not just a scene
 	override private function _createEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void
 	{
-		_entityPointerSet.set(p_logicalEntity, new Mesh(new SphereGeometry()));
+		if (_deleteMeMainLight == null) _deletemeCreateLight(p_logicalScene);
+		
+		var l_logicalMesh:ILogicalMesh = cast(p_logicalEntity, ILogicalMesh);
+		Console.warn("meshType_3d: " + l_logicalMesh.meshType_3d);
+		Console.warn("mesh_3d: " + l_logicalMesh.mesh_3d);
+		
+		Console.warn("materialType_3d: " + l_logicalMesh.materialType_3d);
+		Console.warn("material_3d: " + l_logicalMesh.material_3d);
+		
+		var l_mesh:Mesh;
+		var l_geometry:Geometry=null;
+		var l_material:MaterialBase=null;
+		
+		if (l_logicalMesh.meshType_3d == "Primitive")
+		{
+			if (l_logicalMesh.mesh_3d == "Sphere")
+			{
+				l_geometry = new SphereGeometry();
+			}
+		}
+		
+		if (l_logicalMesh.materialType_3d == "Color")
+		{
+			l_material = new ColorMaterial(Std.parseInt(l_logicalMesh.material_3d));
+			l_material.lightPicker = _deleteMeMainLightpicker;
+		}
+		l_mesh = new Mesh(l_geometry, l_material);
+		//l_mesh.visible = false;
+		_entityPointerSet.set(p_logicalEntity, l_mesh);
 		_scenePointerSet[p_logicalScene].addChild(_entityPointerSet[p_logicalEntity]);
 	}
 	

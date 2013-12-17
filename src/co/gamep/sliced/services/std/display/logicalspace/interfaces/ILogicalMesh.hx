@@ -14,5 +14,13 @@ package co.gamep.sliced.services.std.display.logicalspace.interfaces;
  */
 interface ILogicalMesh extends ILogicalEntity
 {
+	var meshType_2d( default, default ):String;		// "not_available", "url", "primitive", "clone"
+	var mesh_2d( default, default ):String;			// "assets/lion", "circle", "cloneName"
+	var worldSizeX_2d( default, default ):Int;		// 50
 	
+	var meshType_3d( default, default ):String;		// "not_available", "url", "primitive", "clone"
+	var mesh_3d( default, default ):String;			// "assets/lion", "sphere", "cloneName"
+	var worldSizeX_3d( default, default ):Int;		// 50
+	var materialType_3d( default, default ):String;	// "color", "texture"
+	var material_3d( default, default ):String;		// "0xff0000", "assets/lionTexture"
 }

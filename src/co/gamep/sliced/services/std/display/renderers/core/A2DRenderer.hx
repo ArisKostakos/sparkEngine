@@ -6,6 +6,8 @@
 
 package co.gamep.sliced.services.std.display.renderers.core;
 
+import co.gamep.framework.pseudo3d.core.PseudoEntity;
+import co.gamep.framework.pseudo3d.core.PseudoScene;
 import co.gamep.framework.pseudo3d.interfaces.IPseudoCamera;
 import co.gamep.framework.pseudo3d.interfaces.IPseudoEntity;
 import co.gamep.framework.pseudo3d.interfaces.IPseudoScene;
@@ -75,9 +77,27 @@ class A2DRenderer extends ARenderer
 		//_viewPointerSet[p_logicalView].addChild(_scenePointerSet[p_logicalView.logicalScene]);
 	}
 	
+	override public function render ( p_logicalView:ILogicalView):Void
+	{
+		//render a view
+		_viewPointerSet[p_logicalView].render();
+	}
+	
+	override private function _createScene(p_logicalScene:ILogicalScene):Void
+	{
+		_scenePointerSet.set(p_logicalScene, new PseudoScene());
+	}
+	
 	override private function _validateScene(p_logicalScene:ILogicalScene):Void
 	{
 		
+	}
+	
+	//@todo: parent may be an entity too not just a scene
+	override private function _createEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void
+	{
+		_entityPointerSet.set(p_logicalEntity, new PseudoEntity());
+		_scenePointerSet[p_logicalScene].addChild(_entityPointerSet[p_logicalEntity]);
 	}
 	
 	//@todo: parent may be an entity too not just a scene
@@ -89,7 +109,5 @@ class A2DRenderer extends ARenderer
 		_entityPointerSet[p_logicalEntity].yaw = p_logicalEntity.yaw;
 		_entityPointerSet[p_logicalEntity].pitch = p_logicalEntity.pitch;
 		_entityPointerSet[p_logicalEntity].roll = p_logicalEntity.roll;
-		
-		_entityPointerSet[p_logicalEntity].validate();
 	}
 }

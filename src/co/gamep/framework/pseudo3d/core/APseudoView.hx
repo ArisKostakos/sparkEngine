@@ -16,7 +16,7 @@ import co.gamep.framework.pseudo3d.interfaces.IPseudoView;
 class APseudoView implements IPseudoView
 {
 	public var camera( default, default ):IPseudoCamera;
-	public var scene( default, set ):IPseudoScene;
+	public var scene( default, default ):IPseudoScene;
 	public var x( default, default ):Int;
 	public var y( default, default ):Int;
 	public var width( default, default ):Int;
@@ -39,11 +39,5 @@ class APseudoView implements IPseudoView
 		
 	}
 	
-	public function set_scene( v:IPseudoScene):IPseudoScene
-	{
-		//override ahead
-		
-		return scene = v;
-	}
 	
 }

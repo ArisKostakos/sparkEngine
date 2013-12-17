@@ -20,6 +20,10 @@ class LogicalSpace extends ALogicalComponent implements ILogicalSpace
 	public var logicalStage(default, default):ILogicalStage;
 	public var logicalSceneSet(default, null):Map<String,ILogicalScene>;
 	public var logicalCameraSet(default, null):Map<String,ILogicalCamera>;
+	//create here a place to put assets in
+	//things like entities that are not created at the beginning
+	//or textures, materials, etc...
+	//all scenes should be able to access these
 	
 	public function new() 
 	{

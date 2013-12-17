@@ -19,9 +19,8 @@ interface IPseudoEntity
 	var pitch( default, default ):Int;
 	var roll( default, default ):Int;
 	
-	var realObject( default, default ):Dynamic;
-	
-	function validate():Void;
+	var pseudoEntitySet:Array<IPseudoEntity>;
+	function addChild(p_pseudoEntity:IPseudoEntity):Void;
 	
 	/*
 	var x( default, default ):Int;

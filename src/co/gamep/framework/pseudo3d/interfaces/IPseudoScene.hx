@@ -12,7 +12,6 @@ package co.gamep.framework.pseudo3d.interfaces;
  */
 interface IPseudoScene
 {
+	var pseudoEntitySet:Array<IPseudoEntity>;
 	function addChild(p_pseudoEntity:IPseudoEntity):Void;
-	
-	var realObject( default, default ):Dynamic;
 }

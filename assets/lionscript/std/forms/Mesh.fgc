@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Form>
+	<States>
+		<State>
+			<Id>std_2dMeshType</Id>
+			<Type>Text</Type>
+			<Value>Not Available</Value>
+		</State>
+		<State>
+			<Id>std_2dMesh</Id>
+			<Type>Text</Type>
+			<Value>Default</Value>
+		</State>
+		<State>
+			<Id>std_2dWorldSizeX</Id>
+			<Type>Integer</Type>
+			<Value>50</Value>
+		</State>
+		
+		<State>
+			<Id>std_3dMeshType</Id>
+			<Type>Text</Type>
+			<Value>Not Available</Value>
+		</State>
+		<State>
+			<Id>std_3dMesh</Id>
+			<Type>Text</Type>
+			<Value>Default</Value>
+		</State>
+		<State>
+			<Id>std_3dWorldSizeX</Id>
+			<Type>Integer</Type>
+			<Value>50</Value>
+		</State>
+		<State>
+			<Id>std_3dMaterialType</Id>
+			<Type>Text</Type>
+			<Value>Texture</Value>
+		</State>
+		<State>
+			<Id>std_3dMaterial</Id>
+			<Type>Text</Type>
+			<Value>Default</Value>
+		</State>
+	</States>
+	<Space/>
+</Form>

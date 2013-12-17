@@ -9,6 +9,7 @@ package co.gamep.sliced.services.std.display.core;
 import co.gamep.framework.Framework;
 import co.gamep.sliced.interfaces.IDisplay;
 import co.gamep.sliced.core.AService;
+import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
 import co.gamep.sliced.services.std.display.logicalspace.core.LogicalCamera;
 import co.gamep.sliced.services.std.display.logicalspace.core.LogicalEntity;
 import co.gamep.sliced.services.std.display.logicalspace.core.LogicalLight;
@@ -53,7 +54,7 @@ class Display extends AService implements IDisplay
 	public function new() 
 	{
 		super();
-		
+		var fgfg:Camera3D = new Camera3D();
 		_init();
 	}
 	

@@ -6,8 +6,6 @@
 
  package co.gamep.sliced.services.std.display.renderers.core.platform;
 
-import co.gamep.framework.pseudo3d.flambe.FlambeEntity;
-import co.gamep.framework.pseudo3d.flambe.FlambeScene;
 import co.gamep.framework.pseudo3d.flambe.FlambeView;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
@@ -47,34 +45,11 @@ class AFlambe2DRenderer extends A2DRenderer
 		}
 	}
 	
-	override public function render ( p_logicalView:ILogicalView):Void
-	{
-		//render a view
-		_viewPointerSet[p_logicalView].render();
-		
-		//Console.info("Flambe render request");
-	}
-	
-	override private function _createScene(p_logicalScene:ILogicalScene):Void
-	{
-		_scenePointerSet.set(p_logicalScene, new FlambeScene());
-	}
-	
 	override private function _createView(p_logicalView:ILogicalView):Void
 	{
 		_viewPointerSet.set(p_logicalView, new FlambeView(_internalGraphics));
 	}
 	
-	
-	
-	//@todo: parent may be an entity too not just a scene
-	override private function _createEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void
-	{
-		_entityPointerSet.set(p_logicalEntity, new FlambeEntity());
-		_scenePointerSet[p_logicalScene].addChild(_entityPointerSet[p_logicalEntity]);
-	}
-	
-
 	
 	
 	

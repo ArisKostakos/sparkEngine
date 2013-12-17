@@ -46,6 +46,9 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Display", Sliced.display); // share the Display class
 		_interpreter.variables.set("Key", Key); // share the Key enum
 		_interpreter.variables.set("Console", Console); // share the Console
+		_interpreter.variables.set("Math", Math); // share the Math
+		_interpreter.variables.set("Std", Std); // share the Std
+		//_interpreter.variables.set("Int", Int); // share the Int
 	}
 	
 	public function run(hashId:Int, parameters:Map<String,Dynamic>):Bool
@@ -67,8 +70,10 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Display", Sliced.display); // share the Display class
 		_interpreter.variables.set("Key", Key); // share the Key enum
 		_interpreter.variables.set("Console", Console); // share the Console
-		
-		
+		_interpreter.variables.set("Math", Math); // share the Math
+		_interpreter.variables.set("Std", Std); // share the Std
+		//_interpreter.variables.set("Int", Int); // share the Int
+
 		//Dynamic Variables
 		for (varName in parameters.keys())
 		{

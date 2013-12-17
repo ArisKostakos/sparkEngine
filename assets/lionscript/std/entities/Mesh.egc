@@ -28,6 +28,18 @@
 							
 							//Mesh Properties
 							
+							//2d
+							mesh.meshType_2d=me.gameForm.getState('std_2dMeshType');
+							mesh.mesh_2d=me.gameForm.getState('std_2dMesh');
+							mesh.worldSizeX_2d=me.gameForm.getState('std_2dWorldSizeX');
+							
+							//3d
+							mesh.meshType_3d=me.gameForm.getState('std_3dMeshType');
+							mesh.mesh_3d=me.gameForm.getState('std_3dMesh');
+							mesh.worldSizeX_3d=me.gameForm.getState('std_3dWorldSizeX');
+							mesh.materialType_3d=me.gameForm.getState('std_3dMaterialType');
+							mesh.material_3d=me.gameForm.getState('std_3dMaterial');
+							
 							//Store Pointer
 							me.setState('std_object',mesh);
 							
