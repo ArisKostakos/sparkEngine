@@ -55,7 +55,14 @@ class GameAction extends AGameBase implements IGameAction
 		{
 			//if (Sliced.logic.interpreter.run(hashId) == false)
 			//	Console.warn('Action $id:HashId $hashId returned false');
-			Sliced.logic.interpreter.run(hashId, [ "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
+			if (hashId == -1)
+			{
+				Sliced.logic.gmlInterpreter.run(hashId, [ "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
+			}
+			else
+			{
+				Sliced.logic.scriptInterpreter.run(hashId, [ "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
+			}
 		}
 	}
 }

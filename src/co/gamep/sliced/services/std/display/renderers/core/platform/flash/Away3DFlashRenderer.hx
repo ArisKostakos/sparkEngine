@@ -6,12 +6,10 @@
 
  package co.gamep.sliced.services.std.display.renderers.core.platform.flash;
 
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
 import co.gamep.sliced.services.std.display.renderers.core.platform.AAway3DRenderer;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flash.Lib;
-import away3d.core.managers.Stage3DManager;
-import away3d.debug.AwayStats;
 
 /**
  * ...
@@ -32,14 +30,14 @@ class Away3DFlashRenderer extends AAway3DRenderer
 	}
 	
 	
-	override private function _createView(p_logicalView:ILogicalView):Void
+	override private function _createView(p_logicalView:View3D):Void
 	{
 		super._createView(p_logicalView);
 		
 		//Add to flash's Stage3D
 		
 		//standard settings
-		var stage3Dmanager:Stage3DManager = Stage3DManager.getInstance(Lib.current.stage);
+		var stage3Dmanager:away3d.core.managers.Stage3DManager = away3d.core.managers.Stage3DManager.getInstance(Lib.current.stage);
 		
 		_viewPointerSet[p_logicalView].stage3DProxy = stage3Dmanager.getStage3DProxy(0);
 		_viewPointerSet[p_logicalView].shareContext = true;
@@ -51,6 +49,6 @@ class Away3DFlashRenderer extends AAway3DRenderer
 		Lib.current.stage.addChild(_viewPointerSet[p_logicalView]);
 	
 		//debug
-		Lib.current.stage.addChild(new AwayStats(_viewPointerSet[p_logicalView]));
+		Lib.current.stage.addChild(new away3d.debug.AwayStats(_viewPointerSet[p_logicalView]));
 	}
 }

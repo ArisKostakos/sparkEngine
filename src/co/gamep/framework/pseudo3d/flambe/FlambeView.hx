@@ -76,7 +76,7 @@ class FlambeView extends APseudoView
 	
 	private inline function _createRealEntity(p_pseudoEntity:IPseudoEntity):Void
 	{
-		_entityPointerSet[p_pseudoEntity] = new Entity().add(new ImageSprite(Assets.images.getTexture("ball")));
+		//_entityPointerSet[p_pseudoEntity] = new Entity().add(new ImageSprite(Assets.images.getTexture("AtomBlue"))); //FIXMENOW
 		_flambeView.addChild(_entityPointerSet[p_pseudoEntity]);
 	}
 	
@@ -101,11 +101,12 @@ class FlambeView extends APseudoView
 		var l_yScreen:Float = (height / 2) - (height / 2) * l_yProj;
 		
 		
-		l_child.x._ = l_xScreen-l_child.getNaturalWidth()/2;
+		l_child.x._ = l_xScreen - l_child.getNaturalWidth() / 2;
 		l_child.y._ = l_yScreen - l_child.getNaturalHeight() / 2;
-		
+		//Console.warn("x: " + l_child.x._);
+		//Console.warn("y: " + l_child.y._);
 		l_child.setScaleXY(l_d / l_zCamera * l_fov, l_d / l_zCamera * l_fov);
-		
+		//Console.warn("scale: " + l_d / l_zCamera * l_fov);
 		if (_doOnce)
 		{
 			Console.warn("yo: " + l_d / l_zCamera);

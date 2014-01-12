@@ -1,6 +1,13 @@
 package co.gamep.sliced.services.std.display.logicalspace.containers;
 
-class View3D  {
+@:keep class View3D  {
+	public var name: String;
+	public var x: Int;
+	public var y: Int;
+	public var width: Int;
+	public var height: Int;
+	public var zIndex: Int;
+	public var requests3DEngine: Bool;
 	public var antiAlias : Int;
 	public var background : co.gamep.sliced.services.std.display.logicalspace.textures.Texture2DBase;
 	public var backgroundAlpha : Float;
@@ -20,4 +27,4 @@ class View3D  {
 	public var shareContext : Bool;
 	public var stage3DProxy : co.gamep.sliced.services.std.display.logicalspace.core.managers.Stage3DProxy;
 	public var touchPicker : co.gamep.sliced.services.std.display.logicalspace.core.pick.IPicker;
-	public function new():Void {super();}}
+	public function new():Void {}}

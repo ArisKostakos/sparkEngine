@@ -7,37 +7,35 @@
 package co.gamep.sliced.services.std.display.logicalspace.core;
 
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStage;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class LogicalStage extends ALogicalComponent implements ILogicalStage
+@:keep class LogicalStage implements ILogicalStage
 {
-	public var logicalViewSet( default, null ):Map<String,ILogicalView>;
+	public var name( default, default ):String;
+	public var logicalViewSet( default, null ):Map<String,View3D>;
 	public var width( default, default ):Int;
 	public var height( default, default ):Int;
 	
 	public function new() 
 	{
-		super();
-		
 		_init();
 	}
 	
 	inline private function _init():Void
 	{
-		logicalViewSet = new Map<String,ILogicalView>();
+		logicalViewSet = new Map<String,View3D>();
 	}
 	
-	public function addView( p_view:ILogicalView ):Void
+	public function addView( p_view:View3D):Void
 	{
-		p_view.parent = this;
 		logicalViewSet[p_view.name]=p_view;
 	}
 	
-	public function removeView( p_view:ILogicalView ):Void
+	public function removeView( p_view:View3D):Void
 	{
 		logicalViewSet.remove(p_view.name);
 	}

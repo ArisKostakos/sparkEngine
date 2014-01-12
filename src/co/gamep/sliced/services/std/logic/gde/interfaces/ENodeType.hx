@@ -22,6 +22,7 @@ enum ENodeType
 	ACTION;
 	SCRIPTS;
 	SCRIPT;
+	GML;
 	TRIGGERS;
 	TRIGGER;
 	EVENT;

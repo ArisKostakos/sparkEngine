@@ -17,7 +17,6 @@ import flambe.platform.html.WebGLRenderer;
 import flambe.platform.Renderer;
 import flambe.platform.html.HtmlPlatform;
 import away3d.utils.RequestAnimationFrame;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
 import away3d.events.Stage3DEvent;
 import js.html.webgl.RenderingContext;
 

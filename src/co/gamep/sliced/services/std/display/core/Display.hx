@@ -10,22 +10,16 @@ import co.gamep.framework.Framework;
 import co.gamep.sliced.interfaces.IDisplay;
 import co.gamep.sliced.core.AService;
 import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
-import co.gamep.sliced.services.std.display.logicalspace.core.LogicalCamera;
-import co.gamep.sliced.services.std.display.logicalspace.core.LogicalEntity;
-import co.gamep.sliced.services.std.display.logicalspace.core.LogicalLight;
-import co.gamep.sliced.services.std.display.logicalspace.core.LogicalMesh;
-import co.gamep.sliced.services.std.display.logicalspace.core.LogicalScene;
+import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
 import co.gamep.sliced.services.std.display.logicalspace.core.LogicalSpace;
 import co.gamep.sliced.services.std.display.logicalspace.core.LogicalStage;
-import co.gamep.sliced.services.std.display.logicalspace.core.LogicalView;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalLight;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalMesh;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
+import co.gamep.sliced.services.std.display.logicalspace.entities.Entity;
+import co.gamep.sliced.services.std.display.logicalspace.entities.Mesh;
+import co.gamep.sliced.services.std.display.logicalspace.entities.Sprite3D;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalSpace;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStage;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.logicalspace.lights.DirectionalLight;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 /**
@@ -48,13 +42,13 @@ class Display extends AService implements IDisplay
 	
 	//views data stored here for optimization (saving the platform.subgraphics from looking which renderer is responsible for which view
 		//and in what order the views must be renderer
-	public var logicalViewsOrder (default, null ):Array<ILogicalView>;
-	public var logicalViewRendererAssignments (default, null ):Map<ILogicalView,IRenderer>;
+	public var logicalViewsOrder (default, null ):Array<View3D>;
+	public var logicalViewRendererAssignments (default, null ):Map<View3D,IRenderer>;
 	
 	public function new() 
 	{
 		super();
-		var fgfg:Camera3D = new Camera3D();
+		
 		_init();
 	}
 	
@@ -62,8 +56,8 @@ class Display extends AService implements IDisplay
 	{
 		Console.log("Init Display std Service...");
 		rendererSet = new Array<IRenderer>();
-		logicalViewsOrder = new Array<ILogicalView>();
-		logicalViewRendererAssignments = new Map<ILogicalView,IRenderer>();
+		logicalViewsOrder = new Array<View3D>();
+		logicalViewRendererAssignments = new Map<View3D,IRenderer>();
 	}
 	
 	
@@ -182,7 +176,7 @@ class Display extends AService implements IDisplay
 		
 		If [f] is null, the result is unspecified.
 	**/
-	private function _orderViews(view1:ILogicalView, view2:ILogicalView):Int
+	private function _orderViews(view1:View3D, view2:View3D):Int
 	{
 		if (view1.zIndex>view2.zIndex) return 1;
 		else if (view1.zIndex < view2.zIndex) return -1;
@@ -199,12 +193,13 @@ class Display extends AService implements IDisplay
 	
 	public function createSpace():ILogicalSpace { return new LogicalSpace(); }
 	public function createStage():ILogicalStage { return new LogicalStage(); }
-	public function createScene():ILogicalScene { return new LogicalScene(); }
-	public function createCamera():ILogicalCamera { return new LogicalCamera(); }
-	public function createView():ILogicalView { return new LogicalView(); }
-	public function createEntity():ILogicalEntity { return new LogicalEntity(); }
-	public function createMesh():ILogicalMesh { return new LogicalMesh(); }
-	public function createLight():ILogicalLight { return new LogicalLight(); }
+	public function createScene():Scene3D { return new Scene3D(); }
+	public function createCamera():Camera3D { return new Camera3D(); }
+	public function createView():View3D { return new View3D(); }
+	public function createEntity():Entity { return new Entity(); }
+	public function createMesh():Mesh { return new Mesh(); }
+	public function createSprite3D():Sprite3D { return new Sprite3D(); }
+	public function createDirectionalLight():DirectionalLight { return new DirectionalLight(); }
 	
 	
 	//@todo: The display service should DISPLAY the console messages ON SCREEN

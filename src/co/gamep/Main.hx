@@ -27,14 +27,14 @@ class Main
 		Framework.init();
 		
 		//Load Minimal Assets (e.g. config files)
-		Assets.assetsLoaded.connect(_onAssetsLoaded).once();  //Loads all Assets temporarily
-		Assets.init();
+		//Assets.assetsLoaded.connect(_onAssetsLoaded).once();  //Loads all Assets temporarily
+		Assets.testLoadFile("test file", "image.png", true);
     }
 
 	private static function _onAssetsLoaded()
     {
 		//Init Config
-		Config.init(Assets.config.getFile("config.xml").toString());
+		//Config.init(Assets.config.getFile("config.xml").toString()); //FIXMENOW
 		
 		//Init Sliced
 		Sliced.init();

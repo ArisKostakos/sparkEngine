@@ -6,8 +6,8 @@
 
 package co.gamep.sliced.services.std.display.logicalspace.core;
 
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
+import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalSpace;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStage;
 
@@ -15,11 +15,12 @@ import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStag
  * ...
  * @author Aris Kostakos
  */
-class LogicalSpace extends ALogicalComponent implements ILogicalSpace
+@:keep class LogicalSpace implements ILogicalSpace
 {
+	public var name( default, default ):String;
 	public var logicalStage(default, default):ILogicalStage;
-	public var logicalSceneSet(default, null):Map<String,ILogicalScene>;
-	public var logicalCameraSet(default, null):Map<String,ILogicalCamera>;
+	public var logicalSceneSet(default, null):Map<String,Scene3D>;
+	public var logicalCameraSet(default, null):Map<String,Camera3D>;
 	//create here a place to put assets in
 	//things like entities that are not created at the beginning
 	//or textures, materials, etc...
@@ -27,15 +28,13 @@ class LogicalSpace extends ALogicalComponent implements ILogicalSpace
 	
 	public function new() 
 	{
-		super();
-		
 		_init();
 	}
 	
 	inline private function _init():Void
 	{
-		logicalSceneSet = new Map<String,ILogicalScene>();
-		logicalCameraSet = new Map<String,ILogicalCamera>();
+		logicalSceneSet = new Map<String,Scene3D>();
+		logicalCameraSet = new Map<String,Camera3D>();
 	}
 	
 	public function setStage( p_stage:ILogicalStage ):Void
@@ -43,39 +42,36 @@ class LogicalSpace extends ALogicalComponent implements ILogicalSpace
 		//@note if another stage already exists, maybe you can warn the user, or take
 			//other action. may need rerendering, changing renderers, etc, etc, etc
 		
-		p_stage.parent = this;
 		logicalStage = p_stage;
 	}
 	
-	public function addScene( p_scene:ILogicalScene ):Void
+	public function addScene( p_scene:Scene3D ):Void
 	{
-		p_scene.parent = this;
 		logicalSceneSet[p_scene.name] = p_scene;
 	}
 	
-	public function removeScene( p_scene:ILogicalScene ):Void
+	public function removeScene( p_scene:Scene3D ):Void
 	{
 		logicalSceneSet.remove(p_scene.name);
 	}
 	
-	public function getScene( p_sceneName:String ):ILogicalScene
+	public function getScene( p_sceneName:String ):Scene3D
 	{
 		return logicalSceneSet[p_sceneName];
 	}
 	
 	
-	public function addCamera( p_camera:ILogicalCamera ):Void
+	public function addCamera( p_camera:Camera3D ):Void
 	{
-		p_camera.parent = this;
 		logicalCameraSet[p_camera.name]=p_camera;
 	}
 	
-	public function removeCamera( p_camera:ILogicalCamera ):Void
+	public function removeCamera( p_camera:Camera3D ):Void
 	{
 		logicalCameraSet.remove(p_camera.name);
 	}
 	
-	public function getCamera( p_cameraName:String ):ILogicalCamera
+	public function getCamera( p_cameraName:String ):Camera3D
 	{
 		return logicalCameraSet[p_cameraName];
 	}

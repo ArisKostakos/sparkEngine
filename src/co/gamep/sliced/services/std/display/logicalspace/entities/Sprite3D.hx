@@ -1,6 +1,6 @@
 package co.gamep.sliced.services.std.display.logicalspace.entities;
 
-class Sprite3D extends Entity implements co.gamep.sliced.services.std.display.logicalspace.core.base.IRenderable {
+@:keep class Sprite3D extends Entity implements co.gamep.sliced.services.std.display.logicalspace.core.base.IRenderable {
 	public var UVData(default,never) : Dynamic;
 	public var animator(default,never) : co.gamep.sliced.services.std.display.logicalspace.animators.IAnimator;
 	public var castsShadows(default,never) : Bool;

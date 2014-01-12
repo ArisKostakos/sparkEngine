@@ -200,7 +200,14 @@ class GameClassInstantiator implements IGameClassInstantiator
 		var scripts:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SCRIPTS]).next();
 		for ( script in scripts.elements()) 
 		{
-			l_gameAction.scriptSet.push(Sliced.logic.interpreter.hash(script.firstChild().nodeValue));
+			if (script.nodeName == _xmlNodeTypeToNodeName[ENodeType.SCRIPT])
+			{
+				l_gameAction.scriptSet.push(Sliced.logic.scriptInterpreter.hash(script.firstChild().nodeValue));
+			}
+			else
+			{
+				l_gameAction.scriptSet.push(Sliced.logic.gmlInterpreter.hash(script.firstChild().nodeValue));
+			}
 		}
 		
 		//Create the Action's States
@@ -232,7 +239,14 @@ class GameClassInstantiator implements IGameClassInstantiator
 		var scripts:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SCRIPTS]).next();
 		for ( script in scripts.elements()) 
 		{
-			l_gameTrigger.scriptSet.push(Sliced.logic.interpreter.hash(script.firstChild().nodeValue));
+			if (script.nodeName == _xmlNodeTypeToNodeName[ENodeType.SCRIPT])
+			{
+				l_gameTrigger.scriptSet.push(Sliced.logic.scriptInterpreter.hash(script.firstChild().nodeValue));
+			}
+			else
+			{
+				l_gameTrigger.scriptSet.push(Sliced.logic.gmlInterpreter.hash(script.firstChild().nodeValue));
+			}
 		}
 		
 		return l_gameTrigger;

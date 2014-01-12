@@ -6,10 +6,10 @@
 
  package co.gamep.sliced.services.std.display.renderers.core;
 
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.ObjectContainer3D;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 /**
@@ -18,7 +18,7 @@ import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
  */
 class ARenderer implements IRenderer
 {
-	public var logicalViewSet( default, null ):Array<ILogicalView>;
+	public var logicalViewSet( default, null ):Array<View3D>;
 	public var uses3DEngine( default, null ):Bool;
 	
 	private function new() 
@@ -28,7 +28,7 @@ class ARenderer implements IRenderer
 
 	inline private function _aRendererInit():Void
 	{
-		logicalViewSet = new Array<ILogicalView>();
+		logicalViewSet = new Array<View3D>();
 	}
 	
 	public function update ():Void
@@ -40,26 +40,26 @@ class ARenderer implements IRenderer
 		}
 	}
 	
-	private function _updateView(p_logicalView:ILogicalView):Void
+	private function _updateView(p_logicalView:View3D):Void
 	{
 		//UPDATE SCENE
 		
 		//assert scene
-		if (p_logicalView.logicalScene == null) {
+		if (p_logicalView.scene == null) {
 			Console.error("nothing to render...");
 			return; }
 			
-		_updateScene(p_logicalView.logicalScene);
+		_updateScene(p_logicalView.scene);
 		
 		
 		//UPDATE CAMERA
 		
 		//assert camera
-		if (p_logicalView.logicalCamera == null) {
+		if (p_logicalView.camera == null) {
 			Console.error("no way to render...");
 			return; }
 		
-		_updateCamera(p_logicalView.logicalCamera);
+		_updateCamera(p_logicalView.camera);
 		
 		
 		//UPDATE VIEW
@@ -74,7 +74,7 @@ class ARenderer implements IRenderer
 		_validateView(p_logicalView);
 	}
 	
-	private function _updateScene(p_logicalScene:ILogicalScene):Void
+	private function _updateScene(p_logicalScene:Scene3D):Void
 	{
 		//CREATE IT
 		if (_hasScene(p_logicalScene) == false)
@@ -85,16 +85,15 @@ class ARenderer implements IRenderer
 		//VALIDATE IT
 		_validateScene(p_logicalScene);
 		
-		//return;
 		//UPDATE CHILDREN
-		for (f_logicalEntity in p_logicalScene.logicalEntitySet)
+		for (f_logicalObjectContainer in p_logicalScene._sceneGraphRoot._children)
 		{
-			_updateEntity(f_logicalEntity, p_logicalScene);
+			_updateEntity(f_logicalObjectContainer, p_logicalScene);
 		}
 		
 	}
 	
-	private function _updateCamera(p_logicalCamera:ILogicalCamera):Void
+	private function _updateCamera(p_logicalCamera:Camera3D):Void
 	{
 		//CREATE IT
 		if (_hasCamera(p_logicalCamera) == false)
@@ -108,37 +107,37 @@ class ARenderer implements IRenderer
 	}
 	
 	//@todo: parent may be an entity too not just a scene. Also, update children, like u do in scene
-	private function _updateEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void
+	private function _updateEntity(p_logicalObjectContainer:ObjectContainer3D, p_logicalScene:Scene3D):Void
 	{
 		//CREATE IT
-		if (_hasEntity(p_logicalEntity) == false)
+		if (_hasEntity(p_logicalObjectContainer) == false)
 		{
-			_createEntity(p_logicalEntity, p_logicalScene);
+			_createEntity(p_logicalObjectContainer, p_logicalScene);
 		}
 		
 		//VALIDATE IT
-		_validateEntity(p_logicalEntity, p_logicalScene);
+		_validateEntity(p_logicalObjectContainer, p_logicalScene);
 		
 		//UPDATE CHILDREN
 		//???????
 	}
 	
 	//override functions
-	public function render ( p_logicalView:ILogicalView):Void { }
+	public function render ( p_logicalView:View3D):Void { }
 	
-	private function _hasView(p_logicalView:ILogicalView):Bool { return false; }
-	private function _createView(p_logicalView:ILogicalView):Void { }
-	private function _validateView(p_logicalView:ILogicalView):Void { }
+	private function _hasView(p_logicalView:View3D):Bool { return false; }
+	private function _createView(p_logicalView:View3D):Void { }
+	private function _validateView(p_logicalView:View3D):Void { }
 	
-	private function _hasScene(p_logicalScene:ILogicalScene):Bool { return false; }
-	private function _createScene(p_logicalScene:ILogicalScene):Void { }
-	private function _validateScene(p_logicalScene:ILogicalScene):Void { }
+	private function _hasScene(p_logicalScene:Scene3D):Bool { return false; }
+	private function _createScene(p_logicalScene:Scene3D):Void { }
+	private function _validateScene(p_logicalScene:Scene3D):Void { }
 	
-	private function _hasCamera(p_logicalCamera:ILogicalCamera):Bool { return false; }
-	private function _createCamera(p_logicalCamera:ILogicalCamera):Void { }
-	private function _validateCamera(p_logicalCamera:ILogicalCamera):Void { }
+	private function _hasCamera(p_logicalCamera:Camera3D):Bool { return false; }
+	private function _createCamera(p_logicalCamera:Camera3D):Void { }
+	private function _validateCamera(p_logicalCamera:Camera3D):Void { }
 	
-	private function _hasEntity(p_logicalEntity:ILogicalEntity):Bool { return false; }
-	private function _createEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void { }
-	private function _validateEntity(p_logicalEntity:ILogicalEntity, p_logicalScene:ILogicalScene):Void { }
+	private function _hasEntity(p_logicalObjectContainer:ObjectContainer3D):Bool { return false; }
+	private function _createEntity(p_logicalObjectContainer:ObjectContainer3D, p_logicalScene:Scene3D):Void { }
+	private function _validateEntity(p_logicalObjectContainer:ObjectContainer3D, p_logicalScene:Scene3D):Void { }
 }

@@ -8,4 +8,4 @@ package co.gamep.sliced.services.std.display.logicalspace.core.data;
 	public var renderSceneTransform : Dynamic;
 	public var renderable : co.gamep.sliced.services.std.display.logicalspace.core.base.IRenderable;
 	public var zIndex : Float;
-	public function new():Void {super();}}
+	public function new():Void {}}

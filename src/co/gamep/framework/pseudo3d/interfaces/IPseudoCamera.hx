@@ -12,11 +12,11 @@ package co.gamep.framework.pseudo3d.interfaces;
  */
 interface IPseudoCamera
 {
-	var x( default, default ):Int;
-	var y( default, default ):Int;
-	var z( default, default ):Int;
-	var yaw( default, default ):Int;
-	var pitch( default, default ):Int;
-	var roll( default, default ):Int;
+	var x( default, default ):Float;
+	var y( default, default ):Float;
+	var z( default, default ):Float;
+	var rotationX( default, default ):Float;
+	var rotationY( default, default ):Float;
+	var rotationZ( default, default ):Float;
 	var fieldOfView( default, default ):Int;
 }

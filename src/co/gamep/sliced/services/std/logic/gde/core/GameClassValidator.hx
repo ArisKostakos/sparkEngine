@@ -61,6 +61,7 @@ class GameClassValidator implements IGameClassValidator
 		_xmlNodeTypeToNodeRule[ENodeType.FORM] = _createFormNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.SCRIPTS] = _createScriptsNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.SCRIPT] = _createScriptNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.GML] = _createGmlNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.TRIGGERS] = _createTriggersNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.TRIGGER] = _createTriggerNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.EVENT] = _createEventNodeRule();
@@ -197,8 +198,15 @@ class GameClassValidator implements IGameClassValidator
 	
 	inline private function _createScriptsNodeRule():Rule
 	{
-		var l_children:Rule = RMulti(RNode(_xmlNodeTypeToNodeName[ENodeType.SCRIPT]), true);
-
+		var l_children:Rule = RMulti(
+				RChoice(
+				[
+					RNode(_xmlNodeTypeToNodeName[ENodeType.SCRIPT]),
+					RNode(_xmlNodeTypeToNodeName[ENodeType.GML])
+				]
+				),
+			true
+		);
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.SCRIPTS], [], l_children);
 	}
 	
@@ -207,6 +215,13 @@ class GameClassValidator implements IGameClassValidator
 		var l_children:Rule = RData();
 
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.SCRIPT], [], l_children);
+	}
+	
+	inline private function _createGmlNodeRule():Rule
+	{
+		var l_children:Rule = RData();
+
+		return RNode(_xmlNodeTypeToNodeName[ENodeType.GML], [], l_children);
 	}
 	
 	inline private function _createTriggersNodeRule():Rule

@@ -5,14 +5,14 @@
  */
 
 package co.gamep.sliced.interfaces;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalLight;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalMesh;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
+import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
+import co.gamep.sliced.services.std.display.logicalspace.entities.Entity;
+import co.gamep.sliced.services.std.display.logicalspace.entities.Mesh;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalSpace;
 import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStage;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.logicalspace.lights.DirectionalLight;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 
@@ -22,24 +22,24 @@ import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
  * @author Aris Kostakos
  */
 interface IDisplay extends IService
-{
+{	
 	var logicalSpace( default, default ):ILogicalSpace;
 	
 	var rendererSet( default, null ):Array<IRenderer>;
 	
-	var logicalViewsOrder (default, null ):Array<ILogicalView>;
-	var logicalViewRendererAssignments (default, null ):Map<ILogicalView,IRenderer>;
+	var logicalViewsOrder (default, null ):Array<View3D>;
+	var logicalViewRendererAssignments (default, null ):Map<View3D,IRenderer>;
 	
 	function setSpace( p_space:ILogicalSpace ):Void;
 	
 	function createSpace():ILogicalSpace;
 	function createStage():ILogicalStage;
-	function createScene():ILogicalScene;
-	function createCamera():ILogicalCamera;
-	function createView():ILogicalView;
-	function createEntity():ILogicalEntity;
-	function createMesh():ILogicalMesh;
-	function createLight():ILogicalLight;
+	function createScene():Scene3D;
+	function createCamera():Camera3D;
+	function createView():View3D;
+	function createEntity():Entity;
+	function createMesh():Mesh;
+	function createDirectionalLight():DirectionalLight;
 	
 	function update():Void;
 	

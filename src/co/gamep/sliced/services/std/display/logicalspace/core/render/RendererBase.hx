@@ -17,4 +17,4 @@ class RendererBase {
 	public var textureRatioY : Float;
 	public var viewHeight : Float;
 	public var viewWidth : Float;
-	public function new():Void {super();}}
+	public function new():Void {}}

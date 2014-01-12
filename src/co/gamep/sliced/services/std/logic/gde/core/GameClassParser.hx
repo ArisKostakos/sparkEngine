@@ -99,6 +99,7 @@ class GameClassParser implements IGameClassParser
 		_xmlNodeTypeToNodeName[ENodeType.FORM] = "Form";
 		_xmlNodeTypeToNodeName[ENodeType.SCRIPTS] = "Scripts";
 		_xmlNodeTypeToNodeName[ENodeType.SCRIPT] = "Script";
+		_xmlNodeTypeToNodeName[ENodeType.GML] = "Gml";
 		_xmlNodeTypeToNodeName[ENodeType.TRIGGERS] = "Triggers";
 		_xmlNodeTypeToNodeName[ENodeType.TRIGGER] = "Trigger";
 		_xmlNodeTypeToNodeName[ENodeType.EVENT] = "Event";
@@ -123,6 +124,7 @@ class GameClassParser implements IGameClassParser
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.FORM]] = ENodeType.FORM;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.SCRIPTS]] = ENodeType.SCRIPTS;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.SCRIPT]] = ENodeType.SCRIPT;
+		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.GML]] = ENodeType.GML;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.TRIGGERS]] = ENodeType.TRIGGERS;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.TRIGGER]] = ENodeType.TRIGGER;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.EVENT]] = ENodeType.EVENT;
@@ -184,6 +186,7 @@ class GameClassParser implements IGameClassParser
 		_isNodeExtendable[ENodeType.FORM] = true;
 		_isNodeExtendable[ENodeType.SCRIPTS] = false;
 		_isNodeExtendable[ENodeType.SCRIPT] = false;
+		_isNodeExtendable[ENodeType.GML] = false;
 		_isNodeExtendable[ENodeType.TRIGGERS] = false;
 		_isNodeExtendable[ENodeType.TRIGGER] = true;
 		_isNodeExtendable[ENodeType.EVENT] = false;
@@ -208,6 +211,7 @@ class GameClassParser implements IGameClassParser
 		_isNodeMergable[ENodeType.FORM] = true;
 		_isNodeMergable[ENodeType.SCRIPTS] = true;
 		_isNodeMergable[ENodeType.SCRIPT] = false;
+		_isNodeMergable[ENodeType.GML] = false;
 		_isNodeMergable[ENodeType.TRIGGERS] = true;
 		_isNodeMergable[ENodeType.TRIGGER] = false;
 		_isNodeMergable[ENodeType.EVENT] = false;
@@ -232,6 +236,7 @@ class GameClassParser implements IGameClassParser
 		_isNodeTargetMergable[ENodeType.FORM] = false;
 		_isNodeTargetMergable[ENodeType.SCRIPTS] = false;
 		_isNodeTargetMergable[ENodeType.SCRIPT] = false;
+		_isNodeTargetMergable[ENodeType.GML] = false;
 		_isNodeTargetMergable[ENodeType.TRIGGERS] = false;
 		_isNodeTargetMergable[ENodeType.TRIGGER] = false;
 		_isNodeTargetMergable[ENodeType.EVENT] = false;
@@ -256,6 +261,7 @@ class GameClassParser implements IGameClassParser
 		_isNodeArray[ENodeType.FORM] = false;
 		_isNodeArray[ENodeType.SCRIPTS] = true;
 		_isNodeArray[ENodeType.SCRIPT] = false;
+		_isNodeArray[ENodeType.GML] = false;
 		_isNodeArray[ENodeType.TRIGGERS] = true;
 		_isNodeArray[ENodeType.TRIGGER] = false;
 		_isNodeArray[ENodeType.EVENT] = false;
@@ -1151,7 +1157,7 @@ class GameClassParser implements IGameClassParser
 	{
 		try 
 		{
-			return Xml.parse(Assets.lionscript.getFile(p_stringAssetUrl).toString());
+			return null; // return Xml.parse(Assets.lionscript.getFile(p_stringAssetUrl).toString()); //FIXMENOW
 		}
 		catch (err:Dynamic) 
 		{

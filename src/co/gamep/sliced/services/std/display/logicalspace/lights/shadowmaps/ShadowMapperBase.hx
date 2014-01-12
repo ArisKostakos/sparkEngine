@@ -6,4 +6,4 @@ class ShadowMapperBase {
 	public var depthMap(default,never) : co.gamep.sliced.services.std.display.logicalspace.textures.TextureProxyBase;
 	public var depthMapSize : Int;
 	public var light : co.gamep.sliced.services.std.display.logicalspace.lights.LightBase;
-	public function new():Void {super();}}
+	public function new():Void {}}

@@ -5,6 +5,8 @@
  */
 
 package co.gamep.sliced.services.std.display.logicalspace.interfaces;
+import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
 
 /**
  * Logical space stands to ‘reality’, the existence and non-existence of states of affairs (TLP 2.05), as the potential to the actual. 
@@ -12,20 +14,21 @@ package co.gamep.sliced.services.std.display.logicalspace.interfaces;
  * The world is the ‘facts in logical space’ (TLP 1.13), since the contingent existence of states of affairs is embedded in an a priori order of possibilities.
  * @author Aris Kostakos
  */
-interface ILogicalSpace extends ILogicalComponent
+interface ILogicalSpace
 {
+	var name( default, default ):String;
 	var logicalStage( default, default ):ILogicalStage;
-	var logicalSceneSet( default, null ):Map<String,ILogicalScene>;
-	var logicalCameraSet( default, null ):Map<String,ILogicalCamera>;
+	var logicalSceneSet( default, null ):Map<String,Scene3D>;
+	var logicalCameraSet( default, null ):Map<String,Camera3D>;
 	//var assets and primitives?????(neccessary for shared objects between scenes and memory conservation)
 	
 	function setStage( p_stage:ILogicalStage ):Void;
 	
-	function addScene( p_scene:ILogicalScene ):Void;
-	function removeScene( p_scene:ILogicalScene ):Void;
-	function getScene( p_sceneName:String ):ILogicalScene;
+	function addScene( p_scene:Scene3D ):Void;
+	function removeScene( p_scene:Scene3D ):Void;
+	function getScene( p_sceneName:String ):Scene3D;
 	
-	function addCamera( p_camera:ILogicalCamera ):Void;
-	function removeCamera( p_camera:ILogicalCamera ):Void;
-	function getCamera( p_cameraName:String ):ILogicalCamera;
+	function addCamera( p_camera:Camera3D ):Void;
+	function removeCamera( p_camera:Camera3D ):Void;
+	function getCamera( p_cameraName:String ):Camera3D;
 }

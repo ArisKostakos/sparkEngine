@@ -26,6 +26,9 @@ class Framework
 		
 		//Init Platform Specific Graphics
 		Graphics.init();
+		
+		//Init Assets System
+		Assets.init();
 	}
 	
 	public static function createDisplayRenderers():Void

@@ -1,6 +1,6 @@
 package co.gamep.sliced.services.std.display.logicalspace.entities;
 
-class Entity extends co.gamep.sliced.services.std.display.logicalspace.containers.ObjectContainer3D {
+@:keep class Entity extends co.gamep.sliced.services.std.display.logicalspace.containers.ObjectContainer3D {
 	public var _pickingCollider : co.gamep.sliced.services.std.display.logicalspace.core.pick.IPickingCollider;
 	public var _pickingCollisionVO : co.gamep.sliced.services.std.display.logicalspace.core.pick.PickingCollisionVO;
 	public var _staticNode : Bool;

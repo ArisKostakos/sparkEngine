@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Trigger>
-	<Event>Created</Event>
-	<Scripts>
-		<Script>
-			Display.info('XML ENTITY WITH LOGICAL NAME [' + me.gameStateSet.get('std_name').value + '] WAS CREATED!');
-		</Script>
-	</Scripts>
-</Trigger>

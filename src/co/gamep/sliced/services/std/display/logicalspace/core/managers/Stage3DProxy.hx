@@ -24,4 +24,4 @@ class Stage3DProxy {
 	public var width : Int;
 	public var x : Float;
 	public var y : Float;
-	public function new():Void {super();}}
+	public function new():Void {}}

@@ -11,6 +11,7 @@ import co.gamep.sliced.core.AService;
 import co.gamep.sliced.services.std.logic.gde.core.GameFactory;
 import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import co.gamep.sliced.services.std.logic.gde.interfaces.IGameFactory;
+import co.gamep.sliced.services.std.logic.interpreter.core.GmlInterpreter;
 import co.gamep.sliced.services.std.logic.interpreter.core.HaxeInterpreter;
 import co.gamep.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
 
@@ -21,7 +22,8 @@ import co.gamep.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
 class Logic extends AService implements ILogic
 {
 	public var rootGameEntity( default, default ):IGameEntity;
-	public var interpreter( default, null ):IInterpreter;
+	public var scriptInterpreter( default, null ):IInterpreter;
+	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
 	
 	public function new() 
@@ -35,8 +37,11 @@ class Logic extends AService implements ILogic
 	{
 		Console.log("Init Logic std Service...");
 		
-		//Create Interpreter
-		interpreter = new HaxeInterpreter();
+		//Create Script Interpreter
+		scriptInterpreter = new HaxeInterpreter();
+		
+		//Create Gml Interpreter
+		gmlInterpreter = new GmlInterpreter();
 		
 		//Create GameFactory
 		gameFactory = new GameFactory();

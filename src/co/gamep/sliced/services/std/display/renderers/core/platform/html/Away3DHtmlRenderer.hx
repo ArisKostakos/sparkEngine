@@ -4,10 +4,9 @@
  * Written by Aris Kostakos <a.kostakos@gmail.com>, November 2013
  */
 
- package co.gamep.sliced.services.std.display.renderers.core.platform.html;
+package co.gamep.sliced.services.std.display.renderers.core.platform.html;
 
-import away3d.containers.View3D;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
+import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
 import co.gamep.sliced.services.std.display.renderers.core.platform.AAway3DRenderer;
 import away3d.core.managers.Stage3DManager;
 
@@ -29,7 +28,7 @@ class Away3DHtmlRenderer extends AAway3DRenderer
 		Console.info("Creating Away3D Html Renderer...");
 	}
 	
-	override private function _createView(p_logicalView:ILogicalView):Void
+	override private function _createView(p_logicalView:View3D):Void
 	{
 		//@FIX: HUGE BUG. Every time I create a View3D in away-ts it will create a new Stage3DProxy!!! disable that!!!!!!!
 			//or at least make sures u're only left with one Stage3DProxy not 2 or more

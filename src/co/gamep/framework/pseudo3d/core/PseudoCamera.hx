@@ -13,12 +13,12 @@ import co.gamep.framework.pseudo3d.interfaces.IPseudoCamera;
  */
 class PseudoCamera implements IPseudoCamera
 {
-	public var x( default, default ):Int;
-	public var y( default, default ):Int;
-	public var z( default, default ):Int;
-	public var yaw( default, default ):Int;
-	public var pitch( default, default ):Int;
-	public var roll( default, default ):Int;
+	public var x( default, default ):Float;
+	public var y( default, default ):Float;
+	public var z( default, default ):Float;
+	public var rotationX( default, default ):Float;
+	public var rotationY( default, default ):Float;
+	public var rotationZ( default, default ):Float;
 	public var fieldOfView( default, default ):Int;
 	
 	public function new() 

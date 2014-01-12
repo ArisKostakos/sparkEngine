@@ -7,16 +7,14 @@
  package co.gamep.sliced.services.std.display.renderers.core.platform;
 
 import co.gamep.framework.pseudo3d.flambe.FlambeView;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalView;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalScene;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalCamera;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalEntity;
+import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
+import co.gamep.sliced.services.std.display.logicalspace.containers.ObjectContainer3D;
 import co.gamep.sliced.services.std.display.renderers.core.A2DRenderer;
-import flambe.Entity;
 import flambe.platform.InternalGraphics;
 import flambe.platform.Platform;
 import flambe.platform.Renderer;
-import flambe.System;
 
 
 /**
@@ -45,7 +43,7 @@ class AFlambe2DRenderer extends A2DRenderer
 		}
 	}
 	
-	override private function _createView(p_logicalView:ILogicalView):Void
+	override private function _createView(p_logicalView:View3D):Void
 	{
 		_viewPointerSet.set(p_logicalView, new FlambeView(_internalGraphics));
 	}
@@ -53,8 +51,8 @@ class AFlambe2DRenderer extends A2DRenderer
 	
 	
 	
-	override private function _hasView(p_logicalView:ILogicalView):Bool { return _viewPointerSet.exists(p_logicalView); }
-	override private function _hasScene(p_logicalScene:ILogicalScene):Bool { return _scenePointerSet.exists(p_logicalScene); }
-	override private function _hasCamera(p_logicalCamera:ILogicalCamera):Bool { return _cameraPointerSet.exists(p_logicalCamera); }
-	override private function _hasEntity(p_logicalEntity:ILogicalEntity):Bool { return _entityPointerSet.exists(p_logicalEntity); }
+	override private function _hasView(p_logicalView:View3D):Bool { return _viewPointerSet.exists(p_logicalView); }
+	override private function _hasScene(p_logicalScene:Scene3D):Bool { return _scenePointerSet.exists(p_logicalScene); }
+	override private function _hasCamera(p_logicalCamera:Camera3D):Bool { return _cameraPointerSet.exists(p_logicalCamera); }
+	override private function _hasEntity(p_logicalObjectContainer:ObjectContainer3D):Bool { return _entityPointerSet.exists(p_logicalObjectContainer); }
 }
