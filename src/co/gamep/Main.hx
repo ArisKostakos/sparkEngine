@@ -40,7 +40,7 @@ class Main
 		Sliced.init();
 		
 		//Create Display Renderers
-		Framework.createDisplayRenderers();
+		//Framework.createDisplayRenderers(); //[PROTOTYPE HACK]
 		
 		//Create Game
 		System.root.add(new Game());

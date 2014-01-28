@@ -25,7 +25,7 @@ class Framework
 		System.init();
 		
 		//Init Platform Specific Graphics
-		Graphics.init();
+		//Graphics.init(); //[PROTOTYPE HACK]
 		
 		//Init Assets System
 		Assets.init();
