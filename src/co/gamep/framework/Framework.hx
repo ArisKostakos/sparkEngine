@@ -21,11 +21,17 @@ class Framework
 {	
 	public static function init():Void
 	{
+		//In case of html, fix the haxe/js bug to have external js code able to run
+		#if html
+			//fix the haxe/js bug before running any js code
+			untyped __js__('if (Object.defineProperty) Object.defineProperty(Array.prototype, "__class__", {enumerable: false});');
+		#end
+		
 		// Init Flambe
 		System.init();
 		
 		//Init Platform Specific Graphics
-		//Graphics.init(); //[PROTOTYPE HACK]
+		Graphics.init();
 		
 		//Init Assets System
 		Assets.init();

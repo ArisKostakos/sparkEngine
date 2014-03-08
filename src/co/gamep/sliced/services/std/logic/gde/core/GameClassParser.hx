@@ -1157,7 +1157,7 @@ class GameClassParser implements IGameClassParser
 	{
 		try 
 		{
-			return null; // return Xml.parse(Assets.lionscript.getFile(p_stringAssetUrl).toString()); //FIXMENOW
+			return Xml.parse(Assets.lionscript.getFile(p_stringAssetUrl).toString()); //FIXMENOW //[PROTOTYPE HACK: enable]
 		}
 		catch (err:Dynamic) 
 		{

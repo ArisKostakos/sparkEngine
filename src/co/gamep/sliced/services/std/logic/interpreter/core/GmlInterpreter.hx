@@ -24,7 +24,7 @@ class GmlInterpreter implements IInterpreter
 	
 	public function new() 
 	{
-		Console.log("Init Haxe Interpreter...");
+		Console.log("Init Gml Interpreter...");
 		_init();
 	}
 	

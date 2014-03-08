@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Game+ Creator - Prototype</title>
+
+
+<script type="text/javascript" language="javascript" src="libs/Away3D.next.min.js"></script>
+<script type="text/javascript" language="javascript" src="js/Intermediate_MD5Animation.js"></script>
+
+<script type="text/javascript"
+                src="http://repo.zebkit.org/latest/zebra.min.js">
+        </script>
+
+
+	<style type="text/css">
+    	html, body {
+    		height: 100%;
+    		margin: 0;
+			overflow:hidden;
+    	}
+
+    	#content {
+			min-width: 100%;
+    		min-height: 100%; 
+			float:left;
+			z-index:-1;
+    	}
+		
+		#zebra {
+
+			opacity:0.8;
+			float:left;
+			z-index:0;
+			position:fixed;
+    	}
+		
+		#zebra-canvas {
+
+    	}
+    </style>
+</head>
+<body>
+
+<div id="content"></div>
+<div id="zebra"><canvas id="zebra-canvas"/></div>
+<script src="flambe.js"></script>
+<script>
+  flambe.embed(["targets/main-html.js"], "content");
+</script>
+
+<script type="text/javascript">
+
+	zebra.ready(function() {
+	// import all classes, functions, constants
+	// from zebra.ui, zebra.layout packages
+	eval(zebra.Import("ui", "layout"));
+
+	// create canvas
+
+	//400,400
+
+	// create canvas
+	var canvas = new zCanvas("zebra-canvas");
+  
+     
+
+	// create standard UI window component 
+	var win = new zebra.ui.Window();
+	win.setBounds(50,50,230,600);
+	//win.title.setBackground("Orange");
+	
+	win.title.setLayout(new zebra.layout.BorderLayout());
+	var l = new zebra.ui.Label("Tutorial");
+	l.constraints = zebra.layout.CENTER;
+	win.title.add(l);
+	
+	//win.caption.setBackground("Orange");
+	//win.setBorder(new Raised("Orange", "DarkOrange"));
+	
+	//win.root.add(new zebra.ui.Label("Simple string"));
+	
+	showWindow(canvas, "mdi", win);
+   
+   
+   
+	canvas.fullScreen();
+	var r = canvas.root;
+	r.setBackground("rgba(0,0,0,0)");
+});
+ 
+</script>
+
+</body>
+</html>

@@ -55,7 +55,7 @@ class Subgraphics
 	public static function initAway3DStage3DgetContext3D():RenderingContext
 	{
 		//fix the haxe/js bug before running any js code
-		untyped __js__('if (Object.defineProperty) Object.defineProperty(Array.prototype, "__class__", {enumerable: false});');
+		//untyped __js__('if (Object.defineProperty) Object.defineProperty(Array.prototype, "__class__", {enumerable: false});'); //I put that in the framework since it's not just for away3d ts but anything external javascript
 		
 		//@todo aris):  1. EASY: don't check by id to get the content: "content-canvas" but do it like flambe does it (using the property in flambe embeder on the html)
 		//				2. IMPORTANT: right now, the away3d.next.js will create a stage of default size: 640x480. What happens if flambe's content is NOT the same size as that (currently it's also 640x480)
@@ -81,13 +81,13 @@ class Subgraphics
 		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		// Define a new Stage3DManager for the Stage3D objects
 		_stage3DManager = Stage3DManager.getInstance(l_view3D.stage);
-		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		// Create a new Stage3D proxy to contain the separate views
 		_stage3DProxy = _stage3DManager.getStage3DProxy(0);
 		
-		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		l_view3D.dispose();
-		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		return _stage3DProxy.stage3D.context3D.gl();
 	}
 	

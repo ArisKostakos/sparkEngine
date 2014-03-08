@@ -27,20 +27,20 @@ class Main
 		Framework.init();
 		
 		//Load Minimal Assets (e.g. config files)
-		//Assets.assetsLoaded.connect(_onAssetsLoaded).once();  //Loads all Assets temporarily
-		Assets.testLoadFile("test file", "image.png", true);
+		Assets.assetsLoaded.connect(_onAssetsLoaded).once();  //Loads all Assets temporarily //[PROTOTYPE HACK: enable]
+		//Assets.testLoadFile("test file", "image.png", true); //[PROTOTYPE HACK: disable]
     }
 
 	private static function _onAssetsLoaded()
     {
 		//Init Config
-		//Config.init(Assets.config.getFile("config.xml").toString()); //FIXMENOW
+		Config.init(Assets.config.getFile("config.xml").toString()); //FIXMENOW //[PROTOTYPE HACK: enable]
 		
 		//Init Sliced
 		Sliced.init();
 		
 		//Create Display Renderers
-		//Framework.createDisplayRenderers(); //[PROTOTYPE HACK]
+		Framework.createDisplayRenderers();
 		
 		//Create Game
 		System.root.add(new Game());

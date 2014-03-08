@@ -76,7 +76,7 @@ class FlambeView extends APseudoView
 	
 	private inline function _createRealEntity(p_pseudoEntity:IPseudoEntity):Void
 	{
-		//_entityPointerSet[p_pseudoEntity] = new Entity().add(new ImageSprite(Assets.images.getTexture("AtomBlue"))); //FIXMENOW
+		_entityPointerSet[p_pseudoEntity] = new Entity().add(new ImageSprite(Assets.images.getTexture("AtomBlue"))); //FIXMENOW //[PROTOTYPE HACK: enable]
 		_flambeView.addChild(_entityPointerSet[p_pseudoEntity]);
 	}
 	

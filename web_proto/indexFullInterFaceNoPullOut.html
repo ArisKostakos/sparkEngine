@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Game+ Creator - Prototype</title>
+
+
+<script type="text/javascript" language="javascript" src="libs/Away3D.next.min.js"></script>
+<script type="text/javascript" language="javascript" src="js/Intermediate_MD5Animation.js"></script>
+
+<script type="text/javascript"
+                src="http://repo.zebkit.org/latest/zebra.min.js">
+        </script>
+
+
+	<style type="text/css">
+    	html, body {
+    		height: 100%;
+    		margin: 0;
+			overflow:hidden;
+    	}
+
+    	#content {
+			min-width: 100%;
+    		min-height: 100%; 
+			float:left;
+			z-index:-1;
+    	}
+		
+		#zebra {
+
+			//opacity:0.8;
+			float:left;
+			z-index:0;
+			position:fixed;
+    	}
+		
+		#zebra-canvas {
+
+    	}
+    </style>
+</head>
+<body>
+
+<div id="content"></div>
+<div id="zebra"><canvas id="zebra-canvas"/></div>
+<script src="flambe.js"></script>
+<script>
+  flambe.embed(["targets/main-html.js"], "content");
+</script>
+
+<script type="text/javascript">
+	var purpleBox = null, greenBox=null, orangeBox=null, redBox=null, zoomBox=null;
+	zebra.ready(function() {
+		purpleBox = zebra.ui.loadImage("purple_box.png");
+		greenBox = zebra.ui.loadImage("green_box.png");
+		orangeBox = zebra.ui.loadImage("orange_box.png");
+		redBox = zebra.ui.loadImage("red_box.png");
+		zoomBox = zebra.ui.loadImage("zoom_box.png");
+	});
+
+	zebra.ready(function() {
+	// import all classes, functions, constants
+	// from zebra.ui, zebra.layout packages
+	eval(zebra.Import("ui", "layout"));
+
+	//CANVAS
+	var canvas = new zCanvas("zebra-canvas");
+	canvas.fullScreen();
+	var canvasRoot = canvas.root;
+	canvasRoot.setBackground("rgba(0,0,0,0)");
+	//canvasRoot.setLayout(new BorderLayout());
+	canvasRoot.setLayout(new StackLayout());
+	
+	//LEFT GROUP
+	var leftGroupParent = new Panel();
+	leftGroupParent.setLayout(new BorderLayout());
+	canvasRoot.add(leftGroupParent);
+	var leftGroup = new Panel();
+	leftGroup.setLayout(new PercentLayout(VERTICAL, 0, false));
+	leftGroupParent.add(LEFT, leftGroup);
+	
+	//PURPLE BOX
+	var purplePanel = new Panel(ComponentListener ,[
+		function compSized(c,pw,ph) {
+			//c.setPreferredSize(c.parent.height*0.603,c.parent.height);
+			//c.setSize(200,200);
+			//canvasRoot.validate();
+			//leftGroup.validate();
+			//purplePictureParent.validate();
+			//purplePanel.validate();
+			//alert("wtf");
+		}
+	]);
+	
+	var purplePicture = new Picture(purpleBox); //(purpleBox,410,0,475,787);
+	
+	var purplePictureParent = new Panel(ComponentListener ,[
+		function compSized(c,pw,ph) {
+			c.setPreferredSize(c.height*0.603,0);
+			//c.find("/Panel").setBounds(0,0,200,200);
+			canvasRoot.validate();
+			leftGroup.validate();
+		}
+	]);
+	
+	
+	//purplePictureParent.setLayout(new StackLayout());
+	purplePictureParent.setBackground("purple");
+	purplePictureParent.add(purplePanel);
+	
+	purplePanel.setSize(0,0,300,300);
+	//purplePanel.setBounds(-150,0,200,200);
+	purplePanel.setBackground(purplePicture);
+	//purplePanel.setLocation(-200,0);
+	
+	leftGroup.add(7.407,new Panel());
+	leftGroup.add(72.870,purplePictureParent);
+	leftGroup.add(19.723,new Panel());
+	
+
+	
+	//BOTT0M GROUP
+	var bottomGroupParent = new Panel();
+	bottomGroupParent.setLayout(new BorderLayout());
+	canvasRoot.add(bottomGroupParent);
+	var bottomGroup = new Panel();
+	bottomGroup.setLayout(new PercentLayout(HORIZONTAL, 0, false));
+	bottomGroupParent.add(BOTTOM, bottomGroup);
+ 
+	//GREEN BOX
+	var greenPanel = new Panel(ComponentListener ,[
+		function compSized(c,pw,ph) {
+			c.setPreferredSize(0,c.width*0.162);
+			canvasRoot.validate();
+			bottomGroup.validate();
+		}
+	]);
+
+	greenPanel.setBackground(new Picture(greenBox));
+	bottomGroup.add(18.958,new Panel());
+	bottomGroup.add(51.666,greenPanel);
+	bottomGroup.add(29.376,new Panel());
+	
+	 
+	 
+	 
+	//RIGHT GROUP
+	var rightGroupParent = new Panel();
+	rightGroupParent.setLayout(new BorderLayout());
+	canvasRoot.add(rightGroupParent);
+	var rightGroup = new Panel();
+	rightGroup.setLayout(new PercentLayout(VERTICAL, 7, false));
+	rightGroupParent.add(RIGHT, rightGroup);
+	
+	//ORANGE BOX
+	var orangePanel = new Panel(ComponentListener ,[
+		function compSized(c,pw,ph) {
+			c.setPreferredSize(c.height*0.656,0);
+			canvasRoot.validate();
+			rightGroup.validate();
+		}
+	]);
+	orangePanel.setBackground(new Picture(orangeBox));
+	rightGroup.add(54.3,orangePanel);
+	
+	//RED BOX
+	var redPanel = new Panel(ComponentListener ,[
+		function compSized(c,pw,ph) {
+			c.setPreferredSize(c.height*0.791,0);
+			canvasRoot.validate();
+			rightGroup.validate();
+		}
+	]);
+	redPanel.setBackground(new Picture(redBox));
+	rightGroup.add(45.7,redPanel);
+
+	
+	
+	//TOP GROUP
+	var topGroupParent = new Panel();
+	topGroupParent.setLayout(new BorderLayout());
+	canvasRoot.add(topGroupParent);
+	var topGroup = new Panel();
+	topGroup.setLayout(new PercentLayout(HORIZONTAL, 0, false));
+	topGroupParent.add(TOP, topGroup);
+ 
+	//ZOOM BOX
+	var zoomPanel = new Panel(ComponentListener ,[
+		function compSized(c,pw,ph) {
+			c.setPreferredSize(0,c.width*0.483);
+			canvasRoot.validate();
+			topGroup.validate();
+		}
+	]);
+
+	zoomPanel.setBackground(new Picture(zoomBox));
+	topGroup.add(26.927,new Panel());
+	topGroup.add(9.583,zoomPanel);
+	topGroup.add(63.490,new Panel());
+	
+});
+ 
+</script>
+
+</body>
+</html>
