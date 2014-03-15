@@ -6,7 +6,7 @@
 
 package co.gamep.framework.pseudo3d.core;
 import co.gamep.framework.pseudo3d.interfaces.IPseudoEntity;
-
+import nape.phys.Body;
 /**
  * ...
  * @author Aris Kostakos
@@ -19,6 +19,10 @@ class PseudoEntity implements IPseudoEntity
 	public var rotationX( default, default ):Float;
 	public var rotationY( default, default ):Float;
 	public var rotationZ( default, default ):Float;
+	public var spriteUrl( default, default ):String;
+	public var velX( default, default ):Float;
+	public var velY( default, default ):Float;
+	public var velZ( default, default ):Float;
 
 	/*
 	public var x( default, default ):Int;
@@ -29,6 +33,8 @@ class PseudoEntity implements IPseudoEntity
 	public var insideFieldOfView( default, default ):Bool;
 	*/
 	public var pseudoEntitySet:Array<IPseudoEntity>;
+	
+	public var napeBody( default, default ):Body;
 	
 	public function new() 
 	{

@@ -6,6 +6,9 @@
 
 package co.gamep.framework.assets;
 
+import flambe.asset.File;
+import flambe.display.Texture;
+import flambe.sound.Sound;
 import flambe.System;
 import flambe.asset.AssetPack;
 import flambe.asset.Manifest;
@@ -15,6 +18,7 @@ import flambe.util.Signal1;
 import flambe.util.Signal2;
 import flambe.util.SignalConnection;
 import flambe.asset.AssetEntry.AssetFormat;
+import flambe.asset.Asset;
 
 /**
  * Load the config folder statically...
@@ -36,7 +40,7 @@ class FlambeLoader
 	
 	private var _assetInUse:Map<String,Bool>;
 	private var _assetToBatchLoad:Map<String,Manifest>;
-	private var _batchLoadToAssetPack:Map<String,Bool>;
+	private var _batchLoadToAssetPack:Map<Manifest,AssetPack>;
 	
 	private var _manifest:Manifest;
 	private var _promise:Promise<AssetPack>;
@@ -57,7 +61,7 @@ class FlambeLoader
 		
 		_assetInUse = new Map<String,Bool>();
 		_assetToBatchLoad = new Map<String,Manifest>();
-		_batchLoadToAssetPack = new Map<String,Bool>();
+		_batchLoadToAssetPack = new Map<Manifest,AssetPack>();
 	}
 	
 	//Interface function for ServerLoader as well
@@ -71,13 +75,29 @@ class FlambeLoader
 	{
 		if (p_forceLoadAsData)
 		{
-			_manifest.add(p_name, p_url, 112689, AssetFormat.Data);
+			_manifest.add(p_name, p_url +"?" + Std.random(10000), 112689, AssetFormat.Data);
 		}
 		else
 		{
-			_manifest.add(p_name, p_url, 112689);
+			_manifest.add(p_name, p_url +"?" + Std.random(10000), 112689);
 		}
 		
+		_assetToBatchLoad[p_name]= _manifest;
+	}
+	
+	public function getFile(p_name:String):File
+	{
+		return _batchLoadToAssetPack[_assetToBatchLoad[p_name]].getFile(p_name);
+	}
+	
+	public function getTexture(p_name:String):Texture
+	{
+		return _batchLoadToAssetPack[_assetToBatchLoad[p_name]].getTexture(p_name);
+	}
+	
+	public function getSound(p_name:String):Sound
+	{
+		return _batchLoadToAssetPack[_assetToBatchLoad[p_name]].getSound(p_name);
 	}
 	
 	
@@ -95,6 +115,7 @@ class FlambeLoader
 	{
 		_disposePromiseSignals();
 		
+		_batchLoadToAssetPack[_manifest] = p_assettPack;
 		successSignal.emit();
 	}
 	

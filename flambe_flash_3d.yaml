@@ -14,7 +14,7 @@ haxe_flags: -lib hscript -swf-lib C:\HaxeToolkit\haxe\lib\away3d-flash\vendor\Aw
 
 # Additional paths to include in the build
 extra_paths:
-  assets: C:\Users\LLaffer\Documents\GamePlus_Projects\TestGame\assets
+#  assets: C:\Users\LLaffer\Documents\GamePlus_Projects\TestGame\assets
 #   libs: dir1 dir2
 #   src: ../dir1 ../dir2
   web: ["web_flash_3d"]

@@ -97,6 +97,7 @@ class A2DRenderer extends ARenderer
 	override private function _createEntity(p_logicalEntity:ObjectContainer3D, p_logicalScene:Scene3D):Void
 	{
 		_entityPointerSet.set(p_logicalEntity, new PseudoEntity());
+		_entityPointerSet[p_logicalEntity].spriteUrl = p_logicalEntity.assetType;
 		_scenePointerSet[p_logicalScene].addChild(_entityPointerSet[p_logicalEntity]);
 	}
 	
@@ -109,5 +110,8 @@ class A2DRenderer extends ARenderer
 		_entityPointerSet[p_logicalEntity].rotationX = p_logicalEntity.rotationX;
 		_entityPointerSet[p_logicalEntity].rotationY = p_logicalEntity.rotationY;
 		_entityPointerSet[p_logicalEntity].rotationZ = p_logicalEntity.rotationZ;
+		_entityPointerSet[p_logicalEntity].velX = p_logicalEntity.velX;
+		_entityPointerSet[p_logicalEntity].velY = p_logicalEntity.velY;
+		_entityPointerSet[p_logicalEntity].velZ = p_logicalEntity.velZ;
 	}
 }

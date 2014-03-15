@@ -17,6 +17,13 @@ import flambe.display.BlendMode;
 import co.gamep.framework.Assets;
 import flambe.math.Rectangle;
 import flambe.platform.InternalGraphics;
+import nape.geom.Vec2;
+
+import flambe.System;
+import nape.phys.Body;
+import nape.phys.BodyType;
+import nape.shape.Polygon;
+
 
 /**
  * ...
@@ -53,19 +60,80 @@ class FlambeView extends APseudoView
 		Sprite.render(_flambeView, _flambeGraphics);
 	}
 	
+	private var space:SpaceComponent;
 	private inline function _createRealView():Void
 	{
 		_flambeView = new Entity();
-		
+
 		//color  (fix me!)
 		var l_bakcgroundColor:Int;
-		if (x == 0) l_bakcgroundColor = 0x00ff00;
-		else l_bakcgroundColor = 0x0000ff;
+		l_bakcgroundColor = 0xffffff;
 		
 		var l_viewSprite:FillSprite = new FillSprite(l_bakcgroundColor, width, height);
 		l_viewSprite.scissor = new Rectangle(0, 0, width, height);
 		_flambeView.add(l_viewSprite);
+		
+		
+		//Physics test
+        space = new SpaceComponent(_flambeView);
+        //var world = new Entity()
+          //  .add(space)
+          //  .add(new FillSprite(0xf0f0f0, width, height));
+       // _flambeView.addChild(world);
+	   _flambeView.add(space);
+
+        // Since the box and ball images aren't in a texture atlas in this demo, put each type of
+        // body in its own layer to make the drawing order more batch-friendly for GPU renderers
+        
+        //_flambeView.addChild(boxLayer);
+		
+		
+        //_flambeView.addChild(ballLayer);
+		
+		
+		addFloor(_flambeView, 0, -10, 640, 10); //up
+		//addFloor(_flambeView, 0, 480, 640, 10); //down
+		addFloor(_flambeView, -10, 0, 10, 480); //left
+		addFloor(_flambeView, 640, 0, 10, 480); //right
+		
+		System.root.addChild(_flambeView);
+		
+		// On a tap, create a new box or ball
+        System.pointer.down.connect(function (event) 
+		{
+            mouseDown = true;
+			mouseEvent = event;
+        });
+		
+		// On a tap, create a new box or ball
+        System.pointer.up.connect(function (event) 
+		{
+            mouseDown = false;
+        });
 	}
+	
+	private var mouseDown:Bool = false;
+	private var mouseEvent:Dynamic;
+	
+	
+    private function addFloor (world :Entity,myX:Int,myY:Int,myWidth:Int,myHeight:Int)
+    {
+       // var padX = 100;
+        //var padY = 30;
+        //var x = padX;
+        //var y = height - padY;
+        //var mywidth = width - 2*padX;
+        //var myheight = 10;
+
+        var space = world.get(SpaceComponent);
+        var floorBody = new Body(BodyType.STATIC);
+        floorBody.shapes.add(new Polygon(Polygon.rect(myX, myY, myWidth, myHeight)));
+        space.addBody(floorBody);
+
+        var floorEntity = new Entity();
+            //.add(new FillSprite(0x202020, myWidth, myHeight).setXY(myX, myY));
+        world.addChild(floorEntity);
+    }
 	
 	private inline function _validateRealView():Void
 	{
@@ -76,12 +144,70 @@ class FlambeView extends APseudoView
 	
 	private inline function _createRealEntity(p_pseudoEntity:IPseudoEntity):Void
 	{
-		_entityPointerSet[p_pseudoEntity] = new Entity().add(new ImageSprite(Assets.images.getTexture("AtomBlue"))); //FIXMENOW //[PROTOTYPE HACK: enable]
+		trace("sprite url: " + p_pseudoEntity.spriteUrl);
+
+		if (p_pseudoEntity.spriteUrl != "Default")
+		{
+			if (p_pseudoEntity.spriteUrl == "Ball.png")
+			{
+				_entityPointerSet[p_pseudoEntity] = space.addBall(p_pseudoEntity.x, p_pseudoEntity.y , p_pseudoEntity);
+			}
+			else if (p_pseudoEntity.spriteUrl == "Brick.png")
+			{
+				_entityPointerSet[p_pseudoEntity] = space.addBox(p_pseudoEntity.x, p_pseudoEntity.y , p_pseudoEntity);
+			}
+			else if (p_pseudoEntity.spriteUrl == "Paddle.png")
+			{
+				_entityPointerSet[p_pseudoEntity] = space.addBoxKinetic(p_pseudoEntity.x, p_pseudoEntity.y , p_pseudoEntity);
+			}
+			else 
+			{
+				_entityPointerSet[p_pseudoEntity] = new Entity();
+				_entityPointerSet[p_pseudoEntity].add(new ImageSprite(Assets.getTexture("assets/images/" + p_pseudoEntity.spriteUrl)));
+				
+				var l_child:ImageSprite	 = _entityPointerSet[p_pseudoEntity].get(ImageSprite);
+				
+				l_child.x._ = p_pseudoEntity.x;
+				l_child.y._ = p_pseudoEntity.y;
+			}
+			
+		}
+		else
+		{
+			_entityPointerSet[p_pseudoEntity] = new Entity();
+		}
 		_flambeView.addChild(_entityPointerSet[p_pseudoEntity]);
+		
+		
 	}
 	
 	private inline function _validateRealEntity(p_pseudoEntity:IPseudoEntity):Void
 	{
+		if (p_pseudoEntity.spriteUrl == "Paddle.png")
+		{
+			if (mouseDown == true)
+			{
+				if (mouseEvent.viewX < _entityPointerSet[p_pseudoEntity].get(ImageSprite).x._-25)
+				{
+					p_pseudoEntity.napeBody.velocity = new Vec2(-400, 0);
+				}
+				else if (mouseEvent.viewX > _entityPointerSet[p_pseudoEntity].get(ImageSprite).x._+25)
+				{
+					p_pseudoEntity.napeBody.velocity = new Vec2(400, 0);
+				}
+				else
+				{
+					p_pseudoEntity.napeBody.velocity = new Vec2(0, 0);
+				}
+			}
+			else
+			{
+				p_pseudoEntity.napeBody.velocity = new Vec2(p_pseudoEntity.velX, p_pseudoEntity.velY);
+			}
+			
+		}
+			
+		return;
 		var l_fov:Float = 100;
 		var l_d:Float = 1 / Math.tan(l_fov / 2);
 		
@@ -109,7 +235,7 @@ class FlambeView extends APseudoView
 		//Console.warn("scale: " + l_d / l_zCamera * l_fov);
 		if (_doOnce)
 		{
-			Console.warn("yo: " + l_d / l_zCamera);
+			//Console.warn("yo: " + l_d / l_zCamera);
 			_doOnce = false;
 		}
 	}

@@ -14,10 +14,10 @@ haxe_flags: -lib hscript
 
 # Additional paths to include in the build
 extra_paths:
-#   assets: C:\Users\LLaffer\Documents\GamePlus_Projects\TestGame\assets
+#   assets: C:\Users\LLaffer\Documents\GamePlus_Projects\ArkanoidPrototype\EmbeddedAssets
 #   libs: dir1 dir2
 #   src: ../dir1 ../dir2
-  web: ["web_html_2d"]
+   web: ["web_html_2d"]
 
 # The initial orientation and fullscreen state
 orientation: portrait

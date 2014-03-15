@@ -10,5 +10,5 @@ package co.gamep.sliced.services.std.display.logicalspace.entities;
 	public var shaderPickingDetails : Bool;
 	public var showBounds : Bool;
 	public var staticNode : Bool;
-	public var worldBounds(default,never) : co.gamep.sliced.services.std.display.logicalspace.bounds.BoundingVolumeBase;
+	public var worldBounds(default, never) : co.gamep.sliced.services.std.display.logicalspace.bounds.BoundingVolumeBase;
 	public function new():Void {super();}}

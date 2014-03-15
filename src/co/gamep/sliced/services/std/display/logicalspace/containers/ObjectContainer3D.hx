@@ -3,7 +3,7 @@ package co.gamep.sliced.services.std.display.logicalspace.containers;
 @:keep class ObjectContainer3D extends co.gamep.sliced.services.std.display.logicalspace.core.base.Object3D implements co.gamep.sliced.services.std.display.logicalspace.library.assets.IAsset {
 	public var _ancestorsAllowMouseEnabled : Bool;
 	public var _isRoot : Bool;
-	public var assetType(default,never) : String;
+	public var assetType(default,default) : String;
 	public var ignoreTransform : Bool;
 	public var implicitPartition : co.gamep.sliced.services.std.display.logicalspace.core.partition.Partition3D;
 	public var inverseSceneTransform(default,never) : Dynamic;
@@ -23,12 +23,19 @@ package co.gamep.sliced.services.std.display.logicalspace.containers;
 	public var scenePosition(default,never) : Dynamic;
 	public var sceneTransform(default,never) : Dynamic;
 	public var visible : Bool;
+	public var velX:Float;
+	public var velY:Float;
+	public var velZ:Float;
 	
 	public var _children:Array<ObjectContainer3D>;
 	
 	public function new():Void 
 	{
 		super();
+		
+		velX = 0;
+		velY = 0;
+		velZ = 0;
 		
 		_children = new Array<ObjectContainer3D>();
 	

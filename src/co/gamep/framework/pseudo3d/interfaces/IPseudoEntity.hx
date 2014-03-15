@@ -5,7 +5,7 @@
  */
 
 package co.gamep.framework.pseudo3d.interfaces;
-
+import nape.phys.Body;
 /**
  * ...
  * @author Aris Kostakos
@@ -18,9 +18,15 @@ interface IPseudoEntity
 	var rotationX( default, default ):Float;
 	var rotationY( default, default ):Float;
 	var rotationZ( default, default ):Float;
+	var spriteUrl( default, default ):String;
+	var velX( default, default ):Float;
+	var velY( default, default ):Float;
+	var velZ( default, default ):Float;
 	
 	var pseudoEntitySet:Array<IPseudoEntity>;
 	function addChild(p_pseudoEntity:IPseudoEntity):Void;
+	
+	var napeBody( default, default ):Body; 
 	
 	/*
 	var x( default, default ):Int;
