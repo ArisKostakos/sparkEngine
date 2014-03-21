@@ -5,7 +5,7 @@
  */
 
 package co.gamep.sliced.services.std.display.renderers.interfaces;
-import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
+import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -13,9 +13,9 @@ import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
  */
 interface IRenderer
 {
-	var logicalViewSet( default, null ):Array<View3D>;
+	var viewSet( default, null ):Array<IGameEntity>;
 	var uses3DEngine( default, null ):Bool;
 	
-	function render ( p_logicalView:View3D):Void;
+	function render ( p_viewEntity:IGameEntity):Void;
 	function update ():Void;
 }

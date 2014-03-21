@@ -15,7 +15,8 @@ interface IGameEntity extends IGameBase
 	var gameStateSet( default, null ):Map<String,IGameState>;
 	var gameForm( default, default ):IGameForm;
 	var possibleActionSet( default, null ):Map<String,IGameAction>;
-	var currentActionSet( default, null ):Map<String,Array<IGameAction>>;
+	var currentActionSet( default, null ):Map < String, Array<IGameAction> > ;
+	var children ( get, never ):Array<IGameEntity>;
 	
 	//uses IGameSpace
 	//uses IGameEntity (through IGameSpace)

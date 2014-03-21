@@ -41,14 +41,17 @@ class Subgraphics
 		//query display for views in order (far away first)
 		if (Sliced.display!=null)
 		{
-			//for each LogicalView
-			for (logicalView in Sliced.display.logicalViewsOrder)
+			if (Sliced.display.space!=null)
 			{
-				//query Display what renderer has it
-				var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];
-				
-				//renderer.render(logicalView)
-				renderer.render(logicalView);
+				//for each LogicalView
+				for (viewEntity in Sliced.display.space.children)  //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
+				{
+					//query Display what renderer has it
+					var renderer:IRenderer = Sliced.display.viewToRenderer[viewEntity];
+					
+					//Render viewEntity
+					renderer.render(viewEntity);
+				}
 			}
 		}
 		

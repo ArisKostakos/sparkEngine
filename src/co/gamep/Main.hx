@@ -93,6 +93,18 @@ class Main
 		Assets.addFile("assets/images/Brick.png");
 		Assets.addFile("assets/images/Ball.png");
 		
+		Assets.addFile("assets/lionscript/Arkanoid/Arkanoid.egc");
+		Assets.addFile("assets/lionscript/Arkanoid/Space.egc");
+		
+		Assets.addFile("assets/lionscript/std/core/Base.egc");
+		Assets.addFile("assets/lionscript/std/core/Project.egc");
+		
+		Assets.addFile("assets/lionscript/std/display/Base.egc");
+		Assets.addFile("assets/lionscript/std/display/Space.egc");
+		
+		Assets.addFile("assets/lionscript/std/behaviors/core/Constructor.egc");
+		
+		/*
 		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Paddle.fgc");
 		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Paddle.egc");
 		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Background.fgc");
@@ -128,7 +140,7 @@ class Main
 		Assets.addFile("assets/lionscript/std/forms/Mesh.fgc");
 		
 		Assets.addFile("assets/lionscript/std/triggers/AnnounceMe.tgc");
-		
+		*/
 		
 		Assets.loadBatch();
 	}

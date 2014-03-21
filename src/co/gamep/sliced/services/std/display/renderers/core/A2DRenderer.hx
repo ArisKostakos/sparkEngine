@@ -13,10 +13,6 @@ import co.gamep.framework.pseudo3d.interfaces.IPseudoEntity;
 import co.gamep.framework.pseudo3d.interfaces.IPseudoScene;
 import co.gamep.framework.pseudo3d.interfaces.IPseudoView;
 import co.gamep.framework.pseudo3d.core.PseudoCamera;
-import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
-import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
-import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
-import co.gamep.sliced.services.std.display.logicalspace.containers.ObjectContainer3D;
 
 /**
  * ...
@@ -24,10 +20,10 @@ import co.gamep.sliced.services.std.display.logicalspace.containers.ObjectContai
  */
 class A2DRenderer extends ARenderer
 {
-	private var _viewPointerSet:Map<View3D,IPseudoView>;
-	private var _scenePointerSet:Map<Scene3D,IPseudoScene>;
-	private var _entityPointerSet:Map<ObjectContainer3D,IPseudoEntity>;
-	private var _cameraPointerSet:Map<Camera3D,IPseudoCamera>;
+	//private var _viewPointerSet:Map<View3D,IPseudoView>;
+	//private var _scenePointerSet:Map<Scene3D,IPseudoScene>;
+	//private var _entityPointerSet:Map<ObjectContainer3D,IPseudoEntity>;
+	//private var _cameraPointerSet:Map<Camera3D,IPseudoCamera>;
 	
 	private function new() 
 	{
@@ -41,12 +37,13 @@ class A2DRenderer extends ARenderer
 	{
 		uses3DEngine = false;
 		
-		_viewPointerSet = new Map<View3D,IPseudoView>();
-		_scenePointerSet = new Map<Scene3D,IPseudoScene>();
-		_entityPointerSet = new Map<ObjectContainer3D,IPseudoEntity>();
-		_cameraPointerSet = new Map<Camera3D,IPseudoCamera>();
+		//_viewPointerSet = new Map<View3D,IPseudoView>();
+		//_scenePointerSet = new Map<Scene3D,IPseudoScene>();
+		//_entityPointerSet = new Map<ObjectContainer3D,IPseudoEntity>();
+		//_cameraPointerSet = new Map<Camera3D,IPseudoCamera>();
 	}	
 	
+	/*
 	override private function _createCamera(p_logicalCamera:Camera3D):Void
 	{
 		_cameraPointerSet.set(p_logicalCamera, new PseudoCamera());
@@ -114,4 +111,5 @@ class A2DRenderer extends ARenderer
 		_entityPointerSet[p_logicalEntity].velY = p_logicalEntity.velY;
 		_entityPointerSet[p_logicalEntity].velZ = p_logicalEntity.velZ;
 	}
+	*/
 }

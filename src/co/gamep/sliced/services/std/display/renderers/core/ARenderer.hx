@@ -6,11 +6,8 @@
 
  package co.gamep.sliced.services.std.display.renderers.core;
 
-import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
-import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
-import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
-import co.gamep.sliced.services.std.display.logicalspace.containers.ObjectContainer3D;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
+import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -18,7 +15,7 @@ import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
  */
 class ARenderer implements IRenderer
 {
-	public var logicalViewSet( default, null ):Array<View3D>;
+	public var viewSet( default, null ):Array<IGameEntity>;
 	public var uses3DEngine( default, null ):Bool;
 	
 	private function new() 
@@ -28,22 +25,23 @@ class ARenderer implements IRenderer
 
 	inline private function _aRendererInit():Void
 	{
-		logicalViewSet = new Array<View3D>();
+		viewSet = new Array<IGameEntity>();
 	}
 	
 	public function update ():Void
 	{
 		//update 'dirty' views
-		for (logicalView in logicalViewSet)
+		for (viewEntity in viewSet)
 		{
-			_updateView(logicalView);
+			_updateView(viewEntity);
 		}
 	}
 	
-	private function _updateView(p_logicalView:View3D):Void
+	private function _updateView(p_viewEntity:IGameEntity):Void
 	{
 		//UPDATE SCENE
-		
+		Console.info("Updating view: " + p_viewEntity.getState('name') );
+		/*
 		//assert scene
 		if (p_logicalView.scene == null) {
 			Console.error("nothing to render...");
@@ -72,10 +70,14 @@ class ARenderer implements IRenderer
 		
 		//VALIDATE IT
 		_validateView(p_logicalView);
+		*/
 	}
 	
-	private function _updateScene(p_logicalScene:Scene3D):Void
+	private function _updateScene(p_sceneEntity:IGameEntity):Void
 	{
+		Console.info("Updating scene: " + p_sceneEntity.getState('name') );
+		
+		/*
 		//CREATE IT
 		if (_hasScene(p_logicalScene) == false)
 		{
@@ -90,11 +92,14 @@ class ARenderer implements IRenderer
 		{
 			_updateEntity(f_logicalObjectContainer, p_logicalScene);
 		}
-		
+		*/
 	}
 	
-	private function _updateCamera(p_logicalCamera:Camera3D):Void
+	private function _updateCamera(p_cameraEntity:IGameEntity):Void
 	{
+		Console.info("Updating camera: " + p_cameraEntity.getState('name') );
+		
+		/*
 		//CREATE IT
 		if (_hasCamera(p_logicalCamera) == false)
 		{
@@ -104,11 +109,16 @@ class ARenderer implements IRenderer
 		
 		//VALIDATE IT
 		_validateCamera(p_logicalCamera);
+		
+		*/
 	}
 	
 	//@todo: parent may be an entity too not just a scene. Also, update children, like u do in scene
-	private function _updateEntity(p_logicalObjectContainer:ObjectContainer3D, p_logicalScene:Scene3D):Void
+	private function _updateEntity(p_objectEntity:IGameEntity, p_sceneEntity:IGameEntity):Void
 	{
+		Console.info("Updating entity: " + p_objectEntity.getState('name') );
+		
+		/*
 		//CREATE IT
 		if (_hasEntity(p_logicalObjectContainer) == false)
 		{
@@ -120,11 +130,13 @@ class ARenderer implements IRenderer
 		
 		//UPDATE CHILDREN
 		//???????
+		
+		*/
 	}
 	
 	//override functions
-	public function render ( p_logicalView:View3D):Void { }
-	
+	public function render ( p_viewEntity:IGameEntity):Void { }
+	/*
 	private function _hasView(p_logicalView:View3D):Bool { return false; }
 	private function _createView(p_logicalView:View3D):Void { }
 	private function _validateView(p_logicalView:View3D):Void { }
@@ -140,4 +152,6 @@ class ARenderer implements IRenderer
 	private function _hasEntity(p_logicalObjectContainer:ObjectContainer3D):Bool { return false; }
 	private function _createEntity(p_logicalObjectContainer:ObjectContainer3D, p_logicalScene:Scene3D):Void { }
 	private function _validateEntity(p_logicalObjectContainer:ObjectContainer3D, p_logicalScene:Scene3D):Void { }
+	
+	*/
 }

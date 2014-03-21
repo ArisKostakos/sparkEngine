@@ -9,17 +9,7 @@ package co.gamep.sliced.services.std.display.core;
 import co.gamep.framework.Framework;
 import co.gamep.sliced.interfaces.IDisplay;
 import co.gamep.sliced.core.AService;
-import co.gamep.sliced.services.std.display.logicalspace.cameras.Camera3D;
-import co.gamep.sliced.services.std.display.logicalspace.containers.Scene3D;
-import co.gamep.sliced.services.std.display.logicalspace.containers.View3D;
-import co.gamep.sliced.services.std.display.logicalspace.core.LogicalSpace;
-import co.gamep.sliced.services.std.display.logicalspace.core.LogicalStage;
-import co.gamep.sliced.services.std.display.logicalspace.entities.Entity;
-import co.gamep.sliced.services.std.display.logicalspace.entities.Mesh;
-import co.gamep.sliced.services.std.display.logicalspace.entities.Sprite3D;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalSpace;
-import co.gamep.sliced.services.std.display.logicalspace.interfaces.ILogicalStage;
-import co.gamep.sliced.services.std.display.logicalspace.lights.DirectionalLight;
+import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 
 /**
@@ -36,14 +26,39 @@ class Display extends AService implements IDisplay
 	
 	//@think: this is a nice way to check if a new view/scene/entity/etc has been created, 
 	//instead of itterating the virtual world. The Renderer may find this useful.
+	//do i need to itterate anything now that I ditched the logicalSpace?
 
-	public var logicalSpace( default, default ):ILogicalSpace;
+	public var space( default, default ):IGameEntity;
+	
+	
+	private function set_space(p_gameEntity:IGameEntity):IGameEntity
+	{
+		//cast the gameEntity, and complain if space already set.
+		if (space != null)
+		{
+			//@note if another space already exists, maybe you can warn better the user, or take
+				//other action. may need rerendering, changing renderers, etc, etc, etc
+			Console.warn("A space object is already bound to the Display service! Rebounding...");
+		}
+		
+		space = p_gameEntity;
+		Console.log("A space object was set successfully yo");
+		return (space);
+	}
+	
+	public function setSpace(p_gameEntity:IGameEntity):Void
+	{
+		space = p_gameEntity;
+		Console.log("A space object was set successfully yo");
+	}
+	
 	public var rendererSet( default, null ):Array<IRenderer>;
 	
 	//views data stored here for optimization (saving the platform.subgraphics from looking which renderer is responsible for which view
 		//and in what order the views must be renderer
-	public var logicalViewsOrder (default, null ):Array<View3D>;
-	public var logicalViewRendererAssignments (default, null ):Map<View3D,IRenderer>;
+	//public var logicalViewsOrder (default, null ):Array<View3D>;
+	
+	public var viewToRenderer (default, null ):Map<IGameEntity,IRenderer>;
 	
 	public function new() 
 	{
@@ -56,8 +71,8 @@ class Display extends AService implements IDisplay
 	{
 		Console.log("Init Display std Service...");
 		rendererSet = new Array<IRenderer>();
-		logicalViewsOrder = new Array<View3D>();
-		logicalViewRendererAssignments = new Map<View3D,IRenderer>();
+		//logicalViewsOrder = new Array<View3D>();
+		viewToRenderer = new Map<IGameEntity,IRenderer>();
 	}
 	
 	
@@ -68,7 +83,7 @@ class Display extends AService implements IDisplay
 	public function update():Void 
 	{
 		//Assert logicalSpace
-		if (logicalSpace == null)
+		if (space == null)
 			return;
 		
 		//We will be polling the logicalSpace here and taking action when a change is found
@@ -108,10 +123,11 @@ class Display extends AService implements IDisplay
 		//poll for 'dirty' views. actually you poll for 'dirty' stages here... and 'dirty' space of course
 		var l_temp_spaceInvalidated:Bool = false;	//temp value until i do proper invalidation
 		
-		for (logicalView in logicalSpace.logicalStage.logicalViewSet)
+		for (viewEntity in space.children) //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
 		{
-			if (logicalViewRendererAssignments.exists(logicalView) == false)
+			if (viewToRenderer.exists(viewEntity) == false)
 			{
+				/*
 				if (logicalView.requests3DEngine == true)
 				{
 					if (_renderer3dcapable != null)
@@ -134,17 +150,20 @@ class Display extends AService implements IDisplay
 						l_temp_spaceInvalidated = true;	//temp value until i do proper invalidation 
 					}
 				}
+				*/
+				Console.info("Found a (spaceChild)viewEntity to add to display! whooray!");
+				viewToRenderer.set(viewEntity, _renderer2dcapable); //temp define for 2d rendering
 			}
 		}
 		
 		//after updating the 'dirty' space, always re-order the Views correctly
 		if (l_temp_spaceInvalidated)
 		{
-			logicalViewsOrder.sort(_orderViews);
+			//logicalViewsOrder.sort(_orderViews);
 			
-			for (logicalView in logicalViewsOrder)
+			for (viewEntity in space.children) //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
 			{
-				Console.debug("View: " + logicalView.name);
+				Console.debug("(spaceChild)View: " + viewEntity.getState('name') );
 			}
 		}
 		
@@ -156,6 +175,7 @@ class Display extends AService implements IDisplay
 		//poll 'dirty' views here, and if one is found, assign the responsible renderer as 'dirty'
 		
 		//update all 'dirty' renderers
+		return;
 		for (renderer in rendererSet)
 		{
 			renderer.update();
@@ -176,30 +196,16 @@ class Display extends AService implements IDisplay
 		
 		If [f] is null, the result is unspecified.
 	**/
+		
+	/*
 	private function _orderViews(view1:View3D, view2:View3D):Int
 	{
 		if (view1.zIndex>view2.zIndex) return 1;
 		else if (view1.zIndex < view2.zIndex) return -1;
 		else return 0;
 	}
+	*/
 	
-	public function setSpace( p_space:ILogicalSpace ):Void
-	{
-		//@note if another space already exists, maybe you can warn the user, or take
-			//other action. may need rerendering, changing renderers, etc, etc, etc
-			
-		logicalSpace = p_space;
-	}
-	
-	public function createSpace():ILogicalSpace { return new LogicalSpace(); }
-	public function createStage():ILogicalStage { return new LogicalStage(); }
-	public function createScene():Scene3D { return new Scene3D(); }
-	public function createCamera():Camera3D { return new Camera3D(); }
-	public function createView():View3D { return new View3D(); }
-	public function createEntity():Entity { return new Entity(); }
-	public function createMesh():Mesh { return new Mesh(); }
-	public function createSprite3D():Sprite3D { return new Sprite3D(); }
-	public function createDirectionalLight():DirectionalLight { return new DirectionalLight(); }
 	
 	
 	//@todo: The display service should DISPLAY the console messages ON SCREEN

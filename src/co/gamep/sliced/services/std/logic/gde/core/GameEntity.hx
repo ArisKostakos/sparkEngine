@@ -22,8 +22,13 @@ class GameEntity extends AGameBase implements IGameEntity
 	public var gameStateSet( default, null ):Map<String,IGameState>;
 	public var gameForm( default, default ):IGameForm;
 	public var possibleActionSet( default, null ):Map<String,IGameAction>;
-	public var currentActionSet( default, null ):Map<String,Array<IGameAction>>;
+	public var currentActionSet( default, null ):Map < String, Array<IGameAction> > ;
+	public var children ( get, never ):Array<IGameEntity>; 
 	
+	private function get_children()
+	{
+		return gameForm.gameSpace.gameEntitySet;
+	}
 	
 	//Constructor
 	
