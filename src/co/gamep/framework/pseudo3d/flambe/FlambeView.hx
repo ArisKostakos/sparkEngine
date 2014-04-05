@@ -253,7 +253,7 @@ class FlambeView extends APseudoView
 		//Validate View
 		_validateRealView();
 		
-		
+		//delete this comment
 		if (scene != null && camera != null)
 		{
 			for (pseudoEntity in scene.pseudoEntitySet)
