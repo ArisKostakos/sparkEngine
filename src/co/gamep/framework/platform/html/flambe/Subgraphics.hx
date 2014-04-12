@@ -43,6 +43,7 @@ class Subgraphics
 		{
 			if (Sliced.display.space!=null)
 			{
+				/*
 				//for each LogicalView
 				for (viewEntity in Sliced.display.space.children)  //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
 				{
@@ -52,6 +53,7 @@ class Subgraphics
 					//Render viewEntity
 					renderer.render(viewEntity);
 				}
+				*/
 			}
 		}
 		

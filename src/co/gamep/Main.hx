@@ -95,12 +95,20 @@ class Main
 		
 		Assets.addFile("assets/lionscript/Arkanoid/Arkanoid.egc");
 		Assets.addFile("assets/lionscript/Arkanoid/Space.egc");
+		Assets.addFile("assets/lionscript/Arkanoid/Stage.egc");
+		Assets.addFile("assets/lionscript/Arkanoid/View.egc");
+		Assets.addFile("assets/lionscript/Arkanoid/Scene.egc");
+		Assets.addFile("assets/lionscript/Arkanoid/Camera.egc");
 		
 		Assets.addFile("assets/lionscript/std/core/Base.egc");
 		Assets.addFile("assets/lionscript/std/core/Project.egc");
 		
 		Assets.addFile("assets/lionscript/std/display/Base.egc");
 		Assets.addFile("assets/lionscript/std/display/Space.egc");
+		Assets.addFile("assets/lionscript/std/display/Stage.egc");
+		Assets.addFile("assets/lionscript/std/display/View.egc");
+		Assets.addFile("assets/lionscript/std/display/Scene.egc");
+		Assets.addFile("assets/lionscript/std/display/Camera.egc");
 		
 		Assets.addFile("assets/lionscript/std/behaviors/core/Constructor.egc");
 		

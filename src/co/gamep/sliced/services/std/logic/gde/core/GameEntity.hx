@@ -25,11 +25,6 @@ class GameEntity extends AGameBase implements IGameEntity
 	public var currentActionSet( default, null ):Map < String, Array<IGameAction> > ;
 	public var children ( get, never ):Array<IGameEntity>; 
 	
-	private function get_children()
-	{
-		return gameForm.gameSpace.gameEntitySet;
-	}
-	
 	//Constructor
 	
 	public function new() 
@@ -132,5 +127,15 @@ class GameEntity extends AGameBase implements IGameEntity
 	{
 		gameStateSet.get(p_stateId).value = p_value;
 		return gameStateSet.get(p_stateId).value;
+	}
+	
+	public function getChildren():Array<IGameEntity>
+	{
+		return children;
+	}
+	
+	private function get_children()
+	{
+		return gameForm.gameSpace.gameEntitySet;
 	}
 }

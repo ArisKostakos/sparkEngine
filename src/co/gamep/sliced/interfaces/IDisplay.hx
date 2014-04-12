@@ -16,8 +16,7 @@ import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 interface IDisplay extends IService
 {	
-	var space( default, default ):IGameEntity;
-	//function set_space(p_gameEntity:IGameEntity):IGameEntity; //cast the gameEntity, and complain if space already set.
+	var space( default, null ):IGameEntity;
 	
 	var rendererSet( default, null ):Array<IRenderer>;
 	
@@ -36,6 +35,11 @@ interface IDisplay extends IService
 	function createDirectionalLight():DirectionalLight;
 	*/
 	function update():Void;
+	function validate():Void;
+	function invalidate():Void;
+	function isValidated():Bool;
+	function isCurrentSpace(p_gameEntity:IGameEntity):Bool;
+	function setSpace(p_gameEntity:IGameEntity):IGameEntity; //cast the gameEntity, and complain if space already set.
 	
 	function log(message:String):Void;
 	function info(message:String):Void;

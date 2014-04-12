@@ -11,6 +11,7 @@ import co.gamep.sliced.interfaces.IDisplay;
 import co.gamep.sliced.core.AService;
 import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
+import co.gamep.sliced.services.std.logic.gde.interfaces.IGameSpace;
 
 /**
  * ...
@@ -28,10 +29,11 @@ class Display extends AService implements IDisplay
 	//instead of itterating the virtual world. The Renderer may find this useful.
 	//do i need to itterate anything now that I ditched the logicalSpace?
 
-	public var space( default, default ):IGameEntity;
+	public var space( default, null ):IGameEntity;
 	
+	private var __invalidated:Bool;
 	
-	private function set_space(p_gameEntity:IGameEntity):IGameEntity
+	public function setSpace(p_gameEntity:IGameEntity):IGameEntity
 	{
 		//cast the gameEntity, and complain if space already set.
 		if (space != null)
@@ -40,16 +42,11 @@ class Display extends AService implements IDisplay
 				//other action. may need rerendering, changing renderers, etc, etc, etc
 			Console.warn("A space object is already bound to the Display service! Rebounding...");
 		}
-		
+
 		space = p_gameEntity;
-		Console.log("A space object was set successfully yo");
+		invalidate();
+
 		return (space);
-	}
-	
-	public function setSpace(p_gameEntity:IGameEntity):Void
-	{
-		space = p_gameEntity;
-		Console.log("A space object was set successfully yo");
 	}
 	
 	public var rendererSet( default, null ):Array<IRenderer>;
@@ -71,8 +68,7 @@ class Display extends AService implements IDisplay
 	{
 		Console.log("Init Display std Service...");
 		rendererSet = new Array<IRenderer>();
-		//logicalViewsOrder = new Array<View3D>();
-		viewToRenderer = new Map<IGameEntity,IRenderer>();
+		__invalidated = false;
 	}
 	
 	
@@ -85,7 +81,7 @@ class Display extends AService implements IDisplay
 		//Assert logicalSpace
 		if (space == null)
 			return;
-		
+
 		//We will be polling the logicalSpace here and taking action when a change is found
 		
 		//Display is responsible for polling up to the Views level
@@ -93,7 +89,7 @@ class Display extends AService implements IDisplay
 		//Then, it will update all active renderers to poll their assigned view
 		
 		//TEMP POLLING EXAMPLE
-		
+		/*
 		//Find 3d capable renderer
 		if (_renderer3dcapable == null)
 		{
@@ -119,15 +115,19 @@ class Display extends AService implements IDisplay
 				}
 			}
 		}
-			
+		*/
 		//poll for 'dirty' views. actually you poll for 'dirty' stages here... and 'dirty' space of course
-		var l_temp_spaceInvalidated:Bool = false;	//temp value until i do proper invalidation
-		
+		if (isValidated()==false)
+		{
+			//Validate Display Service
+			validate();
+		}
+		/*
 		for (viewEntity in space.children) //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
 		{
 			if (viewToRenderer.exists(viewEntity) == false)
 			{
-				/*
+				
 				if (logicalView.requests3DEngine == true)
 				{
 					if (_renderer3dcapable != null)
@@ -150,11 +150,13 @@ class Display extends AService implements IDisplay
 						l_temp_spaceInvalidated = true;	//temp value until i do proper invalidation 
 					}
 				}
-				*/
+				
 				Console.info("Found a (spaceChild)viewEntity to add to display! whooray!");
 				viewToRenderer.set(viewEntity, _renderer2dcapable); //temp define for 2d rendering
 			}
+			
 		}
+		
 		
 		//after updating the 'dirty' space, always re-order the Views correctly
 		if (l_temp_spaceInvalidated)
@@ -175,11 +177,12 @@ class Display extends AService implements IDisplay
 		//poll 'dirty' views here, and if one is found, assign the responsible renderer as 'dirty'
 		
 		//update all 'dirty' renderers
-		return;
+
 		for (renderer in rendererSet)
 		{
 			renderer.update();
 		}
+		*/
 	}
 	
 	
@@ -207,6 +210,47 @@ class Display extends AService implements IDisplay
 	*/
 	
 	
+	public function validate():Void
+	{
+		Console.warn("DISPLAY UPDATE: VALIDDATING...!");
+		
+		if (space.getState('invalidated') == true) Console.warn("DISPLAY UPDATE: space invalidated.");
+		if (space.getState('stage') != null)
+		{
+			Console.warn("DISPLAY UPDATE: stage found.");
+			if (space.getState('stage').getState('invalidated') == true)
+			{
+				Console.warn("DISPLAY UPDATE: stage invalidated.");
+				viewToRenderer = new Map<IGameEntity,IRenderer>();
+				
+				//add all views again
+				//....
+				//add the views. re-enable subgraphics. put something in the scene. test it with the new flambe 2.5 (rename pseudo3d. work the flambeview...)
+			}
+		}
+		else
+		{
+			Console.warn("DISPLAY UPDATE: stage NOT found.");
+		}
+		
+		__invalidated = false;
+	}
+	
+	inline public function invalidate():Void
+	{
+		Console.warn("Display invalidated!");
+		__invalidated = true;
+	}
+	
+	inline public function isValidated():Bool
+	{
+		return !__invalidated;
+	}
+	
+	inline public function isCurrentSpace(p_gameEntity:IGameEntity):Bool
+	{
+		return p_gameEntity == space;
+	}
 	
 	//@todo: The display service should DISPLAY the console messages ON SCREEN
 	//platform independant..

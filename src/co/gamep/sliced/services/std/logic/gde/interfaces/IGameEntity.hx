@@ -38,4 +38,6 @@ interface IGameEntity extends IGameBase
 	// Set/Get State Value
 	function getState(p_stateId:String):Dynamic;
 	function setState(p_stateId:String, p_value:Dynamic):Dynamic;
+	
+	function getChildren():Array<IGameEntity>;
 }
