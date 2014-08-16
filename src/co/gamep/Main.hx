@@ -96,7 +96,8 @@ class Main
 		Assets.addFile("assets/lionscript/Arkanoid/Arkanoid.egc");
 		Assets.addFile("assets/lionscript/Arkanoid/Space.egc");
 		Assets.addFile("assets/lionscript/Arkanoid/Stage.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/View.egc");
+		Assets.addFile("assets/lionscript/Arkanoid/GameView.egc");
+		Assets.addFile("assets/lionscript/Arkanoid/GUIView.egc");
 		Assets.addFile("assets/lionscript/Arkanoid/Scene.egc");
 		Assets.addFile("assets/lionscript/Arkanoid/Camera.egc");
 		

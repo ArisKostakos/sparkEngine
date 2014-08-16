@@ -10,7 +10,7 @@ package co.gamep.framework.platform.flash;
 #if includeAway3D
 	import co.gamep.framework.platform.flash.away3d.Subgraphics;
 #else
-	import co.gamep.framework.platform.flash.flambe.Subgraphics;
+	import co.gamep.framework.platform.flash.flambe2_5.Subgraphics;
 #end
 
 

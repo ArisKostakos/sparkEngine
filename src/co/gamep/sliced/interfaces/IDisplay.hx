@@ -20,7 +20,7 @@ interface IDisplay extends IService
 	
 	var rendererSet( default, null ):Array<IRenderer>;
 	
-	//var logicalViewsOrder (default, null ):Array<View3D>;
+	var activeViewsOrder (default, null ):Array<IGameEntity>;
 	var viewToRenderer (default, null ):Map<IGameEntity,IRenderer>;
 	
 	

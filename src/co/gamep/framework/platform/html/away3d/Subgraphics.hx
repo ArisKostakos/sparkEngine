@@ -9,7 +9,7 @@ import away3d.containers.View3D;
 import away3d.core.managers.Stage3DManager;
 import away3d.core.managers.Stage3DProxy;
 import co.gamep.sliced.services.std.display.renderers.core.platform.html.Away3DHtmlRenderer;
-import co.gamep.sliced.services.std.display.renderers.core.platform.html.Flambe2DHtmlRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.platform.html.Flambe2_5DHtmlRenderer;
 import co.gamep.sliced.core.Sliced;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flambe.platform.html.WebGLBatcher;
@@ -33,7 +33,7 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new Flambe2DHtmlRenderer());
+		Sliced.display.rendererSet.push(new Flambe2_5DHtmlRenderer());
 		
 		//Create Away3D Renderer
 		Sliced.display.rendererSet.push(new Away3DHtmlRenderer());
@@ -132,7 +132,7 @@ class Subgraphics
 		
 		//query display for views in order (far away first)
 		//for each LogicalView
-		for (logicalView in Sliced.display.logicalViewsOrder)
+		for (logicalView in Sliced.display.activeViewsOrder)
 		{
 			//query Display what renderer has it
 			var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];

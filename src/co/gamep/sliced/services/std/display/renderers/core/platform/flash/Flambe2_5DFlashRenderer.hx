@@ -15,7 +15,7 @@ import flambe.platform.flash.FlashPlatform;
  * ...
  * @author Aris Kostakos
  */
-class Flambe2DFlashRenderer extends AFlambe2DRenderer
+class Flambe2_5DFlashRenderer extends AFlambe2DRenderer
 {
 	public function new() 
 	{
@@ -28,6 +28,6 @@ class Flambe2DFlashRenderer extends AFlambe2DRenderer
 	
 	inline private function _flambe2DFlashRendererInit():Void
 	{
-		Console.info("Creating Flambe 2D Flash Renderer...");
+		Console.info("Creating Flambe 2_5D Flash Renderer...");
 	}
 }

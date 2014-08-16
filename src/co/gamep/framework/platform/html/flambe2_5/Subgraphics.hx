@@ -4,9 +4,9 @@
  * Written by Aris Kostakos <a.kostakos@gmail.com>, November 2013
  */
 
-package co.gamep.framework.platform.html.flambe;
+package co.gamep.framework.platform.html.flambe2_5;
 import co.gamep.sliced.core.Sliced;
-import co.gamep.sliced.services.std.display.renderers.core.platform.html.Flambe2DHtmlRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.platform.html.Flambe2_5DHtmlRenderer;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flambe.platform.Renderer;
 import flambe.platform.html.HtmlPlatform;
@@ -22,7 +22,7 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new Flambe2DHtmlRenderer());
+		Sliced.display.rendererSet.push(new Flambe2_5DHtmlRenderer());
 	}
 	
 	
@@ -41,19 +41,17 @@ class Subgraphics
 		//query display for views in order (far away first)
 		if (Sliced.display!=null)
 		{
-			if (Sliced.display.space!=null)
+			if (Sliced.display.activeViewsOrder!=null)
 			{
-				/*
 				//for each LogicalView
-				for (viewEntity in Sliced.display.space.children)  //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
+				for (viewEntity in Sliced.display.activeViewsOrder)
 				{
 					//query Display what renderer has it
 					var renderer:IRenderer = Sliced.display.viewToRenderer[viewEntity];
 					
 					//Render viewEntity
-					renderer.render(viewEntity);
+					renderer.renderView(viewEntity);
 				}
-				*/
 			}
 		}
 		

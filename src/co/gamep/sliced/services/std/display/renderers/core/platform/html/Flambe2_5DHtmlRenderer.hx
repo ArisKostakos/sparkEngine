@@ -7,7 +7,7 @@
  package co.gamep.sliced.services.std.display.renderers.core.platform.html;
 
 
-import co.gamep.sliced.services.std.display.renderers.core.platform.AFlambe2DRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.platform.AFlambe2_5DRenderer;
 import flambe.platform.html.HtmlPlatform;
 
 
@@ -15,7 +15,7 @@ import flambe.platform.html.HtmlPlatform;
  * ...
  * @author Aris Kostakos
  */
-class Flambe2DHtmlRenderer extends AFlambe2DRenderer
+class Flambe2_5DHtmlRenderer extends AFlambe2_5DRenderer
 {
 	public function new() 
 	{
@@ -28,6 +28,6 @@ class Flambe2DHtmlRenderer extends AFlambe2DRenderer
 	
 	inline private function _flambe2DHtmlRendererInit():Void
 	{
-		Console.info("Creating Flambe 2D Html Renderer...");
+		Console.info("Creating Flambe 2_5D Html Renderer...");
 	}
 }

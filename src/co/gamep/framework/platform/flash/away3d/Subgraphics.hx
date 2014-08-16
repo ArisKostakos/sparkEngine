@@ -10,7 +10,7 @@ import away3d.core.managers.Stage3DProxy;
 import away3d.events.Stage3DEvent;
 import co.gamep.sliced.core.Sliced;
 import co.gamep.sliced.services.std.display.renderers.core.platform.flash.Away3DFlashRenderer;
-import co.gamep.sliced.services.std.display.renderers.core.platform.flash.Flambe2DFlashRenderer;
+import co.gamep.sliced.services.std.display.renderers.core.platform.flash.Flambe2_5DFlashRenderer;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flambe.platform.flash.FlashPlatform;
 import flambe.platform.flash.Stage3DRenderer;
@@ -32,7 +32,7 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new Flambe2DFlashRenderer());
+		Sliced.display.rendererSet.push(new Flambe2_5DFlashRenderer());
 		
 		//Create Away3D Renderer
 		Sliced.display.rendererSet.push(new Away3DFlashRenderer());
@@ -93,7 +93,7 @@ class Subgraphics
 		if (Sliced.display!=null)
 		{
 			//for each LogicalView
-			for (logicalView in Sliced.display.logicalViewsOrder)
+			for (logicalView in Sliced.display.activeViewsOrder)
 			{
 				//query Display what renderer has it
 				var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];

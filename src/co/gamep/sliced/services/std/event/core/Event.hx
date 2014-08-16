@@ -20,6 +20,11 @@ import co.gamep.sliced.services.std.logic.gde.interfaces.IGameTrigger;
  */
 class Event extends AService implements IEvent
 {
+	//@TODO: The way I'm doing this now is having a map of triggers, and in turn it has a map of filters. The values of the second map is: for eventTypeFilterFlags
+		//it's a Boolean, for eventTypeFilterTriggers it's an array of triggers. For eventTypeFilterFlags, I check in every update of the service if each Boolean is
+		//true. But I could instead just add the filter entry and remove the filter entry all together and not check for Booleans. This would optimize it a bit.
+		//Also, instead of the NO_TRIGGER filter, you just check if i have ANY filters for that event. if true, then raise the NO_FILTER. Small optimization but
+		//it could be worth it in the long run. Checking for true/false flags on EVERY FRAME is costly and dangerous.
 	private var _eventTypeFilterFlags:Map < EEventType, ObjectMap < Dynamic, Bool >> ;
 	private var _eventTypeFilterTriggers:Map < EEventType, ObjectMap < Dynamic, Array<IGameTrigger> >> ;
 	
@@ -121,6 +126,10 @@ class Event extends AService implements IEvent
 	
 	public function update():Void
 	{
+		//@FIX ME SOON!: In this case, and the other for loop two lines below, we enumerate the keys(). But in the doTriggers() function deep inside, it maybe be
+		//possible that it will run some lionscript code that adds a new kew.. this will produce problems like it did with the logic service. Maybe store the 
+		//enumeration list somewhere prior, like you did in the logic service to be safe. This means it will check for the newly activated(added) filter, the next frame.
+		//Search for '//Solution to html5 bug' in GameClassParser.hx
 		for (flag in _eventTypeFilterFlags.keys())
 		{
 			if (_eventTypeFilterFlags[flag].get(_NO_FILTER) == true)

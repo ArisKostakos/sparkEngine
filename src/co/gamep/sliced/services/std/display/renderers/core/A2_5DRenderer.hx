@@ -6,19 +6,20 @@
 
 package co.gamep.sliced.services.std.display.renderers.core;
 
-import co.gamep.framework.pseudo3d.core.PseudoEntity;
-import co.gamep.framework.pseudo3d.core.PseudoScene;
-import co.gamep.framework.pseudo3d.interfaces.IPseudoCamera;
-import co.gamep.framework.pseudo3d.interfaces.IPseudoEntity;
-import co.gamep.framework.pseudo3d.interfaces.IPseudoScene;
-import co.gamep.framework.pseudo3d.interfaces.IPseudoView;
-import co.gamep.framework.pseudo3d.core.PseudoCamera;
+import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
+//import co.gamep.framework.pseudo3d.core.PseudoEntity;
+//import co.gamep.framework.pseudo3d.core.PseudoScene;
+//import co.gamep.framework.pseudo3d.interfaces.IPseudoCamera;
+//import co.gamep.framework.pseudo3d.interfaces.IPseudoEntity;
+//import co.gamep.framework.pseudo3d.interfaces.IPseudoScene;
+//import co.gamep.framework.pseudo3d.interfaces.IPseudoView;
+//import co.gamep.framework.pseudo3d.core.PseudoCamera;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class A2DRenderer extends ARenderer
+class A2_5DRenderer extends ARenderer
 {
 	//private var _viewPointerSet:Map<View3D,IPseudoView>;
 	//private var _scenePointerSet:Map<Scene3D,IPseudoScene>;
@@ -35,13 +36,24 @@ class A2DRenderer extends ARenderer
 	
 	inline private function _a2DRendererInit():Void
 	{
-		uses3DEngine = false;
+		//uses3DEngine = false;
 		
 		//_viewPointerSet = new Map<View3D,IPseudoView>();
 		//_scenePointerSet = new Map<Scene3D,IPseudoScene>();
-		//_entityPointerSet = new Map<ObjectContainer3D,IPseudoEntity>();
+		//_entityPointerSet = new Map<ObjectContainer3D,IPseudoEntity>(); 
 		//_cameraPointerSet = new Map<Camera3D,IPseudoCamera>();
 	}	
+	
+	override public function renderView ( p_viewEntity:IGameEntity):Void
+	{
+		//render a view
+		//_viewPointerSet[p_logicalView].render();
+		//Console.warn("2.5 ARenderer rendering View: " + p_viewEntity.getState('name'));
+		
+		//TODO NEXT!!!!!!!!!!!!!!!!!!!!!
+		//this will now render properly. put some entities to test it out and maybe override this for flambe 2.5 html, and make use of space2.5. Take snippets from Flambe View but be careful!
+		//The way i link flambe view to the flambe 2.5html renderer right now is in AFlambe2_5renderer. do something similar. Also, mind invalidation this time!
+	}
 	
 	/*
 	override private function _createCamera(p_logicalCamera:Camera3D):Void
@@ -72,12 +84,6 @@ class A2DRenderer extends ARenderer
 		_viewPointerSet[p_logicalView].validate();
 		//temp add childs
 		//_viewPointerSet[p_logicalView].addChild(_scenePointerSet[p_logicalView.logicalScene]);
-	}
-	
-	override public function render ( p_logicalView:View3D):Void
-	{
-		//render a view
-		_viewPointerSet[p_logicalView].render();
 	}
 	
 	override private function _createScene(p_logicalScene:Scene3D):Void

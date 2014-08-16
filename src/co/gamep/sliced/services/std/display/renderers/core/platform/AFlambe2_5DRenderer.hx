@@ -6,8 +6,8 @@
 
  package co.gamep.sliced.services.std.display.renderers.core.platform;
 
-import co.gamep.framework.pseudo3d.flambe.FlambeView;
-import co.gamep.sliced.services.std.display.renderers.core.A2DRenderer;
+//import co.gamep.framework.pseudo3d.flambe.FlambeView;
+import co.gamep.sliced.services.std.display.renderers.core.A2_5DRenderer;
 import flambe.platform.InternalGraphics;
 import flambe.platform.Platform;
 import flambe.platform.Renderer;
@@ -17,7 +17,7 @@ import flambe.platform.Renderer;
  * ...
  * @author Aris Kostakos
  */
-class AFlambe2DRenderer extends A2DRenderer
+class AFlambe2_5DRenderer extends A2_5DRenderer
 {
 	private var _platform:Platform;
 	private var _internalGraphics:InternalGraphics;

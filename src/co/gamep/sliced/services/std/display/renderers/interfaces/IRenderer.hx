@@ -13,9 +13,13 @@ import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 interface IRenderer
 {
-	var viewSet( default, null ):Array<IGameEntity>;
-	var uses3DEngine( default, null ):Bool;
+	//var viewSet( default, null ):Array<IGameEntity>;
+	//-0var uses3DEngine( default, null ):Bool;
 	
-	function render ( p_viewEntity:IGameEntity):Void;
-	function update ():Void;
+	function renderView ( p_viewEntity:IGameEntity):Void;
+	function addView ( p_viewEntity:IGameEntity):Void;
+	function removeView ( p_viewEntity:IGameEntity):Void;
+	function validateView ( p_viewEntity:IGameEntity):Void;
+	function isViewValidated ( p_viewEntity:IGameEntity):Bool;
+	//function update ():Void;
 }

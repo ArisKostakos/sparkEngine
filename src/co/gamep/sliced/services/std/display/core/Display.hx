@@ -31,7 +31,7 @@ class Display extends AService implements IDisplay
 
 	public var space( default, null ):IGameEntity;
 	
-	private var __invalidated:Bool;
+	private var _invalidated:Bool;
 	
 	public function setSpace(p_gameEntity:IGameEntity):IGameEntity
 	{
@@ -49,12 +49,12 @@ class Display extends AService implements IDisplay
 		return (space);
 	}
 	
+	//This array will be modified from Subgraphic modules, depending on which renderers are available on the platform
 	public var rendererSet( default, null ):Array<IRenderer>;
 	
 	//views data stored here for optimization (saving the platform.subgraphics from looking which renderer is responsible for which view
 		//and in what order the views must be renderer
-	//public var logicalViewsOrder (default, null ):Array<View3D>;
-	
+	public var activeViewsOrder (default, null ):Array<IGameEntity>;
 	public var viewToRenderer (default, null ):Map<IGameEntity,IRenderer>;
 	
 	public function new() 
@@ -68,13 +68,10 @@ class Display extends AService implements IDisplay
 	{
 		Console.log("Init Display std Service...");
 		rendererSet = new Array<IRenderer>();
-		__invalidated = false;
+		
+		_invalidated = false;
 	}
 	
-	
-	//temp
-	private var _renderer3dcapable:IRenderer;
-	private var _renderer2dcapable:IRenderer;
 	
 	public function update():Void 
 	{
@@ -82,47 +79,160 @@ class Display extends AService implements IDisplay
 		if (space == null)
 			return;
 
-		//We will be polling the logicalSpace here and taking action when a change is found
-		
-		//Display is responsible for polling up to the Views level
-		
-		//Then, it will update all active renderers to poll their assigned view
-		
-		//TEMP POLLING EXAMPLE
-		/*
-		//Find 3d capable renderer
-		if (_renderer3dcapable == null)
-		{
-			for (renderer in rendererSet)
-			{
-				if (renderer.uses3DEngine == true)
-				{
-					_renderer3dcapable = renderer;
-					break;
-				}
-			}
-		}
-		
-		//Find 2dcapable renderer
-		if (_renderer2dcapable == null)
-		{
-			for (renderer in rendererSet)
-			{
-				if (renderer.uses3DEngine == false)
-				{
-					_renderer2dcapable = renderer;
-					break;
-				}
-			}
-		}
-		*/
-		//poll for 'dirty' views. actually you poll for 'dirty' stages here... and 'dirty' space of course
+		//Validate Display Service
+			//If Display is invalidated, it means validation is required up to the Views level
 		if (isValidated()==false)
 		{
-			//Validate Display Service
 			validate();
 		}
-		/*
+		
+		//Validate active views (validation of views always happens IN CONTEXT of its assigned renderer)
+		for (viewEntity in activeViewsOrder)
+		{
+			//Validate Display Service That's why views HAVE to be assigned to renderers as well
+			if (viewToRenderer[viewEntity].isViewValidated(viewEntity) == false)
+			{
+				viewToRenderer[viewEntity].validateView(viewEntity);
+			}
+		}
+		  
+	}
+	
+	
+	public function validate():Void
+	{
+		Console.warn("DISPLAY UPDATE: VALIDDATING...!");
+		
+		if (space.getState('invalidated') == true) _validateSpace(space);
+		
+		_invalidated = false;
+	}
+	
+	inline private function _validateSpace(spaceEntity:IGameEntity):Void
+	{
+		Console.warn("DISPLAY UPDATE: space invalidated.");
+		if (spaceEntity.getState('stage') != null)
+		{
+			Console.warn("DISPLAY UPDATE: stage found.");
+			if (spaceEntity.getState('stage').getState('invalidated') == true) _validateStage(space.getState('stage'));
+		}
+		else
+		{
+			Console.warn("DISPLAY UPDATE: stage NOT found.");
+		}
+		
+		spaceEntity.setState('invalidated', false);
+	}
+	
+	inline private function _validateStage(stageEntity:IGameEntity):Void
+	{
+		Console.warn("DISPLAY UPDATE: stage invalidated.");
+		
+		//Validate Stage
+		
+		//Here, it's important before reseting this area, to let the renderers know if a view they have been assigned to is being discarded.
+			//this is important since some renderers will keep data of their own that cache a specific view (for example, 2_5 space, flambe's or away3d's internal data)
+		for (currentGameEntityView in viewToRenderer.keys())
+		{
+			viewToRenderer[currentGameEntityView].removeView(currentGameEntityView);
+		}
+			
+		viewToRenderer = new Map<IGameEntity,IRenderer>();
+		activeViewsOrder = new Array<IGameEntity>();
+		
+		//add all views
+		for (gameEntityView in stageEntity.children)
+		{	
+			//test if view is active (meaning, it has a valid camera and scene assigned to it, otherwise ignore the view until it becomes active again (will cause invalidation so it will be checked if this happens)
+			if (gameEntityView.getState('active') == true)
+			{
+				_addViewToStage(gameEntityView);
+			}
+		}
+		
+		//Reorder views
+		activeViewsOrder.sort(_orderViews);
+		
+		//Print all views (in order)
+		for (viewEntity in activeViewsOrder)
+		{
+			Console.debug("View: " + viewEntity.getState('name') );
+		}
+		
+		//reset invalidate flag
+		space.getState('stage').setState('invalidated', false);
+	}
+	
+	private function _addViewToStage(view:IGameEntity):Void
+	{
+		viewToRenderer.set(view, rendererSet[0]);  //@FIX NOW: When renderer selection is done, fix this so it picks the appropriate renderer. Now it will always assign every view to the first one found!
+		activeViewsOrder.push(view);
+		rendererSet[0].addView(view);
+	}
+	
+	private function _orderViews(view1:IGameEntity, view2:IGameEntity):Int
+	{
+		if (view1.getState('zIndex')>view2.getState('zIndex')) return 1;
+		else if (view1.getState('zIndex') < view2.getState('zIndex')) return -1;
+		else return 0;
+	}
+	
+	inline public function invalidate():Void
+	{
+		Console.warn("Display invalidated!");
+		_invalidated = true;
+	}
+	
+	inline public function isValidated():Bool
+	{
+		return !_invalidated;
+	}
+	
+	inline public function isCurrentSpace(p_gameEntity:IGameEntity):Bool
+	{
+		return p_gameEntity == space;
+	}
+	
+	//@todo: The display service should DISPLAY the console messages ON SCREEN
+	//platform independant..
+	//merge mconsole's view with flambe's renderer to make this possible
+	//probably in a separate view created by the Display service
+	//for this purpose alone.
+	public function log(message:String):Void 
+	{
+		Console.log(message);
+	}
+	
+	public function info(message:String):Void 
+	{
+		Console.info(message);
+	}
+	
+	public function debug(message:String):Void 
+	{
+		Console.debug(message);
+	}
+	
+	public function warn(message:String):Void 
+	{
+		Console.warn(message);
+	}
+	
+	public function error(message:String):Void 
+	{
+		Console.error(message);
+	}
+	
+}
+
+
+
+
+	//temp
+	//private var _renderer3dcapable:IRenderer;
+	//private var _renderer2dcapable:IRenderer;
+
+	/*
 		for (viewEntity in space.children) //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
 		{
 			if (viewToRenderer.exists(viewEntity) == false)
@@ -183,103 +293,33 @@ class Display extends AService implements IDisplay
 			renderer.update();
 		}
 		*/
-	}
+		
 	
-	
-	/**
-		Sorts [this] Array according to the comparison function [f], where
-		[f(x,y)] returns 0 if x == y, a positive Int if x > y and a
-		negative Int if x < y.
-		
-		This operation modifies [this] Array in place.
-		
-		The sort operation is not guaranteed to be stable, which means that the
-		order of equal elements may not be retained. For a stable Array sorting
-		algorithm, haxe.ds.sort.MergeSort.sort() can be used instead.
-		
-		If [f] is null, the result is unspecified.
-	**/
-		
+	//TEMP POLLING EXAMPLE
 	/*
-	private function _orderViews(view1:View3D, view2:View3D):Int
+	//Find 3d capable renderer
+	if (_renderer3dcapable == null)
 	{
-		if (view1.zIndex>view2.zIndex) return 1;
-		else if (view1.zIndex < view2.zIndex) return -1;
-		else return 0;
-	}
-	*/
-	
-	
-	public function validate():Void
-	{
-		Console.warn("DISPLAY UPDATE: VALIDDATING...!");
-		
-		if (space.getState('invalidated') == true) Console.warn("DISPLAY UPDATE: space invalidated.");
-		if (space.getState('stage') != null)
+		for (renderer in rendererSet)
 		{
-			Console.warn("DISPLAY UPDATE: stage found.");
-			if (space.getState('stage').getState('invalidated') == true)
+			if (renderer.uses3DEngine == true)
 			{
-				Console.warn("DISPLAY UPDATE: stage invalidated.");
-				viewToRenderer = new Map<IGameEntity,IRenderer>();
-				
-				//add all views again
-				//....
-				//add the views. re-enable subgraphics. put something in the scene. test it with the new flambe 2.5 (rename pseudo3d. work the flambeview...)
+				_renderer3dcapable = renderer;
+				break;
 			}
 		}
-		else
+	}
+	
+	//Find 2dcapable renderer
+	if (_renderer2dcapable == null)
+	{
+		for (renderer in rendererSet)
 		{
-			Console.warn("DISPLAY UPDATE: stage NOT found.");
+			if (renderer.uses3DEngine == false)
+			{
+				_renderer2dcapable = renderer;
+				break;
+			}
 		}
-		
-		__invalidated = false;
 	}
-	
-	inline public function invalidate():Void
-	{
-		Console.warn("Display invalidated!");
-		__invalidated = true;
-	}
-	
-	inline public function isValidated():Bool
-	{
-		return !__invalidated;
-	}
-	
-	inline public function isCurrentSpace(p_gameEntity:IGameEntity):Bool
-	{
-		return p_gameEntity == space;
-	}
-	
-	//@todo: The display service should DISPLAY the console messages ON SCREEN
-	//platform independant..
-	//merge mconsole's view with flambe's renderer to make this possible
-	//probably in a separate view created by the Display service
-	//for this purpose alone.
-	public function log(message:String):Void 
-	{
-		Console.log(message);
-	}
-	
-	public function info(message:String):Void 
-	{
-		Console.info(message);
-	}
-	
-	public function debug(message:String):Void 
-	{
-		Console.debug(message);
-	}
-	
-	public function warn(message:String):Void 
-	{
-		Console.warn(message);
-	}
-	
-	public function error(message:String):Void 
-	{
-		Console.error(message);
-	}
-	
-}
+	*/

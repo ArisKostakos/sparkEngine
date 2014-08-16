@@ -15,8 +15,8 @@ import co.gamep.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 class ARenderer implements IRenderer
 {
-	public var viewSet( default, null ):Array<IGameEntity>;
-	public var uses3DEngine( default, null ):Bool;
+	private var _viewSet( default, null ):Array<IGameEntity>;
+	//public var uses3DEngine( default, null ):Bool;
 	
 	private function new() 
 	{
@@ -25,9 +25,9 @@ class ARenderer implements IRenderer
 
 	inline private function _aRendererInit():Void
 	{
-		viewSet = new Array<IGameEntity>();
+		_viewSet = new Array<IGameEntity>();
 	}
-	
+	/*
 	public function update ():Void
 	{
 		//update 'dirty' views
@@ -36,6 +36,7 @@ class ARenderer implements IRenderer
 			_updateView(viewEntity);
 		}
 	}
+	*/
 	
 	private function _updateView(p_viewEntity:IGameEntity):Void
 	{
@@ -134,8 +135,12 @@ class ARenderer implements IRenderer
 		*/
 	}
 	
-	//override functions
-	public function render ( p_viewEntity:IGameEntity):Void { }
+	//abstract functions
+	public function renderView ( p_viewEntity:IGameEntity):Void { }
+	public function addView ( p_viewEntity:IGameEntity):Void { }
+	public function removeView ( p_viewEntity:IGameEntity):Void { }
+	public function validateView ( p_viewEntity:IGameEntity):Void { }
+	public function isViewValidated ( p_viewEntity:IGameEntity):Bool { return throw "abstract"; }
 	/*
 	private function _hasView(p_logicalView:View3D):Bool { return false; }
 	private function _createView(p_logicalView:View3D):Void { }

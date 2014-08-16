@@ -24,6 +24,7 @@
   <build>
     <option directives="" />
     <option flashStrict="True" />
+    <option noInlineOnDebug="False" />
     <option mainClass="" />
     <option enabledebug="True" />
     <option additional="" />

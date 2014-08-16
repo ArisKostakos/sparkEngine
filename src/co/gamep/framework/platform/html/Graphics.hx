@@ -10,7 +10,7 @@ package co.gamep.framework.platform.html;
 #if includeAway3D
 	import co.gamep.framework.platform.html.away3d.Subgraphics;
 #else
-	import co.gamep.framework.platform.html.flambe.Subgraphics;
+	import co.gamep.framework.platform.html.flambe2_5.Subgraphics;
 #end
 
 

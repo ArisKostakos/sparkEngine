@@ -4,8 +4,8 @@
  * Written by Aris Kostakos <a.kostakos@gmail.com>, November 2013
  */
 
-package co.gamep.framework.platform.flash.flambe;
-import co.gamep.sliced.services.std.display.renderers.core.platform.flash.Flambe2DFlashRenderer;
+package co.gamep.framework.platform.flash.flambe2_5;
+import co.gamep.sliced.services.std.display.renderers.core.platform.flash.Flambe2_5DFlashRenderer;
 import co.gamep.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flash.events.Event;
 import flash.Lib;
@@ -26,7 +26,7 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new Flambe2DFlashRenderer());
+		Sliced.display.rendererSet.push(new Flambe2_5DFlashRenderer());
 	}
 	
 	public static function init():Void
@@ -47,7 +47,7 @@ class Subgraphics
 		if (Sliced.display!=null)
 		{
 			//for each LogicalView
-			for (logicalView in Sliced.display.logicalViewsOrder)
+			for (logicalView in Sliced.display.activeViewsOrder)
 			{
 				//query Display what renderer has it
 				var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];

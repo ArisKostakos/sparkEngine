@@ -1030,6 +1030,7 @@ class GameClassParser implements IGameClassParser
 	inline private function _mergeSingleGameNode(p_gameNode:Xml):Void
 	{
 		//Solution to html5 bug
+		//@TODO: maybe there's a better way to solve this. How about you just store the enumerable of p_gameNode instead of creating a new array. Small otpimization, but it IS the better solution
 		var childrenArray:Array<Xml> = new Array<Xml>();
 		for (elt in p_gameNode.elements())
 			childrenArray.push(elt);
