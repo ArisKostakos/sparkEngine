@@ -1,0 +1,21 @@
+/* Copyright © Spark.tools - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Aris Kostakos <aris@spark.tools>, August 2013
+ */
+
+package tools.spark.sliced.core;
+
+import tools.spark.sliced.interfaces.IService;
+
+/**
+ * ...
+ * @author Aris Kostakos
+ */
+@:keepSub class AService implements IService
+{
+	private function new() 
+	{
+		//private constructor...
+	}
+}
