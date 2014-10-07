@@ -33,10 +33,10 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new Flambe2_5DHtmlRenderer());
+		Sliced.display.platformRendererSet.push(new Flambe2_5DHtmlRenderer());
 		
 		//Create Away3D Renderer
-		Sliced.display.rendererSet.push(new Away3DHtmlRenderer());
+		Sliced.display.platformRendererSet.push(new Away3DHtmlRenderer());
 	}
 	
 	public static function init():Void
@@ -110,7 +110,9 @@ class Subgraphics
 	private static function _onAwayEnterFrame(?p1 : Dynamic):Void
 	{
 		if (Sliced.display == null) return;
-		
+		//@todo WTF, two more ifs here, JUST to check if there are active Views available???? DO SOMETHING ABOUT THAT, THIS THING RUNS EVERY - SINGLE - FRAME
+		if (Sliced.display.projectActiveSpaceReference == null) return;
+		if (Sliced.display.projectActiveSpaceReference.activeStageReference == null) return;
 		
 		//if (_counterCount >= _counterMax) return;
 		
@@ -131,15 +133,13 @@ class Subgraphics
 		
 		
 		//query display for views in order (far away first)
-		//for each LogicalView
-		for (logicalView in Sliced.display.activeViewsOrder)
+		//for each Active View Reference (there are in z-order)
+		for (activeViewReference in Sliced.display.projectActiveSpaceReference.activeStageReference.activeViewReferences)
 		{
-			//query Display what renderer has it
-			var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];
-			
 			_flambeDisplaySystem.didRender();
 			
-			renderer.render(logicalView);
+			//Render viewEntity
+			activeViewReference.renderer.renderView(activeViewReference.viewEntity);
 			
 			_flambeDisplaySystem.didRender();
 		}

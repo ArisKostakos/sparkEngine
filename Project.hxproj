@@ -49,7 +49,7 @@
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand>xcopy /S /Y $(CompilerPath)\lib\aris-hacks\flambe $(CompilerPath)\lib\flambe\3,1,2\flambe
-cmd /c flambe --config flambe_arkanoid.yaml build --$(BuildConfig)</preBuildCommand>
+cmd /c flambe --config flambe_html_3d.yaml build --$(BuildConfig)</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False">xcopy /E /Y "C:\Users\LLaffer\Documents\GamePlus_Projects\ArkanoidPrototype" "$(ProjectDir)\build\web"
 xcopy /E /Y "$(ProjectDir)\build\web" "C:\wamp\www"</postBuildCommand>
@@ -57,7 +57,7 @@ xcopy /E /Y "$(ProjectDir)\build\web" "C:\wamp\www"</postBuildCommand>
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="flambe --config flambe_arkanoid.yaml run --$(BuildConfig) --no-build --no-fdb || pause" />
+    <option testMovieCommand="flambe --config flambe_html_3d.yaml run --$(BuildConfig) --no-build --no-fdb || pause" />
   </options>
   <!-- Plugin storage -->
   <storage />

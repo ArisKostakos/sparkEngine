@@ -6,7 +6,7 @@
 
 package tools.spark.sliced.services.std.display.renderers.core.platform.html;
 
-import tools.spark.sliced.services.std.display.logicalspace.containers.View3D;
+
 import tools.spark.sliced.services.std.display.renderers.core.platform.AAway3DRenderer;
 import away3d.core.managers.Stage3DManager;
 
@@ -27,8 +27,8 @@ class Away3DHtmlRenderer extends AAway3DRenderer
 	{
 		Console.info("Creating Away3D Html Renderer...");
 	}
-	
-	override private function _createView(p_logicalView:View3D):Void
+	/*
+	override private function _createView(p_logicalView:Dynamic):Void
 	{
 		//@FIX: HUGE BUG. Every time I create a View3D in away-ts it will create a new Stage3DProxy!!! disable that!!!!!!!
 			//or at least make sures u're only left with one Stage3DProxy not 2 or more
@@ -55,4 +55,5 @@ class Away3DHtmlRenderer extends AAway3DRenderer
 		//debug
 		//Lib.current.stage.addChild(new AwayStats(_viewPointerSet[p_logicalView]));
 	}
+	*/
 }

@@ -48,7 +48,7 @@ class A2_5DRenderer extends ARenderer
 	{
 		//render a view
 		//_viewPointerSet[p_logicalView].render();
-		Console.warn("2.5 ARenderer rendering View: " + p_viewEntity.getState('name'));
+		Console.warn("A2_5DRenderer rendering View: " + p_viewEntity.getState('name'));
 		
 		//TODO NEXT!!!!!!!!!!!!!!!!!!!!!
 		//this will now render properly. put some entities to test it out and maybe override this for flambe 2.5 html, and make use of space2.5. Take snippets from Flambe View but be careful!

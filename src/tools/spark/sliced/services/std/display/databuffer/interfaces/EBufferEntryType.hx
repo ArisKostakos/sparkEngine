@@ -6,16 +6,17 @@
 
 package tools.spark.sliced.services.std.display.databuffer.interfaces;
 
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
-
 /**
+ * ...
  * @author Aris Kostakos
  */
-
-interface IDataBuffer 
+enum EBufferEntryType 
 {
-	var dataBuffer( default, null ):Array<IBufferEntry>;
-	
-	function addEntry(p_type:EBufferEntryType, p_source:IGameEntity, ?p_target:IGameEntity, ?p_field:String):Void;
-	function clearBuffer():Void;
+	ADDED;
+	REMOVED;
+	ASSIGNED;
+	UPDATED_STATE;
+	UPDATED_FORM_STATE;
+	UPDATED_COMPONENT_STATES;
+	UPDATED_FORM_COMPONENT_STATES;
 }

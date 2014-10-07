@@ -41,20 +41,19 @@ class Subgraphics
 		//query display for views in order (far away first)
 		if (Sliced.display!=null)
 		{
-			/*@FIX RIGHT NOW
-			if (Sliced.display.activeViewsOrder!=null)
+			//@todo WTF, two more ifs here, JUST to check if there are active Views available???? DO SOMETHING ABOUT THAT, THIS THING RUNS EVERY - SINGLE - FRAME
+			if (Sliced.display.projectActiveSpaceReference!=null)
 			{
-				//for each LogicalView
-				for (viewEntity in Sliced.display.activeViewsOrder)
+				if (Sliced.display.projectActiveSpaceReference.activeStageReference!=null)
 				{
-					//query Display what renderer has it
-					var renderer:IRenderer = Sliced.display.viewToRenderer[viewEntity];
-					
-					//Render viewEntity
-					renderer.renderView(viewEntity);
+					//for each Active View Reference (there are in z-order)
+					for (activeViewReference in Sliced.display.projectActiveSpaceReference.activeStageReference.activeViewReferences)
+					{
+						//Render viewEntity
+						activeViewReference.renderer.renderView(activeViewReference.viewEntity);
+					}
 				}
 			}
-			*/
 		}
 		
 		//Flambe Finish Render

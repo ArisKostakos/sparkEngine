@@ -5,6 +5,7 @@
  */
 
 package tools.spark.sliced.services.std.display.renderers.core;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -12,7 +13,6 @@ package tools.spark.sliced.services.std.display.renderers.core;
  */
 class A3DRenderer extends ARenderer
 {
-
 	private function new() 
 	{
 		super();
@@ -23,7 +23,8 @@ class A3DRenderer extends ARenderer
 	
 	inline private function _a3DRendererInit():Void
 	{
-		uses3DEngine = true;
+		
 	}	
+	
 	
 }

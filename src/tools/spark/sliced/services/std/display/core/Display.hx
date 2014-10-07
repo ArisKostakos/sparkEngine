@@ -9,7 +9,9 @@ package tools.spark.sliced.services.std.display.core;
 import tools.spark.framework.Framework;
 import tools.spark.sliced.interfaces.IDisplay;
 import tools.spark.sliced.core.AService;
+import tools.spark.sliced.services.std.display.active_displayentity_references.core.ActiveSpaceReference;
 import tools.spark.sliced.services.std.display.databuffer.core.DataBuffer;
+import tools.spark.sliced.services.std.display.databuffer.interfaces.EBufferEntryType;
 import tools.spark.sliced.services.std.display.databuffer.interfaces.IDataBuffer;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveSpaceReference;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
@@ -22,7 +24,14 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameSpace;
  */
 class Display extends AService implements IDisplay
 {
-	//todo: somewhere here, add a filtering mechanism for choosing the appropriate renderer
+	//@TODO: When you create the std .egc, .fgc, etc templates, DO ONE THING. You have an .egc (extension) called "Positionable". That's excellent, but 
+	//it should create an extra Boolean state called "Positionable" with value to true. So, now we practically have COMPONENT BASED LOGIC in LionML. Just like that!
+	//So we is this here at Display? Well, after you do this, go to the renderers, and when you update things (put the data to the actual renderer), check against States
+	//like "Positionable", or "3DForm" or "2DForm" or "Physicsable" or AAANYTHING else, and only update if it is a component like that... This can decide if the whole
+	//game can be run on both 3d and 2d... it can decide everything.. it links the component system with Display and all its renderers in a neat and clean way. Do it!!!
+	
+	
+	//@todo: somewhere here, add a filtering mechanism for choosing the appropriate renderer
 	//do this by enumerating all the available renderers added for the current platform
 	//and start disqualifing renderers due to platform requirements and restrictions
 	//order by gRenderer request, then chose the top one
@@ -32,18 +41,12 @@ class Display extends AService implements IDisplay
 	//instead of itterating the virtual world. The Renderer may find this useful.
 	//do i need to itterate anything now that I ditched the logicalSpace?
 	
-	//public var space( default, null ):IGameEntity;
 	
 	private var _dataBuffer:IDataBuffer;
 	
 	//This array will be modified from Subgraphic modules, depending on which renderers are available on the platform
 	public var platformRendererSet( default, null ):Array<IRenderer>;
 	public var projectActiveSpaceReference( default, null ):IActiveSpaceReference;
-	
-	//views data stored here for optimization (saving the platform.subgraphics from looking which renderer is responsible for which view
-		//and in what order the views must be renderer
-	//public var activeViewsOrder (default, null ):Array<IGameEntity>;
-	//public var viewToRenderer (default, null ):Map<IGameEntity,IRenderer>;
 	
 	public function new() 
 	{
@@ -64,149 +67,76 @@ class Display extends AService implements IDisplay
 		_dataBuffer = new DataBuffer();
 	}
 	
-	
-	public function update():Void 
+	private function _setActiveSpace(p_spaceEntity:IGameEntity):Void
 	{
-		Console.warn("DISPLAY UPDATE: UPDATING...!");
-		
-		/*
-		//Assert logicalSpace
-		if (space == null)
-			return;
-
-		//Validate Display Service
-			//If Display is invalidated, it means validation is required up to the Views level
-		if (isValidated()==false)
-		{
-			validate();
-		}
-		
-		if (activeViewsOrder != null) //@THINK: Not sure about this one... (validation thing..)
-		{
-			//Validate active views (validation of views always happens IN CONTEXT of its assigned renderer)
-			for (viewEntity in activeViewsOrder)
-			{
-				//Validate Display Service That's why views HAVE to be assigned to renderers as well
-				if (viewToRenderer[viewEntity].isViewValidated(viewEntity) == false)
-				{
-					viewToRenderer[viewEntity].validateView(viewEntity);
-				}
-			}
-		}
-		*/
-	}
-	
-	/*
-	public function setSpace(p_gameEntity:IGameEntity):IGameEntity
-	{
-		//cast the gameEntity, and complain if space already set.
-		if (space != null)
+		if (projectActiveSpaceReference != null)
 		{
 			//@note if another space already exists, maybe you can warn better the user, or take
 				//other action. may need rerendering, changing renderers, etc, etc, etc
-			Console.warn("A space object is already bound to the Display service! Rebounding...");
+			Console.warn("A space object was already bound to this Project! Rebounding...");
 		}
-
-		space = p_gameEntity;
-		invalidate();
-
-		return (space);
+		
+		projectActiveSpaceReference = new ActiveSpaceReference(p_spaceEntity);
 	}
 	
-	public function validate():Void
+	public function update():Void 
 	{
-		Console.warn("DISPLAY UPDATE: VALIDDATING...!");
+		//Console.warn("DISPLAY UPDATE: UPDATING...!");
 		
-		if (space.getState('invalidated') == true) _validateSpace(space);
 		
-		_invalidated = false;
-	}
-	
-	inline private function _validateSpace(spaceEntity:IGameEntity):Void
-	{
-		Console.warn("DISPLAY UPDATE: space invalidated.");
-		if (spaceEntity.getState('stage') != null)
+		//Buffer
+		for (f_bufferEntry in _dataBuffer.dataBuffer)
 		{
-			Console.warn("DISPLAY UPDATE: stage found.");
-			if (spaceEntity.getState('stage').getState('invalidated') == true) _validateStage(space.getState('stage'));
+			if (f_bufferEntry.type == ASSIGNED)
+			{
+				if (f_bufferEntry.source.getState('displayType') == "Space")
+				{
+					_setActiveSpace(f_bufferEntry.source);
+				}
+				
+			}
+		}
+		_dataBuffer.clearBuffer();
+		
+		
+		//all renderers are up to date in this point, so...
+		
+		//after the Display.update, the platform.subgraphics system will request a render() for each view from their assigned renderer
+	}
+	
+	public function assignSpaceToProject(p_spaceEntity:IGameEntity):Bool
+	{
+		//This is always relevant, meaning, it has direct effect to the ACTIVE space, so always post it to the buffer
+		
+		
+		//cast the p_spaceEntity
+		if (p_spaceEntity.getState('displayType') == "Space")
+		{
+			_dataBuffer.addEntry(ASSIGNED, p_spaceEntity);
+			
+			return true;
 		}
 		else
 		{
-			Console.warn("DISPLAY UPDATE: stage NOT found.");
+			return false;
 		}
-		
-		spaceEntity.setState('invalidated', false);
 	}
 	
-	inline private function _validateStage(stageEntity:IGameEntity):Void
+	public function assignStageToSpace(p_stageEntity:IGameEntity, p_spaceEntity:IGameEntity):Bool
 	{
-		Console.warn("DISPLAY UPDATE: stage invalidated.");
-		
-		//Validate Stage
-		
-		//Here, it's important before reseting this area, to let the renderers know if a view they have been assigned to is being discarded.
-			//this is important since some renderers will keep data of their own that cache a specific view (for example, 2_5 space, flambe's or away3d's internal data)
-		for (currentGameEntityView in viewToRenderer.keys())
+		//cast the gameEntities
+		if (p_stageEntity.getState('displayType') == "Stage" && p_spaceEntity.getState('displayType') == "Space")
 		{
-			viewToRenderer[currentGameEntityView].removeView(currentGameEntityView);
-		}
+			//@todo: ONLY add this to the buffer, IF the Space that the stage is being added to, is an ACTIVE SPACE, meaning, it's ADDED TO THE PROJECT
+			_dataBuffer.addEntry(ASSIGNED, p_stageEntity, p_spaceEntity);
 			
-		viewToRenderer = new Map<IGameEntity,IRenderer>();
-		activeViewsOrder = new Array<IGameEntity>();
-		
-		//add all views
-		for (gameEntityView in stageEntity.children)
-		{	
-			//test if view is active (meaning, it has a valid camera and scene assigned to it, otherwise ignore the view until it becomes active again (will cause invalidation so it will be checked if this happens)
-			if (gameEntityView.getState('active') == true)
-			{
-				_addViewToStage(gameEntityView);
-			}
+			return true;
 		}
-		
-		//Reorder views
-		activeViewsOrder.sort(_orderViews);
-		
-		//Print all views (in order)
-		for (viewEntity in activeViewsOrder)
+		else
 		{
-			Console.debug("View: " + viewEntity.getState('name') );
+			return false;
 		}
-		
-		//reset invalidate flag
-		space.getState('stage').setState('invalidated', false);
 	}
-	
-	private function _addViewToStage(view:IGameEntity):Void
-	{
-		viewToRenderer.set(view, rendererSet[0]);  //@FIX NOW: When renderer selection is done, fix this so it picks the appropriate renderer. Now it will always assign every view to the first one found!
-		activeViewsOrder.push(view);
-		rendererSet[0].addView(view);
-	}
-	
-	private function _orderViews(view1:IGameEntity, view2:IGameEntity):Int
-	{
-		if (view1.getState('zIndex')>view2.getState('zIndex')) return 1;
-		else if (view1.getState('zIndex') < view2.getState('zIndex')) return -1;
-		else return 0;
-	}
-	
-	inline public function invalidate():Void
-	{
-		Console.warn("Display invalidated!");
-		_invalidated = true;
-	}
-	
-	inline public function isValidated():Bool
-	{
-		return !_invalidated;
-	}
-	
-	inline public function isCurrentSpace(p_gameEntity:IGameEntity):Bool
-	{
-		return p_gameEntity == space;
-	}
-	*/
 	
 	
 	//@todo: The display service should DISPLAY the console messages ON SCREEN
@@ -240,102 +170,3 @@ class Display extends AService implements IDisplay
 	}
 	
 }
-
-
-
-
-	//temp
-	//private var _renderer3dcapable:IRenderer;
-	//private var _renderer2dcapable:IRenderer;
-
-	/*
-		for (viewEntity in space.children) //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
-		{
-			if (viewToRenderer.exists(viewEntity) == false)
-			{
-				
-				if (logicalView.requests3DEngine == true)
-				{
-					if (_renderer3dcapable != null)
-					{
-						//assign view to renderer
-						_renderer3dcapable.logicalViewSet.push(logicalView);
-						logicalViewRendererAssignments.set(logicalView, _renderer3dcapable);
-						logicalViewsOrder.push(logicalView);
-						l_temp_spaceInvalidated = true;	//temp value until i do proper invalidation 
-					}
-				}
-				else
-				{
-					if (_renderer2dcapable != null)
-					{
-						//assign view to renderer
-						_renderer2dcapable.logicalViewSet.push(logicalView);
-						logicalViewRendererAssignments.set(logicalView, _renderer2dcapable);
-						logicalViewsOrder.push(logicalView);
-						l_temp_spaceInvalidated = true;	//temp value until i do proper invalidation 
-					}
-				}
-				
-				Console.info("Found a (spaceChild)viewEntity to add to display! whooray!");
-				viewToRenderer.set(viewEntity, _renderer2dcapable); //temp define for 2d rendering
-			}
-			
-		}
-		
-		
-		//after updating the 'dirty' space, always re-order the Views correctly
-		if (l_temp_spaceInvalidated)
-		{
-			//logicalViewsOrder.sort(_orderViews);
-			
-			for (viewEntity in space.children) //for (logicalView in logicalSpace.logicalStage.logicalViewSet)
-			{
-				Console.debug("(spaceChild)View: " + viewEntity.getState('name') );
-			}
-		}
-		
-
-		
-		//after the Display.update, the platform.subgraphics system will request a render() for each view from their assigned renderer, in the order 
-		
-		//RENDERER UPDATE TEMP EXAMPLE
-		//poll 'dirty' views here, and if one is found, assign the responsible renderer as 'dirty'
-		
-		//update all 'dirty' renderers
-
-		for (renderer in rendererSet)
-		{
-			renderer.update();
-		}
-		*/
-		
-	
-	//TEMP POLLING EXAMPLE
-	/*
-	//Find 3d capable renderer
-	if (_renderer3dcapable == null)
-	{
-		for (renderer in rendererSet)
-		{
-			if (renderer.uses3DEngine == true)
-			{
-				_renderer3dcapable = renderer;
-				break;
-			}
-		}
-	}
-	
-	//Find 2dcapable renderer
-	if (_renderer2dcapable == null)
-	{
-		for (renderer in rendererSet)
-		{
-			if (renderer.uses3DEngine == false)
-			{
-				_renderer2dcapable = renderer;
-				break;
-			}
-		}
-	}
-	*/

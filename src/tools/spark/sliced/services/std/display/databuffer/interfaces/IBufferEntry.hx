@@ -6,11 +6,16 @@
 
 package tools.spark.sliced.services.std.display.databuffer.interfaces;
 
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
+
 /**
  * @author Aris Kostakos
  */
 
 interface IBufferEntry 
 {
-  
+	var type( default, null ):EBufferEntryType;
+	var source( default, null ):IGameEntity;
+	var target( default, null ):IGameEntity;
+	var field( default, null ):String;
 }

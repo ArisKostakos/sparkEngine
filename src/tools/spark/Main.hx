@@ -27,7 +27,7 @@ class Main
 		Framework.init();
 		
 		//[ARKANOID HACK]:
-		setHandlerOnDOM();
+		//setHandlerOnDOM();
 		
 		//Load config
 		loadClientConfig();

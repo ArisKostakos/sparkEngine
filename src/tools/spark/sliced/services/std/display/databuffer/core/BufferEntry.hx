@@ -6,7 +6,9 @@
 
 package tools.spark.sliced.services.std.display.databuffer.core;
 
+import tools.spark.sliced.services.std.display.databuffer.interfaces.EBufferEntryType;
 import tools.spark.sliced.services.std.display.databuffer.interfaces.IBufferEntry;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -14,10 +16,17 @@ import tools.spark.sliced.services.std.display.databuffer.interfaces.IBufferEntr
  */
 class BufferEntry implements IBufferEntry
 {
-
-	public function new() 
+	public var type( default, null ):EBufferEntryType;
+	public var source( default, null ):IGameEntity;
+	public var target( default, null ):IGameEntity;
+	public var field( default, null ):String;
+	
+	public function new(p_type:EBufferEntryType, p_source:IGameEntity, ?p_target:IGameEntity, ?p_field:String) 
 	{
-		
+		type = p_type;
+		source = p_source;
+		target = p_target;
+		field = p_field;
 	}
 	
 }
