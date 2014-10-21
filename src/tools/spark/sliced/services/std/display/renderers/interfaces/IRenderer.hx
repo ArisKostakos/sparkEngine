@@ -15,8 +15,4 @@ interface IRenderer
 {
 	//var name( default, null ):String;
 	//var uses3DEngine( default, null ):Bool;
-	
-	function renderView ( p_viewEntity:IGameEntity):Void;
-	function addView ( p_viewEntity:IGameEntity):Void;
-	function removeView ( p_viewEntity:IGameEntity):Void;
 }

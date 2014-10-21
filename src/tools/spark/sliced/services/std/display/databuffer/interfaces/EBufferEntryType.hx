@@ -12,11 +12,9 @@ package tools.spark.sliced.services.std.display.databuffer.interfaces;
  */
 enum EBufferEntryType 
 {
+	SET_SPACE;
 	ADDED;
 	REMOVED;
-	ASSIGNED;
 	UPDATED_STATE;
 	UPDATED_FORM_STATE;
-	UPDATED_COMPONENT_STATES;
-	UPDATED_FORM_COMPONENT_STATES;
 }

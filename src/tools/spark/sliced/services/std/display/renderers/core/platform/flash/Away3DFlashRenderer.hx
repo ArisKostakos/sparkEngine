@@ -7,7 +7,8 @@
  package tools.spark.sliced.services.std.display.renderers.core.platform.flash;
 
 import tools.spark.sliced.services.std.display.logicalspace.containers.View3D;
-import tools.spark.sliced.services.std.display.renderers.core.platform.AAway3DRenderer;
+import tools.spark.sliced.services.std.display.renderers.core.library.AAway3DRenderer;
+import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 import tools.spark.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flash.Lib;
 
@@ -15,7 +16,7 @@ import flash.Lib;
  * ...
  * @author Aris Kostakos
  */
-class Away3DFlashRenderer extends AAway3DRenderer
+class Away3DFlashRenderer extends AAway3DRenderer implements IPlatformSpecificRenderer
 {
 	public function new() 
 	{

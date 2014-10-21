@@ -14,8 +14,10 @@ import tools.spark.sliced.services.std.display.databuffer.core.DataBuffer;
 import tools.spark.sliced.services.std.display.databuffer.interfaces.EBufferEntryType;
 import tools.spark.sliced.services.std.display.databuffer.interfaces.IDataBuffer;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveSpaceReference;
+import tools.spark.sliced.services.std.display.managers.core.ActiveReferenceMediator;
+import tools.spark.sliced.services.std.display.managers.interfaces.IActiveReferenceMediator;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
-import tools.spark.sliced.services.std.display.renderers.interfaces.IRenderer;
+import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameSpace;
 
 /**
@@ -45,8 +47,24 @@ class Display extends AService implements IDisplay
 	private var _dataBuffer:IDataBuffer;
 	
 	//This array will be modified from Subgraphic modules, depending on which renderers are available on the platform
-	public var platformRendererSet( default, null ):Array<IRenderer>;
+	public var platformRendererSet( default, null ):Array<IPlatformSpecificRenderer>;
 	public var projectActiveSpaceReference( default, null ):IActiveSpaceReference;
+	
+	private var _activeReferenceMediator:IActiveReferenceMediator;
+	
+	private var _renderStateNames:Map<String,Bool>;
+	
+	private function _initRenderStateNames():Void
+	{
+		_renderStateNames['posX'] = true;
+		_renderStateNames['posY'] = true;
+		_renderStateNames['stage'] = true;
+		_renderStateNames['view'] = true;
+		_renderStateNames['camera'] = true;
+		_renderStateNames['scene'] = true;
+		_renderStateNames['space'] = true;
+		_renderStateNames['active'] = true;
+	}
 	
 	public function new() 
 	{
@@ -60,84 +78,107 @@ class Display extends AService implements IDisplay
 		//Log
 		Console.log("Init Display std Service...");
 		
+		//Init Render StateNames
+		_renderStateNames = new Map<String,Bool>();
+		_initRenderStateNames();
+		
+		//Active Reference Mediator
+		_activeReferenceMediator = new ActiveReferenceMediator(this);
+		
 		//Renderer Set
-		platformRendererSet = new Array<IRenderer>();
+		platformRendererSet = new Array<IPlatformSpecificRenderer>();
 		
 		//Data Buffer
 		_dataBuffer = new DataBuffer();
 	}
 	
+	//@TODO: Quite a lot of public functions here, all dealing with the activeXReferences.. 
+	//Maybe create a mediator to handle all that, and lighten the Display Service a bit
+	
+	
+	public function setActiveSpace(p_spaceEntity:IGameEntity):Bool
+	{
+		//weakcast the p_spaceEntity
+		if (p_spaceEntity.getState('displayType') == "Space")
+		{
+			_dataBuffer.addEntry(SET_SPACE, p_spaceEntity);
+			
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	private function _setActiveSpace(p_spaceEntity:IGameEntity):Void
 	{
-		if (projectActiveSpaceReference != null)
+		if (_activeReferenceMediator.getActiveSpaceReference(p_spaceEntity) != null)
 		{
-			//@note if another space already exists, maybe you can warn better the user, or take
-				//other action. may need rerendering, changing renderers, etc, etc, etc
-			Console.warn("A space object was already bound to this Project! Rebounding...");
+			Console.warn("This space object is already bound to the Project. Ignoring...");
 		}
-		
-		projectActiveSpaceReference = new ActiveSpaceReference(p_spaceEntity);
+		else
+		{
+			if (projectActiveSpaceReference != null)
+			{
+				//@note if another space already exists, maybe you can warn better the user, or take
+					//other action. may need rerendering, changing renderers, etc, etc, etc
+				Console.warn("Another space object was already set to this Project! Resetting...");
+			}
+			
+			projectActiveSpaceReference = cast(_activeReferenceMediator.spaceReferenceManager.create(p_spaceEntity), ActiveSpaceReference);
+			_activeReferenceMediator.spaceReferenceManager.update(projectActiveSpaceReference, p_spaceEntity);
+		}
 	}
 	
 	public function update():Void 
 	{
-		//Console.warn("DISPLAY UPDATE: UPDATING...!");
-		
-		
 		//Buffer
 		for (f_bufferEntry in _dataBuffer.dataBuffer)
 		{
-			if (f_bufferEntry.type == ASSIGNED)
-			{
-				if (f_bufferEntry.source.getState('displayType') == "Space")
-				{
-					_setActiveSpace(f_bufferEntry.source);
-				}
+			Console.warn("DISPLAY UPDATE: Updating Type: [" + f_bufferEntry.type + "], Name: [" +f_bufferEntry.source.getState('name') + "], State [" + f_bufferEntry.field+"]");
 				
+			switch (f_bufferEntry.type)
+			{
+				case SET_SPACE:
+					_setActiveSpace(f_bufferEntry.source);
+				case UPDATED_STATE:
+					switch (f_bufferEntry.source.getState('displayType'))
+					{
+						case "Space":
+							_activeReferenceMediator.spaceReferenceManager.updateState(_activeReferenceMediator.getActiveSpaceReference(f_bufferEntry.source), f_bufferEntry.source, f_bufferEntry.field);
+						case "Stage":
+							_activeReferenceMediator.stageReferenceManager.updateState(_activeReferenceMediator.getActiveStageReference(f_bufferEntry.source), f_bufferEntry.source, f_bufferEntry.field);
+						case "View":
+							_activeReferenceMediator.viewReferenceManager.updateState(_activeReferenceMediator.getActiveViewReference(f_bufferEntry.source), f_bufferEntry.source, f_bufferEntry.field);
+							for (renderer in platformRendererSet)
+								renderer.updateState(f_bufferEntry.source, f_bufferEntry.field);
+						default:
+							for (renderer in platformRendererSet)
+								renderer.updateState(f_bufferEntry.source, f_bufferEntry.field);
+					}
+				default:
+					Console.warn("DISPLAY: Unhandled request: " + f_bufferEntry.type);
 			}
 		}
+		
+		//Clear buffer
 		_dataBuffer.clearBuffer();
 		
-		
 		//all renderers are up to date in this point, so...
-		
 		//after the Display.update, the platform.subgraphics system will request a render() for each view from their assigned renderer
 	}
 	
-	public function assignSpaceToProject(p_spaceEntity:IGameEntity):Bool
+	inline public function updateDisplayObjectState(p_gameEntity:IGameEntity, p_state:String):Void
 	{
-		//This is always relevant, meaning, it has direct effect to the ACTIVE space, so always post it to the buffer
-		
-		
-		//cast the p_spaceEntity
-		if (p_spaceEntity.getState('displayType') == "Space")
-		{
-			_dataBuffer.addEntry(ASSIGNED, p_spaceEntity);
-			
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		if (p_gameEntity.getState('displayType')!=null && _renderStateNames[p_state]==true)
+			_updateState(p_gameEntity, p_state);
 	}
 	
-	public function assignStageToSpace(p_stageEntity:IGameEntity, p_spaceEntity:IGameEntity):Bool
+	private function _updateState(p_gameEntity:IGameEntity, p_state:String):Void
 	{
-		//cast the gameEntities
-		if (p_stageEntity.getState('displayType') == "Stage" && p_spaceEntity.getState('displayType') == "Space")
-		{
-			//@todo: ONLY add this to the buffer, IF the Space that the stage is being added to, is an ACTIVE SPACE, meaning, it's ADDED TO THE PROJECT
-			_dataBuffer.addEntry(ASSIGNED, p_stageEntity, p_spaceEntity);
-			
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		_dataBuffer.addEntry(UPDATED_STATE, p_gameEntity, p_state);
 	}
-	
 	
 	//@todo: The display service should DISPLAY the console messages ON SCREEN
 	//platform independant..

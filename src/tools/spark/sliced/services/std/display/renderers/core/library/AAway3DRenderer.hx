@@ -4,7 +4,7 @@
  * Written by Aris Kostakos <aris@spark.tools>, November 2013
  */
 
- package tools.spark.sliced.services.std.display.renderers.core.platform;
+ package tools.spark.sliced.services.std.display.renderers.core.library;
 
  
 import away3d.cameras.Camera3D;
@@ -17,7 +17,12 @@ import away3d.materials.ColorMaterial;
 import away3d.materials.lightpickers.StaticLightPicker;
 import away3d.primitives.SphereGeometry;
 import tools.spark.framework.Assets;
-import tools.spark.sliced.services.std.display.renderers.core.A3DRenderer;
+import tools.spark.sliced.services.std.display.managers.core.Away3DCameraManager;
+import tools.spark.sliced.services.std.display.managers.core.Away3DObjectManager;
+import tools.spark.sliced.services.std.display.managers.core.Away3DSceneManager;
+import tools.spark.sliced.services.std.display.managers.core.Away3DViewManager;
+import tools.spark.sliced.services.std.display.renderers.core.dimension.A3DRenderer;
+import tools.spark.sliced.services.std.display.renderers.interfaces.ILibrarySpecificRenderer;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 
@@ -44,17 +49,20 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 
 /**
- * ...
+ * This abstraction level of the Renderer will always act as a mediator between its managers
  * @author Aris Kostakos
  */
-class AAway3DRenderer extends A3DRenderer
+class AAway3DRenderer extends A3DRenderer implements ILibrarySpecificRenderer
 {
 	private var _views:Map<IGameEntity,View3D>;
 	private var _scenes:Map<IGameEntity,Scene3D>;
 	private var _cameras:Map<IGameEntity,Camera3D>;
-	private var _objectContainers:Map<IGameEntity,ObjectContainer3D>;
+	private var _objects:Map<IGameEntity,ObjectContainer3D>;
 	
-	
+	private var _viewManager:Away3DViewManager;
+	private var _sceneManager:Away3DSceneManager;
+	private var _cameraManager:Away3DCameraManager;
+	private var _objectManager:Away3DObjectManager;
 	
 	private function new()
 	{
@@ -66,120 +74,87 @@ class AAway3DRenderer extends A3DRenderer
 
 	inline private function _aAway3dRendererInit():Void
 	{
+		//@THINK: keep this? or just one map to rule them all??
 		_views = new Map<IGameEntity,View3D>();
 		_scenes = new Map<IGameEntity,Scene3D>();
 		_cameras = new Map<IGameEntity,Camera3D>();
-		_objectContainers = new Map<IGameEntity,ObjectContainer3D>();
+		_objects = new Map<IGameEntity,ObjectContainer3D>();
+		
+		_viewManager = new Away3DViewManager(this);
+		_sceneManager = new Away3DSceneManager(this);
+		_cameraManager = new Away3DCameraManager(this);
+		_objectManager = new Away3DObjectManager(this);
 	}
 	
-	override public function renderView ( p_viewEntity:IGameEntity):Void
+	public function renderView ( p_viewEntity:IGameEntity):Void
 	{
-		Console.warn("AAway3DRenderer rendering View: " + p_viewEntity.getState('name'));
+		//Console.warn("AAway3DRenderer rendering View: " + p_viewEntity.getState('name'));
 		
 		//render a view
 		_views[p_viewEntity].render();
 	}
 	
-	////////////////////////////////////////// VIEW //////////////////////////////////////////
-	
-	override public function addView ( p_viewEntity:IGameEntity):Void
+
+	public function createView ( p_viewEntity:IGameEntity):Dynamic
 	{
 		if (_views[p_viewEntity] != null)
-		{
 			Console.warn("View " + p_viewEntity.getState('name') + " has already been added to this Away3DRenderer. Ignoring...");
-		}
 		else
+			_views[p_viewEntity] = cast(_viewManager.create(p_viewEntity),View3D);
+		
+		return _views[p_viewEntity];
+	}
+	
+	public function createScene ( p_sceneEntity:IGameEntity):Dynamic
+	{
+		if (_scenes[p_sceneEntity] != null)
+			Console.warn("Scene " + p_sceneEntity.getState('name') + " has already been added to this Away3DRenderer. Ignoring...");
+		else
+			_scenes[p_sceneEntity] = cast(_sceneManager.create(p_sceneEntity),Scene3D);
+		
+		return _scenes[p_sceneEntity];
+	}
+	
+	public function createCamera ( p_cameraEntity:IGameEntity):Dynamic
+	{
+		if (_cameras[p_cameraEntity] != null)
+			Console.warn("Camera " + p_cameraEntity.getState('name') + " has already been added to this Away3DRenderer. Ignoring...");
+		else
+			_cameras[p_cameraEntity] = cast(_cameraManager.create(p_cameraEntity),Camera3D);
+		
+		return _cameras[p_cameraEntity];
+	}
+	
+	public function createObject ( p_objectEntity:IGameEntity):Dynamic
+	{
+		if (_objects[p_objectEntity] != null)
+			Console.warn("Object " + p_objectEntity.getState('name') + " has already been added to this Away3DRenderer. Ignoring...");
+		else
+			_objects[p_objectEntity] = cast(_objectManager.create(p_objectEntity),ObjectContainer3D);
+		
+		return _objects[p_objectEntity];
+	}
+	
+	inline public function updateState ( p_objectEntity:IGameEntity, p_state:String):Void
+	{
+		//maybe check its display type here..
+		
+		//is it object, do this:
+		if (_objects[p_objectEntity] != null)
 		{
-			_views[p_viewEntity] = _createView(p_viewEntity);
-		}
-	}
-	
-	private function _createView(p_viewEntity:IGameEntity):View3D
-	{
-		var l_view3D:View3D = new View3D();
-		
-		_updateView(l_view3D, p_viewEntity);
-		
-		return l_view3D;
-	}
-	
-	inline private function _updateView(l_view3D:View3D,p_viewEntity:IGameEntity):Void
-	{
-		_updateViewState_scene(l_view3D, p_viewEntity);
-		_updateViewState_camera(l_view3D, p_viewEntity);
-	}
-	
-	inline private function _updateViewState_scene(l_view3D:View3D,p_viewEntity:IGameEntity):Void
-	{
-		var l_sceneEntity:IGameEntity = p_viewEntity.getState('scene');
-		
-		//If the Scene doesn't exist, create it
-		if (_scenes[l_sceneEntity] == null) 
-		{
-			_scenes[l_sceneEntity] = _createScene(l_sceneEntity);
+			_objectManager.updateState(_objects[p_objectEntity], p_objectEntity, p_state);
 		}
 		
-		l_view3D.scene = _scenes[l_sceneEntity];
+		//else, is it view, do this...  etc
 	}
 	
-	inline private function _updateViewState_camera(l_view3D:View3D,p_viewEntity:IGameEntity):Void
+	/*
+	public function destroyView ( p_viewEntity:IGameEntity):Void
 	{
-		var l_cameraEntity:IGameEntity = p_viewEntity.getState('camera');
 		
-		//If the Camera doesn't exist, create it
-		if (_cameras[l_cameraEntity] == null) 
-		{
-			_cameras[l_cameraEntity] = _createCamera(l_cameraEntity);
-		}
-		
-		l_view3D.camera = _cameras[l_cameraEntity];
 	}
-	
+	*/
 
-	////////////////////////////////////////// SCENE //////////////////////////////////////////
-	
-	//You can't add/remove a Scene, just assign it to a View (so, updateViewState covers that)
-	
-	private function _createScene(p_sceneEntity:IGameEntity):Scene3D
-	{
-		var l_scene3D:Scene3D = new Scene3D();
-		
-		
-		//FOR EACH ENTITY CHILD INSIDE SCENE
-			//addEntity    (which in turn does a _createEntity..)
-		
-		//delete me
-		
-		var l_geometry:SphereGeometry = new SphereGeometry();
-		var l_material:ColorMaterial = new ColorMaterial(0xFF0000);
-		var l_mesh:Mesh = new Mesh(l_geometry, l_material);
-		
-		l_scene3D.addChild(l_mesh);
-		
-		//end of delete me
-		
-		return l_scene3D;
-	}
-	
-	////////////////////////////////////////// CAMERA //////////////////////////////////////////
-	
-	//You can't add/remove a Camera, just assign it to a View (so, updateViewState covers that)
-	
-	private function _createCamera(p_cameraEntity:IGameEntity):Camera3D
-	{
-		var l_create3D:Camera3D = new Camera3D();
-		
-		
-		return l_create3D;
-	}
-	
-	////////////////////////////////////////// OBJECT CONTAINER //////////////////////////////////////////
-	
-	public function addObjectContainer( p_rootEntity:IGameEntity):Void
-	{
-		
-	}
-	
 	
 	
 	
@@ -230,25 +205,7 @@ class AAway3DRenderer extends A3DRenderer
 	}
 	
 	
-	public function render ( p_viewEntity:IGameEntity):Void
-	{
-		//render a view
-		//_viewPointerSet[p_logicalView].render();
-		//Console.warn("2.5 ARenderer rendering View: " + p_viewEntity.getState('name'));
-		//Console.info("away3d render request");
-	}
-	
-	
-	override private function _createScene(p_logicalScene:Scene3D):Void
-	{
-		_scenePointerSet.set(p_logicalScene, new away3d.containers.Scene3D());
-	}
-	
 
-	override private function _createCamera(p_logicalCamera:Camera3D):Void
-	{
-		_cameraPointerSet.set(p_logicalCamera, new away3d.cameras.Camera3D());
-	}
 	
 	override private function _validateCamera(p_logicalCamera:Camera3D):Void
 	{

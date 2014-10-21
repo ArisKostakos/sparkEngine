@@ -28,40 +28,10 @@ class ActiveStageReference implements IActiveStageReference
 	
 	inline private function _init():Void
 	{
-		_updateViewReferences();
-		_logViewReferences();
-	}
-	
-	//Here, it's important before reseting this area, to let the renderers know if a view they have been assigned to is being discarded.
-		//this is important since some renderers will keep data of their own that cache a specific view (for example, 2_5 space, flambe's or away3d's internal data)
-	private function _updateViewReferences():Void
-	{
 		activeViewReferences = new Array<IActiveViewReference>();
-		
-		for (f_viewEntity in stageEntity.getChildren())
-		{
-			if (f_viewEntity.getState('displayType') == "View") //weak typecasting
-			{
-				if (f_viewEntity.getState('active') == true)
-				{
-					activeViewReferences.push(new ActiveViewReference(f_viewEntity));
-				}
-				else
-				{
-					Console.log("View Entity not activated yet. Ignoring...");
-				}
-			}
-			else
-			{
-				Console.warn("A child of a Stage gameEntity is NOT a View! Ignoring...");
-			}
-		}
-		
-		//Reorder View References
-		activeViewReferences.sort(_orderViews);
 	}
 	
-	private function _logViewReferences():Void
+	public function logViewReferences():Void
 	{
 		Console.log("Printing Active Views");
 		Console.log("---------------------");
@@ -69,6 +39,15 @@ class ActiveStageReference implements IActiveStageReference
 		{
 			Console.log("View " + activeViewReference.viewEntity.getState('name') + " Index: " + activeViewReference.viewEntity.getState('zIndex'));
 		}
+	}
+	
+	public function addView(p_viewReference:IActiveViewReference):Void
+	{
+		//Push the new View Reference
+		activeViewReferences.push(p_viewReference);
+		
+		//Reorder View References
+		activeViewReferences.sort(_orderViews);
 	}
 	
 	private function _orderViews(viewReference1:IActiveViewReference, viewReference2:IActiveViewReference):Int

@@ -100,6 +100,7 @@ class Main
 		Assets.addFile("assets/lionscript/Arkanoid/GUIView.egc");
 		Assets.addFile("assets/lionscript/Arkanoid/Scene.egc");
 		Assets.addFile("assets/lionscript/Arkanoid/Camera.egc");
+		Assets.addFile("assets/lionscript/Arkanoid/Object.egc");
 		
 		Assets.addFile("assets/lionscript/std/core/Base.egc");
 		Assets.addFile("assets/lionscript/std/core/Project.egc");
@@ -110,8 +111,12 @@ class Main
 		Assets.addFile("assets/lionscript/std/display/View.egc");
 		Assets.addFile("assets/lionscript/std/display/Scene.egc");
 		Assets.addFile("assets/lionscript/std/display/Camera.egc");
+		Assets.addFile("assets/lionscript/std/display/Object.egc");
 		
 		Assets.addFile("assets/lionscript/std/behaviors/core/Constructor.egc");
+		Assets.addFile("assets/lionscript/std/behaviors/core/KeyboardInput.egc");
+		Assets.addFile("assets/lionscript/std/behaviors/core/InputMove.egc");
+		
 		
 		/*
 		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Paddle.fgc");

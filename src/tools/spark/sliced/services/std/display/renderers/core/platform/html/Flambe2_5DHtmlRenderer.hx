@@ -7,15 +7,16 @@
  package tools.spark.sliced.services.std.display.renderers.core.platform.html;
 
 
-import tools.spark.sliced.services.std.display.renderers.core.platform.AFlambe2_5DRenderer;
+import tools.spark.sliced.services.std.display.renderers.core.library.AFlambe2_5DRenderer;
 import flambe.platform.html.HtmlPlatform;
+import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class Flambe2_5DHtmlRenderer extends AFlambe2_5DRenderer
+class Flambe2_5DHtmlRenderer extends AFlambe2_5DRenderer implements IPlatformSpecificRenderer
 {
 	public function new() 
 	{

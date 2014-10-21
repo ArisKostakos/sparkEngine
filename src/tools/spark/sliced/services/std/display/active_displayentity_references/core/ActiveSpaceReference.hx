@@ -16,21 +16,11 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 class ActiveSpaceReference implements IActiveSpaceReference
 {
-	public var activeStageReference( default, null ):IActiveStageReference;
+	public var activeStageReference( default, default ):IActiveStageReference;
 	public var spaceEntity( default, null ):IGameEntity;
 	
 	public function new(p_spaceEntity:IGameEntity) 
 	{
 		spaceEntity = p_spaceEntity;
-		
-		_init();
-	}
-	
-	inline private function _init():Void
-	{
-		if (spaceEntity.getState("stage") != null)
-		{
-			activeStageReference = new ActiveStageReference(spaceEntity.getState("stage"));
-		}
 	}
 }

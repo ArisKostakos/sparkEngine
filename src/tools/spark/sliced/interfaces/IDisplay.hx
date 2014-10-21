@@ -6,7 +6,9 @@
 
 package tools.spark.sliced.interfaces;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveSpaceReference;
-import tools.spark.sliced.services.std.display.renderers.interfaces.IRenderer;
+import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageReference;
+import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveViewReference;
+import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 
@@ -18,10 +20,11 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 interface IDisplay extends IService
 {	
 	var projectActiveSpaceReference( default, null ):IActiveSpaceReference;
-	var platformRendererSet( default, null ):Array<IRenderer>;
+	var platformRendererSet( default, null ):Array<IPlatformSpecificRenderer>;
 	
-	function assignSpaceToProject(p_gameEntity:IGameEntity):Bool;
-	function assignStageToSpace(p_stageEntity:IGameEntity, p_spaceEntity:IGameEntity):Bool;
+	function updateDisplayObjectState(p_gameEntity:IGameEntity, p_state:String):Void;
+	function setActiveSpace(p_spaceEntity:IGameEntity):Bool;
+
 	
 	function update():Void;
 	

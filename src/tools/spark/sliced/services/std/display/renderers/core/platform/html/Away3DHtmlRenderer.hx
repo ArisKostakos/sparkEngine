@@ -7,14 +7,15 @@
 package tools.spark.sliced.services.std.display.renderers.core.platform.html;
 
 
-import tools.spark.sliced.services.std.display.renderers.core.platform.AAway3DRenderer;
+import tools.spark.sliced.services.std.display.renderers.core.library.AAway3DRenderer;
 import away3d.core.managers.Stage3DManager;
+import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class Away3DHtmlRenderer extends AAway3DRenderer
+class Away3DHtmlRenderer extends AAway3DRenderer implements IPlatformSpecificRenderer
 {
 	public function new() 
 	{

@@ -15,4 +15,6 @@ interface IActiveStageReference
 {
   var activeViewReferences (default, null ):Array<IActiveViewReference>;
   var stageEntity( default, null ):IGameEntity;
+  
+  function addView(p_viewReference:IActiveViewReference):Void;
 }

@@ -9,13 +9,14 @@
 
 import tools.spark.sliced.services.std.display.renderers.core.platform.AFlambe2DRenderer;
 import flambe.platform.flash.FlashPlatform;
+import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class Flambe2_5DFlashRenderer extends AFlambe2DRenderer
+class Flambe2_5DFlashRenderer extends AFlambe2DRenderer implements IPlatformSpecificRenderer
 {
 	public function new() 
 	{

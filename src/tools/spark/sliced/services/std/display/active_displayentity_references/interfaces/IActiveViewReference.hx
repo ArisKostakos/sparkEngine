@@ -6,7 +6,7 @@
 
 package tools.spark.sliced.services.std.display.active_displayentity_references.interfaces;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
-import tools.spark.sliced.services.std.display.renderers.interfaces.IRenderer;
+import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 
 /**
  * @author Aris Kostakos
@@ -15,5 +15,5 @@ import tools.spark.sliced.services.std.display.renderers.interfaces.IRenderer;
 interface IActiveViewReference 
 {
   var viewEntity( default, null ):IGameEntity;
-  var renderer( default, null ):IRenderer;
+  var renderer( default, default ):IPlatformSpecificRenderer;
 }

@@ -13,6 +13,6 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 interface IActiveSpaceReference 
 {
-	var activeStageReference( default, null ):IActiveStageReference;
+	var activeStageReference( default, default ):IActiveStageReference;
 	var spaceEntity( default, null ):IGameEntity;
 }
