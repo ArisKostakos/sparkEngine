@@ -6,7 +6,6 @@
 
 package tools.spark.framework.pseudo3d.core;
 import tools.spark.framework.pseudo3d.interfaces.IPseudoEntity;
-import nape.phys.Body;
 /**
  * ...
  * @author Aris Kostakos
@@ -33,8 +32,6 @@ class PseudoEntity implements IPseudoEntity
 	public var insideFieldOfView( default, default ):Bool;
 	*/
 	public var pseudoEntitySet:Array<IPseudoEntity>;
-	
-	public var napeBody( default, default ):Body;
 	
 	public function new() 
 	{

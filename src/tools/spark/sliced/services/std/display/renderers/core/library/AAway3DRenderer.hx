@@ -121,7 +121,7 @@ class AAway3DRenderer extends A3DRenderer implements ILibrarySpecificRenderer
 			Console.warn("Camera " + p_cameraEntity.getState('name') + " has already been added to this Away3DRenderer. Ignoring...");
 		else
 			_cameras[p_cameraEntity] = cast(_cameraManager.create(p_cameraEntity),Camera3D);
-		
+
 		return _cameras[p_cameraEntity];
 	}
 	

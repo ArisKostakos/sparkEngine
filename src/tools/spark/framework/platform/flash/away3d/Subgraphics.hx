@@ -32,10 +32,10 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new Flambe2_5DFlashRenderer());
+		Sliced.display.platformRendererSet.push(new Flambe2_5DFlashRenderer());
 		
 		//Create Away3D Renderer
-		Sliced.display.rendererSet.push(new Away3DFlashRenderer());
+		Sliced.display.platformRendererSet.push(new Away3DFlashRenderer());
 	}
 	
 	public static function init():Void
@@ -92,14 +92,11 @@ class Subgraphics
 		//query display for views in order (far away first)
 		if (Sliced.display!=null)
 		{
-			//for each LogicalView
-			for (logicalView in Sliced.display.activeViewsOrder)
+			//for each activeViewReference
+			for (activeViewReference in Sliced.display.projectActiveSpaceReference.activeStageReference.activeViewReferences)
 			{
-				//query Display what renderer has it
-				var renderer:IRenderer = Sliced.display.logicalViewRendererAssignments[logicalView];
-				
-				//renderer.render(logicalView)
-				renderer.render(logicalView);
+				//Render viewEntity
+				activeViewReference.renderer.renderView(activeViewReference.viewEntity);
 			}
 		}
 		

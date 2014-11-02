@@ -10,6 +10,7 @@ package tools.spark.sliced.services.std.display.renderers.core.platform.html;
 import tools.spark.sliced.services.std.display.renderers.core.library.AAway3DRenderer;
 import away3d.core.managers.Stage3DManager;
 import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -28,21 +29,21 @@ class Away3DHtmlRenderer extends AAway3DRenderer implements IPlatformSpecificRen
 	{
 		Console.info("Creating Away3D Html Renderer...");
 	}
-	/*
-	override private function _createView(p_logicalView:Dynamic):Void
+	
+	override public function createView ( p_viewEntity:IGameEntity):Dynamic
 	{
 		//@FIX: HUGE BUG. Every time I create a View3D in away-ts it will create a new Stage3DProxy!!! disable that!!!!!!!
 			//or at least make sures u're only left with one Stage3DProxy not 2 or more
-		super._createView(p_logicalView);
+		super.createView(p_viewEntity);
 		
 		//Add to html's Stage3D
 		
 		//standard settings
 		//
-		var stage3Dmanager:Stage3DManager = Stage3DManager.getInstance(_viewPointerSet[p_logicalView].stage);
-		_viewPointerSet[p_logicalView].stage3DProxy = stage3Dmanager.getStage3DProxy(0);
-		_viewPointerSet[p_logicalView].shareContext = true;// false;
-		_viewPointerSet[p_logicalView].layeredView = true;// false;
+		var stage3Dmanager:Stage3DManager = Stage3DManager.getInstance(_views[p_viewEntity].stage);
+		_views[p_viewEntity].stage3DProxy = stage3Dmanager.getStage3DProxy(0);
+		_views[p_viewEntity].shareContext = true;// false;
+		_views[p_viewEntity].layeredView = true;// false;
 		
 		
 		Console.info("away html new view created. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
@@ -55,6 +56,8 @@ class Away3DHtmlRenderer extends AAway3DRenderer implements IPlatformSpecificRen
 	
 		//debug
 		//Lib.current.stage.addChild(new AwayStats(_viewPointerSet[p_logicalView]));
+		
+		return _views[p_viewEntity];
 	}
-	*/
+	
 }

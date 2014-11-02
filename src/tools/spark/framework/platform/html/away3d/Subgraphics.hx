@@ -97,7 +97,7 @@ class Subgraphics
 	private static function _initProxies():Void
 	{
 		_stage3DProxy.antiAlias = 8;
-		_stage3DProxy.color = 0xff0000;
+		_stage3DProxy.color = 0xf00f00;
 		
 		//event listener
 		var reqAnimFrame:Dynamic = new RequestAnimationFrame(_onAwayEnterFrame, Subgraphics);

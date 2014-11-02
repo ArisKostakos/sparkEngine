@@ -5,12 +5,20 @@
 
  package tools.spark.sliced.services.std.display.renderers.core.library;
 
-//import tools.spark.framework.pseudo3d.flambe.FlambeView;
+import tools.spark.framework.pseudo3d.core.PseudoCamera;
+import tools.spark.framework.pseudo3d.core.PseudoEntity;
+import tools.spark.framework.pseudo3d.core.PseudoScene;
+import tools.spark.framework.pseudo3d.flambe.FlambeView;
+import tools.spark.framework.pseudo3d.interfaces.IPseudoCamera;
+import tools.spark.framework.pseudo3d.interfaces.IPseudoEntity;
+import tools.spark.framework.pseudo3d.interfaces.IPseudoScene;
+import tools.spark.framework.pseudo3d.interfaces.IPseudoView;
 import tools.spark.sliced.services.std.display.renderers.core.dimension.A2_5DRenderer;
 import flambe.platform.InternalGraphics;
 import flambe.platform.Platform;
 import flambe.platform.Renderer;
 import tools.spark.sliced.services.std.display.renderers.interfaces.ILibrarySpecificRenderer;
+import tools.spark.sliced.services.std.logic.gde.core.GameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 
@@ -23,10 +31,10 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 	private var _platform:Platform;
 	private var _internalGraphics:InternalGraphics;
 	
-	//private var _viewPointerSet:Map<View3D,IPseudoView>;
-	//private var _scenePointerSet:Map<Scene3D,IPseudoScene>;
-	//private var _entityPointerSet:Map<ObjectContainer3D,IPseudoEntity>;
-	//private var _cameraPointerSet:Map<Camera3D,IPseudoCamera>;
+	private var _views:Map<IGameEntity,FlambeView>;
+	private var _scenes:Map<IGameEntity,PseudoScene>;
+	private var _objects:Map<IGameEntity,PseudoEntity>;
+	private var _cameras:Map<IGameEntity,PseudoCamera>;
 	
 	private function new() 
 	{
@@ -44,18 +52,17 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 			Console.error("Flambe renderer does NOT have internal graphics!");
 		}
 		
-		//uses3DEngine = false;
 		
-		//_viewPointerSet = new Map<View3D,IPseudoView>();
-		//_scenePointerSet = new Map<Scene3D,IPseudoScene>();
-		//_entityPointerSet = new Map<ObjectContainer3D,IPseudoEntity>(); 
-		//_cameraPointerSet = new Map<Camera3D,IPseudoCamera>();
+		_views = new Map<IGameEntity,FlambeView>();
+		_scenes = new Map<IGameEntity,PseudoScene>();
+		_objects = new Map<IGameEntity,PseudoEntity>(); 
+		_cameras = new Map<IGameEntity,PseudoCamera>();
 	}
 	
 	public function renderView ( p_viewEntity:IGameEntity):Void
 	{
 		//render a view
-		//_viewPointerSet[p_logicalView].render();
+		_views[p_viewEntity].render();
 		//Console.warn("A2_5DRenderer rendering View: " + p_viewEntity.getState('name'));
 		
 		//TODO NEXT!!!!!!!!!!!!!!!!!!!!!
@@ -69,112 +76,83 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 	}
 
 	
+	
 	public function createView ( p_viewEntity:IGameEntity):Dynamic
 	{
-		return null;
+		if (_views[p_viewEntity] != null)
+			Console.warn("View " + p_viewEntity.getState('name') + " has already been added to this FlambeRenderer. Ignoring...");
+		else
+			_views[p_viewEntity] = new FlambeView(_internalGraphics);
+		
+			
+		_views[p_viewEntity].camera = createCamera(new GameEntity());
+		_views[p_viewEntity].scene = createScene(new GameEntity());
+		_views[p_viewEntity].width = 640;
+		_views[p_viewEntity].height = 480;
+		_views[p_viewEntity].x = 0;
+		_views[p_viewEntity].y = 0;
+
+		_views[p_viewEntity].validate();
+			
+		return _views[p_viewEntity];
 	}
 	
 	public function createScene ( p_sceneEntity:IGameEntity):Dynamic
 	{
-		return null;
+		if (_scenes[p_sceneEntity] != null)
+			Console.warn("Scene " + p_sceneEntity.getState('name') + " has already been added to this FlambeRenderer. Ignoring...");
+		else
+			_scenes[p_sceneEntity] = new PseudoScene();
+			
+		_scenes[p_sceneEntity].addChild(createObject(new GameEntity()));
+		
+		return _scenes[p_sceneEntity];
 	}
 	
 	public function createCamera ( p_cameraEntity:IGameEntity):Dynamic
 	{
-		return null;
+		if (_cameras[p_cameraEntity] != null)
+			Console.warn("Camera " + p_cameraEntity.getState('name') + " has already been added to this FlambeRenderer. Ignoring...");
+		else
+			_cameras[p_cameraEntity] = new PseudoCamera();
+
+		_cameras[p_cameraEntity].x = 0;
+		_cameras[p_cameraEntity].y = 0;
+		_cameras[p_cameraEntity].z = -300;
+		_cameras[p_cameraEntity].rotationX = 0;
+		_cameras[p_cameraEntity].rotationY = 0;
+		_cameras[p_cameraEntity].rotationZ = 0;
+		//_cameraPointerSet[p_logicalCamera].fieldOfView = p_logicalCamera.fieldOfView;
+		
+		
+		return _cameras[p_cameraEntity];
 	}
 	
 	public function createObject ( p_objectEntity:IGameEntity):Dynamic
 	{
-		return null;
-	}
-	
-	
-	/*
-	
-	public function destroyView ( p_viewEntity:IGameEntity):Void
-	{
+		if (_objects[p_objectEntity] != null)
+			Console.warn("Object " + p_objectEntity.getState('name') + " has already been added to this FlambeRenderer. Ignoring...");
+		else
+			_objects[p_objectEntity] = new PseudoEntity();
 		
+		_objects[p_objectEntity].spriteUrl = "Ball.png";
+		//_scenePointerSet[p_logicalScene].addChild(_objects[p_objectEntity]);
+		
+		_objects[p_objectEntity].x = 0;
+		_objects[p_objectEntity].y = 0;
+		_objects[p_objectEntity].z = 0;
+		_objects[p_objectEntity].rotationX =0;
+		_objects[p_objectEntity].rotationY = 0;
+		_objects[p_objectEntity].rotationZ =0;
+		_objects[p_objectEntity].velX = 0;
+		_objects[p_objectEntity].velY =0;
+		_objects[p_objectEntity].velZ =0;
+		
+		
+		return _objects[p_objectEntity];
 	}
 	
-	override private function _createView(p_logicalView:View3D):Void
-	{
-		_viewPointerSet.set(p_logicalView, new FlambeView(_internalGraphics));
-	}
 	
-	
-	
-	
-	override private function _hasView(p_logicalView:View3D):Bool { return _viewPointerSet.exists(p_logicalView); }
-	override private function _hasScene(p_logicalScene:Scene3D):Bool { return _scenePointerSet.exists(p_logicalScene); }
-	override private function _hasCamera(p_logicalCamera:Camera3D):Bool { return _cameraPointerSet.exists(p_logicalCamera); }
-	override private function _hasEntity(p_logicalObjectContainer:ObjectContainer3D):Bool { return _entityPointerSet.exists(p_logicalObjectContainer); }
-	
-	
-	*/
-	
-	
-	/*
-	override private function _createCamera(p_logicalCamera:Camera3D):Void
-	{
-		_cameraPointerSet.set(p_logicalCamera, new PseudoCamera());
-	}
-	
-	override private function _validateCamera(p_logicalCamera:Camera3D):Void
-	{
-		_cameraPointerSet[p_logicalCamera].x = p_logicalCamera.x;
-		_cameraPointerSet[p_logicalCamera].y = p_logicalCamera.y;
-		_cameraPointerSet[p_logicalCamera].z = p_logicalCamera.z;
-		_cameraPointerSet[p_logicalCamera].rotationX = p_logicalCamera.rotationX;
-		_cameraPointerSet[p_logicalCamera].rotationY = p_logicalCamera.rotationY;
-		_cameraPointerSet[p_logicalCamera].rotationZ = p_logicalCamera.rotationZ;
-		//_cameraPointerSet[p_logicalCamera].fieldOfView = p_logicalCamera.fieldOfView;
-	}
-	
-	override private function _validateView(p_logicalView:View3D):Void
-	{
-		_viewPointerSet[p_logicalView].camera = _cameraPointerSet[p_logicalView.camera];
-		_viewPointerSet[p_logicalView].scene = _scenePointerSet[p_logicalView.scene];
-		_viewPointerSet[p_logicalView].width = p_logicalView.width;
-		_viewPointerSet[p_logicalView].height = p_logicalView.height;
-		_viewPointerSet[p_logicalView].x = p_logicalView.x;
-		_viewPointerSet[p_logicalView].y = p_logicalView.y;
 
-		_viewPointerSet[p_logicalView].validate();
-		//temp add childs
-		//_viewPointerSet[p_logicalView].addChild(_scenePointerSet[p_logicalView.logicalScene]);
-	}
 	
-	override private function _createScene(p_logicalScene:Scene3D):Void
-	{
-		_scenePointerSet.set(p_logicalScene, new PseudoScene());
-	}
-	
-	override private function _validateScene(p_logicalScene:Scene3D):Void
-	{
-		
-	}
-	
-	//@todo: parent may be an entity too not just a scene
-	override private function _createEntity(p_logicalEntity:ObjectContainer3D, p_logicalScene:Scene3D):Void
-	{
-		_entityPointerSet.set(p_logicalEntity, new PseudoEntity());
-		_entityPointerSet[p_logicalEntity].spriteUrl = p_logicalEntity.assetType;
-		_scenePointerSet[p_logicalScene].addChild(_entityPointerSet[p_logicalEntity]);
-	}
-	
-	//@todo: parent may be an entity too not just a scene
-	override private function _validateEntity(p_logicalEntity:ObjectContainer3D, p_logicalScene:Scene3D):Void
-	{
-		_entityPointerSet[p_logicalEntity].x = p_logicalEntity.x;
-		_entityPointerSet[p_logicalEntity].y = p_logicalEntity.y;
-		_entityPointerSet[p_logicalEntity].z = p_logicalEntity.z;
-		_entityPointerSet[p_logicalEntity].rotationX = p_logicalEntity.rotationX;
-		_entityPointerSet[p_logicalEntity].rotationY = p_logicalEntity.rotationY;
-		_entityPointerSet[p_logicalEntity].rotationZ = p_logicalEntity.rotationZ;
-		_entityPointerSet[p_logicalEntity].velX = p_logicalEntity.velX;
-		_entityPointerSet[p_logicalEntity].velY = p_logicalEntity.velY;
-		_entityPointerSet[p_logicalEntity].velZ = p_logicalEntity.velZ;
-	}
-	*/
 }

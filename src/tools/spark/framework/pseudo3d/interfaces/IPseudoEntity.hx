@@ -5,7 +5,6 @@
  */
 
 package tools.spark.framework.pseudo3d.interfaces;
-import nape.phys.Body;
 /**
  * ...
  * @author Aris Kostakos
@@ -25,8 +24,6 @@ interface IPseudoEntity
 	
 	var pseudoEntitySet:Array<IPseudoEntity>;
 	function addChild(p_pseudoEntity:IPseudoEntity):Void;
-	
-	var napeBody( default, default ):Body; 
 	
 	/*
 	var x( default, default ):Int;

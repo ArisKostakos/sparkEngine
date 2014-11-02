@@ -1,10 +1,10 @@
 # The name, version and identifier, for mobile app packaging
-name: Game Plus Runtime
+name: Spark Runtime
 version: 0.3.6
-id: co.gamep.gamepruntime
+id: tools.spark.sparkruntime
 
 # The main class name
-main: co.gamep.Main
+main: tools.spark.Main
 
 # The platform to use when invoking `run` or `build` with no arguments
 default_platform: flash
