@@ -31,6 +31,8 @@ class Main
 		
 		//Load config
 		loadClientConfig();
+		
+		//First commit from Chile Whooooo!!!!!!!
     }
 
 	private static function loadClientConfig():Void
