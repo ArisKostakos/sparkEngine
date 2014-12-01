@@ -5,10 +5,10 @@
  */
 
 package tools.spark.framework.platform.html.flambe2_5;
+import flambe.platform.InternalRenderer;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.display.renderers.core.platform.html.Flambe2_5DHtmlRenderer;
 import tools.spark.sliced.services.std.display.renderers.interfaces.IRenderer;
-import flambe.platform.Renderer;
 import flambe.platform.html.HtmlPlatform;
 
 /**
@@ -17,7 +17,7 @@ import flambe.platform.html.HtmlPlatform;
  */
 class Subgraphics
 {	
-	private static var _flambeDisplaySystem:Renderer;
+	private static var _flambeDisplaySystem:InternalRenderer<Dynamic>;
 	
 	public static function createDisplayRenderers():Void
 	{

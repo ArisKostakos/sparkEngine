@@ -52,6 +52,9 @@ class FlambeView extends APseudoView
 		
 		//update dirty camera (calculate all positions)?
 		
+		//validate
+		validate();
+		
 		//render
 		Sprite.render(_flambeView, _flambeGraphics);
 	}
@@ -61,8 +64,8 @@ class FlambeView extends APseudoView
 		_flambeView = new Entity();
 
 		//color  (fix me!)
-		var l_bakcgroundColor:Int;
-		l_bakcgroundColor = 0x00ff00;
+		//var l_bakcgroundColor:Int;
+		//l_bakcgroundColor = 0x00ff00;
 		
 		//var l_viewSprite:FillSprite = new FillSprite(l_bakcgroundColor, width, height);
 		var l_viewSprite:Sprite = new Sprite();
@@ -81,7 +84,7 @@ class FlambeView extends APseudoView
 	
 	private inline function _validateRealView():Void
 	{
-		var l_viewSprite:FillSprite = _flambeView.get(FillSprite);
+		var l_viewSprite:Sprite = _flambeView.get(Sprite);
 		l_viewSprite.x._ = x;
 		l_viewSprite.y._ = y;
 	}

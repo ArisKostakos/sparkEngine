@@ -16,9 +16,8 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="..\..\..\..\..\HaxeToolkit\haxe\lib\away3d-html" />
-    <class path="..\..\..\..\..\HaxeToolkit\haxe\lib\aris-hacks" />
-    <class path="..\..\..\..\..\HaxeToolkit\haxe\lib\nape" />
+    <class path="..\..\..\HaxeToolkit\haxe\lib\away3d-html" />
+    <class path="..\..\..\HaxeToolkit\haxe\lib\aris-hacks" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -48,16 +47,15 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>xcopy /S /Y $(CompilerPath)\lib\aris-hacks\flambe $(CompilerPath)\lib\flambe\3,1,2\flambe
-cmd /c flambe --config flambe_html_3d.yaml build --$(BuildConfig)</preBuildCommand>
+  <preBuildCommand>xcopy /S /Y $(CompilerPath)\lib\aris-hacks\flambe $(CompilerPath)\lib\flambe\4,1,0\flambe
+cmd /c flambe --config flambe_html_2d.yaml build --$(BuildConfig)</preBuildCommand>
   <!-- Executed after build -->
-  <postBuildCommand alwaysRun="False">xcopy /E /Y "C:\Users\LLaffer\Documents\GamePlus_Projects\ArkanoidPrototype" "$(ProjectDir)\build\web"
-xcopy /E /Y "$(ProjectDir)\build\web" "C:\wamp\www"</postBuildCommand>
+  <postBuildCommand alwaysRun="False">xcopy /E /Y "C:\Users\Aris\Documents\Spark_Projects\ArkanoidPrototype" "$(ProjectDir)\build\web"</postBuildCommand>
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="flambe --config flambe_html_3d.yaml run --$(BuildConfig) --no-build --no-fdb || pause" />
+    <option testMovieCommand="flambe --config flambe_html_2d.yaml run --$(BuildConfig) --no-build --no-fdb || pause" />
   </options>
   <!-- Plugin storage -->
   <storage />

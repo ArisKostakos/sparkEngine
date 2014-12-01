@@ -56262,3 +56262,4 @@ var away;
     })(away.events.EventDispatcher);
     away.Away3D = Away3D;
 })(away || (away = {}));
+//# sourceMappingURL=Away3D.next.js.map

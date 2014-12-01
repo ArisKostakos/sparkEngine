@@ -8,13 +8,13 @@ package tools.spark.framework.platform.html.away3d;
 import away3d.containers.View3D;
 import away3d.core.managers.Stage3DManager;
 import away3d.core.managers.Stage3DProxy;
+import flambe.platform.InternalRenderer;
 import tools.spark.sliced.services.std.display.renderers.core.platform.html.Away3DHtmlRenderer;
 import tools.spark.sliced.services.std.display.renderers.core.platform.html.Flambe2_5DHtmlRenderer;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flambe.platform.html.WebGLBatcher;
 import flambe.platform.html.WebGLRenderer;
-import flambe.platform.Renderer;
 import flambe.platform.html.HtmlPlatform;
 import away3d.utils.RequestAnimationFrame;
 import away3d.events.Stage3DEvent;
@@ -26,7 +26,7 @@ import js.html.webgl.RenderingContext;
  */
 class Subgraphics
 {	
-	private static var _flambeDisplaySystem:Renderer;
+	private static var _flambeDisplaySystem:InternalRenderer<Dynamic>;
 	private static var _stage3DManager : Stage3DManager;
 	private static var _stage3DProxy : Stage3DProxy;
 	
