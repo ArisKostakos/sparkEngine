@@ -13,7 +13,7 @@ import flambe.Component;
  * ...
  * @author Aris Kostakos
  */
-class Game extends Component
+class RootComponent extends Component
 {
 	public function new()
 	{

@@ -11,7 +11,7 @@ import tools.spark.sliced.core.Sliced;
 import tools.spark.framework.Framework;
 import tools.spark.framework.Assets;
 import tools.spark.framework.Config;
-import tools.spark.framework.Game;
+import tools.spark.framework.RootComponent;
 import flambe.System;
 
 
@@ -26,30 +26,27 @@ class Main
 		//Init Framework (flambe, graphics, etc..)
 		Framework.init();
 		
-		//[ARKANOID HACK]:
-		//setHandlerOnDOM();
-		
 		//Load config
 		loadClientConfig();
-		
-		//First commit from Chile Whooooo!!!!!!!
     }
 
 	private static function loadClientConfig():Void
 	{
-		Assets.successSignal.connect(_onClientMainLoaded).once(); //normally, this function (_onAssetsLoaded) should be _onMainGpcLoaded
+		Assets.successSignal.connect(_onClientConfigLoaded).once();
 		
 		Assets.initiateBatch();
-		Assets.addFile("main.gpc"); //normaly, just this is loaded, parse, and we subsequently will load every module required to run immediately.
-		
+		Assets.addFile("main.skc");
 		Assets.loadBatch();
 	}
 	
-	private static function _onClientMainLoaded()
+	private static function _onClientConfigLoaded()
     {
-		//Init Config
-		Config.init(Assets.getFile("main.gpc").toString());
+		//somewhere in the config file, include things like: lionscript folder, models folder, etc... especially lionscript
 		
+		//Init Config
+		//Config.init(Assets.getFile("main.spc").toString());
+		//new Config(Assets.getFile("main.spc"));
+		return;
 		//Init Sliced
 		Sliced.init();
 		
@@ -60,39 +57,13 @@ class Main
     }
 
 	
-	
-	//[ARKANOID HACK]: Load fucking everything. (these should be parsed from the main.gpc instead)
-	private static function setHandlerOnDOM():Void
-	{
-		untyped
-		{    
-			var runButton = document.getElementById("runProjectButton");
-			if ( runButton.addEventListener )
-			{
-				runButton.addEventListener( "click", clickHandlerFunction, false );
-			} else {
-				runButton.attachEvent( "onclick", clickHandlerFunction, false );
-			}
-		}
-	}
-	
-	private static var clickHandlerFunction : Dynamic -> Void = function ( e : Dynamic )
-	{
-		untyped {   saveCurrentScript(); }
-		
-		loadFuckingEverything();
-	}
-	
 	private static function loadFuckingEverything():Void
 	{
-		Assets.successSignal.connect(_onArkanoidLoaded).once(); //normally, this function (_onAssetsLoaded) should be _onMainGpcLoaded
+		Assets.successSignal.connect(_onFuckingEverythingLoaded).once();
 		
 		Assets.initiateBatch();
 		
 		//[ARKANOID HACK]: Load fucking everything. (these should be parsed from the main.gpc instead)
-		Assets.addFile("assets/images/Background.png");
-		Assets.addFile("assets/images/Paddle.png");
-		Assets.addFile("assets/images/Brick.png");
 		Assets.addFile("assets/images/Ball.png");
 		
 		Assets.addFile("assets/lionscript/Arkanoid/Arkanoid.egc");
@@ -119,54 +90,12 @@ class Main
 		Assets.addFile("assets/lionscript/std/behaviors/core/KeyboardInput.egc");
 		Assets.addFile("assets/lionscript/std/behaviors/core/InputMove.egc");
 		
-		
-		/*
-		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Paddle.fgc");
-		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Paddle.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Background.fgc");
-		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Background.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Brick.fgc");
-		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Brick.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Ball.fgc");
-		Assets.addFile("assets/lionscript/Arkanoid/gameobjects/Ball.egc");
-		
-		Assets.addFile("assets/lionscript/Arkanoid/Stage.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Scene.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Space.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Game.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Camera3D.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/View2D.egc");
-		
-		Assets.addFile("assets/lionscript/std/entities/Mesh.egc");
-		Assets.addFile("assets/lionscript/std/entities/Space.egc");
-		Assets.addFile("assets/lionscript/std/entities/Camera.egc");
-		Assets.addFile("assets/lionscript/std/entities/View.egc");
-		Assets.addFile("assets/lionscript/std/entities/Scene.egc");
-		Assets.addFile("assets/lionscript/std/entities/Stage.egc");
-		Assets.addFile("assets/lionscript/std/entities/Game.egc");
-		
-		Assets.addFile("assets/lionscript/std/entities/components/InputMove.egc");
-		Assets.addFile("assets/lionscript/std/entities/components/PhysicsMove.egc");
-		Assets.addFile("assets/lionscript/std/entities/components/InputRotate.egc");
-		Assets.addFile("assets/lionscript/std/entities/components/LogicalComponent.egc");
-		Assets.addFile("assets/lionscript/std/entities/components/Constructor.egc");
-		Assets.addFile("assets/lionscript/std/entities/components/Positionable.egc");
-		Assets.addFile("assets/lionscript/std/entities/components/KeyboardInput.egc");
-		
-		Assets.addFile("assets/lionscript/std/forms/Mesh.fgc");
-		
-		Assets.addFile("assets/lionscript/std/triggers/AnnounceMe.tgc");
-		*/
-		
 		Assets.loadBatch();
 	}
 	
-	private static function _onArkanoidLoaded()
+	private static function _onFuckingEverythingLoaded()
     {
-		//Serious memory leaks must be going on here!!!!
-		System.root.disposeChildren();
-		
-		//Create Game
-		System.root.add(new Game());
+		//Create Spark's Flambe Root Component
+		System.root.add(new RootComponent());
 	}
 }

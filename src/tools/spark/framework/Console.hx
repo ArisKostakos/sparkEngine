@@ -15,27 +15,27 @@ package tools.spark.framework;
 #if (debug || flambe_keep_logs)
 	inline public static function log(p_message:String):Void
 	{
-		GamePlusLog.info(p_message);
+		SparkLog.info(p_message);
 	}
 	
 	inline public static function info(p_message:String):Void
 	{
-		GamePlusLog.info(p_message);
+		SparkLog.info(p_message);
 	}
 	
 	inline public static function debug(p_message:String):Void
 	{
-		GamePlusLog.info(p_message);
+		SparkLog.info(p_message);
 	}
 	
 	inline public static function warn(p_message:String):Void
 	{
-		GamePlusLog.warn(p_message);
+		SparkLog.warn(p_message);
 	}
 	
 	inline public static function error(p_message:String):Void
 	{
-		GamePlusLog.error(p_message);
+		SparkLog.error(p_message);
 	}
 	
 #else

@@ -1,10 +1,10 @@
-package tools.spark.framework.assets;
+package tools.spark.framework.config;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class Module
+class Config
 {
 
 	public function new() 

@@ -1,15 +1,21 @@
 /* Copyright © Spark.tools - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Written by Aris Kostakos <aris@spark.tools>, October 2013
+ * Written by Aris Kostakos <aris@spark.tools>, December 2014
  */
 
 package tools.spark.framework;
-
-import flambe.util.PackageLog;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class GamePlusLog extends PackageLog {}
+class AssetManager
+{
+
+	public static function init() 
+	{
+		
+	}
+	
+}
