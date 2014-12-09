@@ -1,30 +1,17 @@
 /* Copyright © Spark.tools - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Written by Aris Kostakos <aris@spark.tools>, August 2013
+ * Written by Aris Kostakos <aris@spark.tools>, December 2014
  */
 
-package tools.spark.sliced.services.std.logic.gde.core;
-import tools.spark.sliced.services.std.logic.gde.interfaces.ENodeType;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EConcurrencyType;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EStateType;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EEventPrefab;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameAction;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameClassInstantiator;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameForm;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameSpace;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameState;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameTrigger;
-import tools.spark.sliced.core.Sliced;
+package tools.spark.framework.config;
+
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class GameClassInstantiator implements IGameClassInstantiator
+class ConfigInstantiator
 {
 	private var _xmlNodeTypeToNodeName:Map<ENodeType,String>;
 	private var _xmlConcurrencyNameToType:Map<String,EConcurrencyType>;

@@ -5,15 +5,15 @@
  */
 
 package tools.spark.sliced.services.std.logic.gde.core;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck.Filter;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck.Rule;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck.Rule.RList;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck.Rule.RNode;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck.Rule.RChoice;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck.Rule.RData;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck.Rule.RMulti;
-import tools.spark.sliced.services.std.logic.gde.haxe.LooseCheck.Rule.ROptional;
+import tools.spark.framework.config.haxe.LooseCheck;
+import tools.spark.framework.config.haxe.LooseCheck.Filter;
+import tools.spark.framework.config.haxe.LooseCheck.Rule;
+import tools.spark.framework.config.haxe.LooseCheck.Rule.RList;
+import tools.spark.framework.config.haxe.LooseCheck.Rule.RNode;
+import tools.spark.framework.config.haxe.LooseCheck.Rule.RChoice;
+import tools.spark.framework.config.haxe.LooseCheck.Rule.RData;
+import tools.spark.framework.config.haxe.LooseCheck.Rule.RMulti;
+import tools.spark.framework.config.haxe.LooseCheck.Rule.ROptional;
 import tools.spark.sliced.services.std.logic.gde.interfaces.ENodeType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EConcurrencyType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EStateType;

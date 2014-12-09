@@ -10,7 +10,7 @@ package tools.spark;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.framework.Framework;
 import tools.spark.framework.Assets;
-import tools.spark.framework.Config;
+import tools.spark.framework.config.Config;
 import tools.spark.framework.RootComponent;
 import flambe.System;
 
@@ -35,17 +35,16 @@ class Main
 		Assets.successSignal.connect(_onClientConfigLoaded).once();
 		
 		Assets.initiateBatch();
-		Assets.addFile("main.skc");
+		Assets.addFile("main.skc", "config");
 		Assets.loadBatch();
 	}
 	
 	private static function _onClientConfigLoaded()
     {
-		//somewhere in the config file, include things like: lionscript folder, models folder, etc... especially lionscript
-		
 		//Init Config
-		//Config.init(Assets.getFile("main.spc").toString());
-		//new Config(Assets.getFile("main.spc"));
+		var l_configurator:Config = new Config(Assets.getFile("config"));
+		l_configurator.parseClient();
+		
 		return;
 		//Init Sliced
 		Sliced.init();

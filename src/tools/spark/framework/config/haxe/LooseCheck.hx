@@ -19,7 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-package tools.spark.sliced.services.std.logic.gde.haxe;
+package tools.spark.framework.config.haxe;
 
 enum Filter {
 	FInt;
