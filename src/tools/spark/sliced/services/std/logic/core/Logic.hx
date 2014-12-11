@@ -21,7 +21,9 @@ import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter
  */
 class Logic extends AService implements ILogic
 {
-	public var rootGameEntity( default, default ):IGameEntity;
+	public var rootGameEntitiesRunning( default, null ):Map<String, IGameEntity>;
+	public var rootGameEntitiesPaused( default, null ):Map<String, IGameEntity>;
+	
 	public var scriptInterpreter( default, null ):IInterpreter;
 	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
@@ -45,11 +47,21 @@ class Logic extends AService implements ILogic
 		
 		//Create GameFactory
 		gameFactory = new GameFactory();
+		
+		//Create Maps
+		rootGameEntitiesRunning = new Map<String, IGameEntity>();
+		rootGameEntitiesPaused = new Map<String, IGameEntity>();
 	}
 	
 	public function update():Void
 	{
-		if (rootGameEntity != null) rootGameEntity.doActions();
+		//@warning: Game Entities may NOT run in order!!! If that's the case, use an Array, and 
+		//will have to traverse the Array if you need to pick up an entity by a url reference
+		//now that i think about it, maybe array would be better, to allow for multiple instances of the
+		//same gameEntity to run (i forbid module run concurrency, but not game entity run concurrency..)
+		//think about itttttttt! but then how do i say, pause this one, etc..?hmm
+		for (gameEntity in rootGameEntitiesRunning)
+			gameEntity.doActions();
 	}
 	
 	public function startAction(entity:IGameEntity, actionId:String):Bool
@@ -57,4 +69,16 @@ class Logic extends AService implements ILogic
 		return entity.startAction(actionId);
 	}
 	
+	public function createAndRun(p_gameEntityUrl:String):Void
+	{
+		//Create GameEntity
+		rootGameEntitiesRunning[p_gameEntityUrl] = gameFactory.createGameEntity(p_gameEntityUrl);
+		Console.warn("Logic Service: Create and Running entity: " + p_gameEntityUrl);
+	}
+	
+	public function createAndPause(p_gameEntityUrl:String):Void
+	{
+		//Create GameEntity
+		rootGameEntitiesPaused[p_gameEntityUrl] = gameFactory.createGameEntity(p_gameEntityUrl);
+	}
 }

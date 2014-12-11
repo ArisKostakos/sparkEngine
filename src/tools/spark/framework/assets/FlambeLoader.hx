@@ -75,11 +75,11 @@ class FlambeLoader
 	{
 		if (p_forceLoadAsData)
 		{
-			_manifest.add(p_name, p_url +"?" + Std.random(10000), 112689, AssetFormat.Data);
+			_manifest.add(p_name, p_url +"?" + Std.random(10000), 1, AssetFormat.Data);
 		}
 		else
 		{
-			_manifest.add(p_name, p_url +"?" + Std.random(10000), 112689);
+			_manifest.add(p_name, p_url +"?" + Std.random(10000), 1);
 		}
 		
 		_assetToBatchLoad[p_name]= _manifest;

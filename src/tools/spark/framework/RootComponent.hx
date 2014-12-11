@@ -17,8 +17,9 @@ class RootComponent extends Component
 {
 	public function new()
 	{
+		/*
 		//Create Root GameEntity
-		Sliced.logic.rootGameEntity = Sliced.logic.gameFactory.createGameEntity(Config.getConfig( "game.rootGameEntity" ));
+		//Sliced.logic.rootGameEntity = Sliced.logic.gameFactory.createGameEntity(Config.getConfig( "game.rootGameEntity" ));
 		
 		if (Sliced.logic.rootGameEntity == null)
 		{
@@ -28,6 +29,7 @@ class RootComponent extends Component
 		{
 			Console.info("Root Game Entity was created successfully!");
 		}
+		*/
 	}
 
 	override public function onUpdate (dt :Float)

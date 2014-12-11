@@ -6,16 +6,15 @@
 
 package tools.spark.framework.config;
 
-import tools.spark.framework.config.haxe.LooseCheck;
-import tools.spark.framework.config.haxe.LooseCheck.Filter;
-import tools.spark.framework.config.haxe.LooseCheck.Rule;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RList;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RNode;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RChoice;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RData;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RMulti;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.ROptional;
-
+import haxe.xml.Check;
+import haxe.xml.Check.Filter;
+import haxe.xml.Check.Rule;
+import haxe.xml.Check.Rule.RList;
+import haxe.xml.Check.Rule.RNode;
+import haxe.xml.Check.Rule.RChoice;
+import haxe.xml.Check.Rule.RData;
+import haxe.xml.Check.Rule.RMulti;
+import haxe.xml.Check.Rule.ROptional;
 
 /**
  * //@todo: filters for everything. And maybe special filter/logic for asset types. Like, script asset types cannot have an id parameter, etc..
@@ -43,39 +42,36 @@ class ConfigValidator
 		_xmlNodeTypeToNodeRule = new Map<ENodeType,Rule>();
 		
 		//Common
-		_xmlNodeTypeToNodeRule[ENodeType.PROJECT] = _createProjectNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.PROJECT_NAME] = _createProjectNameNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.PROJECT_VERSION] = _createProjectVersionNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.EXECUTE_AT_LAUNCH] = _createExecuteAtLaunchNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.EXECUTE_MODULE] = _createExecuteModuleNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.REQUIRES_MODULE] = _createRequiresModuleNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.REQUIRES] = _createRequiresNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.ASSET] = _createAssetNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.MODULE] = _createModuleNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.ASSETS] = _createAssetsNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.PATH] = _createPathNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.PATHS] = _createPathsNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.SOUND_SERVICE] = _createSoundServiceNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.LOGIC_SERVICE] = _createLogicServiceNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.INPUT_SERVICE] = _createInputServiceNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.COMMUNICATIONS_SERVICE] = _createCommsServiceNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.EVENT_SERVICE] = _createEventServiceNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.DISPLAY_SERVICE] = _createDisplayServiceNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.PATHS] = _createPathsNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.PATH] = _createPathNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.ASSETS] = _createAssetsNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.MODULE] = _createModuleNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.ASSET] = _createAssetNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.REQUIRES] = _createRequiresNodeRule();
-		_xmlNodeTypeToNodeRule[ENodeType.REQUIRES_MODULE] = _createRequiresModuleNodeRule();
-	
-	
-	
+		_xmlNodeTypeToNodeRule[ENodeType.EXECUTE_MODULE] = _createExecuteModuleNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.EXECUTE_AT_LAUNCH] = _createExecuteAtLaunchNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.PROJECT_NAME] = _createProjectNameNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.PROJECT_VERSION] = _createProjectVersionNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.PROJECT] = _createProjectNodeRule();
 		
 		//Client Only
 		if (p_rootNodeType == ENodeType.CLIENT)
 		{
-			_xmlNodeTypeToNodeRule[ENodeType.CLIENT] = _createClientNodeRule();
 			_xmlNodeTypeToNodeRule[ENodeType.SLICED] = _createSlicedClientNodeRule();
+			_xmlNodeTypeToNodeRule[ENodeType.CLIENT] = _createClientNodeRule();
 		}
 		//Server Only
 		else if (p_rootNodeType == ENodeType.SERVER)
 		{
-			_xmlNodeTypeToNodeRule[ENodeType.SERVER] = _createServerNodeRule();
 			_xmlNodeTypeToNodeRule[ENodeType.SLICED] = _createSlicedServerNodeRule();
+			_xmlNodeTypeToNodeRule[ENodeType.SERVER] = _createServerNodeRule();
 		}
 	}
 	
@@ -92,7 +88,7 @@ class ConfigValidator
 		
 		try 
 		{
-			LooseCheck.checkNode(p_configNode, _xmlNodeTypeToNodeRule[p_nodeType]);
+			Check.checkNode(p_configNode, _xmlNodeTypeToNodeRule[p_nodeType]);
 			return true;
 		}
 		catch (m:String) 
@@ -109,10 +105,10 @@ class ConfigValidator
 	{
 		var l_children:Rule = RList(
 			[
-				RNode(_xmlNodeTypeToNodeName[ENodeType.PROJECT]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.SLICED]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.PATHS]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.ASSETS])
+				_xmlNodeTypeToNodeRule[ENodeType.PROJECT],
+				_xmlNodeTypeToNodeRule[ENodeType.SLICED],
+				_xmlNodeTypeToNodeRule[ENodeType.PATHS],
+				_xmlNodeTypeToNodeRule[ENodeType.ASSETS]
 			],
 			false
 		);
@@ -124,10 +120,10 @@ class ConfigValidator
 	{
 		var l_children:Rule = RList(
 			[
-				RNode(_xmlNodeTypeToNodeName[ENodeType.PROJECT]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.SLICED]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.PATHS]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.ASSETS])
+				_xmlNodeTypeToNodeRule[ENodeType.PROJECT],
+				_xmlNodeTypeToNodeRule[ENodeType.SLICED],
+				_xmlNodeTypeToNodeRule[ENodeType.PATHS],
+				_xmlNodeTypeToNodeRule[ENodeType.ASSETS]
 			],
 			false
 		);
@@ -139,9 +135,9 @@ class ConfigValidator
 	{
 		var l_children:Rule = RList(
 			[
-				RNode(_xmlNodeTypeToNodeName[ENodeType.PROJECT_NAME]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.PROJECT_VERSION]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.EXECUTE_AT_LAUNCH])
+				_xmlNodeTypeToNodeRule[ENodeType.PROJECT_NAME],
+				_xmlNodeTypeToNodeRule[ENodeType.PROJECT_VERSION],
+				_xmlNodeTypeToNodeRule[ENodeType.EXECUTE_AT_LAUNCH]
 			],
 			false
 		);
@@ -165,7 +161,7 @@ class ConfigValidator
 	
 	inline private function _createExecuteAtLaunchNodeRule():Rule
 	{
-		var l_children:Rule = RMulti(RNode(_xmlNodeTypeToNodeName[ENodeType.EXECUTE_MODULE]), true);
+		var l_children:Rule = RMulti(_xmlNodeTypeToNodeRule[ENodeType.EXECUTE_MODULE], true);
 
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.EXECUTE_AT_LAUNCH], [], l_children);
 	}
@@ -181,12 +177,12 @@ class ConfigValidator
 	{
 		var l_children:Rule = RList(
 			[
-				RNode(_xmlNodeTypeToNodeName[ENodeType.SOUND_SERVICE]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.LOGIC_SERVICE]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.INPUT_SERVICE]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.COMMUNICATIONS_SERVICE]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.EVENT_SERVICE]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.DISPLAY_SERVICE])
+				_xmlNodeTypeToNodeRule[ENodeType.SOUND_SERVICE],
+				_xmlNodeTypeToNodeRule[ENodeType.LOGIC_SERVICE],
+				_xmlNodeTypeToNodeRule[ENodeType.INPUT_SERVICE],
+				_xmlNodeTypeToNodeRule[ENodeType.COMMUNICATIONS_SERVICE],
+				_xmlNodeTypeToNodeRule[ENodeType.EVENT_SERVICE],
+				_xmlNodeTypeToNodeRule[ENodeType.DISPLAY_SERVICE]
 			],
 			false
 		);
@@ -198,9 +194,9 @@ class ConfigValidator
 	{
 		var l_children:Rule = RList(
 			[
-				RNode(_xmlNodeTypeToNodeName[ENodeType.LOGIC_SERVICE]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.COMMUNICATIONS_SERVICE]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.EVENT_SERVICE])
+				_xmlNodeTypeToNodeRule[ENodeType.LOGIC_SERVICE],
+				_xmlNodeTypeToNodeRule[ENodeType.COMMUNICATIONS_SERVICE],
+				_xmlNodeTypeToNodeRule[ENodeType.EVENT_SERVICE]
 			],
 			false
 		);
@@ -252,7 +248,7 @@ class ConfigValidator
 	
 	inline private function _createPathsNodeRule():Rule
 	{
-		var l_children:Rule = RMulti(RNode(_xmlNodeTypeToNodeName[ENodeType.PATH]), true);
+		var l_children:Rule = RMulti(_xmlNodeTypeToNodeRule[ENodeType.PATH], true);
 
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.PATHS], [], l_children);
 	}
@@ -270,7 +266,7 @@ class ConfigValidator
 	
 	inline private function _createAssetsNodeRule():Rule
 	{
-		var l_children:Rule = RMulti(RNode(_xmlNodeTypeToNodeName[ENodeType.MODULE]), true);
+		var l_children:Rule = RMulti(_xmlNodeTypeToNodeRule[ENodeType.MODULE], true);
 
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.ASSETS], [], l_children);
 	}
@@ -279,8 +275,8 @@ class ConfigValidator
 	{
 		var l_children:Rule = RList(
 			[
-				ROptional(RNode(_xmlNodeTypeToNodeName[ENodeType.REQUIRES])),
-				RMulti(RNode(_xmlNodeTypeToNodeName[ENodeType.ASSET]), true)
+				ROptional(_xmlNodeTypeToNodeRule[ENodeType.REQUIRES]),
+				RMulti(_xmlNodeTypeToNodeRule[ENodeType.ASSET], true)
 			],
 			false
 		);
@@ -311,7 +307,7 @@ class ConfigValidator
 	
 	inline private function _createRequiresNodeRule():Rule
 	{
-		var l_children:Rule = RMulti(RNode(_xmlNodeTypeToNodeName[ENodeType.REQUIRES_MODULE]), true);
+		var l_children:Rule = RMulti(_xmlNodeTypeToNodeRule[ENodeType.REQUIRES_MODULE], true);
 
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.REQUIRES], [], l_children);
 	}
@@ -323,22 +319,6 @@ class ConfigValidator
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.REQUIRES_MODULE], [], l_children);
 	}
 	/*
-	
-	inline private function _createActionNodeRule():Rule
-	{
-		var l_children:Rule = RList(
-			[
-				RNode(_xmlNodeTypeToNodeName[ENodeType.ID]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.CONCURRENCY]),
-				RNode(_xmlNodeTypeToNodeName[ENodeType.SCRIPTS]),
-				ROptional(RNode(_xmlNodeTypeToNodeName[ENodeType.STATES]))
-			],
-			false
-		);
-
-		return RNode(_xmlNodeTypeToNodeName[ENodeType.ACTION], [], l_children);
-	}
-	
 	inline private function _createConcurrencyNodeRule():Rule
 	{
 		var l_children:Rule = RData(FEnum([_xmlConcurrencyTypeToName[EConcurrencyType.PARALLEL],
@@ -348,21 +328,6 @@ class ConfigValidator
 							);
 
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.CONCURRENCY], [], l_children);
-	}
-	
-
-	inline private function _createTypeNodeRule():Rule
-	{
-		var l_children:Rule = RData(FEnum([
-								_xmlStateTypeToName[EStateType.DYNAMIC],
-								_xmlStateTypeToName[EStateType.INTEGER],
-								_xmlStateTypeToName[EStateType.DECIMAL],
-								_xmlStateTypeToName[EStateType.BOOLEAN],
-								_xmlStateTypeToName[EStateType.TEXT]
-								])
-							);
-
-		return RNode(_xmlNodeTypeToNodeName[ENodeType.TYPE], [], l_children);
 	}
 	*/
 }

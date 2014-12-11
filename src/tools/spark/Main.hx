@@ -6,7 +6,8 @@
 
 package tools.spark;
 
-
+import tools.spark.framework.Project;
+import tools.spark.framework.ModuleManager;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.framework.Framework;
 import tools.spark.framework.Assets;
@@ -27,10 +28,10 @@ class Main
 		Framework.init();
 		
 		//Load config
-		loadClientConfig();
+		_loadClientConfig();
     }
 
-	private static function loadClientConfig():Void
+	private static function _loadClientConfig():Void
 	{
 		Assets.successSignal.connect(_onClientConfigLoaded).once();
 		
@@ -43,58 +44,24 @@ class Main
     {
 		//Init Config
 		var l_configurator:Config = new Config(Assets.getFile("config"));
-		l_configurator.parseClient();
 		
-		return;
-		//Init Sliced
+		if (l_configurator.parseClient() == false)
+		{
+			Console.error("Failed to parse configuration file. Aborting...");
+			return;
+		}
+		
+		//Init Sliced (For Client)
 		Sliced.init();
 		
 		//Create Display Renderers
 		Framework.createDisplayRenderers();
 		
-		loadFuckingEverything();
-    }
-
-	
-	private static function loadFuckingEverything():Void
-	{
-		Assets.successSignal.connect(_onFuckingEverythingLoaded).once();
-		
-		Assets.initiateBatch();
-		
-		//[ARKANOID HACK]: Load fucking everything. (these should be parsed from the main.gpc instead)
-		Assets.addFile("assets/images/Ball.png");
-		
-		Assets.addFile("assets/lionscript/Arkanoid/Arkanoid.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Space.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Stage.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/GameView.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/GUIView.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Scene.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Camera.egc");
-		Assets.addFile("assets/lionscript/Arkanoid/Object.egc");
-		
-		Assets.addFile("assets/lionscript/std/core/Base.egc");
-		Assets.addFile("assets/lionscript/std/core/Project.egc");
-		
-		Assets.addFile("assets/lionscript/std/display/Base.egc");
-		Assets.addFile("assets/lionscript/std/display/Space.egc");
-		Assets.addFile("assets/lionscript/std/display/Stage.egc");
-		Assets.addFile("assets/lionscript/std/display/View.egc");
-		Assets.addFile("assets/lionscript/std/display/Scene.egc");
-		Assets.addFile("assets/lionscript/std/display/Camera.egc");
-		Assets.addFile("assets/lionscript/std/display/Object.egc");
-		
-		Assets.addFile("assets/lionscript/std/behaviors/core/Constructor.egc");
-		Assets.addFile("assets/lionscript/std/behaviors/core/KeyboardInput.egc");
-		Assets.addFile("assets/lionscript/std/behaviors/core/InputMove.egc");
-		
-		Assets.loadBatch();
-	}
-	
-	private static function _onFuckingEverythingLoaded()
-    {
+		//Execute Modules
+		for (moduleName in Project.executeModules)
+			ModuleManager.execute(moduleName);
+			
 		//Create Spark's Flambe Root Component
 		System.root.add(new RootComponent());
-	}
+    }
 }

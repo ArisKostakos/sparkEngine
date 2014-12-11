@@ -4,18 +4,17 @@
  * Written by Aris Kostakos <aris@spark.tools>, December 2014
  */
 
-package tools.spark.framework;
+package tools.spark.framework.assets;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class AssetManager
+enum EModuleState 
 {
-
-	public static function init() 
-	{
-		
-	}
-	
+	NOT_LOADED;
+	LOADING;
+	LOADED;
+	RUNNING;
+	PAUSED;
 }

@@ -52,7 +52,7 @@ class FlambeView2_5D extends AView2_5D
 	
 	override public function render():Void
 	{
-		Console.warn("Rendering a brand new flambe 2.5 View, yeah boy!");
+		//Console.warn("Rendering a brand new flambe 2.5 View, yeah boy!");
 		
 		//calculate positions (update dirty entities)?
 		//scene.validate(camera);

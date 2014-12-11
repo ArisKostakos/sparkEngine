@@ -19,7 +19,15 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-package tools.spark.framework.config.haxe;
+package tools.spark.framework.haxe;
+
+//@warning: This works, but LooseCheck has bugs. Benefit of loose check, i get good error messages, since
+//i check every node individually. Bad things is attribute validation won't work properly, i broke it
+//when modifying haxe.Check. If you need attribute validation in the future, just remove LooseCheck
+//and use Haxe's original Check the same way I use it in framework.config (the proper way to use Check, not check
+//node by node.. But the problem was, I was getting too abstract error messages, so I had to recheck all nodes,
+//in order to get proper messages about where the fault in the xml is.
+//Currently this class is used for GameClassValidator only.
 
 enum Filter {
 	FInt;

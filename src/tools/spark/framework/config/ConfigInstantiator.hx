@@ -5,6 +5,8 @@
  */
 
 package tools.spark.framework.config;
+import tools.spark.framework.assets.Asset;
+import tools.spark.framework.assets.Module;
 
 
 /**
@@ -14,228 +16,133 @@ package tools.spark.framework.config;
 class ConfigInstantiator
 {
 	private var _xmlNodeTypeToNodeName:Map<ENodeType,String>;
-	private var _xmlConcurrencyNameToType:Map<String,EConcurrencyType>;
-	private var _xmlStateNameToType:Map<String,EStateType>;
-	private var _xmlEventNameToPrefab:Map<String,EEventPrefab>;
+	private var _configNode:Xml;
+	private var _rootNodeType:ENodeType;
 	
-	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>, p_xmlConcurrencyNameToType:Map<String,EConcurrencyType>, p_xmlStateNameToType:Map<String,EStateType>, p_xmlEventNameToPrefab:Map<String,EEventPrefab>) 
+	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>) 
 	{
-		Console.log("Creating Game Class Instantiator");
 		_xmlNodeTypeToNodeName = p_xmlNodeTypeToNodeName;
-		_xmlConcurrencyNameToType = p_xmlConcurrencyNameToType;
-		_xmlStateNameToType = p_xmlStateNameToType;
-		_xmlEventNameToPrefab = p_xmlEventNameToPrefab;
-		_init();
 	}
 	
-	private function _init():Void
+	public function init(p_configNode:Xml, p_rootNodeType:ENodeType):Void
 	{
+		_configNode = p_configNode;
+		_rootNodeType = p_rootNodeType;
+	}
+	
+	public function instantiateProject():Void
+	{	
+		//Project Node
+		var l_projectNode:Xml = _configNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PROJECT]).next();
+		
+		//Project Name
+		Project.name = l_projectNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PROJECT_NAME]).next().firstChild().nodeValue;
+		
+		//Project Version
+		Project.version = l_projectNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PROJECT_VERSION]).next().firstChild().nodeValue;
+		
+		//Project Type
+		Project.type = _rootNodeType;
+		
+		//Project Execute Modules Node
+		var l_ExecuteModules:Xml = l_projectNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EXECUTE_AT_LAUNCH]).next();
+		
+		for ( executeModule in l_ExecuteModules.elements()) 
+		{
+			Project.executeModules.push(executeModule.firstChild().nodeValue);
+		}
+	}
+	
+	public function instantiateSliced():Void
+	{	
+		//Sliced Node
+		var l_slicedNode:Xml = _configNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SLICED]).next();
+		
+		//Common
+		Project.sliced[ENodeType.LOGIC_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.LOGIC_SERVICE]).next().firstChild().nodeValue;
+		Project.sliced[ENodeType.COMMUNICATIONS_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.COMMUNICATIONS_SERVICE]).next().firstChild().nodeValue;
+		Project.sliced[ENodeType.EVENT_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EVENT_SERVICE]).next().firstChild().nodeValue;
+		
+		//Client Only
+		if (Project.type == ENodeType.CLIENT)
+		{
+			Project.sliced[ENodeType.SOUND_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SOUND_SERVICE]).next().firstChild().nodeValue;
+			Project.sliced[ENodeType.INPUT_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.INPUT_SERVICE]).next().firstChild().nodeValue;
+			Project.sliced[ENodeType.DISPLAY_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.DISPLAY_SERVICE]).next().firstChild().nodeValue;
+		}
+	}
+	
+	public function instantiatePaths():Void
+	{	
+		//Paths Node
+		var l_pathsNode:Xml = _configNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PATHS]).next();
+
+		for ( f_pathNode in l_pathsNode.elements()) 
+		{
+			Project.setPath(f_pathNode.get("location"), f_pathNode.get("type"), f_pathNode.firstChild().nodeValue);
+		}
+	}
+	
+	public function instantiateAssets():Void
+	{	
+		//Assets Node
+		var l_assetsNode:Xml = _configNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ASSETS]).next();
+		
+		//Modules
+		for ( f_moduleNode in l_assetsNode.elements()) 
+		{
+			Project.modules[f_moduleNode.get("id")] = _instantiateModule(f_moduleNode);
+		}
 		
 	}
-		
 	
-	
-	public function instantiateEntity(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameEntity
+	private function _instantiateModule(p_moduleNode:Xml):Module
 	{
-		var l_gameEntity:IGameEntity = new GameEntity();
+		var l_module:Module = new Module(p_moduleNode.get("id"));
 		
-		//Parent Entity
-		l_gameEntity.parentEntity = p_parentEntity;
+		//Execute Entity
+		l_module.executeEntity = p_moduleNode.get("executeEntity");
 		
-		//Create the Entity's Form
-		l_gameEntity.gameForm = instantiateForm(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.FORM]).next(),l_gameEntity);
-		
-		//Create the Entity's States
+		//Create the Modules's Required Modules
 		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
 			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
-		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).hasNext())
+		if (p_moduleNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.REQUIRES]).hasNext())
 		{
-			var states:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).next();
-			for ( state in  states.elements()) 
+			var l_requiresNode:Xml = p_moduleNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.REQUIRES]).next();
+			for ( requiresModuleNode in  l_requiresNode.elements()) 
 			{
-				l_gameEntity.addState(instantiateState(state,l_gameEntity));
+				l_module.requiresModules.push(requiresModuleNode.firstChild().nodeValue);
 			}
 		}
 		
-		//Create the Entity's Actions
-		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
-			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
-		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ACTIONS]).hasNext())
+		//Assets
+		var l_assetChildren:Iterator<Xml> = p_moduleNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ASSET]);
+		while (l_assetChildren.hasNext())
 		{
-			var actions:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ACTIONS]).next();
-			for ( action in actions.elements()) 
-			{
-				var f_gameAction:IGameAction = instantiateAction(action, l_gameEntity);
-				
-				l_gameEntity.addAction(f_gameAction);
-			}
+			var w_assetNode:Xml = l_assetChildren.next();
+			
+			var w_asset:Asset = _instantiateAsset(w_assetNode);
+			
+			l_module.assets[w_asset.id] = w_asset;
 		}
 		
-		//Create the Entity's Triggers
-		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
-			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
-		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TRIGGERS]).hasNext())
-		{
-			var triggers:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TRIGGERS]).next();
-			for ( trigger in triggers.elements()) 
-			{
-				var f_gameTrigger:IGameTrigger = instantiateTrigger(trigger,l_gameEntity);
-				
-				Sliced.event.addTrigger(f_gameTrigger);
-			}
-		}
-		
-		Sliced.event.raiseEvent(EEventType.CREATED,l_gameEntity);
-		return l_gameEntity;
+		return l_module;
 	}
 	
-	public function instantiateForm(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameForm
+	private function _instantiateAsset(p_assetNode:Xml):Asset
 	{
-		var l_gameForm:IGameForm = new GameForm();
+		var l_assetId:String = p_assetNode.get("id")=="useUrl"?p_assetNode.firstChild().nodeValue:p_assetNode.get("id");
 		
-		//Parent Entity
-		l_gameForm.parentEntity = p_parentEntity;
+		var l_asset:Asset = new Asset(l_assetId);
 		
-		//Create the Form's States
-		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
-			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
-		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).hasNext())
-		{
-			var states:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).next();
-			for ( state in  states.elements()) 
-			{
-				l_gameForm.addState(instantiateState(state,p_parentEntity));
-			}
-		}
+		l_asset.url = p_assetNode.firstChild().nodeValue;
+		l_asset.type =  p_assetNode.get("type");
+		l_asset.subtype =  p_assetNode.get("subtype");
+		l_asset.location =  p_assetNode.get("location");
+		l_asset.bytes =  p_assetNode.get("bytes");
+		l_asset.condition =  p_assetNode.get("condition");
+		l_asset.forceLoadAsData =  p_assetNode.get("forceLoadAsData");
 		
-		//Create the Form's Space
-		l_gameForm.gameSpace = instantiateSpace(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SPACE]).next(),p_parentEntity);
-		
-		return l_gameForm;
-	}
-	
-	public function instantiateSpace(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameSpace
-	{
-		var l_gameSpace:IGameSpace = new GameSpace();
-		
-		//Parent Entity
-		l_gameSpace.parentEntity = p_parentEntity;
-		
-		//Create the Space's Entities
-		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
-			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
-		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ENTITIES]).hasNext())
-		{
-			var entities:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ENTITIES]).next();
-			for ( entity in  entities.elements()) 
-			{
-				l_gameSpace.gameEntitySet.push(instantiateEntity(entity,p_parentEntity));
-			}
-		}
-		
-		return l_gameSpace;
-	}
-	
-	public function instantiateState(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameState
-	{
-		var l_gameState:IGameState = new GameState();
-		
-		//Parent Entity
-		l_gameState.parentEntity = p_parentEntity;
-		
-		//Create the State's Id
-		l_gameState.id = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ID]).next().firstChild().nodeValue;
-		
-		//Create the State's Type
-		l_gameState.type = _xmlStateNameToType[p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TYPE]).next().firstChild().nodeValue];
-		
-		//Create the State's Value
-		var l_valueInString:String = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.VALUE]).next().firstChild().nodeValue;
-		//Typecast it
-		switch(l_gameState.type)
-		{
-			case EStateType.BOOLEAN:
-				l_gameState.value = (l_valueInString == "true" || l_valueInString == "True" || l_valueInString == "t" || l_valueInString == "T");
-			case EStateType.DECIMAL:
-				l_gameState.value = Std.parseFloat(l_valueInString);
-			case EStateType.INTEGER:
-				l_gameState.value = Std.parseInt(l_valueInString);
-			case EStateType.TEXT:
-				l_gameState.value = l_valueInString;
-			case EStateType.DYNAMIC:
-				l_gameState.value = null;
-		}
-		
-		
-		return l_gameState;
-	}
-	
-	public function instantiateAction(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameAction
-	{
-		var l_gameAction:IGameAction = new GameAction();
-		
-		//Parent Entity
-		l_gameAction.parentEntity = p_parentEntity;
-		
-		//Create the Action's Id
-		l_gameAction.id = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ID]).next().firstChild().nodeValue;
-		
-		//Create the Actions's Concurrency
-		l_gameAction.concurrency = _xmlConcurrencyNameToType[p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.CONCURRENCY]).next().firstChild().nodeValue];
-		
-		//Create the Action's Scripts
-		var scripts:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SCRIPTS]).next();
-		for ( script in scripts.elements()) 
-		{
-			if (script.nodeName == _xmlNodeTypeToNodeName[ENodeType.SCRIPT])
-			{
-				l_gameAction.scriptSet.push(Sliced.logic.scriptInterpreter.hash(script.firstChild().nodeValue));
-			}
-			else
-			{
-				l_gameAction.scriptSet.push(Sliced.logic.gmlInterpreter.hash(script.firstChild().nodeValue));
-			}
-		}
-		
-		//Create the Action's States
-		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
-			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
-		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).hasNext())
-		{
-			var states:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.STATES]).next();
-			for ( state in states.elements()) 
-			{
-				l_gameAction.addState(instantiateState(state,p_parentEntity));
-			}
-		}		
-		
-		return l_gameAction;
-	}
-	
-	public function instantiateTrigger(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameTrigger
-	{
-		var l_gameTrigger:IGameTrigger = new GameTrigger();
-		
-		//Parent Entity
-		l_gameTrigger.parentEntity = p_parentEntity;
-		
-		//Create the Trigger's Event Type
-		l_gameTrigger.eventPrefab = _xmlEventNameToPrefab[p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EVENT]).next().firstChild().nodeValue];
-		
-		//Create the Trigger's Scripts
-		var scripts:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SCRIPTS]).next();
-		for ( script in scripts.elements()) 
-		{
-			if (script.nodeName == _xmlNodeTypeToNodeName[ENodeType.SCRIPT])
-			{
-				l_gameTrigger.scriptSet.push(Sliced.logic.scriptInterpreter.hash(script.firstChild().nodeValue));
-			}
-			else
-			{
-				l_gameTrigger.scriptSet.push(Sliced.logic.gmlInterpreter.hash(script.firstChild().nodeValue));
-			}
-		}
-		
-		return l_gameTrigger;
+		return l_asset;
 	}
 }

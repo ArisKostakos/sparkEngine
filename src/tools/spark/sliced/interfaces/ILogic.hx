@@ -14,11 +14,14 @@ import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter
  */
 interface ILogic extends IService
 {
-	var rootGameEntity( default, default ):IGameEntity;
+	var rootGameEntitiesRunning( default, null ):Map<String, IGameEntity>;
+	var rootGameEntitiesPaused( default, null ):Map<String, IGameEntity>;
 	
 	var scriptInterpreter( default, null ):IInterpreter;
 	var gmlInterpreter( default, null ):IInterpreter;
 	var gameFactory( default, null ):IGameFactory;
 	function startAction(entity:IGameEntity, actionId:String):Bool;
 	function update():Void;
+	function createAndRun(p_gameEntityUrl:String):Void;
+	function createAndPause(p_gameEntityUrl:String):Void;
 }

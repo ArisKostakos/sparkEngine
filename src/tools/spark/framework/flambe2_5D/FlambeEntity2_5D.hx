@@ -33,7 +33,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
 		var l_entity:Entity = new Entity();
-		var l_entityImageSprite:ImageSprite = new ImageSprite(Assets.getTexture("assets/images/Ball.png"));
+		var l_entityImageSprite:ImageSprite = new ImageSprite(Assets.getTexture("atomTexture"));
 				
 		l_entity.add(l_entityImageSprite);
 

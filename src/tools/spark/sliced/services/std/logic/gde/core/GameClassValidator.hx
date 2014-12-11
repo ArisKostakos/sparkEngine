@@ -5,15 +5,15 @@
  */
 
 package tools.spark.sliced.services.std.logic.gde.core;
-import tools.spark.framework.config.haxe.LooseCheck;
-import tools.spark.framework.config.haxe.LooseCheck.Filter;
-import tools.spark.framework.config.haxe.LooseCheck.Rule;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RList;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RNode;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RChoice;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RData;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.RMulti;
-import tools.spark.framework.config.haxe.LooseCheck.Rule.ROptional;
+import tools.spark.framework.haxe.LooseCheck;
+import tools.spark.framework.haxe.LooseCheck.Filter;
+import tools.spark.framework.haxe.LooseCheck.Rule;
+import tools.spark.framework.haxe.LooseCheck.Rule.RList;
+import tools.spark.framework.haxe.LooseCheck.Rule.RNode;
+import tools.spark.framework.haxe.LooseCheck.Rule.RChoice;
+import tools.spark.framework.haxe.LooseCheck.Rule.RData;
+import tools.spark.framework.haxe.LooseCheck.Rule.RMulti;
+import tools.spark.framework.haxe.LooseCheck.Rule.ROptional;
 import tools.spark.sliced.services.std.logic.gde.interfaces.ENodeType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EConcurrencyType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EStateType;
@@ -87,6 +87,12 @@ class GameClassValidator implements IGameClassValidator
 		
 		try 
 		{
+			//@warning: This works, but LooseCheck has bugs. Benefit of loose check, i get good error messages, since
+			//i check every node individually. Bad things is attribute validation won't work properly, i broke it
+			//when modifying haxe.Check. If you need attribute validation in the future, just remove LooseCheck
+			//and use Haxe's original Check the same way I use it in framework.config (the proper way to use Check, not check
+			//node by node.. But the problem was, I was getting too abstract error messages, so I had to recheck all nodes,
+			//in order to get proper messages about where the fault in the xml is.
 			LooseCheck.checkNode(p_gameNode, _xmlNodeTypeToNodeRule[p_nodeType]);
 			return true;
 		}

@@ -8,7 +8,7 @@ import flambe.asset.File;
 class Config
 {
 	private var _configValidator:ConfigValidator;
-	//private var _configInstantiator:ConfigInstantiator;
+	private var _configInstantiator:ConfigInstantiator;
 	private var _configFile:File;
 	private var _xmlNodeTypeToNodeName:Map<ENodeType,String>;
 	private var _xmlNodeNameToNodeType:Map<String,ENodeType>;
@@ -25,7 +25,7 @@ class Config
 		_initNodeTypesMap();
 		
 		_configValidator = new ConfigValidator(_xmlNodeTypeToNodeName);
-		//_configInstantiator = new GameClassInstantiator(_xmlNodeTypeToNodeName);
+		_configInstantiator = new ConfigInstantiator(_xmlNodeTypeToNodeName);
 	}
 	
 	public function parseClient():Bool
@@ -43,7 +43,7 @@ class Config
 		var l_configNode:Xml;
 		
 		//Parse
-		Console.info('Parsing Config file');
+		Console.info('Config: Parsing...');
 		try 
 		{
 			l_configNode=Xml.parse(_configFile.toString());
@@ -65,8 +65,9 @@ class Config
 			return false;
 		}
 		
+		
 		//Validate
-		Console.info('Validating Config file');
+		Console.info('Config: Validating...');
 		
 		//Init Validation (construct rules for either client or server config)
 		_configValidator.init(p_rootNodeType);
@@ -79,11 +80,28 @@ class Config
 		
 		
 		//Instantiate
+		Console.info('Config: Instantiating...');
+		//Console.info(l_configNode.toString());
+
+		//Init
+		_configInstantiator.init(l_configNode, p_rootNodeType);
 		
+		//Project
+		_configInstantiator.instantiateProject();
 		
+		//Sliced
+		_configInstantiator.instantiateSliced();
 		
+		//Paths
+		_configInstantiator.instantiatePaths();
 		
-		Console.info('successs yooo');
+		//Assets
+		//@todo: instantiateAssets should return bool for succeeded or not. If two modules has the same id,
+		//or two assets inside a module share the same id, return false. and figure other problems as well
+		//mostly here in Assets, but maybe above as well (non-validation problems that is..) logical problems that validation cannot catch
+		_configInstantiator.instantiateAssets();
+		
+		Console.info('Config: Completed!');
 		return true;
 	}
 	
@@ -93,21 +111,15 @@ class Config
 		
 		if (_configValidator.validateConfigNode(p_configNode, l_configNodeType))
 		{
-			//For all Elements
-			//@todo: Catch infinite recursion if that could somehow be possible..
-			for ( elt in p_configNode.elements() ) 
-			{
-				if (_validateConfigNode(elt) == false)
-				{
-					Console.error('Failed to validate config node ' + elt.nodeName);
-					return false;
-				}
-			}
 			return true;
 		}
 		else
 		{
-			Console.error('Failed to validate $l_configNodeType node');
+			for ( elt in p_configNode.elements() ) 
+			{
+				if (_validateConfigNode(elt) == false)
+					return false;
+			}
 			return false;
 		}
 	}

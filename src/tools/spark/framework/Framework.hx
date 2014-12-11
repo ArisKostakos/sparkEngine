@@ -35,6 +35,12 @@ class Framework
 		
 		//Init Assets System
 		Assets.init();
+		
+		//Init Project Data Object
+		Project.init();
+		
+		//Init Module Manager
+		ModuleManager.init();
 	}
 	
 	public static function createDisplayRenderers():Void
