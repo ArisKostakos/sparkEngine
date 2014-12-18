@@ -10,7 +10,7 @@ main: tools.spark.Main
 default_platform: html
 
 # Additional flags to pass to the Haxe compiler
-haxe_flags: -lib hscript -D includeAway3D
+haxe_flags: -lib hscript -D includeAway3D -D flambe_transparent
 
 # Additional paths to include in the build
 extra_paths:

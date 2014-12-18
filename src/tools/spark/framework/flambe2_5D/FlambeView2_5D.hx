@@ -12,6 +12,7 @@ import flambe.math.Rectangle;
 import tools.spark.framework.space2_5D.core.AView2_5D;
 import flambe.Entity;
 import flambe.display.Sprite;
+import flambe.display.BlendMode;
 import tools.spark.framework.space2_5D.interfaces.ICamera2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IScene2_5D;
@@ -42,9 +43,10 @@ class FlambeView2_5D extends AView2_5D
 		var l_bakcgroundColor:Int;
 		l_bakcgroundColor = 0x00ff00;
 		
-		var l_viewSprite:FillSprite = new FillSprite(l_bakcgroundColor, 640, 480);
-		//var l_viewSprite:Sprite = new Sprite();
-		l_viewSprite.scissor = new Rectangle(0, 0, 640, 480);
+		//var l_viewSprite:FillSprite = new FillSprite(l_bakcgroundColor, 640, 480);
+		var l_viewSprite:Sprite = new Sprite();
+		l_viewSprite.blendMode = BlendMode.Copy;
+		//l_viewSprite.scissor = new Rectangle(0, 0, 640, 480);
 		l_viewSprite.x._ = 0;
 		l_viewSprite.y._ = 0;
 		_flambeView.add(l_viewSprite);

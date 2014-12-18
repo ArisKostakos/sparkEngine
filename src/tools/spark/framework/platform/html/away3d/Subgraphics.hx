@@ -54,9 +54,6 @@ class Subgraphics
 	//Called from flambe's HtmlPltform to get the Context3D created by Away3D
 	public static function initAway3DStage3DgetContext3D():RenderingContext
 	{
-		//fix the haxe/js bug before running any js code
-		//untyped __js__('if (Object.defineProperty) Object.defineProperty(Array.prototype, "__class__", {enumerable: false});'); //I put that in the framework since it's not just for away3d ts but anything external javascript
-		
 		//@todo aris):  1. EASY: don't check by id to get the content: "content-canvas" but do it like flambe does it (using the property in flambe embeder on the html)
 		//				2. IMPORTANT: right now, the away3d.next.js will create a stage of default size: 640x480. What happens if flambe's content is NOT the same size as that (currently it's also 640x480)
 		//away3d ts Stage hack
@@ -121,35 +118,35 @@ class Subgraphics
 		
 		
 		
-		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		
 		// Clear the Context3D object
 		//if (_counterCount < _counterMax) 
-		//_stage3DProxy.clear();
+		//_stage3DProxy.clear(); //not neccessary since away3d view has layered and shared flags on
 		
 		//Flambe Prepare Render
-		_flambeDisplaySystem.willRender(); //DOES NOT DO AANYTHING. ITS EMPTY
-		
+		_flambeDisplaySystem.willRender(); //Does a clean IF DEF flambe_transparent
 		
 		
 		//query display for views in order (far away first)
 		//for each Active View Reference (there are in z-order)
 		for (activeViewReference in Sliced.display.projectActiveSpaceReference.activeStageReference.activeViewReferences)
 		{
+			//Does a flush, resets all vars, etc
 			_flambeDisplaySystem.didRender();
-			
+
 			//Render viewEntity
 			activeViewReference.renderer.renderView(activeViewReference.viewEntity);
 			
+			//Does a flush, resets all vars, etc
 			_flambeDisplaySystem.didRender();
 		}
 		
-		
-		//Flambe Finish Render
+		//Does a flush, resets all vars, etc
 		_flambeDisplaySystem.didRender();
 		
 		// Present the Context3D object to Stage3D
-		//_stage3DProxy.present();
+		//_stage3DProxy.present(); //not neccessary since away3d view has layered and shared flags on
 		
 		//_counterCount++;
 	}

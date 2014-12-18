@@ -6,6 +6,7 @@
 
  package tools.spark.sliced.services.std.display.managers.core;
 import away3d.containers.View3D;
+import away3d.core.managers.Stage3DManager;
 import tools.spark.sliced.services.std.display.renderers.interfaces.ILibrarySpecificRenderer;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameForm;
 
@@ -33,6 +34,17 @@ class Away3DViewManager implements IDisplayObjectManager
 		
 		var l_view3D:View3D = new View3D();
 		
+		var stage3Dmanager:Stage3DManager = Stage3DManager.getInstance(l_view3D.stage);
+		l_view3D.stage3DProxy = stage3Dmanager.getStage3DProxy(0);
+		l_view3D.shareContext = true;// false;
+		l_view3D.layeredView = true;// false;
+
+		
+		Console.info("away html new view created. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
+		stage3Dmanager.iRemoveStage3DProxy(stage3Dmanager.getStage3DProxy(1));
+		Console.info("away html view removed. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
+
+
 		update(l_view3D, p_gameEntity);
 		
 		return l_view3D;

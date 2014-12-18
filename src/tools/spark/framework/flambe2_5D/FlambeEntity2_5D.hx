@@ -10,6 +10,7 @@ import flambe.display.ImageSprite;
 import flambe.Entity;
 import tools.spark.framework.space2_5D.core.AEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
+import flambe.display.BlendMode;
 
 /**
  * ...
@@ -33,8 +34,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
 		var l_entity:Entity = new Entity();
-		var l_entityImageSprite:ImageSprite = new ImageSprite(Assets.getTexture("atomTexture"));
-				
+		var l_entityImageSprite:ImageSprite = new ImageSprite(Assets.getTexture("mainMenu"));
+		l_entityImageSprite.blendMode = BlendMode.Copy;
 		l_entity.add(l_entityImageSprite);
 
 		l_entityImageSprite.x._ = x;

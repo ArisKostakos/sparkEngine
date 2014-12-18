@@ -26,7 +26,6 @@ class Flambe2_5DSceneManager implements IDisplayObjectManager
 		_renderer = p_renderer;
 	}
 	
-	/* INTERFACE tools.spark.sliced.services.std.display.managers.interfaces.IDisplayObjectManager */
 	
 	public function create(p_gameEntity:IGameEntity):Dynamic 
 	{

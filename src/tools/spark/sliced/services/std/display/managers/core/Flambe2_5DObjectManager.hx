@@ -84,7 +84,8 @@ class Flambe2_5DObjectManager implements IDisplayObjectManager
 				l_entity2_5D.z = p_gameEntity.getState(p_state);
 		}
 		
-		//Not really sure about this... THIS IS SOO BAD!!!
+		//Not really sure about this... THIS IS SOO BAD!!! it will update everything on the real flambe instances
+		//not just the state currently being revalidated...
 		l_entity2_5D.updateInstances();
 	}
 	
