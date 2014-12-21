@@ -13,9 +13,11 @@ import tools.spark.sliced.core.AService;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EEventPrefab;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameTrigger;
+import tools.spark.sliced.core.Sliced;
 
 /**
- * ...
+ * This one needs a lot of reworking. apart from the comments below, consider this as well. If we try to raise an event but there are no triggers
+ * established for this event, there's no reason raising the event at all!!!! So may optimizations here.. rework it asap
  * @author Aris Kostakos
  */
 class Event extends AService implements IEvent
@@ -82,6 +84,16 @@ class Event extends AService implements IEvent
 		
 		//Push the trigger to the correct slot
 		_eventTypeFilterTriggers.get(l_eventType).get(l_eventFilter).push(p_gameTrigger);
+		
+		//Register Triggers to appropriate Services (where needed)
+		if (	l_eventType == MOUSE_LEFT_CLICK ||
+				l_eventType == MOUSE_RIGHT_CLICK ||
+				l_eventType == MOUSE_ENTERED ||
+				l_eventType == MOUSE_LEFT
+		   )
+		{
+			Sliced.input.pointer.registerTrigger(l_eventType,l_eventFilter);
+		}
 	}
 	
 	public function raiseEvent(p_eventType:EEventType, ?p_eventFilter:Dynamic):Void
@@ -156,10 +168,10 @@ class Event extends AService implements IEvent
 		_prefabConvertToType[EEventPrefab.UPDATE] = EEventType.UPDATE;
 		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_CLICK] = EEventType.MOUSE_LEFT_CLICK;
 		_prefabConvertToType[EEventPrefab.MOUSE_RIGHT_CLICK] = EEventType.MOUSE_RIGHT_CLICK;
-		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_CLICKED] = EEventType.MOUSE_LEFT_CLICKED;
-		_prefabConvertToType[EEventPrefab.MOUSE_RIGHT_CLICKED] = EEventType.MOUSE_RIGHT_CLICKED;
-		_prefabConvertToType[EEventPrefab.MOUSE_OVER] = EEventType.MOUSE_OVER;
-		_prefabConvertToType[EEventPrefab.MOUSE_OUT] = EEventType.MOUSE_OUT;
+		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_CLICKED] = EEventType.MOUSE_LEFT_CLICK;
+		_prefabConvertToType[EEventPrefab.MOUSE_RIGHT_CLICKED] = EEventType.MOUSE_RIGHT_CLICK;
+		_prefabConvertToType[EEventPrefab.MOUSE_ENTERED] = EEventType.MOUSE_ENTERED;
+		_prefabConvertToType[EEventPrefab.MOUSE_LEFT] = EEventType.MOUSE_LEFT;
 		_prefabConvertToType[EEventPrefab.KEY_PRESSED] = EEventType.KEY_PRESSED;
 		_prefabConvertToType[EEventPrefab.KEY_RELEASED] = EEventType.KEY_RELEASED;
 		_prefabConvertToType[EEventPrefab.KEY_PRESSED_ALT] = EEventType.KEY_PRESSED;
@@ -376,8 +388,8 @@ class Event extends AService implements IEvent
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_RIGHT_CLICK , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT_CLICKED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_RIGHT_CLICKED , _FILTER_VARIABLE_USER_ENTITY);
-		_prefabConvertToFilter.set(EEventPrefab.MOUSE_OVER , _FILTER_VARIABLE_USER_ENTITY);
-		_prefabConvertToFilter.set(EEventPrefab.MOUSE_OUT , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.MOUSE_ENTERED , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_PRESSED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_RELEASED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_PRESSED_ALT, Key.Alt);

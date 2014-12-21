@@ -5,6 +5,7 @@
  */
 
 package tools.spark.sliced.services.std.logic.gde.core;
+import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameForm;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameState;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameSpace;
@@ -50,12 +51,17 @@ class GameForm extends AGameBase implements IGameForm
 	// Set/Get State Value
 	public function getState(p_stateId:String):Dynamic
 	{
-		return gameStateSet.get(p_stateId).value;
+		if (gameStateSet.get(p_stateId) == null) return null;
+		else return gameStateSet.get(p_stateId).value;
 	}
 	
 	public function setState(p_stateId:String, p_value:Dynamic):Dynamic
 	{
 		gameStateSet.get(p_stateId).value = p_value;
+		
+		//Following line is the weak connection between Logic and Display
+		Sliced.display.updateDisplayObjectFormState(this.parentEntity,p_stateId);	
+		
 		return gameStateSet.get(p_stateId).value;
 	}
 }

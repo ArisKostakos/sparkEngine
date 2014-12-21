@@ -148,6 +148,19 @@ class AAway3DRenderer extends A3DRenderer implements ILibrarySpecificRenderer
 		//else, is it view, do this...  etc
 	}
 	
+	inline public function updateFormState ( p_objectEntity:IGameEntity, p_state:String):Void
+	{
+		//maybe check its display type here..
+		
+		//is it object, do this:
+		if (_objects[p_objectEntity] != null)
+		{
+			_objectManager.updateFormState(_objects[p_objectEntity], p_objectEntity.gameForm, p_state);
+		}
+		
+		//else, is it view, do this...  etc
+	}
+	
 	/*
 	public function destroyView ( p_viewEntity:IGameEntity):Void
 	{

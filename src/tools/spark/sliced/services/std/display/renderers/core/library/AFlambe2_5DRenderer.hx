@@ -130,4 +130,17 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		
 		//else, is it view, do this...  etc
 	}
+	
+	inline public function updateFormState ( p_objectEntity:IGameEntity, p_state:String):Void
+	{
+		//maybe check its display type here..
+		
+		//is it object, do this:
+		if (_objects[p_objectEntity] != null)
+		{
+			_objectManager.updateFormState(_objects[p_objectEntity], p_objectEntity.gameForm, p_state);
+		}
+		
+		//else, is it view, do this...  etc
+	}
 }

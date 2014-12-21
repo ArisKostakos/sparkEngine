@@ -5,6 +5,8 @@
  */
 
 package tools.spark.sliced.interfaces;
+import flambe.sound.Playback;
+import flambe.sound.Sound;
 
 /**
  * ...
@@ -12,5 +14,6 @@ package tools.spark.sliced.interfaces;
  */
 interface ISound extends IService
 {
-
+	function playSound(p_soundName:String, ?volume :Float):Playback;
+	function loopSound(p_soundName:String, ?volume :Float):Playback;
 }

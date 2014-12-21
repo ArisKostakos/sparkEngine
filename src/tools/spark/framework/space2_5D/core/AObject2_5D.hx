@@ -6,6 +6,7 @@
 
 package tools.spark.framework.space2_5D.core;
 import tools.spark.framework.space2_5D.interfaces.IObject2_5D;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -13,6 +14,7 @@ import tools.spark.framework.space2_5D.interfaces.IObject2_5D;
  */
 class AObject2_5D implements IObject2_5D
 {
+	public var gameEntity( default, default ):IGameEntity;
 	public var x( default, default ):Int;
 	public var y( default, default ):Int;
 	public var z( default, default ):Int;

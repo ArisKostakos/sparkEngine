@@ -53,11 +53,12 @@ class Display extends AService implements IDisplay
 	private var _activeReferenceMediator:IActiveReferenceMediator;
 	
 	private var _renderStateNames:Map<String,Bool>;
+	private var _renderFormStateNames:Map<String,Bool>;
 	
 	private function _initRenderStateNames():Void
 	{
-		_renderStateNames['posX'] = true;
-		_renderStateNames['posY'] = true;
+		_renderStateNames['sceneX'] = true;
+		_renderStateNames['sceneY'] = true;
 		_renderStateNames['stage'] = true;
 		_renderStateNames['view'] = true;
 		_renderStateNames['camera'] = true;
@@ -65,6 +66,14 @@ class Display extends AService implements IDisplay
 		_renderStateNames['space'] = true;
 		_renderStateNames['active'] = true;
 	}
+	
+	private function _initRenderFormStateNames():Void
+	{
+		_renderFormStateNames['SpriteUrl'] = true;
+		_renderFormStateNames['ModelUrl'] = true;
+	}
+	
+	
 	
 	public function new() 
 	{
@@ -81,6 +90,10 @@ class Display extends AService implements IDisplay
 		//Init Render StateNames
 		_renderStateNames = new Map<String,Bool>();
 		_initRenderStateNames();
+		
+		//Init Render Form StateNames
+		_renderFormStateNames = new Map<String,Bool>();
+		_initRenderFormStateNames();
 		
 		//Active Reference Mediator
 		_activeReferenceMediator = new ActiveReferenceMediator(this);
@@ -157,6 +170,9 @@ class Display extends AService implements IDisplay
 							for (renderer in platformRendererSet)
 								renderer.updateState(f_bufferEntry.source, f_bufferEntry.field);
 					}
+				case UPDATED_FORM_STATE:
+					for (renderer in platformRendererSet)
+						renderer.updateFormState(f_bufferEntry.source, f_bufferEntry.field);
 				default:
 					Console.warn("DISPLAY: Unhandled request: " + f_bufferEntry.type);
 			}
@@ -175,9 +191,20 @@ class Display extends AService implements IDisplay
 			_updateState(p_gameEntity, p_state);
 	}
 	
+	inline public function updateDisplayObjectFormState(p_gameEntity:IGameEntity, p_state:String):Void
+	{
+		if (p_gameEntity.getState('displayType')!=null && _renderFormStateNames[p_state]==true)
+			_updateFormState(p_gameEntity, p_state);
+	}
+	
 	private function _updateState(p_gameEntity:IGameEntity, p_state:String):Void
 	{
 		_dataBuffer.addEntry(UPDATED_STATE, p_gameEntity, p_state);
+	}
+	
+	private function _updateFormState(p_gameEntity:IGameEntity, p_state:String):Void
+	{
+		_dataBuffer.addEntry(UPDATED_FORM_STATE, p_gameEntity, p_state);
 	}
 	
 	//@todo: The display service should DISPLAY the console messages ON SCREEN

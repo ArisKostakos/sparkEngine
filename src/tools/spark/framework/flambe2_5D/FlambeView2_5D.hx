@@ -16,6 +16,7 @@ import flambe.display.BlendMode;
 import tools.spark.framework.space2_5D.interfaces.ICamera2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IScene2_5D;
+import flambe.System;
 
 /**
  * ...
@@ -50,6 +51,9 @@ class FlambeView2_5D extends AView2_5D
 		l_viewSprite.x._ = 0;
 		l_viewSprite.y._ = 0;
 		_flambeView.add(l_viewSprite);
+		
+		//Add flambe views that are active on root, for mouse listeners, physics, etc.. make sure you remove them if hidden, not active.
+		System.root.addChild(_flambeView);
 	}
 	
 	override public function render():Void
@@ -76,7 +80,7 @@ class FlambeView2_5D extends AView2_5D
 	{
 		for (f_childEntity in v.children)
 		{
-			Console.error(f_childEntity.name);
+			Console.error("Adding child: " + f_childEntity.name);
 			_flambeView.addChild(cast(f_childEntity.createInstance(this),Entity));
 		}
 		

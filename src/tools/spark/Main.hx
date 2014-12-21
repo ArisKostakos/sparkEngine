@@ -50,7 +50,7 @@ class Main
 			Console.error("Failed to parse configuration file. Aborting...");
 			return;
 		}
-		//test bb
+
 		//Init Sliced (For Client)
 		Sliced.init();
 		

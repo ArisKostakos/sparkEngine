@@ -16,6 +16,8 @@ import tools.spark.framework.space2_5D.interfaces.IView2_5D;
 class AEntity2_5D extends AObjectContainer2_5D implements IEntity2_5D
 {
 	public var name( default, default ):String;
+	public var spriteUrl( default, default ):String;
+	public var modelUrl( default, default ):String;
 	
 	public function new() 
 	{
@@ -29,7 +31,7 @@ class AEntity2_5D extends AObjectContainer2_5D implements IEntity2_5D
 		return null;
 	}
 	
-	public function updateInstances():Void
+	public function updateInstances(?updateState:String):Void
 	{
 		//override me!!
 	}

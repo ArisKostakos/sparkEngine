@@ -5,6 +5,7 @@
  */
 
 package tools.spark.framework.space2_5D.interfaces;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * @author Aris Kostakos
@@ -12,6 +13,7 @@ package tools.spark.framework.space2_5D.interfaces;
 
 interface IObject2_5D
 {
+  var gameEntity( default, default ):IGameEntity;
   var x( default, default ):Int;
   var y( default, default ):Int;
   var z( default, default ):Int;

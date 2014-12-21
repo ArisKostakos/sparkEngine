@@ -4,8 +4,10 @@
  * Written by Aris Kostakos <aris@spark.tools>, August 2013
  */
 
-package tools.spark.sliced.services.dummy;
+package tools.spark.sliced.services.std.sound.core;
 
+import flambe.sound.Playback;
+import tools.spark.framework.Assets;
 import tools.spark.sliced.interfaces.ISound;
 import tools.spark.sliced.core.AService;
 
@@ -23,7 +25,16 @@ class Sound extends AService implements ISound
 	
 	private function _init():Void
 	{
-		Console.log("Init Sound Dummy Service...");
+		Console.log("Init Sound std Service...");
 	}
 	
+	public function playSound(p_soundName:String, ?volume :Float):Playback
+	{
+		return Assets.getSound(p_soundName).play(volume);
+	}
+	
+	public function loopSound(p_soundName:String, ?volume :Float):Playback
+	{
+		return Assets.getSound(p_soundName).loop(volume);
+	}
 }

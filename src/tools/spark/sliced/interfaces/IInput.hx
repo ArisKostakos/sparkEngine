@@ -6,6 +6,8 @@
 
 package tools.spark.sliced.interfaces;
 import flambe.input.Key;
+import tools.spark.sliced.services.std.input.devices.core.KeyboardDevice;
+import tools.spark.sliced.services.std.input.devices.core.PointerDevice;
 
 /**
  * ...
@@ -14,7 +16,7 @@ import flambe.input.Key;
 interface IInput extends IService
 {
 	function update():Void;
-	function isKeyPressed( type:Key ):Bool;
-	function isKeyReleased( type:Key ):Bool;
-	function isKeyDown( type:Key ):Bool;
+	
+	var keyboard( default, null ):KeyboardDevice;
+	var pointer( default, null ):PointerDevice;
 }

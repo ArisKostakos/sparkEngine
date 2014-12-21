@@ -23,6 +23,7 @@ interface IDisplay extends IService
 	var platformRendererSet( default, null ):Array<IPlatformSpecificRenderer>;
 	
 	function updateDisplayObjectState(p_gameEntity:IGameEntity, p_state:String):Void;
+	function updateDisplayObjectFormState(p_gameEntity:IGameEntity, p_state:String):Void;
 	function setActiveSpace(p_spaceEntity:IGameEntity):Bool;
 
 	

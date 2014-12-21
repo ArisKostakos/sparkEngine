@@ -22,6 +22,7 @@ interface ILibrarySpecificRenderer extends IDimensionSpecificRenderer
 	
 	//delete me
 	function updateState ( p_objectEntity:IGameEntity, p_state:String):Void;
+	function updateFormState ( p_objectEntity:IGameEntity, p_state:String):Void;
 	
 	//function destroyView ( p_viewEntity:IGameEntity):Void;
 }

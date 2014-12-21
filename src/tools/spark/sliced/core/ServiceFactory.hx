@@ -20,8 +20,6 @@ import tools.spark.framework.Project;
  * So that it is packaged to the application, in case
  * it needs to be reflected.
  */
-//Dummy
-import tools.spark.sliced.services.dummy.Sound;
 import tools.spark.sliced.services.dummy.Comms;
 
 
@@ -30,6 +28,7 @@ import tools.spark.sliced.services.std.logic.core.Logic;
 import tools.spark.sliced.services.std.input.core.Input;
 import tools.spark.sliced.services.std.event.core.Event;
 import tools.spark.sliced.services.std.display.core.Display;
+import tools.spark.sliced.services.std.sound.core.Sound;
 
 /**
  * ...
