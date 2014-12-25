@@ -4,13 +4,13 @@
  * Written by Aris Kostakos <aris@spark.tools>, December 2014
  */
 
-package tools.spark.sliced.interfaces;
+package tools.spark.sliced.services.std.comms.sockets.interfaces;
 
 /**
- * ...
  * @author Aris Kostakos
  */
-interface IComms extends IService
-{
 
+interface ISocket 
+{
+	function init():Void;
 }

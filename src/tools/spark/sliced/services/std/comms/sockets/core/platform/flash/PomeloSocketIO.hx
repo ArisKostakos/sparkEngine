@@ -4,13 +4,24 @@
  * Written by Aris Kostakos <aris@spark.tools>, December 2014
  */
 
-package tools.spark.sliced.interfaces;
+package tools.spark.sliced.services.std.comms.sockets.core.platform.flash;
+
+import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-interface IComms extends IService
+class PomeloSocketIO implements ISocket
 {
 
+	public function new() 
+	{
+		
+	}
+	
+	public function init():Void
+	{
+		
+	}
 }
