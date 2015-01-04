@@ -1,17 +1,18 @@
 /* Copyright © Spark.tools - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Written by Aris Kostakos <aris@spark.tools>, November 2014
+ * Written by Aris Kostakos <aris@spark.tools>, January 2015
  */
 
 package tools.spark.framework.space2_5D.interfaces;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * @author Aris Kostakos
  */
 
-interface IObject2_5D extends IBase2_5D
+interface IBase2_5D
 {
-	//here be positioning logic functions
-	//...
+  var gameEntity( default, null ):IGameEntity;
+
 }

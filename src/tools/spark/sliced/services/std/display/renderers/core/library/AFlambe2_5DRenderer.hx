@@ -118,6 +118,22 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		return _objects[p_objectEntity];
 	}
 	
+	inline public function addChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void
+	{
+		//check the parent display type here.. For the childEntity, I'm ASSUMING it's an entity/object.. is that right??
+		switch (p_parentEntity.getState('displayType'))
+		{
+			case "Scene":
+				if (_scenes[p_parentEntity] != null)
+					_sceneManager.addTo(createObject(p_childEntity), _scenes[p_parentEntity]);
+			case "Entity":
+				if (_objects[p_parentEntity] != null)
+					_objectManager.addTo(createObject(p_childEntity), _objects[p_parentEntity]);
+			default:
+				Console.warn("AFlambe2_5DRenderer: Unhandled add child request: " + p_parentEntity.getState('displayType'));
+		}
+	}
+	
 	inline public function updateState ( p_objectEntity:IGameEntity, p_state:String):Void
 	{
 		//maybe check its display type here..

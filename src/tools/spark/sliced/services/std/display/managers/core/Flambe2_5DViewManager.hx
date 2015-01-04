@@ -34,9 +34,7 @@ class Flambe2_5DViewManager implements IDisplayObjectManager
 	{
 		//typecast?
 		
-		var l_view2_5D:FlambeView2_5D = new FlambeView2_5D(_flambeGraphics);
-		l_view2_5D.name = p_gameEntity.getState('name');
-		
+		var l_view2_5D:FlambeView2_5D = new FlambeView2_5D(p_gameEntity, _flambeGraphics);
 		
 		update(l_view2_5D, p_gameEntity);
 		
@@ -68,12 +66,12 @@ class Flambe2_5DViewManager implements IDisplayObjectManager
 				var l_sceneEntity:IGameEntity = p_gameEntity.getState(p_state);
 				
 				l_view2_5D.scene = _renderer.createScene(l_sceneEntity);
-				Console.error("Scene Name: " + l_view2_5D.scene.name);
+				Console.log("Scene Name: " + l_view2_5D.scene.name);
 			case 'camera':
 				var l_cameraEntity:IGameEntity = p_gameEntity.getState(p_state);
 				
 				l_view2_5D.camera = _renderer.createCamera(l_cameraEntity);
-				Console.error("Camera Name: " + l_view2_5D.camera.name);
+				Console.log("Camera Name: " + l_view2_5D.camera.name);
 		}
 	}
 	

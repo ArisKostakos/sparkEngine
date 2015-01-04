@@ -57,8 +57,11 @@ class Display extends AService implements IDisplay
 	
 	private function _initRenderStateNames():Void
 	{
-		_renderStateNames['sceneX'] = true;
-		_renderStateNames['sceneY'] = true;
+		_renderStateNames['stageX'] = true;
+		_renderStateNames['stageY'] = true;
+		_renderStateNames['spaceX'] = true;
+		_renderStateNames['spaceY'] = true;
+		_renderStateNames['spaceZ'] = true;
 		_renderStateNames['stage'] = true;
 		_renderStateNames['view'] = true;
 		_renderStateNames['camera'] = true;
@@ -155,6 +158,21 @@ class Display extends AService implements IDisplay
 			{
 				case SET_SPACE:
 					_setActiveSpace(f_bufferEntry.source);
+				case ADDED:
+					switch (f_bufferEntry.source.getState('displayType'))
+					{
+						case "Space":
+							Console.warn("adding something to a space");//...
+						case "Stage":
+							Console.warn("adding something to a stage");//...
+						case "View":
+							Console.warn("adding something to a view");//...
+							for (renderer in platformRendererSet)
+								Console.warn("adding something to a view, renderer logic");//...
+						default:
+							for (renderer in platformRendererSet)
+								renderer.addChild(f_bufferEntry.source, f_bufferEntry.target);
+					}
 				case UPDATED_STATE:
 					switch (f_bufferEntry.source.getState('displayType'))
 					{
@@ -185,6 +203,12 @@ class Display extends AService implements IDisplay
 		//after the Display.update, the platform.subgraphics system will request a render() for each view from their assigned renderer
 	}
 	
+	inline public function addDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void
+	{
+		if (p_gameEntityParent.getState('displayType')!=null && p_gameEntityChild.getState('displayType')!=null)
+			_addChild(p_gameEntityParent, p_gameEntityChild);
+	}
+	
 	inline public function updateDisplayObjectState(p_gameEntity:IGameEntity, p_state:String):Void
 	{
 		if (p_gameEntity.getState('displayType')!=null && _renderStateNames[p_state]==true)
@@ -197,12 +221,17 @@ class Display extends AService implements IDisplay
 			_updateFormState(p_gameEntity, p_state);
 	}
 	
-	private function _updateState(p_gameEntity:IGameEntity, p_state:String):Void
+	inline private function _addChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void
+	{
+		_dataBuffer.addEntry(ADDED, p_gameEntityParent, p_gameEntityChild);
+	}
+	
+	inline private function _updateState(p_gameEntity:IGameEntity, p_state:String):Void
 	{
 		_dataBuffer.addEntry(UPDATED_STATE, p_gameEntity, p_state);
 	}
 	
-	private function _updateFormState(p_gameEntity:IGameEntity, p_state:String):Void
+	inline private function _updateFormState(p_gameEntity:IGameEntity, p_state:String):Void
 	{
 		_dataBuffer.addEntry(UPDATED_FORM_STATE, p_gameEntity, p_state);
 	}

@@ -7,19 +7,17 @@
 package tools.spark.framework.space2_5D.core;
 
 import tools.spark.framework.space2_5D.interfaces.ICamera2_5D;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class Camera2_5D extends AObject2_5D implements ICamera2_5D
+class ACamera2_5D extends AObject2_5D implements ICamera2_5D
 {
-	public var name( default, default ):String;
-	
-	public function new() 
+	private function new(p_gameEntity:IGameEntity) 
 	{
-		super();
-		
+		super(p_gameEntity);
 	}
 	
 }

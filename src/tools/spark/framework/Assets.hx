@@ -6,6 +6,7 @@
 
 package tools.spark.framework;
 
+import flambe.asset.AssetPack;
 import tools.spark.framework.assets.FlambeLoader;
 import flambe.asset.File;
 import flambe.display.Texture;
@@ -57,7 +58,7 @@ class Assets
 	
 	private static function _onLoaderProgress(p_progress:Float, p_total:Float):Void
 	{
-		trace("Assets: Progress: Loaded " + p_progress + " Bytes out of " + p_total + " total Bytes...");
+		//trace("Assets: Progress: Loaded " + p_progress + " Bytes out of " + p_total + " total Bytes...");
 		progressSignal.emit(p_progress, p_total);
 	}
 	
@@ -76,6 +77,12 @@ class Assets
 	public static function loadBatch():Void
 	{
 		_loader.initiateLoad();
+	}
+	
+	
+	public static function getAssetPackOf(p_name:String):AssetPack
+	{
+		return _loader.getAssetPackOf(p_name);
 	}
 	
 	public static function getFile(p_name:String):File

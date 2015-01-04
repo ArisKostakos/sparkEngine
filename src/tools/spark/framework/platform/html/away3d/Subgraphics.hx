@@ -118,7 +118,7 @@ class Subgraphics
 		
 		
 		
-		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		
 		// Clear the Context3D object
 		//if (_counterCount < _counterMax) 

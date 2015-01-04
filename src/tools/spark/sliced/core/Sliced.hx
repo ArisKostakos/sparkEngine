@@ -56,5 +56,8 @@ class Sliced
 		
 		//Display Update
 		Sliced.display.update();
+		
+		//Comms Update
+		Sliced.comms.update();
 	}
 }

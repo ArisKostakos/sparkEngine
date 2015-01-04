@@ -14,10 +14,10 @@ haxe_flags: -lib hscript
 
 # Additional paths to include in the build
 extra_paths:
-#   assets: C:\Users\LLaffer\Documents\GamePlus_Projects\ArkanoidPrototype\EmbeddedAssets
-#   libs: dir1 dir2
-#   src: ../dir1 ../dir2
-   web: ["web_html_2d"]
+#  assets: C:\Users\LLaffer\Documents\GamePlus_Projects\ArkanoidPrototype\EmbeddedAssets
+#  libs: C:\HaxeToolkit\haxe\lib\pomelo-client-html\vendor
+#  src: C:\HaxeToolkit\haxe\lib\pomelo-client-html\src
+   web: ["web_html_2d", "vendor"]
 
 # The initial orientation and fullscreen state
 orientation: portrait

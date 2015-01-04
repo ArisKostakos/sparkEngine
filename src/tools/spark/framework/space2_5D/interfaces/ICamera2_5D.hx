@@ -12,5 +12,5 @@ package tools.spark.framework.space2_5D.interfaces;
 
 interface ICamera2_5D extends IObject2_5D
 {
-	var name( default, default ):String;
+
 }

@@ -10,9 +10,8 @@ package tools.spark.framework.space2_5D.interfaces;
  * @author Aris Kostakos
  */
 
-interface IView2_5D
+interface IView2_5D extends IBase2_5D
 {
-	var name( default, default ):String;
 	var scene( default, set ):IScene2_5D;
 	var camera( default, set ):ICamera2_5D;
 	function render():Void;

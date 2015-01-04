@@ -135,6 +135,14 @@ class GameEntity extends AGameBase implements IGameEntity
 		return gameStateSet.get(p_stateId).value;
 	}
 	
+	public function addChild(p_gameEntity:IGameEntity):Void
+	{
+		children.push(p_gameEntity);
+		
+		//Following line is the weak connection between Logic and Display
+		Sliced.display.addDisplayObjectChild(this,p_gameEntity);
+	}
+	
 	public function getChildren():Array<IGameEntity>
 	{
 		return children;

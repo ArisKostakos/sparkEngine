@@ -44,7 +44,7 @@ class Away3DViewManager implements IDisplayObjectManager
 		stage3Dmanager.iRemoveStage3DProxy(stage3Dmanager.getStage3DProxy(1));
 		Console.info("away html view removed. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
 
-
+		//l_view3D.backgroundColor = 0xff0000;
 		update(l_view3D, p_gameEntity);
 		
 		return l_view3D;

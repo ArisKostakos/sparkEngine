@@ -4,7 +4,7 @@
  * Written by Aris Kostakos <aris@spark.tools>, December 2014
  */
 
-package tools.spark.sliced.services.std.comms.sockets.core.platform.flash;
+package tools.spark.sliced.services.std.comms.sockets.core.pomelo.platform.flash.socketio;
 
 import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
 
@@ -12,7 +12,7 @@ import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
  * ...
  * @author Aris Kostakos
  */
-class PomeloSocketIO implements ISocket
+class Socket implements ISocket
 {
 
 	public function new() 

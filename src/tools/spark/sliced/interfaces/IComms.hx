@@ -12,5 +12,6 @@ package tools.spark.sliced.interfaces;
  */
 interface IComms extends IService
 {
-
+	function connectTo(p_hostname:String, p_port:String, ?p_serverIdentifier:String):Void;
+	function update():Void;
 }

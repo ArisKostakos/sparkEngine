@@ -85,6 +85,11 @@ class FlambeLoader
 		_assetToBatchLoad[p_name]= _manifest;
 	}
 	
+	public function getAssetPackOf(p_name:String):AssetPack
+	{
+		return _batchLoadToAssetPack[_assetToBatchLoad[p_name]];
+	}
+	
 	public function getFile(p_name:String):File
 	{
 		return _batchLoadToAssetPack[_assetToBatchLoad[p_name]].getFile(p_name);

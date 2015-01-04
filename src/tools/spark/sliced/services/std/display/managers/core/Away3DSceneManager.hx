@@ -28,7 +28,6 @@ class Away3DSceneManager implements IDisplayObjectManager
 		_renderer = p_renderer;
 	}
 	
-	/* INTERFACE tools.spark.sliced.services.std.display.managers.interfaces.IDisplayObjectManager */
 	
 	public function create(p_gameEntity:IGameEntity):Dynamic 
 	{
@@ -36,6 +35,8 @@ class Away3DSceneManager implements IDisplayObjectManager
 		
 		var l_scene3D:Scene3D = new Scene3D();
 		
+		//Temp Lighting
+		_deletemeCreateLight(l_scene3D);
 		
 		update(l_scene3D,p_gameEntity);
 		
@@ -87,5 +88,26 @@ class Away3DSceneManager implements IDisplayObjectManager
 	{
 		//typecast?
 		
+	}
+	
+	private var _deleteMeMainLight:away3d.lights.DirectionalLight;
+	public static var _deleteMeMainLightpicker:away3d.materials.lightpickers.StaticLightPicker;
+	
+	private function _deletemeCreateLight(p_scene:Scene3D):Void
+	{
+		var directionalLight:away3d.lights.DirectionalLight = new away3d.lights.DirectionalLight();
+		directionalLight.ambientColor = 0xFFFFFF;
+		directionalLight.color = 0xFFFFFF;
+		directionalLight.ambient = 0.39;
+		directionalLight.castsShadows = false;
+		directionalLight.specular = 0.8;
+		directionalLight.diffuse = 0.6;
+		directionalLight.name = "MainLight";
+		//directionalLight.direction = new Vector3D(-0.7376268918178536, -0.4171149406714452, -0.5309629881034924);
+		p_scene.addChild(directionalLight);
+		
+		_deleteMeMainLight = directionalLight;
+		
+		_deleteMeMainLightpicker = new away3d.materials.lightpickers.StaticLightPicker([_deleteMeMainLight]);
 	}
 }

@@ -70,7 +70,7 @@ class ModuleManager
 	
 	private static function _onLoaderProgress(p_progress:Float, p_total:Float):Void
 	{
-		trace("Module Loader: Progress: Loaded " + p_progress + " Bytes out of " + p_total + " total Bytes...");
+		//trace("Module Loader: Progress: Loaded " + p_progress + " Bytes out of " + p_total + " total Bytes...");
 		//progressSignal.emit(p_progress, p_total);
 	}
 	
@@ -144,13 +144,13 @@ class ModuleManager
 	
 	private static function _loadModule(p_moduleName:String):Void
 	{
-		Console.warn("LOADING MODULE: " + p_moduleName);
+		Console.log("LOADING MODULE: " + p_moduleName);
 		if (getModuleState(p_moduleName) == NOT_LOADED)
 		{
 			//@todo Watch for Recursion for two modules both requiring one another!
 			for (f_requiredModuleName in Project.modules[p_moduleName].requiresModules)
 			{
-				Console.error("LOADING MODULE REQUIREMENT: " + f_requiredModuleName);
+				Console.log("LOADING MODULE REQUIREMENT: " + f_requiredModuleName);
 				if (getModuleState(f_requiredModuleName) == NOT_LOADED)
 					_loadModule(f_requiredModuleName);
 			}

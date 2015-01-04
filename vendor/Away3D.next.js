@@ -7478,8 +7478,8 @@ var away;
         var Stage = (function (_super) {
             __extends(Stage, _super);
             function Stage(width, height) {
-                if (typeof width === "undefined") { width = 640; }
-                if (typeof height === "undefined") { height = 480; }
+                if (typeof width === "undefined") { width = 1024; }
+                if (typeof height === "undefined") { height = 580; }
                 _super.call(this);
 
                 if (!document) {

@@ -35,6 +35,8 @@ class Away3DCameraManager implements IDisplayObjectManager
 		
 		var l_camera3D:Camera3D = new Camera3D();
 		
+		l_camera3D.x = 450;
+		l_camera3D.z -= 700;
 		
 		return l_camera3D;
 	}

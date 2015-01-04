@@ -8,6 +8,7 @@ package tools.spark.framework.space2_5D.core;
 
 import tools.spark.framework.space2_5D.interfaces.IObjectContainer2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -17,9 +18,9 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 {
 	public var children( default, null ):Array<IEntity2_5D>;
 	
-	public function new() 
+	private function new(p_gameEntity:IGameEntity) 
 	{
-		super();
+		super(p_gameEntity);
 		children = new Array<IEntity2_5D>();
 	}
 	

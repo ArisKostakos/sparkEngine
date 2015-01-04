@@ -4,7 +4,7 @@
  * Written by Aris Kostakos <aris@spark.tools>, December 2014
  */
 
-package tools.spark.sliced.services.std.comms.sockets.core.platform.html5;
+package tools.spark.sliced.services.std.comms.sockets.core.pomelo.platform.flash.websocket;
 
 import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
 
@@ -12,17 +12,11 @@ import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
  * ...
  * @author Aris Kostakos
  */
-class PomeloWebsocket implements ISocket
+class Socket implements ISocket
 {
 
 	public function new() 
 	{
-		_init();
-	}
-	
-	private inline _init():Void
-	{
-		//INCLUDE RAW JS CODE HERE...
 		
 	}
 	

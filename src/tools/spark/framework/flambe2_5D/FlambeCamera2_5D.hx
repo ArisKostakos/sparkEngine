@@ -6,8 +6,7 @@
 
 package tools.spark.framework.flambe2_5D;
 
-import flambe.Entity;
-import tools.spark.framework.space2_5D.core.AScene2_5D;
+import tools.spark.framework.space2_5D.core.ACamera2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
@@ -15,19 +14,19 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  * ...
  * @author Aris Kostakos
  */
-class FlambeScene2_5D extends AScene2_5D
+class FlambeCamera2_5D extends ACamera2_5D
 {
-	private var _instances:Map<IView2_5D,Entity>;
+	private var _addedToViews:Map<IView2_5D,IView2_5D>;
 	
 	public function new(p_gameEntity:IGameEntity)
 	{
 		super(p_gameEntity);
-		_initFlambeScene2_5D();
+		_initFlambeCamera2_5D();
 	}
 	
-	private function _initFlambeScene2_5D()
+	private function _initFlambeCamera2_5D()
 	{
-		_instances = new Map<IView2_5D,Entity>();
+		_addedToViews = new Map<IView2_5D,IView2_5D>();
 	}
 	
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic

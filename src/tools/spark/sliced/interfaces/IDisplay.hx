@@ -22,10 +22,11 @@ interface IDisplay extends IService
 	var projectActiveSpaceReference( default, null ):IActiveSpaceReference;
 	var platformRendererSet( default, null ):Array<IPlatformSpecificRenderer>;
 	
+	function setActiveSpace(p_spaceEntity:IGameEntity):Bool;
+	function addDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void;
 	function updateDisplayObjectState(p_gameEntity:IGameEntity, p_state:String):Void;
 	function updateDisplayObjectFormState(p_gameEntity:IGameEntity, p_state:String):Void;
-	function setActiveSpace(p_spaceEntity:IGameEntity):Bool;
-
+	
 	
 	function update():Void;
 	

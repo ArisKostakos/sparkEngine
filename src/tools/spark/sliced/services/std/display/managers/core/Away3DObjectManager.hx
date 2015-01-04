@@ -28,7 +28,6 @@ class Away3DObjectManager implements IDisplayObjectManager
 		_renderer = p_renderer;
 	}
 	
-	/* INTERFACE tools.spark.sliced.services.std.display.managers.interfaces.IDisplayObjectManager */
 	
 	public function create(p_gameEntity:IGameEntity):Dynamic 
 	{
@@ -39,7 +38,8 @@ class Away3DObjectManager implements IDisplayObjectManager
 		
 		
 		var l_geometry:SphereGeometry = new SphereGeometry();
-		var l_material:ColorMaterial = new ColorMaterial(0xFF0000);
+		var l_material:ColorMaterial = new ColorMaterial(Std.int(Math.random()*(13421772-10000)+10000));
+		l_material.lightPicker = Away3DSceneManager._deleteMeMainLightpicker;
 		var l_mesh:Mesh = new Mesh(l_geometry, l_material);
 		
 		//l_object3D.x = Math.random() * 500;
@@ -63,9 +63,9 @@ class Away3DObjectManager implements IDisplayObjectManager
 	{
 		//typecast?
 		
-		updateState(p_object, p_gameEntity, 'posX');
-		updateState(p_object, p_gameEntity, 'posY');
-		updateState(p_object, p_gameEntity, 'posZ');
+		updateState(p_object, p_gameEntity, 'spaceX');
+		updateState(p_object, p_gameEntity, 'spaceY');
+		updateState(p_object, p_gameEntity, 'spaceZ');
 	}
 	
 	public function updateState(p_object:Dynamic, p_gameEntity:IGameEntity, p_state:String):Void 
@@ -74,11 +74,11 @@ class Away3DObjectManager implements IDisplayObjectManager
 		
 		switch (p_state)
 		{
-			case 'posX':
+			case 'spaceX':
 				p_object.x = p_gameEntity.getState(p_state);
-			case 'posY':
+			case 'spaceY':
 				p_object.y = p_gameEntity.getState(p_state);
-			case 'posZ':
+			case 'spaceZ':
 				p_object.z = p_gameEntity.getState(p_state);
 		}
 		

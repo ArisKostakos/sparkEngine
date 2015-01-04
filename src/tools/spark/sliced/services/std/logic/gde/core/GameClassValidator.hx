@@ -288,6 +288,9 @@ class GameClassValidator implements IGameClassValidator
 		var l_children:Rule = RData(FEnum([
 								_xmlEventPrefabToName[EEventPrefab.CREATED],
 								_xmlEventPrefabToName[EEventPrefab.UPDATE],
+								_xmlEventPrefabToName[EEventPrefab.NETWORK_CONNECTED],
+								_xmlEventPrefabToName[EEventPrefab.NETWORK_REQUEST],
+								_xmlEventPrefabToName[EEventPrefab.NETWORK_SERVER_EVENT],
 								_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICK],
 								_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICK],
 								_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICKED],

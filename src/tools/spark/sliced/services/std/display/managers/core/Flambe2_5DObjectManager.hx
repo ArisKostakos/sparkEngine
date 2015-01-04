@@ -33,12 +33,8 @@ class Flambe2_5DObjectManager implements IDisplayObjectManager
 		
 		var l_object2_5D:FlambeEntity2_5D = new FlambeEntity2_5D();
 		l_object2_5D.name = p_gameEntity.getState('name');
-		l_object2_5D.gameEntity = p_gameEntity; //Why store the gameEntity you ask? For when renderers want to send 
-		//stuff back to sliced, like tell them which game eneity was actually clicked by the mouse, physics collisions, etc..
-		//actually, might as well rely more on this.. no need to update x,y,z, rot,scale, name, all that stuff to the flame2.5 entities..
-		//i dont thing doing a get state for x,y,z, is too much.. or is it?? it will happen a lot. hmmm.
-		//What if i make an optimization exception, to store x,y,z as variables, and let everything else stored on the gameEntity?
-		//since its x,y,z that will need to be accessed all the time and nothing else... i kinda like this idea....
+		l_object2_5D.gameEntity = p_gameEntity;
+		
 		update(l_object2_5D, p_gameEntity);
 		
 		return l_object2_5D;
@@ -55,15 +51,7 @@ class Flambe2_5DObjectManager implements IDisplayObjectManager
 		//typecast
 		var l_entity2_5D:FlambeEntity2_5D = cast(p_object, FlambeEntity2_5D);
 		
-		updateState(l_entity2_5D, p_gameEntity, 'spaceX');
-		updateState(l_entity2_5D, p_gameEntity, 'spaceY');
-		updateState(l_entity2_5D, p_gameEntity, 'spaceZ');
-		
-		updateFormState(l_entity2_5D, p_gameEntity.gameForm, 'SpriteUrl');
-		updateFormState(l_entity2_5D, p_gameEntity.gameForm, 'ModelUrl');
-		
-		//Not really sure about this...
-		l_entity2_5D.updateInstances();
+		l_entity2_5D.update();
 	}
 	
 	public function updateState(p_object:Dynamic, p_gameEntity:IGameEntity, p_state:String):Void 

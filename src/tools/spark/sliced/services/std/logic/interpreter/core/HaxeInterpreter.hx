@@ -108,7 +108,7 @@ class HaxeInterpreter implements IInterpreter
 		{
 			if (Std.string(script) == Std.string(_hashTable[hashId]))
 			{
-				Console.log('Same Script found: [$script] in hashId: [$hashId]');
+				//Console.log('Same Script found: [$script] in hashId: [$hashId]');
 				return hashId;
 			}
 			else
@@ -119,7 +119,7 @@ class HaxeInterpreter implements IInterpreter
 		}
 		else
 		{
-			Console.log('Entering hashId: [$hashId] with Script: $script');
+			//Console.log('Entering hashId: [$hashId] with Script: $script');
 			_hashTable[hashId] = script;
 			return hashId;
 		}

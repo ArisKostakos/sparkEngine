@@ -86,10 +86,10 @@ class ViewReferenceManager implements IDisplayObjectManager
 		if (p_viewReference.renderer == null)
 		{
 			//@FIX NOW: When renderer selection is done, fix this so it picks the appropriate renderer. Now it will assign every view to a fixed renderer!
-			//if (p_viewReference.viewEntity.getState('name')=="GUI View")
+			if (p_viewReference.viewEntity.getState('name')=="Away3D")
+				p_viewReference.renderer = _activeReferenceMediator.display.platformRendererSet[1];
+			else
 				p_viewReference.renderer = _activeReferenceMediator.display.platformRendererSet[0];
-			//else
-			//	p_viewReference.renderer = _activeReferenceMediator.display.platformRendererSet[1];
 			
 			//This is huge... starting to talk to renderers here!! right place to do that??? Sure why not...
 			p_viewReference.renderer.createView(p_viewReference.viewEntity);

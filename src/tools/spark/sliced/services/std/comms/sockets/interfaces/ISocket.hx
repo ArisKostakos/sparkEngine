@@ -12,5 +12,9 @@ package tools.spark.sliced.services.std.comms.sockets.interfaces;
 
 interface ISocket 
 {
-	function init():Void;
+	function init(p_hostName:String, p_port:String, p_log:Bool = false, ?p_callBack:Void->Void):Void;
+	function request(p_route:String, p_msg:Dynamic, ?p_callBack:Dynamic->Void):Void;
+	function notify(p_route:Dynamic, p_msg:Dynamic):Void;
+	function on(p_route:String, ?p_callback:Dynamic->Void):Void;
+	function disconnect():Void;
 }

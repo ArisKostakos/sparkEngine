@@ -4,7 +4,7 @@
  * Written by Aris Kostakos <aris@spark.tools>, December 2014
  */
 
-package tools.spark.sliced.services.std.comms.sockets.core.platform.html5;
+package tools.spark.sliced.services.std.comms.sockets.core.pomelo.platform.html5.socketio;
 
 import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
 
@@ -12,7 +12,7 @@ import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
  * ...
  * @author Aris Kostakos
  */
-class PomeloSocketIO implements ISocket
+class Socket implements ISocket
 {
 
 	public function new() 
@@ -20,7 +20,7 @@ class PomeloSocketIO implements ISocket
 		
 	}
 	
-	public function init():Void
+	public function init(p_hostName:String, p_port:String, p_log:Bool=false, ?p_callBack:Dynamic->Void):Void
 	{
 		
 	}
