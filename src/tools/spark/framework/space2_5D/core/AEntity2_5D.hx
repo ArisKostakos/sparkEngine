@@ -28,7 +28,7 @@ class AEntity2_5D extends AObjectContainer2_5D implements IEntity2_5D
 		return null;
 	}
 	
-	public function updateInstances(?updateState:String):Void
+	public function update(?p_view2_5D:IView2_5D):Void
 	{
 		//override me!!
 	}

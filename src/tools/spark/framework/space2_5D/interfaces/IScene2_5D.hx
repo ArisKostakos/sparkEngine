@@ -16,5 +16,4 @@ interface IScene2_5D extends IBase2_5D
 	function addChild( p_entity2_5D:IEntity2_5D):Void;
 	
 	function createInstance (p_view2_5D:IView2_5D):Dynamic;
-	function updateInstances(?updateState:String):Void;
 }

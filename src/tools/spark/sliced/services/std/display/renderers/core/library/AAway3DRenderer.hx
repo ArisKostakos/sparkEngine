@@ -127,12 +127,16 @@ class AAway3DRenderer extends A3DRenderer implements ILibrarySpecificRenderer
 	
 	public function createObject ( p_objectEntity:IGameEntity):Dynamic
 	{
-		if (_objects[p_objectEntity] != null)
-			Console.warn("Object " + p_objectEntity.getState('name') + " has already been added to this Away3DRenderer. Ignoring...");
-		else
-			_objects[p_objectEntity] = cast(_objectManager.create(p_objectEntity),ObjectContainer3D);
-		
-		return _objects[p_objectEntity];
+		if (p_objectEntity.getState('displayType')=="Entity")
+		{
+			if (_objects[p_objectEntity] != null)
+				Console.warn("Object " + p_objectEntity.getState('name') + " has already been added to this Away3DRenderer. Ignoring...");
+			else
+				_objects[p_objectEntity] = cast(_objectManager.create(p_objectEntity),ObjectContainer3D);
+			
+			return _objects[p_objectEntity];
+		}
+		else return null;
 	}
 	
 	inline public function addChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void

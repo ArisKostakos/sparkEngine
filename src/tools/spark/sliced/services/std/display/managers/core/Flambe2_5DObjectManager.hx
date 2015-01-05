@@ -31,11 +31,10 @@ class Flambe2_5DObjectManager implements IDisplayObjectManager
 	{
 		//typecast?
 		
-		var l_object2_5D:FlambeEntity2_5D = new FlambeEntity2_5D();
-		l_object2_5D.name = p_gameEntity.getState('name');
-		l_object2_5D.gameEntity = p_gameEntity;
+		var l_object2_5D:FlambeEntity2_5D = new FlambeEntity2_5D(p_gameEntity);
 		
-		update(l_object2_5D, p_gameEntity);
+		//No need for this. space 2_5D entities get updated only when added to an active view
+		//update(l_object2_5D, p_gameEntity);
 		
 		return l_object2_5D;
 	}
@@ -59,39 +58,17 @@ class Flambe2_5DObjectManager implements IDisplayObjectManager
 		//typecast
 		var l_entity2_5D:FlambeEntity2_5D = cast(p_object, FlambeEntity2_5D);
 		
-		switch (p_state)
-		{
-			case 'spaceX':
-				l_entity2_5D.x = p_gameEntity.getState(p_state);
-			case 'spaceY':
-				l_entity2_5D.y = p_gameEntity.getState(p_state);
-			case 'spaceZ':
-				l_entity2_5D.z = p_gameEntity.getState(p_state);
-		}
-		
-		//Not really sure about this... THIS IS SOO BAD!!! it will update everything on the real flambe instances
-		//not just the state currently being revalidated... and ALSO, it happens like 3 billion times (if you do update();)
-		l_entity2_5D.updateInstances();
+		l_entity2_5D.updateState(p_state);
 	}
 	
 	public function updateFormState(p_object:Dynamic, p_gameForm:IGameForm, p_state:String):Void 
 	{
+		/*  ****************************FORM STATE UPDATE DEPRECATED*************************
 		//typecast
 		var l_entity2_5D:FlambeEntity2_5D = cast(p_object, FlambeEntity2_5D);
 		
-		switch (p_state)
-		{
-			case 'SpriteUrl':
-				l_entity2_5D.spriteUrl = p_gameForm.getState(p_state);
-				l_entity2_5D.updateInstances(p_state);
-				//Console.error("updating sprite url of: " + l_entity2_5D.name + "to: " + p_gameForm.getState(p_state));
-			case 'ModelUrl':
-				l_entity2_5D.modelUrl = p_gameForm.getState(p_state);
-		}
-		
-		//Not really sure about this... THIS IS SOO BAD!!! it will update everything on the real flambe instances
-		//not just the state currently being revalidated... and ALSO, it happens like 3 billion times (if you do update();)
-		//l_entity2_5D.updateInstances();
+		l_entity2_5D.updateFormState(p_state);
+		*/
 	}
 	
 	public function addTo(p_objectChild:Dynamic, p_objectParent:Dynamic):Void

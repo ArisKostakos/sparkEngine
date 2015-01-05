@@ -31,7 +31,7 @@ class GameEntity extends AGameBase implements IGameEntity
 	public function new() 
 	{
 		super();
-		Console.log ("Game Entity Created");
+		//Console.log ("Game Entity Created");
 		
 		_init();
 	}

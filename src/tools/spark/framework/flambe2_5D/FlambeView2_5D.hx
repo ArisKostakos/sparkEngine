@@ -41,43 +41,47 @@ class FlambeView2_5D extends AView2_5D
 	private inline function _initFlambeView2_5D():Void
 	{
 		_instanceView = new Entity();
-
-		//color
-		var l_bakcgroundColor:Int;
-		l_bakcgroundColor = 0x00ff00;
 		
-		//var l_viewSprite:FillSprite = new FillSprite(l_bakcgroundColor, 640, 480);
+		//var l_viewSprite:FillSprite = new FillSprite(0x00ff00,1024,580);
 		var l_viewSprite:Sprite = new Sprite();
 		l_viewSprite.blendMode = BlendMode.Copy;
 		//l_viewSprite.scissor = new Rectangle(0, 0, 640, 480);
-		l_viewSprite.x._ = 0;
-		l_viewSprite.y._ = 0;
+		//l_viewSprite.x._ = 0;
+		//l_viewSprite.y._ = 0;
 		_instanceView.add(l_viewSprite);
 		
-		//Add flambe views that are active on root, for mouse listeners, physics, etc.. make sure you remove them if hidden, not active.
-		System.root.addChild(_instance);
+		//Add flambe views that are active on root, for mouse listeners, physics, etc.. make sure you remove them if hidden, not active. remember this is for physics/event listeners only.. view will still render and be visible even if removed from the root
+		System.root.addChild(_instanceView);
 	}
 	
 	override public function render():Void
 	{
-		//Console.warn("Rendering a brand new flambe 2.5 View, yeah boy!");
-		
-		//calculate positions (update dirty entities)?
-		//scene.validate(camera);
-		
-		//update dirty camera (calculate all positions)?
-		
-		//validate
-		//validate();
-		
 		//render
 		Sprite.render(_instanceView, _flambeGraphics);
 	}
 	
 	override private function set_camera( p_value : ICamera2_5D ) : ICamera2_5D 
 	{
-		//update scene pos here required? think so...
-        return camera = p_value;
+		//If the camera is already attached to this view, do nothing
+		if (camera == p_value)
+			return camera;
+			
+		if (p_value == null)
+		{
+			camera = null;
+			//_disposeCurrentCamera();
+			_updateCurrentView();
+			return null;
+		}
+			
+		//instanciate camera
+		camera = p_value;
+		camera.createInstance(this);
+		
+		//UPDATE VIEW
+		_updateCurrentView();
+		
+		return camera;
     }
 	
 	override private function set_scene( p_value : IScene2_5D ) : IScene2_5D 
@@ -89,8 +93,10 @@ class FlambeView2_5D extends AView2_5D
 		//This means, everything should be destroyed.. except, if you want to keep them and just 'remove them from stage'
 		if (p_value == null)
 		{
+			scene = null;
 			_disposeCurrentScene();
-			return scene = null;
+			_updateCurrentView();
+			return null;
 		}
 			
 		//@todo: remove previous scene, possibly dispose a lot of stuff..
@@ -103,7 +109,8 @@ class FlambeView2_5D extends AView2_5D
 		scene = p_value;
 		_instanciateCurrentScene();
 		
-		
+		//UPDATE VIEW
+		_updateCurrentView();
 		
         return scene;
     }
@@ -119,15 +126,12 @@ class FlambeView2_5D extends AView2_5D
 		}
 	}
 	
-	private function _updateCurrentScene():Void
+	private function _updateCurrentView():Void
 	{
-		if (scene == null)
-			return;
-		
-		//If camera is not found, don't add the scene instance to the view and quit
-		if (camera == null)
+		//If scene or camera is not found, if scene instance in on a view, remove it, then quit
+		if (scene == null || camera == null)
 		{
-			//if it's added alreay, remove it
+			//if it's added already, remove it
 			if (_instanceView.firstChild!=null)
 				_instanceView.removeChild(_instanceView.firstChild);
 				
@@ -140,11 +144,10 @@ class FlambeView2_5D extends AView2_5D
 		if (_instanceView.firstChild==null)
 			_instanceView.addChild(_instanceScene);
 			
-		//Update Positions for all scene's children
+		//Update all of this view instances for its scene's children
 		for (f_childEntity in scene.children)
 		{
-			//_instanceScene.addChild(cast(f_childEntity.createInstance(this),Entity));
-			f_childEntity.update(
+			f_childEntity.update(this);
 		}
 	}
 	

@@ -10,8 +10,8 @@ import flambe.platform.InternalGraphics;
 import flambe.platform.Platform;
 import tools.spark.framework.flambe2_5D.FlambeScene2_5D;
 import tools.spark.framework.flambe2_5D.FlambeView2_5D;
+import tools.spark.framework.flambe2_5D.FlambeCamera2_5D;
 import tools.spark.framework.space2_5D.core.AObjectContainer2_5D;
-import tools.spark.framework.space2_5D.core.Camera2_5D;
 import tools.spark.sliced.services.std.display.managers.core.Flambe2_5DCameraManager;
 import tools.spark.sliced.services.std.display.managers.core.Flambe2_5DObjectManager;
 import tools.spark.sliced.services.std.display.managers.core.Flambe2_5DSceneManager;
@@ -29,7 +29,7 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 {
 	private var _views:Map<IGameEntity,FlambeView2_5D>;
 	private var _scenes:Map<IGameEntity,FlambeScene2_5D>;
-	private var _cameras:Map<IGameEntity,Camera2_5D>;
+	private var _cameras:Map<IGameEntity,FlambeCamera2_5D>;
 	private var _objects:Map<IGameEntity,AObjectContainer2_5D>;
 	
 	private var _viewManager:Flambe2_5DViewManager;
@@ -60,7 +60,7 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		//@THINK: keep this? or just one map to rule them all??
 		_views = new Map<IGameEntity,FlambeView2_5D>();
 		_scenes = new Map<IGameEntity,FlambeScene2_5D>();
-		_cameras = new Map<IGameEntity,Camera2_5D>();
+		_cameras = new Map<IGameEntity,FlambeCamera2_5D>();
 		_objects = new Map<IGameEntity,AObjectContainer2_5D>();
 		
 		_viewManager = new Flambe2_5DViewManager(this,_internalGraphics);
@@ -103,19 +103,23 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		if (_cameras[p_cameraEntity] != null)
 			Console.warn("Camera " + p_cameraEntity.getState('name') + " has already been added to this Flambe2_5DRenderer. Ignoring...");
 		else
-			_cameras[p_cameraEntity] = cast(_cameraManager.create(p_cameraEntity),Camera2_5D);
+			_cameras[p_cameraEntity] = cast(_cameraManager.create(p_cameraEntity),FlambeCamera2_5D);
 
 		return _cameras[p_cameraEntity];
 	}
 	
 	public function createObject ( p_objectEntity:IGameEntity):Dynamic
 	{
-		if (_objects[p_objectEntity] != null)
-			Console.warn("Object " + p_objectEntity.getState('name') + " has already been added to this Flambe2_5DRenderer. Ignoring...");
-		else
-			_objects[p_objectEntity] = cast(_objectManager.create(p_objectEntity),AObjectContainer2_5D);
-		
-		return _objects[p_objectEntity];
+		if (p_objectEntity.getState('displayType')=="Entity")
+		{
+			if (_objects[p_objectEntity] != null)
+				Console.warn("Object " + p_objectEntity.getState('name') + " has already been added to this Flambe2_5DRenderer. Ignoring...");
+			else
+				_objects[p_objectEntity] = cast(_objectManager.create(p_objectEntity),AObjectContainer2_5D);
+			
+			return _objects[p_objectEntity];
+		}
+		else return null;
 	}
 	
 	inline public function addChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void

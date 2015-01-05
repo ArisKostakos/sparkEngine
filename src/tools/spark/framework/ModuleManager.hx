@@ -64,7 +64,7 @@ class ModuleManager
 	
 	private static function _onLoaderError(p_error:String):Void
 	{
-		trace("Module Loader: ERROR: " + p_error);
+		Console.error("Module Loader: ERROR: " + p_error);
 		//errorSignal.emit(p_error);
 	}
 	
@@ -190,7 +190,7 @@ class ModuleManager
 			
 			for (asset in Project.modules[l_moduleName].assets)
 			{
-				Console.log("adding file: " + asset.id);
+				//Console.log("adding file: " + asset.id);
 				Assets.addFile(Project.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true");
 			}
 			Assets.loadBatch();

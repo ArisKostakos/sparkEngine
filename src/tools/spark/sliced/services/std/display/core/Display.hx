@@ -57,25 +57,40 @@ class Display extends AService implements IDisplay
 	
 	private function _initRenderStateNames():Void
 	{
+		_renderStateNames['2DmeshType'] = true;
+		_renderStateNames['3DmeshType'] = true;
+		_renderStateNames['touchable'] = true;
+		_renderStateNames['2DMeshImageForm'] = true;
+		_renderStateNames['2DMeshSpriterForm'] = true;
+		_renderStateNames['2DMeshSpriterAnimForm'] = true;
+		
 		_renderStateNames['stageX'] = true;
 		_renderStateNames['stageY'] = true;
+		
 		_renderStateNames['spaceX'] = true;
 		_renderStateNames['spaceY'] = true;
 		_renderStateNames['spaceZ'] = true;
+		
+		_renderStateNames['scaleX'] = true;
+		_renderStateNames['scaleY'] = true;
+		_renderStateNames['scaleZ'] = true;
+		
 		_renderStateNames['stage'] = true;
 		_renderStateNames['view'] = true;
 		_renderStateNames['camera'] = true;
 		_renderStateNames['scene'] = true;
 		_renderStateNames['space'] = true;
+		
 		_renderStateNames['active'] = true;
 	}
 	
+/*  ****************************FORM STATE UPDATE DEPRECATED*************************
 	private function _initRenderFormStateNames():Void
 	{
 		_renderFormStateNames['SpriteUrl'] = true;
 		_renderFormStateNames['ModelUrl'] = true;
 	}
-	
+*/	
 	
 	
 	public function new() 
@@ -96,7 +111,7 @@ class Display extends AService implements IDisplay
 		
 		//Init Render Form StateNames
 		_renderFormStateNames = new Map<String,Bool>();
-		_initRenderFormStateNames();
+		//_initRenderFormStateNames();
 		
 		//Active Reference Mediator
 		_activeReferenceMediator = new ActiveReferenceMediator(this);
@@ -188,9 +203,11 @@ class Display extends AService implements IDisplay
 							for (renderer in platformRendererSet)
 								renderer.updateState(f_bufferEntry.source, f_bufferEntry.field);
 					}
+				/*  ****************************FORM STATE UPDATE DEPRECATED*************************
 				case UPDATED_FORM_STATE:
 					for (renderer in platformRendererSet)
 						renderer.updateFormState(f_bufferEntry.source, f_bufferEntry.field);
+				*/
 				default:
 					Console.warn("DISPLAY: Unhandled request: " + f_bufferEntry.type);
 			}

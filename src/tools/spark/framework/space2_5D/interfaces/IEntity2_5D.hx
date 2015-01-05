@@ -13,5 +13,5 @@ package tools.spark.framework.space2_5D.interfaces;
 interface IEntity2_5D extends IObjectContainer2_5D
 {
 	function createInstance (p_view2_5D:IView2_5D):Dynamic;
-	function updateInstances(?updateState:String):Void;
+	function update(?p_view2_5D:IView2_5D):Void;
 }

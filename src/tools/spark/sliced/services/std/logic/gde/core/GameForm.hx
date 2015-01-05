@@ -27,7 +27,7 @@ class GameForm extends AGameBase implements IGameForm
 	public function new() 
 	{
 		super();
-		Console.log ("Game Form Created");
+		//Console.log ("Game Form Created");
 		
 		_init();
 	}
@@ -59,8 +59,10 @@ class GameForm extends AGameBase implements IGameForm
 	{
 		gameStateSet.get(p_stateId).value = p_value;
 		
+		/*  ****************************FORM STATE UPDATE DEPRECATED*************************
 		//Following line is the weak connection between Logic and Display
 		Sliced.display.updateDisplayObjectFormState(this.parentEntity,p_stateId);	
+		*/
 		
 		return gameStateSet.get(p_stateId).value;
 	}

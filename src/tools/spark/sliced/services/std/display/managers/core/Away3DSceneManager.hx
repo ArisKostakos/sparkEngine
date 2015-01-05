@@ -79,9 +79,12 @@ class Away3DSceneManager implements IDisplayObjectManager
 	
 	public function addTo(p_objectChild:Dynamic, p_objectParent:Dynamic):Void 
 	{
-		//typecast?
+		//typecast
+		var l_scene3D:Scene3D = cast(p_objectParent, Scene3D);
 		
-		p_objectParent.addChild(p_objectChild);
+		//objetChild may be null if it failed to be typeasted as a display object when being created
+		if (p_objectChild!=null)
+			l_scene3D.addChild(p_objectChild);
 	}
 	
 	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void 

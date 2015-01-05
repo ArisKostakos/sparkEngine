@@ -24,7 +24,7 @@ class GameSpace extends AGameBase implements IGameSpace
 	public function new() 
 	{
 		super();
-		Console.log ("Game Space Created");
+		//Console.log ("Game Space Created");
 		
 		_init();
 	}

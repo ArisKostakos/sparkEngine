@@ -7,7 +7,7 @@
 package tools.spark.sliced.services.std.display.managers.core;
 
 
-import tools.spark.framework.space2_5D.core.Camera2_5D;
+import tools.spark.framework.flambe2_5D.FlambeCamera2_5D;
 import tools.spark.sliced.services.std.display.renderers.interfaces.ILibrarySpecificRenderer;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameForm;
 
@@ -32,8 +32,7 @@ class Flambe2_5DCameraManager implements IDisplayObjectManager
 	{
 		//typecast?
 		
-		var l_camera2_5D:Camera2_5D = new Camera2_5D();
-		l_camera2_5D.name = p_gameEntity.getState('name');
+		var l_camera2_5D:FlambeCamera2_5D = new FlambeCamera2_5D(p_gameEntity);
 		
 		return l_camera2_5D;
 	}

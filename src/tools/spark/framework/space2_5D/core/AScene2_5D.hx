@@ -35,9 +35,4 @@ class AScene2_5D extends ABase2_5D implements IScene2_5D
 		//override me!!
 		return null;
 	}
-	
-	public function updateInstances(?updateState:String):Void
-	{
-		//override me!!
-	}
 }

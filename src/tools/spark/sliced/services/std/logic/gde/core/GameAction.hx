@@ -28,7 +28,7 @@ class GameAction extends AGameBase implements IGameAction
 	public function new() 
 	{
 		super();
-		Console.log ("Game Action Created");
+		//Console.log ("Game Action Created");
 		
 		_init();
 	}

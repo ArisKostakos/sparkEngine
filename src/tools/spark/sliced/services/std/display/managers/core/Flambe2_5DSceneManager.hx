@@ -31,8 +31,7 @@ class Flambe2_5DSceneManager implements IDisplayObjectManager
 	{
 		//typecast?
 		
-		var l_scene2_5D:FlambeScene2_5D = new FlambeScene2_5D();
-		l_scene2_5D.name = p_gameEntity.getState('name');
+		var l_scene2_5D:FlambeScene2_5D = new FlambeScene2_5D(p_gameEntity);
 		
 		update(l_scene2_5D,p_gameEntity);
 		
@@ -78,7 +77,9 @@ class Flambe2_5DSceneManager implements IDisplayObjectManager
 		//typecast
 		var l_scene2_5D:FlambeScene2_5D = cast(p_objectParent, FlambeScene2_5D);
 		
-		l_scene2_5D.addChild(p_objectChild);
+		//objetChild may be null if it failed to be typeasted as a display object when being created
+		if (p_objectChild!=null)
+			l_scene2_5D.addChild(p_objectChild);
 	}
 	
 	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void 
