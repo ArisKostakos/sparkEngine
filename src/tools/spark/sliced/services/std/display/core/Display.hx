@@ -62,6 +62,9 @@ class Display extends AService implements IDisplay
 		_renderStateNames['touchable'] = true;
 		_renderStateNames['2DMeshImageForm'] = true;
 		_renderStateNames['2DMeshSpriterForm'] = true;
+		_renderStateNames['2DMeshFillRectForm'] = true;
+		_renderStateNames['2DMeshSpriteForm'] = true;
+		
 		_renderStateNames['2DMeshSpriterAnimForm'] = true;
 		
 		_renderStateNames['stageX'] = true;

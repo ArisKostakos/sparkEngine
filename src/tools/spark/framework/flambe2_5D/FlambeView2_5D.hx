@@ -60,6 +60,7 @@ class FlambeView2_5D extends AView2_5D
 		Sprite.render(_instanceView, _flambeGraphics);
 	}
 	
+	//i think this belongs to AView2_5D instead.. i don't see any flambe relevant code...
 	override private function set_camera( p_value : ICamera2_5D ) : ICamera2_5D 
 	{
 		//If the camera is already attached to this view, do nothing
@@ -84,6 +85,7 @@ class FlambeView2_5D extends AView2_5D
 		return camera;
     }
 	
+	//i think this belongs to AView2_5D instead.. i don't see any flambe relevant code...
 	override private function set_scene( p_value : IScene2_5D ) : IScene2_5D 
 	{
 		//If the scene is already attached to this view, do nothing
@@ -115,17 +117,26 @@ class FlambeView2_5D extends AView2_5D
         return scene;
     }
 	
+	//NEXT
+	//this should be moved to ascene or something... and follow this example for entity later... merge them finally? maybe
+	//then, see how we will add children when called by the renderers, dynamically.. later on..
+	//are we putting x,y to entity or not??? otherwise, we merge..
+	//END NEXT
 	
 	private function _instanciateCurrentScene():Void
 	{
 		_instanceScene = cast(scene.createInstance(this), Entity);
 		
+		//i think this belongs to AView2_5D instead..i duunnooooooooo
 		for (f_childEntity in scene.children)
 		{
+			//This is an 'instance' addChild... a flambe addChild..
 			_instanceScene.addChild(cast(f_childEntity.createInstance(this),Entity));
 		}
 	}
 	
+	//i think this belongs to AView2_5D instead.. i don't see any flambe relevant code... or is there...
+	//or maybe there is.. just override and keep the for loop in AView2_5D instead
 	private function _updateCurrentView():Void
 	{
 		//If scene or camera is not found, if scene instance in on a view, remove it, then quit
@@ -145,6 +156,7 @@ class FlambeView2_5D extends AView2_5D
 			_instanceView.addChild(_instanceScene);
 			
 		//Update all of this view instances for its scene's children
+		//i think this belongs to AView2_5D instead..
 		for (f_childEntity in scene.children)
 		{
 			f_childEntity.update(this);

@@ -6,6 +6,7 @@
 
 package tools.spark.framework.flambe2_5D;
 
+import flambe.display.FillSprite;
 import flambe.display.ImageSprite;
 import flambe.display.Sprite;
 import flambe.Entity;
@@ -112,6 +113,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 				_update2DMeshImageForm(gameEntity.getState(p_state),p_view2_5D);
 			case '2DMeshSpriterForm':
 				_update2DMeshSpriterForm(gameEntity.getState(p_state), p_view2_5D);
+			case '2DMeshFillRectForm':
+				_update2DMeshFillRectForm(gameEntity.getState(p_state), p_view2_5D);
+			case '2DMeshSpriteForm':
+				_update2DMeshSpriteForm(gameEntity.getState(p_state), p_view2_5D);
 			case '2DMeshSpriterAnimForm':
 				_update2DMeshSpriterAnimForm(gameEntity.getState(p_state),p_view2_5D);
 		}
@@ -138,6 +143,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 				_updateStateOfInstance('2DMeshImageForm', p_view2_5D);
 			case 'Spriter':
 				_updateStateOfInstance('2DMeshSpriterForm', p_view2_5D);
+			case 'FillRect':
+				_updateStateOfInstance('2DMeshFillRectForm', p_view2_5D);
+			case 'Sprite':
+				_updateStateOfInstance('2DMeshSpriteForm', p_view2_5D);
 			case 'Undefined':
 				Console.warn('Undefined 2DmeshType value');
 			default:
@@ -216,6 +225,76 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		//Play Animation (nesting)
 		_updateStateOfInstance('2DMeshSpriterAnimForm', p_view2_5D);
+	}
+	
+	private function _update2DMeshFillRectForm(p_2DMeshFillRectForm:String, p_view2_5D:IView2_5D):Void
+	{
+		//If the Entity's mesh type is not image, ignore this update
+		if (gameEntity.getState('2DmeshType') != 'FillRect')
+			return;
+			
+		//If the Form Name is Undefined, ignore this update
+		if (p_2DMeshFillRectForm == 'Undefined')
+			return;
+			
+		//Get the instance we're updating
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		var l_mesh:FillSprite;
+		
+		if (_instancesMesh[p_view2_5D]!=null)	//Get it's existing mesh, if any
+			l_mesh= cast(_instancesMesh[p_view2_5D],FillSprite); //(the cast should always work due to logic.. but not very sure..)
+		else
+			l_mesh = null;
+			
+			
+		if (l_mesh == null)
+		{
+			l_mesh = new FillSprite(0xff0000,100,100);
+			l_mesh.blendMode = BlendMode.Copy;
+			l_instance.add(l_mesh);
+			_instancesMesh[p_view2_5D] = l_mesh;
+		}
+		else
+		{
+			//l_mesh.color =
+			//l_mesh.setSize = 
+		}
+	}
+	
+	private function _update2DMeshSpriteForm(p_2DMeshSpriteForm:String, p_view2_5D:IView2_5D):Void
+	{
+		//If the Entity's mesh type is not image, ignore this update
+		if (gameEntity.getState('2DmeshType') != 'Sprite')
+			return;
+			
+		//If the Form Name is Undefined, ignore this update
+		if (p_2DMeshSpriteForm == 'Undefined')
+			return;
+			
+		//Get the instance we're updating
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		var l_mesh:Sprite;
+		
+		if (_instancesMesh[p_view2_5D]!=null)	//Get it's existing mesh, if any
+			l_mesh= cast(_instancesMesh[p_view2_5D],Sprite); //(the cast should always work due to logic.. but not very sure..)
+		else
+			l_mesh = null;
+			
+			
+		if (l_mesh == null)
+		{
+			l_mesh = new Sprite();
+			l_mesh.blendMode = BlendMode.Copy;
+			l_instance.add(l_mesh);
+			_instancesMesh[p_view2_5D] = l_mesh;
+		}
+		else
+		{
+			//l_mesh.color =
+			//l_mesh.setSize = 
+		}
 	}
 	
 	private function _update2DMeshSpriterAnimForm(p_2DMeshSpriterAnimForm:String, p_view2_5D:IView2_5D):Void

@@ -46,17 +46,18 @@ class Flambe2_5DSceneManager implements IDisplayObjectManager
 	
 	public function update(p_object:Dynamic, p_gameEntity:IGameEntity):Void
 	{
-		//typecast?
+		//typecast
+		var l_scene2_5D:FlambeScene2_5D = cast(p_object, FlambeScene2_5D);
 		
 		//Update is usually responsible for two things.. update all entity states and form states, and update all children
 		
 		//Before doing this, shouldn't we remove all children from this entity?
-		//p_object.removeChildren(); ??
+		//l_scene2_5D.removeChildren(); ??
 		
 		//FOR EACH ENTITY CHILD INSIDE SCENE
 		for (f_childEntity in p_gameEntity.children)
 		{
-			addTo(_renderer.createObject(f_childEntity), p_object);
+			addTo(_renderer.createObject(f_childEntity), l_scene2_5D);
 		}
 	}
 	
