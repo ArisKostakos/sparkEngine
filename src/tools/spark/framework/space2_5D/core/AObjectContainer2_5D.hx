@@ -11,7 +11,7 @@ import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
- * ...
+ * An object container can also have multiple instances. Used for Scenes and Entities
  * @author Aris Kostakos
  */
 class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D

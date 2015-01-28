@@ -4,14 +4,18 @@
  * Written by Aris Kostakos <aris@spark.tools>, January 2015
  */
 
-package tools.spark.framework.space2_5D.interfaces;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
+package tools.spark.framework.layout.managers;
 
 /**
+ * ...
  * @author Aris Kostakos
  */
-
-interface IBase2_5D
+class LayoutManager
 {
-	var gameEntity( default, null ):IGameEntity;
+
+	public function new() 
+	{
+		
+	}
+	
 }

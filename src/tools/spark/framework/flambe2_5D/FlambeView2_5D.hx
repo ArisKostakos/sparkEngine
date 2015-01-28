@@ -75,9 +75,9 @@ class FlambeView2_5D extends AView2_5D
 			return null;
 		}
 			
-		//instanciate camera
+		//attach camera
 		camera = p_value;
-		camera.createInstance(this);
+		camera.attachToView(this);
 		
 		//UPDATE VIEW
 		_updateCurrentView();
@@ -107,9 +107,13 @@ class FlambeView2_5D extends AView2_5D
 		//if (scene!=null)
 		//...
 		
-		//Instanciate
+		//Instanciate current scene
 		scene = p_value;
-		_instanciateCurrentScene();
+		_instanceScene = cast(scene.createInstance(this), Entity);
+		
+		//LAYOUT MANAGER
+		//if (gameEntity.getState('layoutable') == true)
+			//..
 		
 		//UPDATE VIEW
 		_updateCurrentView();
@@ -118,22 +122,9 @@ class FlambeView2_5D extends AView2_5D
     }
 	
 	//NEXT
-	//this should be moved to ascene or something... and follow this example for entity later... merge them finally? maybe
 	//then, see how we will add children when called by the renderers, dynamically.. later on..
-	//are we putting x,y to entity or not??? otherwise, we merge..
 	//END NEXT
 	
-	private function _instanciateCurrentScene():Void
-	{
-		_instanceScene = cast(scene.createInstance(this), Entity);
-		
-		//i think this belongs to AView2_5D instead..i duunnooooooooo
-		for (f_childEntity in scene.children)
-		{
-			//This is an 'instance' addChild... a flambe addChild..
-			_instanceScene.addChild(cast(f_childEntity.createInstance(this),Entity));
-		}
-	}
 	
 	//i think this belongs to AView2_5D instead.. i don't see any flambe relevant code... or is there...
 	//or maybe there is.. just override and keep the for loop in AView2_5D instead
@@ -155,12 +146,9 @@ class FlambeView2_5D extends AView2_5D
 		if (_instanceView.firstChild==null)
 			_instanceView.addChild(_instanceScene);
 			
-		//Update all of this view instances for its scene's children
-		//i think this belongs to AView2_5D instead..
-		for (f_childEntity in scene.children)
-		{
-			f_childEntity.update(this);
-		}
+			
+		//Update it
+		scene.update(this);
 	}
 	
 	private function _disposeCurrentScene():Void

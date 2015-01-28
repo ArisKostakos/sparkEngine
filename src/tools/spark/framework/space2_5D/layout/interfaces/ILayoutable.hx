@@ -4,14 +4,15 @@
  * Written by Aris Kostakos <aris@spark.tools>, January 2015
  */
 
-package tools.spark.framework.space2_5D.interfaces;
-import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
+package tools.spark.framework.space2_5D.layout.interfaces;
+import tools.spark.framework.layout.containers.Group;
 
 /**
  * @author Aris Kostakos
  */
 
-interface IBase2_5D
+interface ILayoutable 
 {
-	var gameEntity( default, null ):IGameEntity;
+	var group( default, null ):Group;
+	var children( default, null ):ILayoutable;
 }

@@ -5,6 +5,7 @@
  */
 
  package tools.spark.sliced.services.std.display.managers.core;
+import tools.spark.framework.layout.containers.Group;
 import tools.spark.sliced.services.std.display.active_displayentity_references.core.ActiveStageReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveViewReference;
@@ -49,7 +50,7 @@ class StageReferenceManager implements IDisplayObjectManager
 		
 		//typecast?
 		
-		//updateState(p_object, p_gameEntity, 'stage properties');
+		updateState(p_object, p_gameEntity, 'test');
 		
 		
 		//FOR ALL CHILDREN
@@ -66,22 +67,108 @@ class StageReferenceManager implements IDisplayObjectManager
 		if (p_object == null) return;
 		
 		//typecast?
+		var l_activeStageReference:IActiveStageReference = cast(p_object, IActiveStageReference);
 		
-		/*
 		switch (p_state)
 		{
-
+			case 'test':
+				_createStageLayOutThing(l_activeStageReference, p_gameEntity);
 		}
-		*/
+		
 	}
 	
-	public function updateFormState(p_object:Dynamic, p_gameForm:IGameForm, p_state:String):Void 
+	private function _createStageLayOutThing(p_activeStageReference:IActiveStageReference, p_gameEntity:IGameEntity):Void
 	{
-		//Check if this gameEntity was Active
-		if (p_object == null) return;
+		//i guess we create our thing on the activeStageRegerence eyh? where else..
 		
-		//typecast?
+		var fullStage:Group = new Group();
 		
+		//give skata real stage width and stuff..
+		fullStage.explicitWidth = flambe.System.stage.width;
+		fullStage.explicitHeight = flambe.System.stage.height;
+		
+		//add substages and stuff
+		//..
+		
+		//add test children
+		var childOne:Group = new Group();
+		childOne.horizontalCenter = 0;
+		
+		var childOneInChildOne:Group = new Group();
+		
+		childOneInChildOne.explicitWidth = 50;
+		childOneInChildOne.explicitHeight = 50;
+		childOneInChildOne.left = 200;
+		childOneInChildOne.top = 200;
+		
+		childOne.children.push(childOneInChildOne);
+		
+		
+		fullStage.children.push(childOne);
+		
+		
+		
+		//So now if we measure everything, ChildOne's width and height were not explicit (like everything else)
+		//so they should be measured as 250,250
+		_layoutManagerMeasure(fullStage);
+		
+		//let's try this shit...
+		Console.error('====================================================');
+		Console.error("Full Stage Preferred Width: " + fullStage.preferredWidth);
+		Console.error("Full Stage Preferred Height: " + fullStage.preferredHeight);
+		Console.error("Child One Preferred Width: " + childOne.preferredWidth);
+		Console.error("Child One Preferred Height: " + childOne.preferredHeight);
+		Console.error("childOneInChildOne Preferred Width: " + childOneInChildOne.preferredWidth);
+		Console.error("childOneInChildOne Preferred Height: " + childOneInChildOne.preferredHeight);
+		Console.error('====================================================');
+		
+		//fuck yeah..
+		
+		//now layout manager actually positions layouts..
+		_layoutManagerUpdateDisplayList(fullStage);
+		
+		
+		//when it doesnt crash, trace some x,y,width,height of our groups
+		//on init they are 0 but updatedisplaylist updates them all
+		Console.error('----------------full stage----------------');
+		Console.error("Full Stage REAL x: " + fullStage.x);
+		Console.error("Full Stage REAL y: " + fullStage.y);
+		Console.error("Full Stage REAL Width: " + fullStage.width);
+		Console.error("Full Stage REAL Height: " + fullStage.height);
+		Console.error('----------------Child One----------------');
+		Console.error("Child One REAL x: " + childOne.x);
+		Console.error("Child One REAL y: " + childOne.y);
+		Console.error("Child One REAL Width: " + childOne.width);
+		Console.error("Child One REAL Height: " + childOne.height);
+		Console.error('----------------childOneInChildOne----------------');
+		Console.error("childOneInChildOne REAL x: " + childOneInChildOne.x);
+		Console.error("childOneInChildOne REAL y: " + childOneInChildOne.y);
+		Console.error("childOneInChildOne REAL Width: " + childOneInChildOne.width);
+		Console.error("childOneInChildOne REAL Height: " + childOneInChildOne.height);
+		Console.error('-------------------------------------------------');
+	}
+	
+	private function _layoutManagerMeasure(p_Group:Group):Void
+	{
+		for (f_child in p_Group.children)
+		{
+			_layoutManagerMeasure(f_child);
+		}
+		
+		//down here cause it's bottom-up
+		//only measure if explicit not set?
+		p_Group.measure();
+	}
+	
+	private function _layoutManagerUpdateDisplayList(p_Group:Group):Void
+	{
+		//up here cause it's top to bottom
+		p_Group.updateDisplayList(p_Group.preferredWidth, p_Group.preferredHeight);
+		
+		for (f_child in p_Group.children)
+		{
+			_layoutManagerUpdateDisplayList(f_child);
+		}
 	}
 	
 	public function addTo(p_objectChild:Dynamic, p_objectParent:Dynamic):Void

@@ -5,6 +5,7 @@
  */
 
 package tools.spark.framework.space2_5D.interfaces;
+import tools.spark.framework.space2_5D.layout.core.GroupSpace2_5D;
 
 /**
  * @author Aris Kostakos
@@ -14,5 +15,6 @@ interface IView2_5D extends IBase2_5D
 {
 	var scene( default, set ):IScene2_5D;
 	var camera( default, set ):ICamera2_5D;
+	var group( default, null ):GroupSpace2_5D;
 	function render():Void;
 }

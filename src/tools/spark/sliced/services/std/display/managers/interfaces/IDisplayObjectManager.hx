@@ -19,7 +19,6 @@ interface IDisplayObjectManager
   function destroy(p_object:Dynamic):Void;
   function update(p_object:Dynamic, p_gameEntity:IGameEntity):Void;
   function updateState(p_object:Dynamic, p_gameEntity:IGameEntity, p_state:String):Void;
-  function updateFormState(p_object:Dynamic, p_gameForm:IGameForm, p_state:String):Void;
   function addTo(p_objectChild:Dynamic, p_objectParent:Dynamic):Void;
   function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void;
 }

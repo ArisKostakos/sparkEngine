@@ -16,23 +16,8 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 class FlambeCamera2_5D extends ACamera2_5D
 {
-	private var _addedToViews:Map<IView2_5D,IView2_5D>;
-	
 	public function new(p_gameEntity:IGameEntity)
 	{
 		super(p_gameEntity);
-		_initFlambeCamera2_5D();
-	}
-	
-	private function _initFlambeCamera2_5D()
-	{
-		_addedToViews = new Map<IView2_5D,IView2_5D>();
-	}
-	
-	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
-	{
-		_addedToViews[p_view2_5D] = p_view2_5D;
-		
-		return null;
 	}
 }

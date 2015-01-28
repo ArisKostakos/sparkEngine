@@ -11,7 +11,9 @@ import flambe.display.ImageSprite;
 import flambe.display.Sprite;
 import flambe.Entity;
 import flambe.input.PointerEvent;
+import flambe.math.Rectangle;
 import tools.spark.framework.space2_5D.core.AEntity2_5D;
+import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
 import flambe.display.BlendMode;
 import tools.spark.sliced.core.Sliced;
@@ -25,7 +27,6 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 class FlambeEntity2_5D extends AEntity2_5D
 {
-	private var _instances:Map<IView2_5D,Entity>;
 	private var _instancesMesh:Map<IView2_5D,Sprite>;
 	
 	public function new(p_gameEntity:IGameEntity) 
@@ -36,19 +37,34 @@ class FlambeEntity2_5D extends AEntity2_5D
 	
 	private function _initFlambeEntity2_5D()
 	{
-		_instances = new Map<IView2_5D,Entity>();
 		_instancesMesh = new Map<IView2_5D,Sprite>();
+		
+		_updateStateFunctions['2DmeshType'] = _update2DMeshType; //this will also update nested states here like 2DMeshImageForm,..
+		_updateStateFunctions['spaceX'] = _updatePositionX; //for pure 2d.. for 3d coordinates, its not that simple..
+		_updateStateFunctions['spaceY'] = _updatePositionY; //for pure 2d.. for 3d coordinates, its not that simple..
+		_updateStateFunctions['scaleX'] = _updateSizeX; //for pure 2d.. for 3d coordinates, its not that simple..
+		_updateStateFunctions['scaleY'] = _updateSizeY; //for pure 2d.. for 3d coordinates, its not that simple..
+		_updateStateFunctions['touchable'] = _updateTouchable;
+		_updateStateFunctions['2DMeshImageForm'] = _update2DMeshImageForm;
+		_updateStateFunctions['2DMeshSpriterForm'] = _update2DMeshSpriterForm;
+		_updateStateFunctions['2DMeshFillRectForm'] = _update2DMeshFillRectForm;
+		_updateStateFunctions['2DMeshSpriteForm'] = _update2DMeshSpriteForm;
+		_updateStateFunctions['2DMeshSpriterAnimForm'] = _update2DMeshSpriterAnimForm;
 	}
+	
 	
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
-		var l_entity:Entity = new Entity();
-		
-		_instances[p_view2_5D] = l_entity;
-		
-		return l_entity;
+		_instances[p_view2_5D] = new Entity();
+
+		return super.createInstance(p_view2_5D);
 	}
 
+	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	{
+		//This is an 'instance' addChild... a flambe addChild..
+		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D),Entity));
+	}
 
 	override public function update(?p_view2_5D:IView2_5D):Void
 	{
@@ -68,59 +84,13 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//_updateState('2DMeshImageForm', p_view2_5D); //this is nested.. not for global update i think
 		//_updateState('2DMeshSpriterForm', p_view2_5D); //this is nested.. not for global update i think
 		//more spriter nested things exist also don't update them
+		
+		
+		//Update Children
+		for (f_childEntity in children)
+			f_childEntity.update(p_view2_5D);
 	}
 	
-	
-	//For optimization purposes.. to be able to inline the publics
-	private function _updateState(p_state:String, ?p_view2_5D:IView2_5D):Void
-	{
-		updateState(p_state,p_view2_5D);
-	}
-	
-	inline public function updateState(p_state:String, ?p_view2_5D:IView2_5D):Void
-	{
-		if (p_view2_5D == null)
-		{
-			//do for all instances
-			for (f_view in _instances.keys())
-				_updateStateOfInstance(p_state, f_view);
-		}
-		else
-		{
-			//do for p_View2_5D instance
-			_updateStateOfInstance(p_state, p_view2_5D);
-		}
-	}
-	
-	
-	inline private function _updateStateOfInstance(p_state:String, p_view2_5D:IView2_5D):Void
-	{
-		switch (p_state)
-		{
-			case '2DmeshType':
-				_update2DMeshType(gameEntity.getState(p_state),p_view2_5D); //this will also update nested states here like 2DMeshImageForm,..
-			case 'spaceX':
-				_updatePosition("x", gameEntity.getState(p_state), p_view2_5D); //for pure 2d.. for 3d coordinates, its not that simple..
-			case 'spaceY':
-				_updatePosition("y", gameEntity.getState(p_state), p_view2_5D); //for pure 2d.. for 3d coordinates, its not that simple..
-			case 'scaleX':
-				_updateSize("x", gameEntity.getState(p_state), p_view2_5D); //for pure 2d.. for 3d coordinates, its not that simple..
-			case 'scaleY':
-				_updateSize("y", gameEntity.getState(p_state), p_view2_5D); //for pure 2d.. for 3d coordinates, its not that simple..
-			case 'touchable':
-				_updateTouchable(gameEntity.getState(p_state), p_view2_5D);
-			case '2DMeshImageForm':
-				_update2DMeshImageForm(gameEntity.getState(p_state),p_view2_5D);
-			case '2DMeshSpriterForm':
-				_update2DMeshSpriterForm(gameEntity.getState(p_state), p_view2_5D);
-			case '2DMeshFillRectForm':
-				_update2DMeshFillRectForm(gameEntity.getState(p_state), p_view2_5D);
-			case '2DMeshSpriteForm':
-				_update2DMeshSpriteForm(gameEntity.getState(p_state), p_view2_5D);
-			case '2DMeshSpriterAnimForm':
-				_update2DMeshSpriterAnimForm(gameEntity.getState(p_state),p_view2_5D);
-		}
-	}
 	
 	inline private function _update2DMeshType(p_2DMeshType:String, p_view2_5D:IView2_5D):Void
 	{
@@ -250,7 +220,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 			
 		if (l_mesh == null)
 		{
-			l_mesh = new FillSprite(0xff0000,100,100);
+			//do Layout Call??????????????
+			//...
+			
+			//if (gameEntity.getState('layoutable') == true)
+				l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),groupInstances[p_view2_5D].width, groupInstances[p_view2_5D].height);
 			l_mesh.blendMode = BlendMode.Copy;
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
@@ -287,6 +261,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			l_mesh = new Sprite();
 			l_mesh.blendMode = BlendMode.Copy;
+			
+			//do Layout Call??????????????
+			//...
+			//if (gameEntity.getState('layoutable') == true)
+
+				
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
 		}
@@ -325,45 +305,44 @@ class FlambeEntity2_5D extends AEntity2_5D
 	}
 	
 
-	//@todo: for pure 2d.. for 3d coordinates, its not that simple.. if you want to use the same function for 3d,
-	//use p_axis to specifiy "both", or "all 3d" something like that. and ofc make sure you update once, no matter how many setState Events where made
-	inline private function _updatePosition(p_axis:String, p_newPos:Int, p_view2_5D:IView2_5D):Void
+	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
+	inline private function _updatePositionX(p_newPos:Int, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
-		if (l_mesh != null)
-		{
-			//@todo: I AM NOT LIKING THIS.. updatePosition should be REALLLLLYYYYYYYYY optimized.. and here I'm comparing strings ://// jeez..
-			//maybe just create different inline functions alltogether for updateX and updateY..
-			//look it up when you're also doing 2_5D Positioning...
-			switch (p_axis)
-			{
-				case "x":
-					l_mesh.x._ = p_newPos;
-				case "y":
-					l_mesh.y._ = p_newPos;
-			}
-		}
+		if (l_mesh != null) //this really nesseccery?
+			l_mesh.x._ = p_newPos;
 	}
 	
 	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
-	inline private function _updateSize(p_axis:String, p_newScale:Float, p_view2_5D:IView2_5D):Void
+	inline private function _updatePositionY(p_newPos:Int, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh != null) //this really nesseccery?
+			l_mesh.y._ = p_newPos;
+	}
+	
+	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
+	inline private function _updateSizeX(p_newScale:Float, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
 		if (l_mesh != null)
-		{
-			//@todo: Not too crazy about this one either:P scale doesn't hapen often for 2d without 2.5 simulation stuff tho.. so it's not that bad here:)
-			switch (p_axis)
-			{
-				case "x":
-					l_mesh.scaleX._ = p_newScale;
-				case "y":
-					l_mesh.scaleY._ = p_newScale;
-			}
-		}
+			l_mesh.scaleX._ = p_newScale;
+	}
+	
+	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
+	inline private function _updateSizeY(p_newScale:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh != null)
+			l_mesh.scaleY._ = p_newScale;
 	}
 	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void

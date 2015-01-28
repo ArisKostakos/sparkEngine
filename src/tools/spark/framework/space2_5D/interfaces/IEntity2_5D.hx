@@ -10,8 +10,7 @@ package tools.spark.framework.space2_5D.interfaces;
  * @author Aris Kostakos
  */
 
-interface IEntity2_5D extends IObjectContainer2_5D
+interface IEntity2_5D extends IInstantiable2_5D
 {
-	function createInstance (p_view2_5D:IView2_5D):Dynamic;
-	function update(?p_view2_5D:IView2_5D):Void;
+	
 }

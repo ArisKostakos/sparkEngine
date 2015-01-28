@@ -62,8 +62,5 @@ class Main
 			
 		//Create Spark's Flambe Root Component
 		System.root.add(new RootComponent());
-		
-		Console.error("Width: " + System.stage.width);
-		Console.error("Height: " + System.stage.height);
     }
 }

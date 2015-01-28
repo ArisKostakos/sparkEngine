@@ -16,14 +16,23 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 class ACamera2_5D extends AObject2_5D implements ICamera2_5D
 {
+	private var _attachedToViews:Map<IView2_5D,IView2_5D>;
+	
 	private function new(p_gameEntity:IGameEntity) 
 	{
 		super(p_gameEntity);
+		_initACamera2_5D();
 	}
 	
-	public function createInstance (p_view2_5D:IView2_5D):Dynamic
+	private function _initACamera2_5D()
 	{
-		//override me!!
+		_attachedToViews = new Map<IView2_5D,IView2_5D>();
+	}
+	
+	public function attachToView(p_view2_5D:IView2_5D):Dynamic
+	{
+		_attachedToViews[p_view2_5D] = p_view2_5D;
+		
 		return null;
 	}
 }
