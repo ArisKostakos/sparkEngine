@@ -187,8 +187,6 @@ class AAway3DRenderer extends A3DRenderer implements ILibrarySpecificRenderer
 		
 	}
 	*/
-
-	
 	
 	
 	

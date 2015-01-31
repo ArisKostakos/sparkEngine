@@ -10,7 +10,7 @@ import tools.spark.framework.space2_5D.interfaces.IView2_5D;
 import tools.spark.framework.space2_5D.interfaces.IScene2_5D;
 import tools.spark.framework.space2_5D.interfaces.ICamera2_5D;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
-import tools.spark.framework.space2_5D.layout.core.GroupSpace2_5D;
+import tools.spark.framework.layout.containers.Group;
 
 /**
  * ...
@@ -20,14 +20,14 @@ class AView2_5D extends ABase2_5D implements IView2_5D
 {
 	public var scene( default, set ):IScene2_5D;
 	public var camera( default, set ):ICamera2_5D;
-	public var group( default, null ):GroupSpace2_5D;
+	public var group( default, null ):Group;
 	
 	private function new(p_gameEntity:IGameEntity) 
 	{
 		super(p_gameEntity);
 		
 		//if (gameEntity.getState('layoutable') == true)
-			group = new GroupSpace2_5D("view", null, this);
+			//group = new GroupSpace2_5D("view", null, this);
 			
 		//do Layout Call??????????????
 		//...

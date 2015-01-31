@@ -5,7 +5,7 @@
  */
 
 package tools.spark.framework.platform.html;
-
+import tools.spark.sliced.core.Sliced;
 
 #if includeAway3D
 	import tools.spark.framework.platform.html.away3d.Subgraphics;
@@ -13,6 +13,9 @@ package tools.spark.framework.platform.html;
 	import tools.spark.framework.platform.html.flambe2_5.Subgraphics;
 #end
 
+#if includeNativeComponents
+	import tools.spark.sliced.services.std.display.renderers.core.platform.html.NativeControlsHtmlRenderer;
+#end
 
 /**
  * ...
@@ -28,6 +31,11 @@ class Graphics
 	public static function createDisplayRenderers():Void
 	{
 		Subgraphics.createDisplayRenderers();
+		
+		#if includeNativeComponents
+			//Create Dom Renderer
+			Sliced.display.platformRendererSet["NativeControls"] = new NativeControlsHtmlRenderer();
+		#end
 	}
 
 }

@@ -8,6 +8,7 @@
 
 import tools.spark.sliced.interfaces.IDisplay;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveSpaceReference;
+import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageAreaReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveViewReference;
 import tools.spark.sliced.services.std.display.managers.interfaces.IActiveReferenceMediator;
@@ -15,6 +16,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.display.active_displayentity_references.core.ActiveSpaceReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.core.ActiveStageReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.core.ActiveViewReference;
+import tools.spark.sliced.services.std.display.active_displayentity_references.core.ActiveStageAreaReference;
 import tools.spark.sliced.services.std.display.managers.interfaces.IDisplayObjectManager;
 
 /**
@@ -27,6 +29,7 @@ class ActiveReferenceMediator implements IActiveReferenceMediator
 	public var spaceReferenceManager( default, null ):IDisplayObjectManager;
 	public var stageReferenceManager( default, null ):IDisplayObjectManager;
 	public var viewReferenceManager( default, null ):IDisplayObjectManager;
+	public var stageAreaReferenceManager( default, null ):IDisplayObjectManager;
 	
 	public function new(p_display:IDisplay) 
 	{
@@ -41,6 +44,12 @@ class ActiveReferenceMediator implements IActiveReferenceMediator
 		spaceReferenceManager = new SpaceReferenceManager(this);
 		stageReferenceManager = new StageReferenceManager(this);
 		viewReferenceManager = new ViewReferenceManager(this);
+		stageAreaReferenceManager = new StageAreaReferenceManager(this);
+	}
+	
+	public function createSpaceReference(p_spaceEntity:IGameEntity):IActiveSpaceReference
+	{
+		return cast(spaceReferenceManager.create(p_spaceEntity), ActiveSpaceReference);
 	}
 	
 	public function createStageReference(p_stageEntity:IGameEntity):IActiveStageReference
@@ -51,6 +60,11 @@ class ActiveReferenceMediator implements IActiveReferenceMediator
 	public function createViewReference(p_viewEntity:IGameEntity):IActiveViewReference
 	{
 		return cast(viewReferenceManager.create(p_viewEntity), ActiveViewReference);
+	}
+	
+	public function createStageAreaReference(p_stageAreaEntity:IGameEntity):IActiveStageAreaReference
+	{
+		return cast(stageAreaReferenceManager.create(p_stageAreaEntity), ActiveStageAreaReference);
 	}
 	
 	public function getActiveSpaceReference(p_spaceEntity:IGameEntity):IActiveSpaceReference
@@ -83,6 +97,20 @@ class ActiveReferenceMediator implements IActiveReferenceMediator
 		{
 			if (f_activeViewReference.viewEntity == p_viewEntity)
 				return f_activeViewReference;
+		}
+		
+		return null;
+	}
+	
+	public function getActiveStageAreaReference(p_stageAreaEntity:IGameEntity):IActiveStageAreaReference
+	{
+		if (display.projectActiveSpaceReference == null) return null;
+		else if (display.projectActiveSpaceReference.activeStageReference == null) return null;
+		
+		for (f_activeStageAreaReference in display.projectActiveSpaceReference.activeStageReference.activeStageAreaReferences)
+		{
+			if (f_activeStageAreaReference.stageAreaEntity == p_stageAreaEntity)
+				return f_activeStageAreaReference;
 		}
 		
 		return null;

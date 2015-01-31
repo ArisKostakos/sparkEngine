@@ -26,7 +26,7 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.rendererSet.push(new Flambe2_5DFlashRenderer());
+		Sliced.display.rendererSet["2D"] = new Flambe2_5DFlashRenderer();
 	}
 	
 	public static function init():Void

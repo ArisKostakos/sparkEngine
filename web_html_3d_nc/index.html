@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Platform - Html 3d</title>
+
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57" href="icons/57x57.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/72x72.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/114x114.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="icons/144x144.png">
+
+  <style>
+    body {
+      text-align: center;
+      margin: 0;
+      background: black;
+      color: #404040;
+      font-family: sans-serif;
+      font-size: 10pt;
+    }
+    a {
+      color: #F88113;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #content {
+      width: 1024px;
+      height: 580px;
+      margin: auto auto auto auto;
+      box-shadow: 0px 4px 16px -4px #333;
+    }
+
+    /* On small devices, fill the entire screen and hide the rest of the page. */
+    @media (max-device-width: 8in), (max-device-height: 8in) {
+      html {
+        /* Prevent scrollbars from causing a resize feedback loop. */
+        overflow: hidden;
+      }
+      html, body {
+        height: 100%;
+      }
+      #content {v 
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="content"></div>
+<script type="text/javascript" src="Away3D.next.js"></script>
+<!-- pomelo stuff start-->
+	<script src="pomeloWebsocketClientBuild.js" type="text/javascript"></script>
+	<script type="text/javascript">require('boot');</script> 
+<!-- pomelo stuff end-->
+<script src="flambe.js"></script>
+<script>
+  flambe.embed(["targets/main-flash.swf", "targets/main-html.js"], "content");
+</script>
+
+<footer class="no-mobile">
+<p>
+  <a href="?">Default</a> |
+  <a href="?flambe=flash">Flash</a> |
+  <a href="?flambe=html">HTML5</a>
+</p>
+<p>Made with <a href="http://www.spark.tools">Spark</a></p>
+</footer>
+
+</body>
+</html>

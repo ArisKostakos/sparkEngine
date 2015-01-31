@@ -9,7 +9,7 @@ package tools.spark.framework.space2_5D.core;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IScene2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
-import tools.spark.framework.space2_5D.layout.core.GroupSpace2_5D;
+import tools.spark.framework.layout.containers.Group;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
@@ -26,7 +26,7 @@ class AScene2_5D extends AInstantiable2_5D implements IScene2_5D
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
 		//if (gameEntity.getState('layoutable') == true)
-			groupInstances[p_view2_5D] = new GroupSpace2_5D("scene", p_view2_5D, this);
+			//groupInstances[p_view2_5D] = new Group("scene", p_view2_5D, this);
 
 		return super.createInstance(p_view2_5D);
 	}

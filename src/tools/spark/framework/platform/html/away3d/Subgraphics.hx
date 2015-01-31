@@ -33,10 +33,10 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.platformRendererSet.push(new Flambe2_5DHtmlRenderer());
+		Sliced.display.platformRendererSet["2D"] = new Flambe2_5DHtmlRenderer();
 		
 		//Create Away3D Renderer
-		Sliced.display.platformRendererSet.push(new Away3DHtmlRenderer());
+		Sliced.display.platformRendererSet["3D"] = new Away3DHtmlRenderer();
 	}
 	
 	public static function init():Void

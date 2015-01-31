@@ -22,7 +22,7 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.platformRendererSet.push(new Flambe2_5DHtmlRenderer());
+		Sliced.display.platformRendererSet["2D"] = new Flambe2_5DHtmlRenderer();
 	}
 	
 	

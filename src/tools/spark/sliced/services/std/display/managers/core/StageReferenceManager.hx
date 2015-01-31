@@ -7,6 +7,7 @@
  package tools.spark.sliced.services.std.display.managers.core;
 import tools.spark.framework.layout.containers.Group;
 import tools.spark.sliced.services.std.display.active_displayentity_references.core.ActiveStageReference;
+import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageAreaReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveViewReference;
 import tools.spark.sliced.services.std.display.managers.interfaces.IActiveReferenceMediator;
@@ -48,16 +49,25 @@ class StageReferenceManager implements IDisplayObjectManager
 		//Check if this gameEntity was Active
 		if (p_object == null) return;
 		
-		//typecast?
+		//typecast
+		var l_stageReference:IActiveStageReference = cast(p_object, IActiveStageReference);
 		
-		updateState(p_object, p_gameEntity, 'test');
+		updateState(l_stageReference, p_gameEntity, 'test');
+		updateState(l_stageReference, p_gameEntity, 'width');
+		updateState(l_stageReference, p_gameEntity, 'height');
 		
+		//Update my layoutObject
+		l_stageReference.layoutRoot.update();
+		
+		//this.. yeah....hmm
+		l_stageReference.layoutRoot.explicitWidth = flambe.System.stage.width;
+		l_stageReference.layoutRoot.explicitHeight = flambe.System.stage.height;
 		
 		//FOR ALL CHILDREN
-		//@FIX ME VERY VERY SOON!: OMG, if I keep updating the Stage it will keep adding the same views!! REMOVE THEM FIRST!!!!!!!! or smth..
-		for (f_viewEntity in p_gameEntity.getChildren())
+		//@FIX ME VERY VERY SOON!: OMG, if I keep updating the Stage it will keep adding the same views and stageAreas!! REMOVE THEM FIRST!!!!!!!! or smth..
+		for (f_stageChildEntity in p_gameEntity.getChildren())
 		{
-			addTo(f_viewEntity,p_object);
+			addTo(f_stageChildEntity,l_stageReference);
 		}
 	}
 	
@@ -71,12 +81,16 @@ class StageReferenceManager implements IDisplayObjectManager
 		
 		switch (p_state)
 		{
-			case 'test':
-				_createStageLayOutThing(l_activeStageReference, p_gameEntity);
+			//case 'test':
+				//_createStageLayOutThing(l_activeStageReference, p_gameEntity);
+			case 'width':
+				//_createStageLayOutThing(l_activeStageReference, p_gameEntity);
+			case 'height':
+				//_createStageLayOutThing(l_activeStageReference, p_gameEntity);
 		}
 		
 	}
-	
+	/*
 	private function _createStageLayOutThing(p_activeStageReference:IActiveStageReference, p_gameEntity:IGameEntity):Void
 	{
 		//i guess we create our thing on the activeStageRegerence eyh? where else..
@@ -146,30 +160,8 @@ class StageReferenceManager implements IDisplayObjectManager
 		Console.error("childOneInChildOne REAL Width: " + childOneInChildOne.width);
 		Console.error("childOneInChildOne REAL Height: " + childOneInChildOne.height);
 		Console.error('-------------------------------------------------');
-	}
+	}*/
 	
-	private function _layoutManagerMeasure(p_Group:Group):Void
-	{
-		for (f_child in p_Group.children)
-		{
-			_layoutManagerMeasure(f_child);
-		}
-		
-		//down here cause it's bottom-up
-		//only measure if explicit not set?
-		p_Group.measure();
-	}
-	
-	private function _layoutManagerUpdateDisplayList(p_Group:Group):Void
-	{
-		//up here cause it's top to bottom
-		p_Group.updateDisplayList(p_Group.preferredWidth, p_Group.preferredHeight);
-		
-		for (f_child in p_Group.children)
-		{
-			_layoutManagerUpdateDisplayList(f_child);
-		}
-	}
 	
 	public function addTo(p_objectChild:Dynamic, p_objectParent:Dynamic):Void
 	{
@@ -179,12 +171,14 @@ class StageReferenceManager implements IDisplayObjectManager
 		//typecast?
 
 		var l_stageReference:IActiveStageReference = cast(p_objectParent, ActiveStageReference);
-		var l_viewEntity:IGameEntity = cast(p_objectChild, GameEntity);
+		var l_stageChildEntity:IGameEntity = cast(p_objectChild, GameEntity);
 		
-		if (l_viewEntity.getState('displayType') == "View") //weak typecasting
-			_addView(l_stageReference,_activeReferenceMediator.createViewReference(l_viewEntity),l_viewEntity);
+		if (l_stageChildEntity.getState('displayType') == "View") //weak typecasting
+			_addView(l_stageReference, _activeReferenceMediator.createViewReference(l_stageChildEntity), l_stageChildEntity);
+		else if (l_stageChildEntity.getState('displayType') == "StageArea") //weak typecasting
+			_addStageArea(l_stageReference,_activeReferenceMediator.createStageAreaReference(l_stageChildEntity),l_stageChildEntity);
 		else
-			Console.warn("A child of a Stage gameEntity is NOT a View! Ignoring...");
+			Console.warn("A child of a Stage gameEntity is NOT a View or a StageArea! Ignoring...");
 	}
 	
 	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void
@@ -219,6 +213,22 @@ class StageReferenceManager implements IDisplayObjectManager
 				p_stageReference.addView(p_viewReference);
 				_activeReferenceMediator.viewReferenceManager.update(p_viewReference, p_viewEntity);
 			}
+		}
+	}
+	
+	private function _addStageArea(p_stageReference:IActiveStageReference, p_stageAreaReference:IActiveStageAreaReference, p_stageAreaEntity:IGameEntity):Void
+	{
+		//somewhere around here, you should make sure if the stageArea being added previously belonged somewhere else, it should get removed from that place
+		
+		if (_activeReferenceMediator.getActiveStageAreaReference(p_stageAreaEntity) != null)
+		{
+			Console.warn("This stageArea object [" + p_stageAreaEntity.getState('name') + "] is already bound to the Active Stage. Ignoring...");
+			//in this case, the newly created stageAreaReference pointer won't be held anywhere and the stageAreaReference object will be garbage collected :/
+		}
+		else
+		{
+			p_stageReference.addStageArea(p_stageAreaReference);
+			_activeReferenceMediator.stageAreaReferenceManager.update(p_stageAreaReference, p_stageAreaEntity);
 		}
 	}
 }

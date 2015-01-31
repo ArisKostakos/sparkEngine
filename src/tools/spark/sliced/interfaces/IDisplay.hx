@@ -20,7 +20,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 interface IDisplay extends IService
 {	
 	var projectActiveSpaceReference( default, null ):IActiveSpaceReference;
-	var platformRendererSet( default, null ):Array<IPlatformSpecificRenderer>;
+	var platformRendererSet( default, null ):Map<String, IPlatformSpecificRenderer>;
 	
 	function setActiveSpace(p_spaceEntity:IGameEntity):Bool;
 	function addDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void;

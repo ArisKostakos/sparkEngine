@@ -9,7 +9,7 @@ package tools.spark.framework.space2_5D.core;
 import tools.spark.framework.space2_5D.interfaces.IInstantiable2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
-import tools.spark.framework.space2_5D.layout.core.GroupSpace2_5D;
+import tools.spark.framework.layout.containers.Group;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
@@ -21,7 +21,7 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 	private var _updateStateFunctions:Map < String, Dynamic->IView2_5D->Void >;
 	
 	//For Layout 2D
-	public var groupInstances( default, null ):Map<IView2_5D, GroupSpace2_5D>;
+	public var groupInstances( default, null ):Map<IView2_5D, Group>;
 	//group instances have a pointer of me, and their view, so they can do stuff
 	
 	private function new(p_gameEntity:IGameEntity) 
@@ -36,7 +36,7 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 		_updateStateFunctions = new Map < String, Dynamic->IView2_5D->Void > ();
 		
 		//if (gameEntity.getState('layoutable') == true)
-			groupInstances = new Map<IView2_5D, GroupSpace2_5D>();
+			groupInstances = new Map<IView2_5D, Group>();
 	}
 	
 	//For optimization purposes.. to be able to inline the publics

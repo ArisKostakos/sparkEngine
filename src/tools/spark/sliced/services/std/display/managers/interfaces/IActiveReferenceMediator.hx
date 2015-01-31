@@ -7,6 +7,7 @@
  package tools.spark.sliced.services.std.display.managers.interfaces;
 import tools.spark.sliced.interfaces.IDisplay;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveSpaceReference;
+import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageAreaReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveViewReference;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
@@ -21,11 +22,15 @@ interface IActiveReferenceMediator
 	var spaceReferenceManager( default, null ):IDisplayObjectManager;
 	var stageReferenceManager( default, null ):IDisplayObjectManager;
 	var viewReferenceManager( default, null ):IDisplayObjectManager;
+	var stageAreaReferenceManager( default, null ):IDisplayObjectManager;
 	
+	function createSpaceReference(p_spaceEntity:IGameEntity):IActiveSpaceReference;
   	function createStageReference(p_stageEntity:IGameEntity):IActiveStageReference;
 	function createViewReference(p_viewEntity:IGameEntity):IActiveViewReference;
+	function createStageAreaReference(p_stageAreaEntity:IGameEntity):IActiveStageAreaReference;
 	
 	function getActiveSpaceReference(p_spaceEntity:IGameEntity):IActiveSpaceReference;
 	function getActiveStageReference(p_stageEntity:IGameEntity):IActiveStageReference;
 	function getActiveViewReference(p_viewEntity:IGameEntity):IActiveViewReference;
+	function getActiveStageAreaReference(p_stageAreaEntity:IGameEntity):IActiveStageAreaReference;
 }

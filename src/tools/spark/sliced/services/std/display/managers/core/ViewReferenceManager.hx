@@ -45,12 +45,17 @@ class ViewReferenceManager implements IDisplayObjectManager
 		//Check if this gameEntity was Active
 		if (p_object == null) return;
 		
-		//weak typecast?
+		//typecast
+		var l_viewReference:IActiveViewReference = cast(p_object, IActiveViewReference);
 		
-		updateState(p_object, p_gameEntity, 'scene');
-		updateState(p_object, p_gameEntity, 'camera');
+		updateState(l_viewReference, p_gameEntity, 'scene');
+		updateState(l_viewReference, p_gameEntity, 'camera');
 		
-		_updateRenderer(cast(p_object, ActiveViewReference));
+		
+		//Update my layoutObject
+		l_viewReference.layoutElement.update();
+		
+		_updateRenderer(l_viewReference);
 	}
 	
 	public function updateState(p_object:Dynamic, p_gameEntity:IGameEntity, p_state:String):Void 
@@ -85,14 +90,25 @@ class ViewReferenceManager implements IDisplayObjectManager
 		//Add to Renderer, if you haven't already
 		if (p_viewReference.renderer == null)
 		{
-			//@FIX NOW: When renderer selection is done, fix this so it picks the appropriate renderer. Now it will assign every view to a fixed renderer!
-			if (p_viewReference.viewEntity.getState('name')=="Away3D")
-				p_viewReference.renderer = _activeReferenceMediator.display.platformRendererSet[1];
+			//@FIX NOW: Only explicit renderer selection has been implemented.. work on the auto one later
+			if (p_viewReference.viewEntity.getState('renderer') != "Implicit")
+			{
+				p_viewReference.renderer = _activeReferenceMediator.display.platformRendererSet[p_viewReference.viewEntity.getState('renderer')];
+			}
 			else
-				p_viewReference.renderer = _activeReferenceMediator.display.platformRendererSet[0];
+			{
+				Console.error("Implicit Renderer selection has not been implemented yet. View " + p_viewReference.viewEntity.getState('name') + " cannot be rendered!");
+			}
 			
-			//This is huge... starting to talk to renderers here!! right place to do that??? Sure why not...
-			p_viewReference.renderer.createView(p_viewReference.viewEntity);
+			if (p_viewReference.renderer != null)
+			{
+				//This is huge... starting to talk to renderers here!! right place to do that??? Sure why not...
+				p_viewReference.renderer.createView(p_viewReference.viewEntity);
+			}
+			else
+			{
+				Console.error("Could not create renderer: " + p_viewReference.viewEntity.getState('renderer') + ".");
+			}
 		}
 		//else
 		//{

@@ -1,6 +1,6 @@
 # The name, version and identifier, for mobile app packaging
 name: Spark Runtime
-version: 0.4.6
+version: 0.3.6
 id: tools.spark.sparkruntime
 
 # The main class name
@@ -10,14 +10,14 @@ main: tools.spark.Main
 default_platform: html
 
 # Additional flags to pass to the Haxe compiler
-haxe_flags: -lib hscript -lib SpriterHaxeEngine -D flambe_transparent -D includeNativeComponents
+haxe_flags: -lib hscript -D includeAway3D -D includeNativeComponents -D flambe_transparent -lib SpriterHaxeEngine
 
 # Additional paths to include in the build
 extra_paths:
 #  assets: C:\Users\LLaffer\Documents\GamePlus_Projects\TestGame\assets
 #   libs: dir1 dir2
-#  src: C:\HaxeToolkit\haxe\lib\away3d-html
-  web: ["web_html_editor", "vendor"]
+  src: C:\HaxeToolkit\haxe\lib\away3d-html
+  web: ["web_html_3d_nc", "vendor"]
 
 # The initial orientation and fullscreen state
 orientation: portrait

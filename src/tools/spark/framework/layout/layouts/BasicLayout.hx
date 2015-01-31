@@ -191,7 +191,7 @@ class BasicLayout extends ALayoutBase
     {
         var l_maxX:Float = 0;
         var l_maxY:Float = 0;
-		
+		Console.error(target.layoutableEntity.getState('name') + " updateDisplayList(w:"+p_unscaledWidth+",h:"+p_unscaledHeight+"):");
         for (f_child in target.children)
         {
             var f_elementMaxWidth:Null<Float> = null; 
@@ -208,10 +208,11 @@ class BasicLayout extends ALayoutBase
                     f_availableWidth -= f_child.left;
                 if (f_child.right!=null)
                      f_availableWidth -= f_child.right;
-
+				
                 f_childWidth = Math.round(f_availableWidth * Math.min(f_child.percentWidth * 0.01, 1));
                 f_elementMaxWidth = Math.min(f_child.preferredMaxWidth,
                     _maxSizeToFitIn(p_unscaledWidth, f_child.horizontalCenter, f_child.left, f_child.right, f_child.x));
+					
             }
             else if (f_child.left!=null && f_child.right!=null)
             {
@@ -252,7 +253,7 @@ class BasicLayout extends ALayoutBase
             }
 
             // Set the size.
-			
+
             //layoutElement.setLayoutBoundsSize(childWidth, childHeight);
 			f_child.setActualSize(f_childWidth, f_childHeight);
 			
@@ -297,7 +298,10 @@ class BasicLayout extends ALayoutBase
         //layoutTarget.setContentSize(Math.ceil(maxX), Math.ceil(maxY));
 		//target.width = Math.ceil(l_maxX);
 		//target.height = Math.ceil(l_maxY);
-		target.width = target.explicitWidth==null ? Math.ceil(l_maxX) : target.explicitWidth;
-		target.height = target.explicitHeight==null ? Math.ceil(l_maxY) : target.explicitHeight;
+
+		//target.width = target.explicitWidth==null ? Math.ceil(l_maxX) : target.explicitWidth;
+		//target.height = target.explicitHeight == null ? Math.ceil(l_maxY) : target.explicitHeight;
+		target.setActualSize(Math.ceil(l_maxX), Math.ceil(l_maxY));
+		
     }   
 }

@@ -1,10 +1,10 @@
 /* Copyright © Spark.tools - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Written by Aris Kostakos <aris@spark.tools>, November 2014
+ * Written by Aris Kostakos <aris@spark.tools>, January 2015
  */
 
-package tools.spark.framework.flambe2_5D;
+package tools.spark.framework.dom2_5D;
 
 import flambe.display.FillSprite;
 import flambe.display.ImageSprite;
@@ -25,7 +25,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  * ...
  * @author Aris Kostakos
  */
-class FlambeEntity2_5D extends AEntity2_5D
+class DomEntity2_5D extends AEntity2_5D
 {
 	private var _instancesMesh:Map<IView2_5D,Sprite>;
 	

@@ -32,10 +32,10 @@ class Subgraphics
 	public static function createDisplayRenderers():Void
 	{
 		//Create Flambe Renderer
-		Sliced.display.platformRendererSet.push(new Flambe2_5DFlashRenderer());
+		Sliced.display.platformRendererSet["2D"] = new Flambe2_5DFlashRenderer();
 		
 		//Create Away3D Renderer
-		Sliced.display.platformRendererSet.push(new Away3DFlashRenderer());
+		Sliced.display.platformRendererSet["3D"] = new Away3DFlashRenderer();
 	}
 	
 	public static function init():Void

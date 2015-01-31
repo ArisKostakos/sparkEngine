@@ -7,6 +7,7 @@
 package tools.spark.framework.layout.containers;
 import tools.spark.framework.layout.layouts.ALayoutBase;
 import tools.spark.framework.layout.layouts.BasicLayout;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -78,14 +79,16 @@ class Group
 	//children (if this group is a container)
 	public var children( default, null):Array<Group>;
 	
+	public var layoutableEntity ( default, null):IGameEntity;
+	public var layoutableInstanceType (default, null):String;
+	public var layoutableInstance (default, default):Dynamic;
 	
-	public function new(?p_layout : ALayoutBase) 
+	public function new(p_layoutableEntity : IGameEntity, p_layoutableInstanceType:String, p_layoutableInstance:Dynamic) 
 	{
-		if (p_layout!=null)
-			layout = p_layout;
-		else
-			layout = new BasicLayout();
-			
+		layoutableEntity = p_layoutableEntity;
+		layoutableInstanceType = p_layoutableInstanceType;
+		layoutableInstance = p_layoutableInstance;
+		
 		_init();
 	}
 	
@@ -94,8 +97,76 @@ class Group
 		children = new Array<Group>();
 		
 		x = y = width = height = 0;
+	}
+	
+	public function update():Void
+	{
+		updateState('layout');
+		updateState('x');
+		updateState('y');
+		updateState('width');
+		updateState('height');
+		updateState('left');
+		updateState('top');
+		updateState('right');
+		updateState('bottom');
+	}
+	
+	public function updateState(p_state:String):Void
+	{
+		switch (p_state)
+		{
+			case "layout":
+				if (layoutableEntity.getState(p_state) == "Basic") layout = new BasicLayout();
+				
+				layout.target = this;
+			case "x":
+				
+			case "y":
+				
+			case "width":
+				_updateExplicitSize(layoutableEntity.getState(p_state), "width");
+			case "height":
+				_updateExplicitSize(layoutableEntity.getState(p_state), "height");
+			case "left":
+				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
+					left = layoutableEntity.getState(p_state);
+			case "top":
+				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
+					top = layoutableEntity.getState(p_state);
+			case "right":
+				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
+					right = layoutableEntity.getState(p_state);
+			case "bottom":
+				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
+					bottom = layoutableEntity.getState(p_state);
+		}
+	}
+	
+	private function _updateExplicitSize(p_stateValue:String, p_dimension:String):Void
+	{
+		var l_explicitSize:Null<Float>=null;
+		var l_percentSize:Null<Float>=null;
 		
-		layout.target = this;
+		if (p_stateValue != "Implicit")
+		{
+			if (p_stateValue.indexOf("%") != -1)
+				l_percentSize = Std.parseFloat(p_stateValue);
+			else
+				l_explicitSize = Std.parseFloat(p_stateValue);
+		}
+		
+		
+		if (p_dimension == "width")
+		{
+			explicitWidth = l_explicitSize;
+			percentWidth = l_percentSize;
+		}
+		else
+		{
+			explicitHeight = l_explicitSize;
+			percentHeight = l_percentSize;
+		}
 	}
 	
 	private function set_layout( p_value : ALayoutBase ) : ALayoutBase 
@@ -118,13 +189,64 @@ class Group
     {
 		layout.updateDisplayList(p_width, p_height);
     }
-	
+	/*
 	public function setActualSize(?p_width:Float, ?p_height:Float):Void
 	{
 		if (p_width == null && p_height == null)
 		{
 			width = preferredWidth;
 			height = preferredHeight;
+		}
+		else
+		{
+			if (p_width != null) width = p_width;
+			if (p_height != null) height = p_height;
+		}
+	}*/
+	
+	//the horror......
+	public function setActualSize(?p_width:Float, ?p_height:Float):Void
+	{
+		//Width
+		if (explicitWidth != null)
+		{
+			width = explicitWidth;
+		}
+		else
+		{
+			if (p_width != null && p_width != 0)
+			{
+				width = p_width;
+				measuredWidth = p_width;
+			}
+			else
+			{
+				if (preferredWidth != 0)
+				{
+					width = preferredWidth;
+				}
+			}
+		}
+		
+		//Height
+		if (explicitHeight != null)
+		{
+			height = explicitHeight;
+		}
+		else
+		{
+			if (p_height != null && p_height != 0)
+			{
+				height = p_height;
+				measuredHeight = p_height;
+			}
+			else
+			{
+				if (preferredHeight != 0)
+				{
+					height = preferredHeight;
+				}
+			}
 		}
 	}
 	

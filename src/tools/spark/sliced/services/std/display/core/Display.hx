@@ -19,6 +19,7 @@ import tools.spark.sliced.services.std.display.managers.interfaces.IActiveRefere
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameSpace;
+import tools.spark.framework.layout.managers.LayoutManager;
 
 /**
  * ...
@@ -47,7 +48,7 @@ class Display extends AService implements IDisplay
 	private var _dataBuffer:IDataBuffer;
 	
 	//This array will be modified from Subgraphic modules, depending on which renderers are available on the platform
-	public var platformRendererSet( default, null ):Array<IPlatformSpecificRenderer>;
+	public var platformRendererSet( default, null ):Map<String, IPlatformSpecificRenderer>;
 	public var projectActiveSpaceReference( default, null ):IActiveSpaceReference;
 	
 	private var _activeReferenceMediator:IActiveReferenceMediator;
@@ -66,9 +67,6 @@ class Display extends AService implements IDisplay
 		_renderStateNames['2DMeshSpriteForm'] = true;
 		
 		_renderStateNames['2DMeshSpriterAnimForm'] = true;
-		
-		_renderStateNames['stageX'] = true;
-		_renderStateNames['stageY'] = true;
 		
 		_renderStateNames['spaceX'] = true;
 		_renderStateNames['spaceY'] = true;
@@ -120,7 +118,7 @@ class Display extends AService implements IDisplay
 		_activeReferenceMediator = new ActiveReferenceMediator(this);
 		
 		//Renderer Set
-		platformRendererSet = new Array<IPlatformSpecificRenderer>();
+		platformRendererSet = new Map<String, IPlatformSpecificRenderer>();
 		
 		//Data Buffer
 		_dataBuffer = new DataBuffer();
@@ -160,7 +158,7 @@ class Display extends AService implements IDisplay
 				Console.warn("Another space object was already set to this Project! Resetting...");
 			}
 			
-			projectActiveSpaceReference = cast(_activeReferenceMediator.spaceReferenceManager.create(p_spaceEntity), ActiveSpaceReference);
+			projectActiveSpaceReference = _activeReferenceMediator.createSpaceReference(p_spaceEntity);
 			_activeReferenceMediator.spaceReferenceManager.update(projectActiveSpaceReference, p_spaceEntity);
 		}
 	}
@@ -183,6 +181,8 @@ class Display extends AService implements IDisplay
 							Console.warn("adding something to a space");//...
 						case "Stage":
 							Console.warn("adding something to a stage");//...
+						case "StageArea":
+							Console.warn("adding something to a stageArea");//...
 						case "View":
 							Console.warn("adding something to a view");//...
 							for (renderer in platformRendererSet)
@@ -198,6 +198,8 @@ class Display extends AService implements IDisplay
 							_activeReferenceMediator.spaceReferenceManager.updateState(_activeReferenceMediator.getActiveSpaceReference(f_bufferEntry.source), f_bufferEntry.source, f_bufferEntry.field);
 						case "Stage":
 							_activeReferenceMediator.stageReferenceManager.updateState(_activeReferenceMediator.getActiveStageReference(f_bufferEntry.source), f_bufferEntry.source, f_bufferEntry.field);
+						case "StageArea":
+							_activeReferenceMediator.stageAreaReferenceManager.updateState(_activeReferenceMediator.getActiveStageAreaReference(f_bufferEntry.source), f_bufferEntry.source, f_bufferEntry.field);
 						case "View":
 							_activeReferenceMediator.viewReferenceManager.updateState(_activeReferenceMediator.getActiveViewReference(f_bufferEntry.source), f_bufferEntry.source, f_bufferEntry.field);
 							for (renderer in platformRendererSet)
@@ -218,6 +220,13 @@ class Display extends AService implements IDisplay
 		
 		//Clear buffer
 		_dataBuffer.clearBuffer();
+		
+		//Layout
+		//@think: should this be before the buffer, or after the buffer? should this be here at all? prob, not..
+		//put me in a buffer event, so i don't check for this every single FUCKING frame.. this is so WRONG
+		if (projectActiveSpaceReference!=null)
+			projectActiveSpaceReference.activeStageReference.layoutManager.validate();
+		
 		
 		//all renderers are up to date in this point, so...
 		//after the Display.update, the platform.subgraphics system will request a render() for each view from their assigned renderer
