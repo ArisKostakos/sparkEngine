@@ -19,7 +19,4 @@ class AObject2_5D extends ABase2_5D implements IObject2_5D
 	{
 		super(p_gameEntity);
 	}
-	
-	//here be positioning logic functions
-	//...
 }

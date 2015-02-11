@@ -28,9 +28,15 @@ class AEntity2_5D extends AInstantiable2_5D implements IEntity2_5D
 	
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
-		//if (gameEntity.getState('layoutable') == true)
-			//groupInstances[p_view2_5D] = new Group("entity", p_view2_5D, this);
-
+		if (gameEntity.getState('layoutable') == true)
+			groupInstances[p_view2_5D] = new Group(gameEntity, "Entity", this);
+			
 		return super.createInstance(p_view2_5D);
+	}
+	
+	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	{
+		if (p_childEntity.gameEntity.getState('layoutable') == true)
+			groupInstances[p_view2_5D].children.push(p_childEntity.groupInstances[p_view2_5D]);
 	}
 }

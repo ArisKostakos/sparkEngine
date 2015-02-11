@@ -9,6 +9,7 @@ package tools.spark.framework.flambe2_5D;
 import flambe.display.FillSprite;
 import flambe.platform.InternalGraphics;
 import flambe.math.Rectangle;
+import tools.spark.framework.layout.containers.Group;
 import tools.spark.framework.space2_5D.core.AView2_5D;
 import flambe.Entity;
 import flambe.display.Sprite;
@@ -17,8 +18,8 @@ import tools.spark.framework.space2_5D.interfaces.ICamera2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IScene2_5D;
 import flambe.System;
+import tools.spark.framework.space2_5D.interfaces.IView2_5D;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
-import tools.spark.sliced.core.Sliced;
 
 /**
  * ...
@@ -29,6 +30,7 @@ class FlambeView2_5D extends AView2_5D
 	private var _flambeGraphics:InternalGraphics;
 	private var _instanceView:Entity;
 	private var _instanceScene:Entity;
+	
 	
 	public function new(p_gameEntity:IGameEntity, p_flambeGraphics:InternalGraphics) 
 	{
@@ -43,7 +45,6 @@ class FlambeView2_5D extends AView2_5D
 	{
 		_instanceView = new Entity();
 		
-		
 		//var l_viewSprite:FillSprite = new FillSprite(0x00ff00,1024,580);
 		var l_viewSprite:Sprite = new Sprite();
 		l_viewSprite.blendMode = BlendMode.Copy;
@@ -51,8 +52,6 @@ class FlambeView2_5D extends AView2_5D
 		//l_viewSprite.x._ = 100;
 		//l_viewSprite.y._ = 0;
 		_instanceView.add(l_viewSprite);
-		
-		Sliced.display.projectActiveSpaceReference.activeStageReference.layoutRoot.children[0].children[0].layoutableInstance = l_viewSprite;
 		
 		//Add flambe views that are active on root, for mouse listeners, physics, etc.. make sure you remove them if hidden, not active. remember this is for physics/event listeners only.. view will still render and be visible even if removed from the root
 		System.root.addChild(_instanceView);
@@ -158,5 +157,15 @@ class FlambeView2_5D extends AView2_5D
 	private function _disposeCurrentScene():Void
 	{
 		_instanceScene = null;
+	}
+	
+	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void
+	{
+		var l_viewSprite:Sprite = _instanceView.get(Sprite);
+		
+		if (p_x != null) l_viewSprite.x._ = p_x;
+		if (p_y != null) l_viewSprite.y._ = p_y;
+		//if (p_width != null) l_viewSprite.scissor.width = p_width;
+		//if (p_height != null) l_viewSprite.scissor.height = p_height;
 	}
 }

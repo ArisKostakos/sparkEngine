@@ -19,10 +19,7 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 {
 	private var _instances:Map<IView2_5D,Dynamic>;
 	private var _updateStateFunctions:Map < String, Dynamic->IView2_5D->Void >;
-	
-	//For Layout 2D
 	public var groupInstances( default, null ):Map<IView2_5D, Group>;
-	//group instances have a pointer of me, and their view, so they can do stuff
 	
 	private function new(p_gameEntity:IGameEntity) 
 	{
@@ -57,6 +54,21 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 		{
 			//do for p_View2_5D instance
 			_updateStateOfInstance(p_state, p_view2_5D);
+		}
+	}
+	
+	private function _updateLayoutGroup( ?p_view2_5D:IView2_5D):Void
+	{
+		if (p_view2_5D == null)
+		{
+			//do for all instances
+			for (f_view in groupInstances.keys())
+				groupInstances[f_view].update();
+		}
+		else
+		{
+			//do for p_View2_5D instance
+			groupInstances[p_view2_5D].update();
 		}
 	}
 	

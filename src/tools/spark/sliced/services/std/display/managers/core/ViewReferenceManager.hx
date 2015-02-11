@@ -51,7 +51,6 @@ class ViewReferenceManager implements IDisplayObjectManager
 		updateState(l_viewReference, p_gameEntity, 'scene');
 		updateState(l_viewReference, p_gameEntity, 'camera');
 		
-		
 		//Update my layoutObject
 		l_viewReference.layoutElement.update();
 		

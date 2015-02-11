@@ -19,6 +19,7 @@ class BasicLayout extends ALayoutBase
 	public function new() 
 	{
 		super();
+		layoutType = "Basic";
 	}
 	
 	private static function _constraintsDetermineWidth(p_group:Group):Bool
@@ -95,6 +96,9 @@ class BasicLayout extends ALayoutBase
 
         for (f_child in target.children)
         {
+            if (f_child==null || f_child.includeInLayout==false)
+                continue;
+				
             // Extents of the element - how much additional space (besides its own width/height)
             // the element needs based on its constraints.
             var f_extX:Float;
@@ -191,9 +195,12 @@ class BasicLayout extends ALayoutBase
     {
         var l_maxX:Float = 0;
         var l_maxY:Float = 0;
-		Console.error(target.layoutableEntity.getState('name') + " updateDisplayList(w:"+p_unscaledWidth+",h:"+p_unscaledHeight+"):");
+		//Console.error(target.layoutableEntity.getState('name') + " updateDisplayList(w:"+p_unscaledWidth+",h:"+p_unscaledHeight+"):");
         for (f_child in target.children)
         {
+			if (f_child==null || f_child.includeInLayout==false)
+				continue;
+				
             var f_elementMaxWidth:Null<Float> = null; 
             var f_elementMaxHeight:Null<Float> = null;
 
@@ -301,7 +308,9 @@ class BasicLayout extends ALayoutBase
 
 		//target.width = target.explicitWidth==null ? Math.ceil(l_maxX) : target.explicitWidth;
 		//target.height = target.explicitHeight == null ? Math.ceil(l_maxY) : target.explicitHeight;
-		target.setActualSize(Math.ceil(l_maxX), Math.ceil(l_maxY));
-		
+		//target.setActualSize(Math.ceil(l_maxX), Math.ceil(l_maxY));
+		//OK THIS ONE NEEDS WORK...
+		target.width = Math.ceil(p_unscaledWidth);
+		target.height = Math.ceil(p_unscaledHeight);
     }   
 }

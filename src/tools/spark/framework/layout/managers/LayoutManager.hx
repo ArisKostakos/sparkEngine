@@ -8,6 +8,8 @@ package tools.spark.framework.layout.managers;
 import flambe.display.Sprite;
 import flambe.math.Rectangle;
 import tools.spark.framework.layout.containers.Group;
+import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
+import tools.spark.framework.space2_5D.interfaces.IView2_5D;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.core.Sliced;
 
@@ -34,23 +36,51 @@ class LayoutManager
 			logPreffered(rootLayoutElement);
 			updateDisplayList(rootLayoutElement);
 			log(rootLayoutElement);
-			//updateRealObjects(rootLayoutElement);
+			updateRealObjects(rootLayoutElement);
 			validated = true;
 		}
 	}
 	
-	public function updateRealObjects(p_Group:Group):Void
+	public function getViewGroupByGameEntity(p_gameEntity:IGameEntity, ?p_Group:Group):Group
 	{
+		if (p_Group == null)
+			p_Group = rootLayoutElement;
+		
+		if (p_Group.layoutableEntity == p_gameEntity)
+			return p_Group;
+			
+		for (f_child in p_Group.children)
+		{
+			if (f_child.layoutableInstanceType != "Entity")
+			{
+				var l_found:Group = getViewGroupByGameEntity(p_gameEntity, f_child);
+				if (l_found != null)
+					return l_found;
+			}
+		}
+		
+		return null;
+	}
+	
+	public function updateRealObjects(p_Group:Group, p_parentsX:Float=0, p_parentsY:Float=0, p_parentView:IView2_5D=null):Void
+	{
+		var l_view2_5D:IView2_5D = p_parentView;
+		
 		//up here cause it's top to bottom
 		if (p_Group.layoutableInstanceType == "View")
 		{
-			var skata:Sprite = p_Group.layoutableInstance;
-			skata.setXY(rootLayoutElement.children[0].x,rootLayoutElement.children[0].y);
+			l_view2_5D = p_Group.layoutableInstance;
+			l_view2_5D.setPosSize(p_Group.x+p_parentsX, p_Group.y+p_parentsY, p_Group.width, p_Group.height);
+		}
+		else if (p_Group.layoutableInstanceType == "Entity")
+		{
+			var l_entity2_5D:IEntity2_5D = p_Group.layoutableInstance;
+			l_entity2_5D.setPosSize(p_Group.x, p_Group.y, p_Group.width, p_Group.height, l_view2_5D);
 		}
 		
 		for (f_child in p_Group.children)
 		{
-			updateRealObjects(f_child);
+			updateRealObjects(f_child, p_Group.x+p_parentsX,p_Group.y+p_parentsY, l_view2_5D);
 		}
 	}
 	

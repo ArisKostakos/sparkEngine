@@ -5,8 +5,12 @@
  */
 
 package tools.spark.framework.layout.containers;
+import tools.spark.framework.layout.interfaces.EHorizontalAlign;
+import tools.spark.framework.layout.interfaces.EVerticalAlign;
 import tools.spark.framework.layout.layouts.ALayoutBase;
 import tools.spark.framework.layout.layouts.BasicLayout;
+import tools.spark.framework.layout.layouts.HorizontalLayout;
+import tools.spark.framework.layout.layouts.VerticalLayout;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
@@ -17,13 +21,14 @@ class Group
 {
 	public var layout( default, set ):ALayoutBase;
 	
-	//public var width( default, default ):Int;
-	//public var height( default, default ):Int;
+
 	//public var minWidth( default, default ):Float;
 	//public var minHeight( default, default ):Float;
 	//public var maxWidth( default, default ):Null<Float>;
 	//public var maxHeight( default, default ):Null<Float>;
 
+	public var includeInLayout( default, default ):Bool;
+	
 	//ACTUAL SHIT
 	//positions
 	public var x( default, default ):Float;
@@ -75,6 +80,29 @@ class Group
 	
 	public var percentWidth( default, default ):Null<Float>;
 	public var percentHeight( default, default ):Null<Float>;
+
+	//HORIZONTAL-VERTICAL
+	public var paddingLeft( default, default ):Float;
+	public var paddingRight( default, default ):Float;
+	public var paddingTop( default, default ):Float;
+	public var paddingBottom( default, default ):Float;
+	public var gap( default, default ):Float;
+	public var horizontalAlign( default, default ):EHorizontalAlign;
+	public var verticalAlign( default, default ):EVerticalAlign;
+	
+	//HORIZONTAL
+	public var columnWidth( default, default ):String;
+	public var requestedColumnCount( default, default ):Int;
+	public var requestedMaxColumnCount( default, default ):Int;
+	public var requestedMinColumnCount( default, default ):Int;
+	public var variableColumnWidth( default, default ):Bool;
+	
+	//VERTICAL
+	public var rowHeight( default, default ):String;
+	public var requestedRowCount( default, default ):Int;
+	public var requestedMaxRowCount( default, default ):Int;
+	public var requestedMinRowCount( default, default ):Int;
+	public var variableRowHeight( default, default ):Bool;
 	
 	//children (if this group is a container)
 	public var children( default, null):Array<Group>;
@@ -82,6 +110,8 @@ class Group
 	public var layoutableEntity ( default, null):IGameEntity;
 	public var layoutableInstanceType (default, null):String;
 	public var layoutableInstance (default, default):Dynamic;
+	
+	
 	
 	public function new(p_layoutableEntity : IGameEntity, p_layoutableInstanceType:String, p_layoutableInstance:Dynamic) 
 	{
@@ -101,29 +131,82 @@ class Group
 	
 	public function update():Void
 	{
+		//@fixme soon: i guess here if soemething called update, somehow layoutmanager should get invalidated.
+		//maybe pass all updates and even add childs through layout manager after all... so we can invalidate as well
+		//seems about right....
+		
+		//layout
 		updateState('layout');
+		updateState('includeInLayout');
+		
+		//absolute
 		updateState('x');
 		updateState('y');
+		
+		//width stuff
 		updateState('width');
 		updateState('height');
+		
+		//normal constraints
 		updateState('left');
 		updateState('top');
 		updateState('right');
 		updateState('bottom');
+		updateState('horizontalCenter');
+		updateState('verticalCenter');
+		
+		//horizontal-vertical
+		if (layout != null)
+		{
+			if (layout.layoutType != "Basic")
+			{
+				updateState('paddingLeft');
+				updateState('paddingRight');
+				updateState('paddingTop');
+				updateState('paddingBottom');
+				updateState('gap');
+				updateState('horizontalAlign');
+				updateState('verticalAlign');
+				
+				
+				if (layout.layoutType == "Horizontal")
+				{
+					updateState('columnWidth');
+					updateState('requestedColumnCount');
+					updateState('requestedMaxColumnCount');
+					updateState('requestedMinColumnCount');
+					updateState('variableColumnWidth');
+				}
+				else if (layout.layoutType == "Vertical")
+				{
+					updateState('rowHeight');
+					updateState('requestedRowCount');
+					updateState('requestedMaxRowCount');
+					updateState('requestedMinRowCount');
+					updateState('variableRowHeight');
+				}
+			}
+		}
 	}
 	
 	public function updateState(p_state:String):Void
 	{
 		switch (p_state)
 		{
+			//Layout
 			case "layout":
-				if (layoutableEntity.getState(p_state) == "Basic") layout = new BasicLayout();
+				_updateLayout(layoutableEntity.getState(p_state));
 				
-				layout.target = this;
+			case "includeInLayout":
+				includeInLayout = layoutableEntity.getState(p_state);
+				
+			//Basic
 			case "x":
-				
+				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
+					x = layoutableEntity.getState(p_state);
 			case "y":
-				
+				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
+					y = layoutableEntity.getState(p_state);
 			case "width":
 				_updateExplicitSize(layoutableEntity.getState(p_state), "width");
 			case "height":
@@ -140,14 +223,100 @@ class Group
 			case "bottom":
 				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
 					bottom = layoutableEntity.getState(p_state);
+			case "horizontalCenter":
+				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
+					horizontalCenter = layoutableEntity.getState(p_state);
+			case "verticalCenter":
+				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
+					verticalCenter = layoutableEntity.getState(p_state);
+					
+			//Horizontal/Vertical
+			case "paddingLeft":
+				paddingLeft = layoutableEntity.getState(p_state);
+			case "paddingRight":
+				paddingRight = layoutableEntity.getState(p_state);
+			case "paddingTop":
+				paddingTop = layoutableEntity.getState(p_state);
+			case "paddingBottom":
+				paddingBottom = layoutableEntity.getState(p_state);
+			case "gap":
+				gap = layoutableEntity.getState(p_state);
+			case "horizontalAlign":
+				var s_horAlignStr:String = layoutableEntity.getState(p_state);
+				if (s_horAlignStr == "left") horizontalAlign = EHorizontalAlign.LEFT;
+				else if (s_horAlignStr == "center") horizontalAlign = EHorizontalAlign.CENTER;
+				else if (s_horAlignStr == "right") horizontalAlign = EHorizontalAlign.RIGHT;
+				else if (s_horAlignStr == "justify") horizontalAlign = EHorizontalAlign.JUSTIFY;
+				else if (s_horAlignStr == "contentJustify") horizontalAlign = EHorizontalAlign.CONTENT_JUSTIFY;
+			case "verticalAlign":
+				var s_verAlignStr:String = layoutableEntity.getState(p_state);
+				if (s_verAlignStr == "top") verticalAlign = EVerticalAlign.TOP;
+				else if (s_verAlignStr == "middle") verticalAlign = EVerticalAlign.MIDDLE;
+				else if (s_verAlignStr == "bottom") verticalAlign = EVerticalAlign.BOTTOM;
+				else if (s_verAlignStr == "justify") verticalAlign = EVerticalAlign.JUSTIFY;
+				else if (s_verAlignStr == "contentJustify") verticalAlign = EVerticalAlign.CONTENT_JUSTIFY;
+				
+			//Horizontal
+			case "columnWidth":
+				columnWidth = layoutableEntity.getState(p_state);
+			case "requestedColumnCount":
+				requestedColumnCount = layoutableEntity.getState(p_state);
+			case "requestedMaxColumnCount":
+				requestedMaxColumnCount = layoutableEntity.getState(p_state);
+			case "requestedMinColumnCount":
+				requestedMinColumnCount = layoutableEntity.getState(p_state);
+			case "variableColumnWidth":
+				variableColumnWidth = layoutableEntity.getState(p_state);
+				
+			//Vertical
+			case "rowHeight":
+				rowHeight = layoutableEntity.getState(p_state);
+			case "requestedRowCount":
+				requestedRowCount = layoutableEntity.getState(p_state);
+			case "requestedMaxRowCount":
+				requestedMaxRowCount = layoutableEntity.getState(p_state);
+			case "requestedMinRowCount":
+				requestedMinRowCount = layoutableEntity.getState(p_state);
+			case "variableRowHeight":
+				variableRowHeight = layoutableEntity.getState(p_state);
 		}
+	}
+	
+	private function _updateLayout(p_stateValue:String):Void
+	{
+		if (p_stateValue == "Basic")
+		{
+			if (layout == null)
+				layout = new BasicLayout();
+			else
+				if (layout.layoutType != p_stateValue)
+					layout = new BasicLayout();
+		}
+		else if (p_stateValue == "Horizontal")
+		{
+			if (layout == null)
+				layout = new HorizontalLayout();
+			else
+				if (layout.layoutType != p_stateValue)
+					layout = new HorizontalLayout();
+		}
+		else if (p_stateValue == "Vertical")
+		{
+			if (layout == null)
+				layout = new VerticalLayout();
+			else
+				if (layout.layoutType != p_stateValue)
+					layout = new VerticalLayout();
+		}
+		
+		layout.target = this;
 	}
 	
 	private function _updateExplicitSize(p_stateValue:String, p_dimension:String):Void
 	{
 		var l_explicitSize:Null<Float>=null;
 		var l_percentSize:Null<Float>=null;
-		
+		//Console.error("updating " + p_dimension + " of entity: " + layoutableEntity.getState('name') + ", which is: " + p_stateValue);
 		if (p_stateValue != "Implicit")
 		{
 			if (p_stateValue.indexOf("%") != -1)

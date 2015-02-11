@@ -63,16 +63,20 @@ class FlambeEntity2_5D extends AEntity2_5D
 	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
 	{
 		//This is an 'instance' addChild... a flambe addChild..
-		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D),Entity));
+		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity));
+		
+		super._createChildOfInstance(p_childEntity, p_view2_5D);
 	}
 
 	override public function update(?p_view2_5D:IView2_5D):Void
 	{
 		_updateState('2DmeshType', p_view2_5D); //THIS NEEDS TO BE FIRST AT THE UPDATE TO GET THE SPRITE!!!!!!
 		
-		
-		_updateState('spaceX',p_view2_5D);
-		_updateState('spaceY',p_view2_5D);
+		if (gameEntity.getState('layoutable') == null || gameEntity.getState('layoutable') == false)
+		{
+			_updateState('spaceX',p_view2_5D);
+			_updateState('spaceY', p_view2_5D);
+		}
 		//_updateState('spaceZ', p_view2_5D);
 		
 		_updateState('scaleX',p_view2_5D);
@@ -85,6 +89,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//_updateState('2DMeshSpriterForm', p_view2_5D); //this is nested.. not for global update i think
 		//more spriter nested things exist also don't update them
 		
+		
+		//Update my layoutObject
+		if (gameEntity.getState('layoutable') == true)
+			_updateLayoutGroup(p_view2_5D);
 		
 		//Update Children
 		for (f_childEntity in children)
@@ -225,7 +233,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 			
 			//if (gameEntity.getState('layoutable') == true)
 				//l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),groupInstances[p_view2_5D].width, groupInstances[p_view2_5D].height);
-			l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),100, 100);
+			l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),gameEntity.getState( 'spaceWidth' ), gameEntity.getState( 'spaceHeight' ));
 			l_mesh.blendMode = BlendMode.Copy;
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
@@ -389,5 +397,20 @@ class FlambeEntity2_5D extends AEntity2_5D
 	private function _onPointerOut(p_pointerEvent:PointerEvent):Void
 	{
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT, gameEntity);
+	}
+	
+	
+	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view];
+		
+		if (l_mesh != null)		
+		{
+			if (p_x != null) l_mesh.x._ = p_x;
+			if (p_y != null) l_mesh.y._ = p_y;
+			//if (p_width != null) l_mesh.scissor.width = p_width;
+			//if (p_height != null) l_mesh.scissor.height = p_height;
+		}
 	}
 }

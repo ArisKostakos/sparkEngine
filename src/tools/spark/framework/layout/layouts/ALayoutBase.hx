@@ -14,11 +14,21 @@ import tools.spark.framework.layout.containers.Group;
 class ALayoutBase
 {
 	public var target( default, set ):Group;
-
+	public var layoutType( default, default ):String;
+	public var typicalLayoutElement( get, null ):Group;
+	private var _typicalLayoutElement:Group;
+	
 	public function new() 
 	{
 		
 	}
+	
+	public function get_typicalLayoutElement():Group
+    {
+        if (_typicalLayoutElement==null && target!=null && (target.children.length > 0))
+            _typicalLayoutElement = target.children[0];
+        return _typicalLayoutElement;
+    }
 	
 	private function set_target( p_value : Group ) : Group 
 	{

@@ -14,4 +14,5 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 interface IBase2_5D
 {
 	var gameEntity( default, null ):IGameEntity;
+	function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void;
 }

@@ -43,6 +43,26 @@ class ActiveStageReference implements IActiveStageReference
 		//the idea is, the stageEntity might give instructions for a specific layout manager, although right now we just have the one
 		//also since we give the manager a rootElement on constructor, discard the whole manager if we change activeStage
 		layoutManager = new LayoutManager(layoutRoot);
+		
+		//not sure if I should put this here... it's the flambe's native resize event..
+		// System.stage.resize is a Signal, listen to it.
+		flambe.System.stage.resize.connect(_onResize);
+	}
+
+	private function _onResize()
+	{
+		//this is a new low of sloppiness.. fix plzz... soon
+		#if html
+			layoutRoot.explicitWidth = js.Browser.window.innerWidth;
+			layoutRoot.explicitHeight = js.Browser.window.innerHeight;
+		#else
+			layoutRoot.explicitWidth = flambe.System.stage.width;
+			layoutRoot.explicitHeight = flambe.System.stage.height;
+		#end
+
+		//Console.error("*****WIDTH******: " + layoutRoot.explicitWidth);
+		//Console.error("*****HEIGHT******: " + layoutRoot.explicitHeight);
+		layoutManager.validated = false;
 	}
 	
 	public function logViewReferences():Void

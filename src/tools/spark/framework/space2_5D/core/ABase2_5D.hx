@@ -6,6 +6,7 @@
 
 package tools.spark.framework.space2_5D.core;
 import tools.spark.framework.space2_5D.interfaces.IBase2_5D;
+import tools.spark.framework.space2_5D.interfaces.IView2_5D;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
@@ -21,4 +22,9 @@ class ABase2_5D implements IBase2_5D
 		gameEntity = p_gameEntity;
 	}
 	
+	public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void
+	{
+		//override me
+		//..
+	}
 }

@@ -35,7 +35,7 @@ class Main
 		Assets.successSignal.connect(_onClientConfigLoaded).once();
 		
 		Assets.initiateBatch();
-		Assets.addFile("main.skc", "config");
+		Assets.addFile(_getSkcUrl(), "config");
 		Assets.loadBatch();
 	}
 	
@@ -63,4 +63,17 @@ class Main
 		//Create Spark's Flambe Root Component
 		System.root.add(new RootComponent());
     }
+	
+	//Get External skc url if provided
+	private static function _getSkcUrl():String
+	{
+		try
+		{
+			var l_skcUrl:String = System.external.call("getMainSparkClientUrl");
+			if (l_skcUrl.length==0) return "main.skc";
+			else return l_skcUrl;
+		}
+		catch (e : Dynamic)
+			return "main.skc";
+	}
 }

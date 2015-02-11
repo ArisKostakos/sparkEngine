@@ -52,6 +52,8 @@ class FlambeScene2_5D extends AScene2_5D
 	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
 	{
 		//This is an 'instance' addChild... a flambe addChild..
-		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D),Entity));
+		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity));
+		
+		super._createChildOfInstance(p_childEntity, p_view2_5D);
 	}
 }
