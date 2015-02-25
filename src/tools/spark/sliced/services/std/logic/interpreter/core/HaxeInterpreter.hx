@@ -13,6 +13,7 @@ import hscript.Expr;
 import haxe.io.Bytes;
 import haxe.crypto.Crc32;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
+import tools.spark.framework.Framework;
 
 /**
  * ...
@@ -48,6 +49,8 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Console", Console); // share the Console
 		_interpreter.variables.set("Math", Math); // share the Math
 		_interpreter.variables.set("Std", Std); // share the Std
+		_interpreter.variables.set("String", String); // share the String
+		_interpreter.variables.set("Framework", Framework); // share the Framework class
 		//_interpreter.variables.set("Int", Int); // share the Int
 	}
 	
@@ -72,6 +75,8 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Console", Console); // share the Console
 		_interpreter.variables.set("Math", Math); // share the Math
 		_interpreter.variables.set("Std", Std); // share the Std
+		_interpreter.variables.set("String", String); // share the String
+		_interpreter.variables.set("Framework", Framework); // share the Framework class
 		//_interpreter.variables.set("Int", Int); // share the Int
 
 		//Dynamic Variables

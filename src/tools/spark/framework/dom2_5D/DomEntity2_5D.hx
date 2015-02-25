@@ -37,6 +37,16 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['NCmeshType'] = _updateNCmeshType;
 		_updateStateFunctions['touchable'] = _updateTouchable;
 		_updateStateFunctions['NCstyleable'] = _updateNCstyleable;
+		_updateStateFunctions['visibility'] = _updateVisibility;
+		_updateStateFunctions['opacity'] = _updateOpacity;
+		_updateStateFunctions['display'] = _updateDisplay;
+		_updateStateFunctions['text'] = _updateText;
+		_updateStateFunctions['fontColor'] = _updateFontColor;
+		_updateStateFunctions['src'] = _updateImageSrc;
+		_updateStateFunctions['fontSize'] = _updateFontSize;
+		_updateStateFunctions['overflow'] = _updateOverflow;
+		_updateStateFunctions['width'] = _updateWidth;
+		_updateStateFunctions['height'] = _updateHeight;
 	}
 	
 	
@@ -46,11 +56,14 @@ class DomEntity2_5D extends AEntity2_5D
 		{
 			case "Div":
 				_instances[p_view2_5D] = Browser.document.createDivElement();
-				//_instances[p_view2_5D].style.backgroundColor = "green";
 			case "Input":
 				_instances[p_view2_5D] = Browser.document.createInputElement();
+				_instances[p_view2_5D].onchange = _onChange;
+				_instances[p_view2_5D].style.outline = "0"; //remove blue border when selected.. it's a hack, fix me
 			case "Button":
-				_instances[p_view2_5D] = Browser.document.createButtonElement();
+				//_instances[p_view2_5D] = Browser.document.createButtonElement();
+				_instances[p_view2_5D] = Browser.document.createDivElement();
+				_instances[p_view2_5D].style.outline = "0"; //remove blue border when selected.. it's a hack, fix me
 			case "Image":
 				_instances[p_view2_5D] = Browser.document.createImageElement();
 			default:
@@ -79,10 +92,22 @@ class DomEntity2_5D extends AEntity2_5D
 		
 		//Update Style
 		if (gameEntity.getState('NCstyleable') == true)
+		{
 			_updateState('NCstyleable', p_view2_5D);
+			_updateState('visibility', p_view2_5D);
+			_updateState('opacity', p_view2_5D);
+			_updateState('display', p_view2_5D);
+			_updateState('fontSize', p_view2_5D);
+			_updateState('fontColor', p_view2_5D);
+			_updateState('overflow', p_view2_5D);
+		}
 		
 		//Update Touchable Stuff
 		_updateState('touchable', p_view2_5D);
+		
+		//Update Text Stuff
+		if (gameEntity.getState('text')!=null)
+			_updateState('text', p_view2_5D);
 			
 		//Update my layoutObject
 		if (gameEntity.getState('layoutable') == true)
@@ -125,15 +150,134 @@ class DomEntity2_5D extends AEntity2_5D
 		if (gameEntity.getState('fontFamily') != null && gameEntity.getState('fontFamily')!="Undefined")
 			_instances[p_view2_5D].style.fontFamily = gameEntity.getState('fontFamily');
 			
-		if (gameEntity.getState('fontSize') != null && gameEntity.getState('fontSize')!="Undefined")
-			_instances[p_view2_5D].style.fontSize = gameEntity.getState('fontSize');
+		if (gameEntity.getState('textAlign') != null && gameEntity.getState('textAlign')!="Undefined")
+			_instances[p_view2_5D].style.textAlign = gameEntity.getState('textAlign');
 			
-		if (gameEntity.getState('fontColor') != null && gameEntity.getState('fontColor')!="Undefined")
-			_instances[p_view2_5D].style.color = gameEntity.getState('fontColor');
+		if (gameEntity.getState('textVerticalAlign') != null && gameEntity.getState('textVerticalAlign') != "Undefined")
+		{	//Huge hack..:) but I'm ok with it..
+			if (gameEntity.getState('textVerticalAlign')=='middle')
+				_instances[p_view2_5D].style.lineHeight = gameEntity.getState('height') + "px";
+		}
 			
 		if (gameEntity.getState('textIndent') != null && gameEntity.getState('textIndent')!="Undefined")
 			_instances[p_view2_5D].style.textIndent = gameEntity.getState('textIndent');
+			
+		if (gameEntity.getState('cursor') != null && gameEntity.getState('cursor')!="Undefined")
+			_instances[p_view2_5D].style.cursor = gameEntity.getState('cursor');
+			
+		if (gameEntity.getState('white-space') != null && gameEntity.getState('white-space')!="Undefined")
+			_instances[p_view2_5D].style.whiteSpace = gameEntity.getState('white-space');
 	}
+	
+
+	//much better way.. should be done for everything
+	inline private function _updateImageSrc(p_src:String, p_view2_5D:IView2_5D):Void
+	{
+		//Get the instance we're updating
+		var l_instance:ImageElement = _instances[p_view2_5D];
+		
+		if (p_src != "Undefined")
+		{
+			var l_asset:Asset = Project.modules["DoNotLoad"].assets[p_src];
+			l_instance.src = Project.getPath(l_asset.location, l_asset.type) + l_asset.url;
+		}
+	}
+	
+	
+	//much better way.. should be done for everything
+	inline private function _updateWidth(p_width:String, p_view2_5D:IView2_5D):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			groupInstances[p_view2_5D].updateState('width');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.projectActiveSpaceReference.activeStageReference.layoutManager.validated=false;
+		}
+		else
+		{
+			//..
+		}
+	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateHeight(p_height:String, p_view2_5D:IView2_5D):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			groupInstances[p_view2_5D].updateState('height');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.projectActiveSpaceReference.activeStageReference.layoutManager.validated=false;
+		}
+		else
+		{
+			//..
+		}
+	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateOverflow(p_overflow:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_overflow!="Undefined")
+			_instances[p_view2_5D].style.overflow = p_overflow;
+	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateFontSize(p_fontSize:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_fontSize!="Undefined")
+			_instances[p_view2_5D].style.fontSize = p_fontSize;
+	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateFontColor(p_fontColor:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_fontColor!="Undefined")
+			_instances[p_view2_5D].style.color = p_fontColor;
+	}
+	
+	//much better way.. should be done for everything (also visibility should be for all dom elements not just ncStylables
+	inline private function _updateVisibility(p_visibility:String, p_view2_5D:IView2_5D):Void
+	{
+		_instances[p_view2_5D].style.visibility = p_visibility;
+	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateOpacity(p_opacity:String, p_view2_5D:IView2_5D):Void
+	{
+		_instances[p_view2_5D].style.opacity= p_opacity;
+	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateDisplay(p_display:String, p_view2_5D:IView2_5D):Void
+	{
+		_instances[p_view2_5D].style.display = p_display;
+		/*
+		if (p_display == "none")
+			_instances[p_view2_5D].style.setProperty("pointer-events", "none");
+		else
+			_instances[p_view2_5D].style.setProperty("pointer-events", "auto");*/
+	}
+	
+	//much better way.. should be done for everything (also visibility should be for all dom elements not just ncStylables
+	inline private function _updateText(p_text:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_text!="Undefined")
+			switch (gameEntity.getState( 'NCmeshType' ))
+			{
+				case "Div":
+					_instances[p_view2_5D].innerHTML = p_text;
+				case "Input":
+					_instances[p_view2_5D].value = p_text;
+				case "Button":
+					_instances[p_view2_5D].innerHTML = p_text;
+				default:
+			}
+	}
+	
 	
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
 	inline private function _updateNCmeshType(p_NCmeshType:String, p_view2_5D:IView2_5D):Void
@@ -147,7 +291,7 @@ class DomEntity2_5D extends AEntity2_5D
 			case 'Input':
 				_updateInputProperties(p_view2_5D);
 			case 'Image':
-				_updateImageProperties(p_view2_5D);
+				_updateImageSrc(gameEntity.getState('src') ,p_view2_5D);
 			case 'Undefined':
 				Console.warn('Undefined NCmeshType value');
 			default:
@@ -168,21 +312,13 @@ class DomEntity2_5D extends AEntity2_5D
 			l_instance.placeholder = gameEntity.getState('placeholder');
 			
 		if (gameEntity.getState('type') != null && gameEntity.getState('type')!="Undefined")
-			l_instance.type= gameEntity.getState('type');
+			l_instance.type = gameEntity.getState('type');
+			
+		if (gameEntity.getState('type') == "file")
+			if (gameEntity.getState('accept') != null && gameEntity.getState('accept')!="Undefined")
+				l_instance.accept = gameEntity.getState('accept');
 	}
 	
-	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
-	private function _updateImageProperties( p_view2_5D:IView2_5D):Void
-	{
-		//Get the instance we're updating
-		var l_instance:ImageElement = _instances[p_view2_5D];
-		
-		if (gameEntity.getState('src') != null && gameEntity.getState('src') != "Undefined")
-		{
-			var l_asset:Asset = Project.modules["DoNotLoad"].assets[gameEntity.getState('src')];
-			l_instance.src = Project.getPath(l_asset.location, l_asset.type) + l_asset.url;
-		}
-	}
 	
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
 	private function _updateButtonProperties( p_view2_5D:IView2_5D):Void
@@ -191,8 +327,9 @@ class DomEntity2_5D extends AEntity2_5D
 		var l_instance:ButtonElement = _instances[p_view2_5D];
 
 		if (gameEntity.getState('text') != null && gameEntity.getState('text')!="Undefined")
-			l_instance.innerText = gameEntity.getState('text');
+			l_instance.innerHTML = gameEntity.getState('text');
 	}
+	
 	
 	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void
@@ -241,5 +378,19 @@ class DomEntity2_5D extends AEntity2_5D
 	private function _onPointerClick(p_pointerEvent:Dynamic):Void
 	{
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+	}
+	
+	private function _onChange(p_changeEvent:Dynamic):Void
+	{
+		//you should emit a spark event here at some point..
+		if (gameEntity.getState('type') == "file")
+		{
+			gameEntity.setState('files', p_changeEvent.target.files);
+			Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+		}
+		else
+		{
+			gameEntity.setState('text', p_changeEvent.target.value);
+		}
 	}
 }

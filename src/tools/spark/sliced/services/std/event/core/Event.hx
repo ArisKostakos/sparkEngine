@@ -169,6 +169,8 @@ class Event extends AService implements IEvent
 		_prefabConvertToType[EEventPrefab.NETWORK_CONNECTED] = EEventType.NETWORK_CONNECTED;
 		_prefabConvertToType[EEventPrefab.NETWORK_REQUEST] = EEventType.NETWORK_REQUEST;
 		_prefabConvertToType[EEventPrefab.NETWORK_SERVER_EVENT] = EEventType.NETWORK_SERVER_EVENT;
+		_prefabConvertToType[EEventPrefab.FILETRANSFER_CONNECTED] = EEventType.FILETRANSFER_CONNECTED;
+		_prefabConvertToType[EEventPrefab.FILETRANSFER_SENDREQUEST] = EEventType.FILETRANSFER_SENDREQUEST;
 		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_CLICK] = EEventType.MOUSE_LEFT_CLICK;
 		_prefabConvertToType[EEventPrefab.MOUSE_RIGHT_CLICK] = EEventType.MOUSE_RIGHT_CLICK;
 		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_CLICKED] = EEventType.MOUSE_LEFT_CLICK;
@@ -390,6 +392,8 @@ class Event extends AService implements IEvent
 		_prefabConvertToFilter.set(EEventPrefab.NETWORK_CONNECTED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.NETWORK_REQUEST , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.NETWORK_SERVER_EVENT , _NO_FILTER);
+		_prefabConvertToFilter.set(EEventPrefab.FILETRANSFER_CONNECTED , _NO_FILTER);
+		_prefabConvertToFilter.set(EEventPrefab.FILETRANSFER_SENDREQUEST , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT_CLICK , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_RIGHT_CLICK , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT_CLICKED , _FILTER_VARIABLE_USER_ENTITY);

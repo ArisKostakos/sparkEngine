@@ -76,6 +76,11 @@ class GameEntity extends AGameBase implements IGameEntity
 		possibleActionSet[gameAction.id] = gameAction;
 	}
 	
+	public function getAction(p_actionId:String):IGameAction
+	{
+		return possibleActionSet.get(p_actionId);
+	}
+	
 	public function startAction(actionId:String):Bool
 	{
 		//Get Action Object

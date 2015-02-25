@@ -28,6 +28,8 @@ class Logic extends AService implements ILogic
 	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
 	
+	private var _gameEntitiesByName:Map<String, IGameEntity>;
+	
 	public function new() 
 	{
 		super();
@@ -51,6 +53,7 @@ class Logic extends AService implements ILogic
 		//Create Maps
 		rootGameEntitiesRunning = new Map<String, IGameEntity>();
 		rootGameEntitiesPaused = new Map<String, IGameEntity>();
+		_gameEntitiesByName = new Map<String, IGameEntity>();
 	}
 	
 	public function update():Void
@@ -80,5 +83,16 @@ class Logic extends AService implements ILogic
 	{
 		//Create GameEntity
 		rootGameEntitiesPaused[p_gameEntityUrl] = gameFactory.createGameEntity(p_gameEntityUrl);
+	}
+	
+	public function getEntityByName(p_stateName:String):IGameEntity
+	{
+		return _gameEntitiesByName.get(p_stateName);
+	}
+	
+	public function registerEntityByName(p_entity:IGameEntity):Void
+	{
+		if (p_entity.getState('name') != null)
+			_gameEntitiesByName.set(p_entity.getState('name'), p_entity);
 	}
 }

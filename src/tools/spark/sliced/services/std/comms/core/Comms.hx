@@ -8,6 +8,7 @@ package tools.spark.sliced.services.std.comms.core;
 
 import tools.spark.sliced.interfaces.IComms;
 import tools.spark.sliced.core.AService;
+import tools.spark.sliced.services.std.comms.filetransfer.interfaces.IFileTransfer;
 import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
@@ -31,6 +32,13 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 	#end
 #end
 
+//File Transfer
+#if flash
+
+#else
+	import tools.spark.sliced.services.std.comms.filetransfer.core.platform.html5.websocket.binaryjs.FileTransfer;
+#end
+
 /**
  * ...
  * @author Aris Kostakos
@@ -43,6 +51,14 @@ class Comms extends AService implements IComms
 	
 	public var isConnected( default, null ):Bool;
 	public var connectedServerName( default, null ):String;
+	
+	
+	public var file_isConnected( default, null ):Bool;
+	public var file_connectedServerName( default, null ):String;
+	
+	private var _fileTransfer:IFileTransfer;
+	private var _file_requestsData:Map<String, Dynamic>;
+	
 	
 	//have some info here for polling... connected or not... connected to where, etc... logging maybe..
 	public function new() 
@@ -62,12 +78,16 @@ class Comms extends AService implements IComms
 		_serverEventsData = new Map<String, Dynamic>();
 		
 		isConnected = false;
+		
+		_file_requestsData = new Map<String, Dynamic>();
+		file_isConnected = false;
 	}
 	
 	public function update():Void
 	{
 		_requestsData = new Map<String, Dynamic>();
 		_serverEventsData = new Map<String, Dynamic>();
+		_file_requestsData = new Map<String, Dynamic>();
 	}
 	
 	public function getRequestData(p_requestName:String):Dynamic
@@ -137,5 +157,77 @@ class Comms extends AService implements IComms
 		}
 		
 		_socket.on(p_serverEventName, l_serverEventCallback);
+	}
+	
+	
+	
+	//FILE TRANSFER FUNCTIONS
+	
+	public function file_connectTo(p_hostname:String, p_port:String, ?p_serverIdentifier:String):Void
+	{
+		if (file_isConnected)
+		{
+			Console.warn("Attempting to connect to file server: File Transfer already connected. Disconnect first.");
+		}
+		else
+		{
+			if (p_serverIdentifier == null)
+				p_serverIdentifier = p_hostname+":"+p_port;
+				
+			//Using Closures to preserve server id
+			var l_connectToCallback:Void->Void = function () 
+			{
+				file_isConnected = true;
+				file_connectedServerName = p_serverIdentifier;
+				Sliced.event.raiseEvent(FILETRANSFER_CONNECTED);
+			}
+			
+			_fileTransfer = new FileTransfer("ws://" + p_hostname+":" + p_port);
+			
+			_fileTransfer.onConnected(l_connectToCallback);
+		}
+	}
+	
+	public function file_getSendFileRequestData(p_fileRequestName:String):Dynamic
+	{
+		return _file_requestsData[p_fileRequestName];
+	}
+	
+	public function file_disconnect():Void
+	{
+		_fileTransfer.disconnect();
+		file_isConnected = false;
+		_fileTransfer = null;
+		file_connectedServerName = null;
+	}
+
+	public function file_sendFileRequest(p_fileReference:Dynamic, p_fileMeta:Dynamic, ?p_fileRequestIdentifier:String):Void
+	{
+		if (!file_isConnected)
+		{
+			Console.warn("Attempting to send a file: File Transfer is not connected.");
+		}
+		else
+		{
+			if (p_fileRequestIdentifier == null)
+				p_fileRequestIdentifier = p_fileMeta.name;
+				
+			var clsr_progressBytes:Float = 0;
+			
+			//Using Closures to preserve request id
+			var l_requestCallback:Dynamic->Void = function (p_data:Dynamic) 
+			{
+				clsr_progressBytes += p_data.length;
+				
+				p_data.progress = clsr_progressBytes / p_fileMeta.size;
+				
+				p_data.progressPercent = Math.round((clsr_progressBytes / p_fileMeta.size)* 100);
+				
+				_file_requestsData[p_fileRequestIdentifier] = p_data;
+				Sliced.event.raiseEvent(FILETRANSFER_SENDREQUEST);
+			}
+			
+			_fileTransfer.sendFile(p_fileReference, p_fileMeta, l_requestCallback);
+		}
 	}
 }

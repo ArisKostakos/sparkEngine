@@ -32,6 +32,8 @@ interface IGameEntity extends IGameBase
 	function addState(gameState:IGameState):Void;
 	function addAction(gameAction:IGameAction):Void;
 	
+	function getAction(p_actionId:String):IGameAction;
+	
 	function startAction(actionId:String):Bool;
 	function stopAction(actionId:String):Bool;
 	

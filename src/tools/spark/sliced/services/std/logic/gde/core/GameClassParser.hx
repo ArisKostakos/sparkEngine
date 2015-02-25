@@ -326,6 +326,9 @@ class GameClassParser implements IGameClassParser
 		_xmlEventPrefabToName[EEventPrefab.NETWORK_REQUEST] = "NetworkRequest";
 		_xmlEventPrefabToName[EEventPrefab.NETWORK_SERVER_EVENT] = "NetworkServerEvent";
 		
+		_xmlEventPrefabToName[EEventPrefab.FILETRANSFER_CONNECTED] = "FileTransferConnected";
+		_xmlEventPrefabToName[EEventPrefab.FILETRANSFER_SENDREQUEST] = "FileTransferRequest";
+		
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICK] = "MouseLeftClick";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICK] = "MouseRightClick";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICKED] = "MouseLeftClicked";
@@ -548,6 +551,8 @@ class GameClassParser implements IGameClassParser
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.NETWORK_CONNECTED]] = EEventPrefab.NETWORK_CONNECTED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.NETWORK_REQUEST]] = EEventPrefab.NETWORK_REQUEST;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.NETWORK_SERVER_EVENT]] = EEventPrefab.NETWORK_SERVER_EVENT;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.FILETRANSFER_CONNECTED]] = EEventPrefab.FILETRANSFER_CONNECTED;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.FILETRANSFER_SENDREQUEST]] = EEventPrefab.FILETRANSFER_SENDREQUEST;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICK]] = EEventPrefab.MOUSE_LEFT_CLICK;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICK]] = EEventPrefab.MOUSE_RIGHT_CLICK;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICKED]] = EEventPrefab.MOUSE_LEFT_CLICKED;

@@ -138,9 +138,11 @@ class NativeControlsHtmlRenderer extends ANativeControls2_5DRenderer implements 
 		if (_objects[p_objectEntity] != null)
 		{
 			_objectManager.updateState(_objects[p_objectEntity], p_objectEntity, p_state);
+		}//else, is it view, do this...  etc
+		else if (_views[p_objectEntity] != null)
+		{
+			_viewManager.updateState(_views[p_objectEntity], p_objectEntity, p_state);
 		}
-		
-		//else, is it view, do this...  etc
 	}
 	
 	override inline public function updateFormState ( p_objectEntity:IGameEntity, p_state:String):Void

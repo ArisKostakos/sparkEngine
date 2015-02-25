@@ -49,7 +49,8 @@ class DomViewManager implements IDisplayObjectManager
 		//typecast?
 		
 		updateState(p_object, p_gameEntity, 'scene');
-		updateState(p_object,p_gameEntity,'camera');
+		updateState(p_object, p_gameEntity, 'camera');
+		updateState(p_object,p_gameEntity, 'visible');
 	}
 	
 	public function updateState(p_object:Dynamic, p_gameEntity:IGameEntity, p_state:String):Void 
@@ -67,6 +68,9 @@ class DomViewManager implements IDisplayObjectManager
 				var l_cameraEntity:IGameEntity = p_gameEntity.getState(p_state);
 				
 				l_view2_5D.camera = _renderer.createCamera(l_cameraEntity);
+				
+			case 'visible':
+				l_view2_5D.updateState(p_state);
 		}
 	}
 	

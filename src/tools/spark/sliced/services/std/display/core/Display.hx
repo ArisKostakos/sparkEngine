@@ -68,6 +68,18 @@ class Display extends AService implements IDisplay
 		
 		_renderStateNames['2DMeshSpriterAnimForm'] = true;
 		
+		_renderStateNames['visibility'] = true;
+		_renderStateNames['visible'] = true;
+		_renderStateNames['width'] = true;
+		_renderStateNames['height'] = true;
+		_renderStateNames['opacity'] = true;
+		_renderStateNames['display'] = true;
+		_renderStateNames['text'] = true;
+		_renderStateNames['fontSize'] = true;
+		_renderStateNames['fontColor'] = true;
+		_renderStateNames['src'] = true;
+		_renderStateNames['overflow'] = true;
+		
 		_renderStateNames['spaceX'] = true;
 		_renderStateNames['spaceY'] = true;
 		_renderStateNames['spaceZ'] = true;
@@ -168,8 +180,8 @@ class Display extends AService implements IDisplay
 		//Buffer
 		for (f_bufferEntry in _dataBuffer.dataBuffer)
 		{
-			Console.warn("DISPLAY UPDATE: Updating Type: [" + f_bufferEntry.type + "], Name: [" +f_bufferEntry.source.getState('name') + "], State [" + f_bufferEntry.field+"]");
-				
+			//Console.warn("DISPLAY UPDATE: Updating Type: [" + f_bufferEntry.type + "], Name: [" +f_bufferEntry.source.getState('name') + "], State [" + f_bufferEntry.field+"]");
+			
 			switch (f_bufferEntry.type)
 			{
 				case SET_SPACE:

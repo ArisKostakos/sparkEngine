@@ -107,4 +107,17 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 	{
 		//override me!!
 	}
+	
+	override public function addChild( p_entity2_5D:IEntity2_5D):Void
+	{
+		//Console.error("adding child (instanciable here)");
+		super.addChild(p_entity2_5D);
+		
+		//do for all instances (hack?)
+		for (f_view in _instances.keys())
+		{
+			_createChildOfInstance(p_entity2_5D, f_view);
+			p_entity2_5D.update(f_view);
+		}
+	}
 }

@@ -98,7 +98,12 @@ class GameClassInstantiator implements IGameClassInstantiator
 			}
 		}
 		
-		Sliced.event.raiseEvent(EEventType.CREATED,l_gameEntity);
+		//Register Entity By Name (watch here, if we dispose this entity we will need to remove it's reference from here as well)
+		Sliced.logic.registerEntityByName(l_gameEntity);
+		
+		//Trigger Event
+		Sliced.event.raiseEvent(EEventType.CREATED, l_gameEntity);
+		
 		return l_gameEntity;
 	}
 	

@@ -317,6 +317,7 @@ class Group
 		var l_explicitSize:Null<Float>=null;
 		var l_percentSize:Null<Float>=null;
 		//Console.error("updating " + p_dimension + " of entity: " + layoutableEntity.getState('name') + ", which is: " + p_stateValue);
+		
 		if (p_stateValue != "Implicit")
 		{
 			if (p_stateValue.indexOf("%") != -1)

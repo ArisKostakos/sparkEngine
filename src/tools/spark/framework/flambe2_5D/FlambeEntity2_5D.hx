@@ -56,7 +56,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
 		_instances[p_view2_5D] = new Entity();
-
+		
 		return super.createInstance(p_view2_5D);
 	}
 

@@ -65,4 +65,18 @@ class GameAction extends AGameBase implements IGameAction
 			}
 		}
 	}
+	
+	// Set/Get State Value
+	public function getState(p_stateId:String):Dynamic
+	{
+		if (gameStateSet.get(p_stateId) == null) return null;
+		else return gameStateSet.get(p_stateId).value;
+	}
+	
+	public function setState(p_stateId:String, p_value:Dynamic):Dynamic
+	{
+		gameStateSet.get(p_stateId).value = p_value;
+		
+		return gameStateSet.get(p_stateId).value;
+	}
 }

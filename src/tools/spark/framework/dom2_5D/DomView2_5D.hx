@@ -36,6 +36,18 @@ class DomView2_5D extends AView2_5D
 		_initDomView2_5D();
 	}
 	
+	public function updateState(p_state:String):Void
+	{
+		switch (p_state)
+		{
+			case 'visible':
+				if (gameEntity.getState(p_state)==true)
+					_instanceView.style.display = "inline";
+				else
+					_instanceView.style.display = "none";
+		}
+	}
+	
 	private inline function _initDomView2_5D():Void
 	{	
 		var content:Element = Browser.document.getElementById("content");
