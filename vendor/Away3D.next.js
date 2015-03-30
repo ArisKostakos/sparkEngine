@@ -15709,8 +15709,8 @@ var away;
                 this._globalPos = new away.geom.Point();
                 this._time = 0;
                 this._deltaTime = 0;
-                this._backgroundColor = 0x000000;
-                this._backgroundAlpha = 1;
+                this._backgroundColor = 0xff0000; //aris
+                this._backgroundAlpha = 0; //aris
                 this._depthTextureInvalid = true;
                 this._antiAlias = 0;
                 this._scissorRectDirty = true;
@@ -42247,38 +42247,38 @@ var away;
         var CSS = (function () {
             function CSS() {
             }
-            CSS.setCanvasSize = function (canvas, width, height) {
+            CSS.setCanvasSize = function (canvas, width, height) {return; //aris
                 canvas.style.width = width + "px";
                 canvas.style.height = height + "px";
                 canvas.width = width;
                 canvas.height = height;
             };
 
-            CSS.setCanvasWidth = function (canvas, width) {
+            CSS.setCanvasWidth = function (canvas, width) {return; //aris
                 canvas.style.width = width + "px";
                 canvas.width = width;
             };
 
-            CSS.setCanvasHeight = function (canvas, height) {
+            CSS.setCanvasHeight = function (canvas, height) {return; //aris
                 canvas.style.height = height + "px";
                 canvas.height = height;
             };
 
-            CSS.setCanvasX = function (canvas, x) {
+            CSS.setCanvasX = function (canvas, x) {return; //aris
                 canvas.style.position = 'absolute';
                 canvas.style.left = x + "px";
             };
 
-            CSS.setCanvasY = function (canvas, y) {
+            CSS.setCanvasY = function (canvas, y) {return; //aris
                 canvas.style.position = 'absolute';
                 canvas.style.top = y + "px";
             };
 
-            CSS.getCanvasVisibility = function (canvas) {
+            CSS.getCanvasVisibility = function (canvas) {return; //aris
                 return canvas.style.visibility == 'visible';
             };
 
-            CSS.setCanvasVisibility = function (canvas, visible) {
+            CSS.setCanvasVisibility = function (canvas, visible) {return; //aris
                 if (visible) {
                     canvas.style.visibility = 'visible';
                 } else {
@@ -42286,12 +42286,12 @@ var away;
                 }
             };
 
-            CSS.setCanvasAlpha = function (canvas, alpha) {
+            CSS.setCanvasAlpha = function (canvas, alpha) {return; //aris
                 var context = canvas.getContext("2d");
                 context.globalAlpha = alpha;
             };
 
-            CSS.setCanvasPosition = function (canvas, x, y, absolute) {
+            CSS.setCanvasPosition = function (canvas, x, y, absolute) {return; //aris
                 if (typeof absolute === "undefined") { absolute = false; }
                 if (absolute) {
                     canvas.style.position = "absolute";

@@ -88,6 +88,9 @@ class Display extends AService implements IDisplay
 		_renderStateNames['scaleY'] = true;
 		_renderStateNames['scaleZ'] = true;
 		
+		_renderStateNames['spaceWidth'] = true;	//just for fillsprites
+		_renderStateNames['spaceHeight'] = true;	//just for fillsprites
+		
 		_renderStateNames['stage'] = true;
 		_renderStateNames['view'] = true;
 		_renderStateNames['camera'] = true;

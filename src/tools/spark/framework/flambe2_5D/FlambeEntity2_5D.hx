@@ -45,6 +45,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['scaleX'] = _updateSizeX; //for pure 2d.. for 3d coordinates, its not that simple..
 		_updateStateFunctions['scaleY'] = _updateSizeY; //for pure 2d.. for 3d coordinates, its not that simple..
 		_updateStateFunctions['touchable'] = _updateTouchable;
+		_updateStateFunctions['visible'] = _updateVisible;
+		_updateStateFunctions['opacity'] = _updateOpacity;
+		_updateStateFunctions['spaceWidth'] = _updateSpaceWidth;	//this is iffy.. should do it with forms instead
+		_updateStateFunctions['spaceHeight'] = _updateSpaceHeight;	//this is iffy.. should do it with forms instead
 		_updateStateFunctions['2DMeshImageForm'] = _update2DMeshImageForm;
 		_updateStateFunctions['2DMeshSpriterForm'] = _update2DMeshSpriterForm;
 		_updateStateFunctions['2DMeshFillRectForm'] = _update2DMeshFillRectForm;
@@ -85,6 +89,9 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		_updateState('touchable', p_view2_5D);
 		
+		_updateState('visible', p_view2_5D);
+		
+		_updateState('opacity', p_view2_5D);
 		//_updateState('2DMeshImageForm', p_view2_5D); //this is nested.. not for global update i think
 		//_updateState('2DMeshSpriterForm', p_view2_5D); //this is nested.. not for global update i think
 		//more spriter nested things exist also don't update them
@@ -130,6 +137,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 			default:
 				Console.warn('Unhandled 2DmeshType value: ' + p_2DMeshType);
 		}
+		
+		//Feedback back to the game Entity about the Entities Size (lil bit of a hack, if many views render the same scene,
+		//then this is updated with the last rendered view)
+		_updateBounds(p_view2_5D);
 		
 		//@think: if old mesh is lost, should probably update touchable too, since signals would be lost as well
 		//and again.. old signals MUST be disposed.. for memory leaks...
@@ -354,6 +365,28 @@ class FlambeEntity2_5D extends AEntity2_5D
 			l_mesh.scaleY._ = p_newScale;
 	}
 	
+	private function _updateVisible(p_visibleFlag:Bool, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh != null)
+		{
+			l_mesh.visible = p_visibleFlag;
+		}
+	}
+	
+	private function _updateOpacity(p_opacity:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh != null)
+		{
+			l_mesh.setAlpha(p_opacity);
+		}
+	}
+
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void
 	{
 		//Gt Mesh
@@ -370,14 +403,20 @@ class FlambeEntity2_5D extends AEntity2_5D
 				if (!l_mesh.pointerIn.hasListeners())
 					l_mesh.pointerIn.connect(_onPointerIn);
 					
+				if (!l_mesh.pointerMove.hasListeners())
+					l_mesh.pointerMove.connect(_onPointerMove);
+					
 				if (!l_mesh.pointerOut.hasListeners())
 					l_mesh.pointerOut.connect(_onPointerOut);
+					
+				if (!l_mesh.pointerDown.hasListeners())
+					l_mesh.pointerDown.connect(_onPointerDown);
 			}
 			else
 			{
 				//@todo: should really consider actually removing those listeners, here.... use the disposer component thing
 				//if you don't want to store the signal Connections..and retrieve disposer here, from the entity. Disposer way looks better anyway...
-				l_mesh.pointerEnabled = false;
+				//l_mesh.pointerEnabled = false;
 			}
 			
 		}
@@ -394,23 +433,76 @@ class FlambeEntity2_5D extends AEntity2_5D
 		Sliced.input.pointer.submitPointerEvent(MOUSE_ENTERED, gameEntity);
 	}
 	
+	private function _onPointerMove(p_pointerEvent:PointerEvent):Void
+	{
+		Sliced.input.pointer.submitPointerEvent(MOUSE_MOVED, gameEntity);
+	}
+	
 	private function _onPointerOut(p_pointerEvent:PointerEvent):Void
 	{
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT, gameEntity);
 	}
 	
+	private function _onPointerDown(p_pointerEvent:PointerEvent):Void
+	{
+		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+	}
 	
 	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void
 	{
 		//Get Mesh
 		var l_mesh:Sprite = _instancesMesh[p_view];
-		
+		//Console.error("RESIZING: " + gameEntity.getState('name') + '. width: ' + p_width + ', height: ' + p_height);
 		if (l_mesh != null)		
 		{
 			if (p_x != null) l_mesh.x._ = p_x;
 			if (p_y != null) l_mesh.y._ = p_y;
 			//if (p_width != null) l_mesh.scissor.width = p_width;
 			//if (p_height != null) l_mesh.scissor.height = p_height;
+		}
+		
+		var l_instance:Entity = _instances[p_view];
+		var l_fillSprite:FillSprite = l_instance.get(FillSprite);
+		
+		if (l_fillSprite != null) 
+		{
+			l_fillSprite.setSize(p_width,p_height);
+		}
+	}
+	
+	private function _updateSpaceWidth(p_spaceWidth:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		var l_fillSprite:FillSprite = l_instance.get(FillSprite);
+		
+		if (l_fillSprite != null) 
+		{
+			l_fillSprite.width._ = p_spaceWidth;
+		}
+	}
+	
+	private function _updateSpaceHeight(p_spaceHeight:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		var l_fillSprite:FillSprite = l_instance.get(FillSprite);
+		
+		if (l_fillSprite != null) 
+		{
+			l_fillSprite.height._ = p_spaceHeight;
+		}
+	}
+	
+	//Feedback back to the game Entity
+	private function _updateBounds(p_view2_5D:IView2_5D):Void
+	{
+		//Get Entity
+		var l_instance:Entity = _instances[p_view2_5D];
+
+		if (l_instance != null)
+		{
+			gameEntity.setState('boundsRect', Sprite.getBounds(l_instance));
 		}
 	}
 }

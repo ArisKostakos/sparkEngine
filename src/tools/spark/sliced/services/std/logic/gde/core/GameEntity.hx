@@ -142,7 +142,11 @@ class GameEntity extends AGameBase implements IGameEntity
 	
 	public function addChild(p_gameEntity:IGameEntity):Void
 	{
+		//Add to children
 		children.push(p_gameEntity);
+		
+		//Set Parent to Child
+		p_gameEntity.parentEntity = this;
 		
 		//Following line is the weak connection between Logic and Display
 		Sliced.display.addDisplayObjectChild(this,p_gameEntity);

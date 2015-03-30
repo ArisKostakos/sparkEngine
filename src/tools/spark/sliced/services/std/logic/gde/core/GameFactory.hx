@@ -18,7 +18,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
  * ...
  * @author Aris Kostakos
  */
-class GameFactory implements IGameFactory
+@:keep class GameFactory implements IGameFactory
 {
 	private var _gameClassParser:IGameClassParser;
 	
@@ -32,6 +32,15 @@ class GameFactory implements IGameFactory
 	private function _init():Void
 	{
 		_gameClassParser = new GameClassParser();
+	}
+	
+	public function createGameEntityExtended(p_gameClassName:String, p_extendGameClassName:String):IGameEntity
+	{
+		var l_extendGameNode:Xml = _gameClassParser.getGameNode(EGameType.ENTITY, p_extendGameClassName);
+		
+		l_extendGameNode.set(GameClassParser._XMLATTRIBUTE_EXTENDS,p_gameClassName);
+		
+		return createGameEntity(l_extendGameNode);
 	}
 	
 	public function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml):IGameEntity

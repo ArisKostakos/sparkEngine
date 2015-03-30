@@ -70,8 +70,33 @@ class LayoutManager
 		//up here cause it's top to bottom
 		if (p_Group.layoutableInstanceType == "View")
 		{
-			l_view2_5D = p_Group.layoutableInstance;
-			l_view2_5D.setPosSize(p_Group.x+p_parentsX, p_Group.y+p_parentsY, p_Group.width, p_Group.height);
+			//@todo: Here's the problem. Away3d view instances are not IView2_5Ds yet.. fix this..
+			if (p_Group.layoutableEntity.getState('renderer') == '3D')
+			{
+				var l_view3D:Dynamic = p_Group.layoutableInstance;
+				l_view3D.x = p_Group.x + p_parentsX;
+				l_view3D.y = p_Group.y + p_parentsY;
+				l_view3D.width = p_Group.width;
+				l_view3D.height = p_Group.height;
+				//NEXT....
+				//THIS DOESNT DO ANYTHING. SO START YOUR RESEARCH FROM HERE
+				//MAYBE ITS TIME TO GET THE NEWEST VRSION OF AWAYJS ON!
+				//why Im struggling to get 3d to work?
+				//1) impressive results
+				//2) its easier to understand how views, scenes and cameras will work here
+				//because in away3d they already work properly (or should work properly..)
+				//in 2d, i dont have the concept of viewports implemented yet..
+				//so im scared to do it there..
+				//why is this important for level editor?
+				//because level editor must have a concept of viewports and real game stage, etc, etc..
+				//BUT 2d physics, also impressive.. do spark machines!
+				//Console.error('View3d x: ' + l_view3D.x  + ', y: ' + l_view3D.y + ', width: ' + l_view3D.width + ', height: ' + l_view3D.height);
+			}
+			else
+			{
+				l_view2_5D = p_Group.layoutableInstance;
+				l_view2_5D.setPosSize(p_Group.x + p_parentsX, p_Group.y + p_parentsY, p_Group.width, p_Group.height);
+			}
 		}
 		else if (p_Group.layoutableInstanceType == "Entity")
 		{

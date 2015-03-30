@@ -16,7 +16,7 @@ import tools.spark.sliced.core.Sliced;
  * ...
  * @author Aris Kostakos
  */
-class KeyboardDevice implements IInputDevice
+@:keep class KeyboardDevice implements IInputDevice
 {
 	private var _keysDown:Array<Key>;
 	private var _keysUp:Array<Key>;

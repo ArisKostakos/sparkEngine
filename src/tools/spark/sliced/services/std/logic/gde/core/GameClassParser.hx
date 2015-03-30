@@ -48,7 +48,7 @@ class GameClassParser implements IGameClassParser
 	private var _isNodeArray:Map<ENodeType,Bool>;
 	
 	inline static private var _XMLELEMENT_EXTENDS:String = "Extends";
-	inline static private var _XMLATTRIBUTE_EXTENDS:String = "extends";
+	inline static public var _XMLATTRIBUTE_EXTENDS:String = "extends";
 	
 	inline static private var _XMLELEMENT_TARGETMERGE:String = "Id";
 	inline static private var _XMLATTRIBUTE_TARGETMERGE:String = "id";
@@ -334,6 +334,7 @@ class GameClassParser implements IGameClassParser
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICKED] = "MouseLeftClicked";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICKED] = "MouseRightClicked";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_ENTERED] = "MouseEntered";
+		_xmlEventPrefabToName[EEventPrefab.MOUSE_MOVED] = "MouseMoved";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT] = "MouseLeft";
 		_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED] = "KeyPressed";
 		_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED] = "KeyReleased";
@@ -558,6 +559,7 @@ class GameClassParser implements IGameClassParser
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICKED]] = EEventPrefab.MOUSE_LEFT_CLICKED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICKED]] = EEventPrefab.MOUSE_RIGHT_CLICKED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_ENTERED]] = EEventPrefab.MOUSE_ENTERED;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_MOVED]] = EEventPrefab.MOUSE_MOVED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT]] = EEventPrefab.MOUSE_LEFT;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED]] = EEventPrefab.KEY_PRESSED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED]] = EEventPrefab.KEY_RELEASED;

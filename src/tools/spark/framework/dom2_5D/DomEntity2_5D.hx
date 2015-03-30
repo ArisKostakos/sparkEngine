@@ -66,6 +66,10 @@ class DomEntity2_5D extends AEntity2_5D
 				_instances[p_view2_5D].style.outline = "0"; //remove blue border when selected.. it's a hack, fix me
 			case "Image":
 				_instances[p_view2_5D] = Browser.document.createImageElement();
+			case "Ace":
+				_instances[p_view2_5D] = Browser.document.createDivElement();
+			case "Tree":
+				_instances[p_view2_5D] = Browser.document.createDivElement();
 			default:
 				//@fixme: If this element was not meant to be rendered at all, don't let it create a DomEntity at all!!!
 				Console.error("Unrecognised NCMeshType input. Creating a Div By Default.");
@@ -178,8 +182,18 @@ class DomEntity2_5D extends AEntity2_5D
 		
 		if (p_src != "Undefined")
 		{
-			var l_asset:Asset = Project.modules["DoNotLoad"].assets[p_src];
-			l_instance.src = Project.getPath(l_asset.location, l_asset.type) + l_asset.url;
+			 //hack.. for full length dom image urls
+			if (p_src.indexOf('assets/') == -1)
+			{
+				//Normal loading (but not quite, still there's the DoNotLoad hacky thing, for Dom stuff..)
+				var l_asset:Asset = Project.modules["DoNotLoad"].assets[p_src];
+				l_instance.src = Project.getPath(l_asset.location, l_asset.type) + l_asset.url;
+			}
+			else
+			{
+				//pass whole url hack ( and another hack for relative url)
+				l_instance.src = "../" + p_src;
+			}
 		}
 	}
 	
@@ -291,7 +305,11 @@ class DomEntity2_5D extends AEntity2_5D
 			case 'Input':
 				_updateInputProperties(p_view2_5D);
 			case 'Image':
-				_updateImageSrc(gameEntity.getState('src') ,p_view2_5D);
+				_updateImageSrc(gameEntity.getState('src') , p_view2_5D);
+			case 'Ace':
+				_updateAceProperties(p_view2_5D);
+			case 'Tree':
+				_updateTreeProperties(p_view2_5D);
 			case 'Undefined':
 				Console.warn('Undefined NCmeshType value');
 			default:
@@ -330,7 +348,33 @@ class DomEntity2_5D extends AEntity2_5D
 			l_instance.innerHTML = gameEntity.getState('text');
 	}
 	
+	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
+	private function _updateAceProperties( p_view2_5D:IView2_5D):Void
+	{
+		//Get the instance we're updating
+		var l_instance:DivElement = _instances[p_view2_5D];
+
+		l_instance.id = "editor";
+		var editor:Dynamic = untyped ace.edit("editor");
+		editor.setTheme("ace/theme/merbivore_soft");
+		editor.getSession().setMode("ace/mode/xml");
+		
+		gameEntity.setState('aceObject', editor);
+	}
 	
+	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
+	private function _updateTreeProperties( p_view2_5D:IView2_5D):Void
+	{
+		//Get the instance we're updating
+		var l_instance:DivElement = _instances[p_view2_5D];
+
+		l_instance.id = "tree";
+		var tree:Dynamic = untyped $('#tree');
+		l_instance.style.overflowX = "hidden";
+		l_instance.style.overflowY = "scroll";
+		
+		gameEntity.setState('treeObject', tree);
+	}
 	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void
 	{

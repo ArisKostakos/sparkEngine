@@ -9,6 +9,7 @@ import away3d.containers.ObjectContainer3D;
 import away3d.entities.Mesh;
 import away3d.materials.ColorMaterial;
 import away3d.primitives.SphereGeometry;
+import away3d.primitives.CubeGeometry;
 import tools.spark.sliced.services.std.display.renderers.interfaces.ILibrarySpecificRenderer;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameForm;
 
@@ -37,15 +38,15 @@ class Away3DObjectManager implements IDisplayObjectManager
 		
 		
 		
-		var l_geometry:SphereGeometry = new SphereGeometry();
+		var l_geometry:CubeGeometry = new CubeGeometry(500, 500, 500);
 		var l_material:ColorMaterial = new ColorMaterial(Std.int(Math.random()*(13421772-10000)+10000));
 		l_material.lightPicker = Away3DSceneManager._deleteMeMainLightpicker;
 		var l_mesh:Mesh = new Mesh(l_geometry, l_material);
 		
-		//l_object3D.x = Math.random() * 500;
-		//l_object3D.y = Math.random() * 500;
-		//l_object3D.z = Math.random() * 500;
-		
+		//l_object3D.x = 5000;
+		//l_object3D.y = 5000;
+		//l_object3D.z = 5000;
+
 		l_object3D.addChild(l_mesh);
 		
 		update(l_object3D, p_gameEntity);
@@ -80,6 +81,10 @@ class Away3DObjectManager implements IDisplayObjectManager
 				p_object.y = p_gameEntity.getState(p_state);
 			case 'spaceZ':
 				p_object.z = p_gameEntity.getState(p_state);
+			case 'scaleX':
+				p_object.rotationX = p_gameEntity.getState(p_state);
+				p_object.rotationY = p_gameEntity.getState(p_state);
+				p_object.rotationZ = p_gameEntity.getState(p_state);
 		}
 		
 	}

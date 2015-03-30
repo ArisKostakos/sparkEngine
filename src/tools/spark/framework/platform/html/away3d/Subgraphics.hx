@@ -69,7 +69,7 @@ class Subgraphics
 						');
 						
 						
-		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		Console.info("away html init!");
 		
 		//Create a temp View3D which in away-ts will kind of 'initialize' the engine and the Stage
 		var l_view3D:View3D = new View3D();
@@ -82,9 +82,9 @@ class Subgraphics
 		// Create a new Stage3D proxy to contain the separate views
 		_stage3DProxy = _stage3DManager.getStage3DProxy(0);
 		
-		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		l_view3D.dispose();
-		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		return _stage3DProxy.stage3D.context3D.gl();
 	}
 	
@@ -94,7 +94,7 @@ class Subgraphics
 	private static function _initProxies():Void
 	{
 		_stage3DProxy.antiAlias = 8;
-		_stage3DProxy.color = 0xf00f00;
+		_stage3DProxy.color = 0xff0000; // 0xf00f00;
 		
 		//event listener
 		var reqAnimFrame:Dynamic = new RequestAnimationFrame(_onAwayEnterFrame, Subgraphics);

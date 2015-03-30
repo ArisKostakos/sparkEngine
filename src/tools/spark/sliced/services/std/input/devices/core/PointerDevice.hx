@@ -17,9 +17,15 @@ import tools.spark.sliced.core.Sliced;
  * ...
  * @author Aris Kostakos
  */
-class PointerDevice implements IInputDevice
+@:keep class PointerDevice implements IInputDevice
 {
 	private var _registeredTriggers:Map< EEventType, Map < IGameEntity, IGameEntity > >; //PointerEvent, Filter, SameFilterAgain
+	
+	public var currentX( default, null ):Float;
+	public var currentY( default, null ):Float;
+	
+	private var _oldX:Float;
+	private var _oldY:Float;
 	
 	public function new() 
 	{
@@ -34,7 +40,26 @@ class PointerDevice implements IInputDevice
 	
 	public function update():Void
 	{
+		_oldX = currentX;
+		_oldY = currentY;
 		
+		currentX = System.pointer.x;
+		currentY = System.pointer.y;
+	}
+	
+	public function distX() : Float 
+	{
+		return currentX-_oldX;
+	}
+	
+	public function distY() : Float 
+	{
+		return currentY-_oldY;
+	}
+	
+	public function isDown():Bool
+	{
+		return System.pointer.isDown();
 	}
 	
 	private function _setTrigger(p_eventType:EEventType, p_eventFilter:IGameEntity):Void
@@ -64,6 +89,6 @@ class PointerDevice implements IInputDevice
 	
 	private function _onMove(p:PointerEvent):Void
 	{
-		//Console.error("PointerMove");
+		Console.error("PointerMove: " + p.viewX + ', ' + p.viewY);
 	}
 }

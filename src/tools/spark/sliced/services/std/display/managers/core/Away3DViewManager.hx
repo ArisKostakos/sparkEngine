@@ -13,6 +13,9 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameForm;
 import tools.spark.sliced.services.std.display.managers.interfaces.IDisplayObjectManager;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
+import tools.spark.framework.layout.containers.Group;
+import tools.spark.sliced.core.Sliced;
+
 /**
  * ...
  * @author Aris Kostakos
@@ -34,12 +37,16 @@ class Away3DViewManager implements IDisplayObjectManager
 		
 		var l_view3D:View3D = new View3D();
 		
+		var l_group:Group = Sliced.display.projectActiveSpaceReference.activeStageReference.layoutManager.getViewGroupByGameEntity(p_gameEntity);
+		//Console.error("did recursion while looking for: " + gameEntity.getState('name') + ", and found this: " + group.layoutableEntity.getState('name'));
+		l_group.layoutableInstance = this;
+		
 		var stage3Dmanager:Stage3DManager = Stage3DManager.getInstance(l_view3D.stage);
 		l_view3D.stage3DProxy = stage3Dmanager.getStage3DProxy(0);
 		l_view3D.shareContext = true;// false;
-		l_view3D.layeredView = true;// false;
+		l_view3D.layeredView =  true;// false;
 
-		
+		Console.error("CREATED VIEW 3D WITH A GROUP ON THE VIEW MANAGER!!");
 		Console.info("away html new view created. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
 		stage3Dmanager.iRemoveStage3DProxy(stage3Dmanager.getStage3DProxy(1));
 		Console.info("away html view removed. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);

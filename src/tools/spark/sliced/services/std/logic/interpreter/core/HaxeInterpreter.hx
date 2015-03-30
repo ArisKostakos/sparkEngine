@@ -14,6 +14,7 @@ import haxe.io.Bytes;
 import haxe.crypto.Crc32;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
 import tools.spark.framework.Framework;
+import tools.spark.framework.Assets;
 
 /**
  * ...
@@ -50,8 +51,14 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Math", Math); // share the Math
 		_interpreter.variables.set("Std", Std); // share the Std
 		_interpreter.variables.set("String", String); // share the String
-		_interpreter.variables.set("Framework", Framework); // share the Framework class
+		//_interpreter.variables.set("Framework", Framework); // share the Framework class
+		_interpreter.variables.set("Assets", Assets); // share the Assets class
 		//_interpreter.variables.set("Int", Int); // share the Int
+		
+		//so bad..
+		#if html
+		_interpreter.variables.set("XMLHttpRequest", js.html.XMLHttpRequest); // share the XMLHttpRequest
+		#end
 	}
 	
 	public function run(hashId:Int, parameters:Map<String,Dynamic>):Bool
@@ -76,9 +83,16 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Math", Math); // share the Math
 		_interpreter.variables.set("Std", Std); // share the Std
 		_interpreter.variables.set("String", String); // share the String
-		_interpreter.variables.set("Framework", Framework); // share the Framework class
+		//_interpreter.variables.set("Framework", Framework); // share the Framework class
+		_interpreter.variables.set("Assets", Assets); // share the Assets class
 		//_interpreter.variables.set("Int", Int); // share the Int
 
+		//so bad..
+		#if html
+		_interpreter.variables.set("XMLHttpRequest", js.html.XMLHttpRequest); // share the XMLHttpRequest
+		#end
+		
+		
 		//Dynamic Variables
 		for (varName in parameters.keys())
 		{

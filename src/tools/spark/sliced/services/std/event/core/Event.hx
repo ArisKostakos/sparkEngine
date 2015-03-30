@@ -89,6 +89,7 @@ class Event extends AService implements IEvent
 		if (	l_eventType == MOUSE_LEFT_CLICK ||
 				l_eventType == MOUSE_RIGHT_CLICK ||
 				l_eventType == MOUSE_ENTERED ||
+				l_eventType == MOUSE_MOVED ||
 				l_eventType == MOUSE_LEFT
 		   )
 		{
@@ -176,6 +177,7 @@ class Event extends AService implements IEvent
 		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_CLICKED] = EEventType.MOUSE_LEFT_CLICK;
 		_prefabConvertToType[EEventPrefab.MOUSE_RIGHT_CLICKED] = EEventType.MOUSE_RIGHT_CLICK;
 		_prefabConvertToType[EEventPrefab.MOUSE_ENTERED] = EEventType.MOUSE_ENTERED;
+		_prefabConvertToType[EEventPrefab.MOUSE_MOVED] = EEventType.MOUSE_MOVED;
 		_prefabConvertToType[EEventPrefab.MOUSE_LEFT] = EEventType.MOUSE_LEFT;
 		_prefabConvertToType[EEventPrefab.KEY_PRESSED] = EEventType.KEY_PRESSED;
 		_prefabConvertToType[EEventPrefab.KEY_RELEASED] = EEventType.KEY_RELEASED;
@@ -399,6 +401,7 @@ class Event extends AService implements IEvent
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT_CLICKED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_RIGHT_CLICKED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_ENTERED , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.MOUSE_MOVED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_PRESSED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_RELEASED , _NO_FILTER);

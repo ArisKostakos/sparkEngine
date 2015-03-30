@@ -298,6 +298,7 @@ class GameClassValidator implements IGameClassValidator
 								_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICKED],
 								_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICKED],
 								_xmlEventPrefabToName[EEventPrefab.MOUSE_ENTERED],
+								_xmlEventPrefabToName[EEventPrefab.MOUSE_MOVED],
 								_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT],
 								_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED],
 								_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED],
