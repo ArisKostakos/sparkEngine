@@ -321,6 +321,7 @@ class GameClassParser implements IGameClassParser
 		
 		_xmlEventPrefabToName[EEventPrefab.CREATED] = "Created";
 		_xmlEventPrefabToName[EEventPrefab.UPDATE] = "Update";
+		_xmlEventPrefabToName[EEventPrefab.CHANGED] = "Changed";
 		
 		_xmlEventPrefabToName[EEventPrefab.NETWORK_CONNECTED] = "NetworkConnected";
 		_xmlEventPrefabToName[EEventPrefab.NETWORK_REQUEST] = "NetworkRequest";
@@ -549,6 +550,7 @@ class GameClassParser implements IGameClassParser
 		
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.CREATED]] = EEventPrefab.CREATED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.UPDATE]] = EEventPrefab.UPDATE;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.CHANGED]] = EEventPrefab.CHANGED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.NETWORK_CONNECTED]] = EEventPrefab.NETWORK_CONNECTED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.NETWORK_REQUEST]] = EEventPrefab.NETWORK_REQUEST;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.NETWORK_SERVER_EVENT]] = EEventPrefab.NETWORK_SERVER_EVENT;
@@ -1190,7 +1192,7 @@ class GameClassParser implements IGameClassParser
 	inline public function getGameNode(p_expectedGameType:EGameType, ?p_gameClassName:String, ?p_gameClassNode:Xml):Xml
 	{
 		var l_gameClassNode:Xml;
-		
+
 		if (p_gameClassName != null && p_gameClassNode != null)
 		{
 			Console.warn('Both a game class name and a game class node have been specified to create a game class. Using game class node...');

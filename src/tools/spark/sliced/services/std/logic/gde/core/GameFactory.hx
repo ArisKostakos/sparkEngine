@@ -43,6 +43,11 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 		return createGameEntity(l_extendGameNode);
 	}
 	
+	public function createGameEntityByXml(p_gameClassNode:Xml):IGameEntity
+	{
+		return createGameEntity(null, p_gameClassNode);
+	}
+	
 	public function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml):IGameEntity
 	{
 		//Get the class from the embedded assets folder(preloaded)

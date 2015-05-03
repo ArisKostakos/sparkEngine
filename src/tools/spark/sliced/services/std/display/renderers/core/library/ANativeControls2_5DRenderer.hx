@@ -53,6 +53,11 @@ class ANativeControls2_5DRenderer extends A2_5DRenderer implements ILibrarySpeci
 		
 	}
 	
+	public function removeChild(p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void 
+	{
+		
+	}
+	
 	public function updateState(p_objectEntity:IGameEntity, p_state:String):Void 
 	{
 		

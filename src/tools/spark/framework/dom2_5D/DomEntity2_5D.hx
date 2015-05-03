@@ -47,6 +47,7 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['overflow'] = _updateOverflow;
 		_updateStateFunctions['width'] = _updateWidth;
 		_updateStateFunctions['height'] = _updateHeight;
+		_updateStateFunctions['backgroundColor'] = _updateBackgroundColor;
 	}
 	
 	
@@ -83,12 +84,20 @@ class DomEntity2_5D extends AEntity2_5D
 
 	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
 	{
-		//This is an 'instance' addChild... a flambe addChild..
+		//This is an 'instance' addChild... a dom addChild..
 		_instances[p_view2_5D].appendChild(cast(p_childEntity.createInstance(p_view2_5D), Element));
 		
 		super._createChildOfInstance(p_childEntity, p_view2_5D);
 	}
-
+	
+	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	{
+		//This is an 'instance' removeChild... a dom removeChild..
+		_instances[p_view2_5D].removeChild(cast(p_childEntity.getInstance(p_view2_5D), Element));
+		
+		super._removeChildOfInstance(p_childEntity, p_view2_5D);
+	}
+		
 	override public function update(?p_view2_5D:IView2_5D):Void
 	{
 		//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
@@ -104,6 +113,7 @@ class DomEntity2_5D extends AEntity2_5D
 			_updateState('fontSize', p_view2_5D);
 			_updateState('fontColor', p_view2_5D);
 			_updateState('overflow', p_view2_5D);
+			_updateState('backgroundColor', p_view2_5D);
 		}
 		
 		//Update Touchable Stuff
@@ -139,9 +149,6 @@ class DomEntity2_5D extends AEntity2_5D
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
 	inline private function _updateNCstyleable(p_NCstyleable:String, p_view2_5D:IView2_5D):Void
 	{
-		if (gameEntity.getState('backgroundColor') != null && gameEntity.getState('backgroundColor')!="Undefined")
-			_instances[p_view2_5D].style.backgroundColor = gameEntity.getState('backgroundColor');
-		
 		if (gameEntity.getState('border') != null && gameEntity.getState('border')!="Undefined")
 			_instances[p_view2_5D].style.border = gameEntity.getState('border');
 			
@@ -263,6 +270,13 @@ class DomEntity2_5D extends AEntity2_5D
 	inline private function _updateOpacity(p_opacity:String, p_view2_5D:IView2_5D):Void
 	{
 		_instances[p_view2_5D].style.opacity= p_opacity;
+	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateBackgroundColor(p_backgroundColor:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_backgroundColor!="Undefined")
+			_instances[p_view2_5D].style.backgroundColor = p_backgroundColor;
 	}
 	
 	//much better way.. should be done for everything
@@ -435,6 +449,7 @@ class DomEntity2_5D extends AEntity2_5D
 		else
 		{
 			gameEntity.setState('text', p_changeEvent.target.value);
+			Sliced.event.raiseEvent(CHANGED, gameEntity);
 		}
 	}
 }

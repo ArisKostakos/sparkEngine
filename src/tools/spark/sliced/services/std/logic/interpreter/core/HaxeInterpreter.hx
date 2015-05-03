@@ -15,6 +15,7 @@ import haxe.crypto.Crc32;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
 import tools.spark.framework.Framework;
 import tools.spark.framework.Assets;
+import haxe.xml.Fast;
 
 /**
  * ...
@@ -53,6 +54,9 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("String", String); // share the String
 		//_interpreter.variables.set("Framework", Framework); // share the Framework class
 		_interpreter.variables.set("Assets", Assets); // share the Assets class
+		_interpreter.variables.set("Xml", Xml); // share the Xml class
+		_interpreter.variables.set("Fast", Fast); // share the Fast class
+		_interpreter.variables.set("StringTools", StringTools); // share the StringTools class
 		//_interpreter.variables.set("Int", Int); // share the Int
 		
 		//so bad..
@@ -85,6 +89,9 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("String", String); // share the String
 		//_interpreter.variables.set("Framework", Framework); // share the Framework class
 		_interpreter.variables.set("Assets", Assets); // share the Assets class
+		_interpreter.variables.set("Xml", Xml); // share the Xml class
+		_interpreter.variables.set("Fast", Fast); // share the Fast class
+		_interpreter.variables.set("StringTools", StringTools); // share the StringTools class
 		//_interpreter.variables.set("Int", Int); // share the Int
 
 		//so bad..

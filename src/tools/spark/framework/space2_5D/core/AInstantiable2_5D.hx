@@ -36,6 +36,12 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 			groupInstances = new Map<IView2_5D, Group>();
 	}
 	
+	public function getInstance(p_view2_5D:IView2_5D):Dynamic
+	{
+		return _instances[p_view2_5D];
+	}
+	
+	
 	//For optimization purposes.. to be able to inline the publics
 	private function _updateState(p_state:String, ?p_view2_5D:IView2_5D):Void
 	{
@@ -103,6 +109,11 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 		//override me!!
 	}
 	
+	private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	{
+		//override me!!
+	}
+	
 	public function update(?p_view2_5D:IView2_5D):Void
 	{
 		//override me!!
@@ -118,6 +129,18 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 		{
 			_createChildOfInstance(p_entity2_5D, f_view);
 			p_entity2_5D.update(f_view);
+		}
+	}
+	
+	override public function removeChild( p_entity2_5D:IEntity2_5D):Void
+	{
+		//Console.error("adding child (instanciable here)");
+		super.removeChild(p_entity2_5D);
+		
+		//do for all instances (hack?)
+		for (f_view in _instances.keys())
+		{
+			_removeChildOfInstance(p_entity2_5D, f_view);
 		}
 	}
 }

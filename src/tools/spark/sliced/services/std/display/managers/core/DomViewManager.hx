@@ -69,7 +69,7 @@ class DomViewManager implements IDisplayObjectManager
 				
 				l_view2_5D.camera = _renderer.createCamera(l_cameraEntity);
 				
-			case 'visible':
+			default:
 				l_view2_5D.updateState(p_state);
 		}
 	}

@@ -45,6 +45,42 @@ class DomView2_5D extends AView2_5D
 					_instanceView.style.display = "inline";
 				else
 					_instanceView.style.display = "none";
+			case 'width':
+					_updateWidth(gameEntity.getState(p_state));
+			case 'height':
+					_updateHeight(gameEntity.getState(p_state));
+		}
+	}
+	
+	private inline function _updateWidth(p_width:String):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			group.updateState('width');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.projectActiveSpaceReference.activeStageReference.layoutManager.validated=false;
+		}
+		else
+		{
+			//..
+		}
+	}
+	
+	private inline function _updateHeight(p_height:String):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			group.updateState('height');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.projectActiveSpaceReference.activeStageReference.layoutManager.validated=false;
+		}
+		else
+		{
+
 		}
 	}
 	

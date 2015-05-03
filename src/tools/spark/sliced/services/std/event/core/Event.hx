@@ -167,6 +167,7 @@ class Event extends AService implements IEvent
 		
 		_prefabConvertToType[EEventPrefab.CREATED] = EEventType.CREATED;
 		_prefabConvertToType[EEventPrefab.UPDATE] = EEventType.UPDATE;
+		_prefabConvertToType[EEventPrefab.CHANGED] = EEventType.CHANGED;
 		_prefabConvertToType[EEventPrefab.NETWORK_CONNECTED] = EEventType.NETWORK_CONNECTED;
 		_prefabConvertToType[EEventPrefab.NETWORK_REQUEST] = EEventType.NETWORK_REQUEST;
 		_prefabConvertToType[EEventPrefab.NETWORK_SERVER_EVENT] = EEventType.NETWORK_SERVER_EVENT;
@@ -391,6 +392,7 @@ class Event extends AService implements IEvent
 		
 		_prefabConvertToFilter.set(EEventPrefab.CREATED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.UPDATE , _NO_FILTER);
+		_prefabConvertToFilter.set(EEventPrefab.CHANGED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.NETWORK_CONNECTED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.NETWORK_REQUEST , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.NETWORK_SERVER_EVENT , _NO_FILTER);

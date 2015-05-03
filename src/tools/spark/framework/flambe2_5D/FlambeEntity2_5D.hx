@@ -12,6 +12,8 @@ import flambe.display.Sprite;
 import flambe.Entity;
 import flambe.input.PointerEvent;
 import flambe.math.Rectangle;
+import flambe.math.FMath;
+import nape.shape.Shape;
 import tools.spark.framework.space2_5D.core.AEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
@@ -20,6 +22,17 @@ import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 import spriter.flambe.SpriterMovie;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
+
+//IF DEF THIS SHIT ONLY IF SPARK RUNTIME SUPPORTS NAPE
+import tools.spark.framework.flambe2_5D.components.BodyComponent;
+import tools.spark.framework.flambe2_5D.components.SpaceComponent;
+import nape.geom.Vec2;
+import nape.phys.Body;
+import nape.phys.Material;
+import nape.shape.Circle;
+import nape.shape.Polygon;
+import nape.space.Space;
+import nape.phys.BodyType;
 
 /**
  * ...
@@ -47,6 +60,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['touchable'] = _updateTouchable;
 		_updateStateFunctions['visible'] = _updateVisible;
 		_updateStateFunctions['opacity'] = _updateOpacity;
+		_updateStateFunctions['centerAnchor'] = _centerAnchor;
+		_updateStateFunctions['physicsEntity'] = _updatePhysics;
 		_updateStateFunctions['spaceWidth'] = _updateSpaceWidth;	//this is iffy.. should do it with forms instead
 		_updateStateFunctions['spaceHeight'] = _updateSpaceHeight;	//this is iffy.. should do it with forms instead
 		_updateStateFunctions['2DMeshImageForm'] = _update2DMeshImageForm;
@@ -95,6 +110,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//_updateState('2DMeshImageForm', p_view2_5D); //this is nested.. not for global update i think
 		//_updateState('2DMeshSpriterForm', p_view2_5D); //this is nested.. not for global update i think
 		//more spriter nested things exist also don't update them
+		_updateState('centerAnchor', p_view2_5D);
+		_updateState('physicsEntity', p_view2_5D);
 		
 		
 		//Update my layoutObject
@@ -386,7 +403,99 @@ class FlambeEntity2_5D extends AEntity2_5D
 			l_mesh.setAlpha(p_opacity);
 		}
 	}
+	
+	
 
+	private function _centerAnchor(p_centerAnchorFlag:Dynamic, p_view2_5D:IView2_5D):Void
+	{
+		//Center Anchor State doesn't exist yet, we do it for everyone
+		var l_instance:Entity = _instances[p_view2_5D];
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh != null)
+		{
+			l_mesh.centerAnchor();
+		}
+	}
+	
+	private function _updatePhysics(p_physicsFlag:Bool, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh != null)
+		{
+			if (p_physicsFlag)
+			{
+				Console.error("UPDATING PHYSICS ENTITY: " + gameEntity.getState('name') + ": " + gameEntity.getState('physicsType'));
+
+				if (parentScene != null)
+				{
+					if (parentScene.gameEntity.getState('physicsScene'))
+					{
+						var l_sceneInstance:Entity = parentScene.getInstance(p_view2_5D);
+						
+						//Add a child
+						var body:Body;
+						if (gameEntity.getState('physicsType') == "Static")
+							body = new Body(BodyType.STATIC);
+						else
+							body = new Body();
+						
+						var l_material:Material;
+						
+						switch (gameEntity.getState('physicsMaterial'))
+						{
+							case "Glass":
+								l_material = Material.glass();
+							case "Ice":
+								l_material = Material.ice();
+							case "Rubber":
+								l_material = Material.rubber();
+							case "Sand":
+								l_material = Material.sand();
+							case "Steel":
+								l_material = Material.steel();
+							case "Wood":
+								l_material = Material.wood();
+							default:
+								l_material = Material.wood();
+						}
+						
+						var l_shape:Shape;
+						
+						switch (gameEntity.getState('physicsShape'))
+						{
+							case "Circle":
+								//I take the medium between width and hight (w+h)/2 and then divide by 2 cause we need radius which is half
+								var l_radious = (l_mesh.getNaturalWidth() * l_mesh.scaleX._ + l_mesh.getNaturalHeight() * l_mesh.scaleY._) / 4;
+								l_shape = new Circle(l_radious, l_material);
+							case "Polygon":
+								l_shape = new Polygon(Polygon.box(l_mesh.getNaturalWidth() * l_mesh.scaleX._, l_mesh.getNaturalHeight() * l_mesh.scaleY._), l_material); 
+							default:
+								l_shape = new Polygon(Polygon.box(l_mesh.getNaturalWidth() * l_mesh.scaleX._, l_mesh.getNaturalHeight() * l_mesh.scaleY._), l_material);
+						}
+						
+						body.shapes.add(l_shape);
+						body.position = new Vec2(l_mesh.x._, l_mesh.y._);
+						
+						//Initial Velocity
+						if (gameEntity.getState('physicsType') != "Static")
+							body.velocity = new Vec2(gameEntity.getState('initialForceX'), gameEntity.getState('initialForceY'));
+						
+						//body.rotation = Math.random() * 2*FMath.PI;
+						body.space = l_sceneInstance.get(SpaceComponent).space;
+						
+						l_instance.add(new BodyComponent(body));
+						//var childEntity:Entity = new Entity().add(new BodyComponent(body));
+						//childEntity.add(new FillSprite(0x00ff00, 64, 64).centerAnchor());
+					}
+				}
+			}
+		}
+	}
+	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void
 	{
 		//Gt Mesh

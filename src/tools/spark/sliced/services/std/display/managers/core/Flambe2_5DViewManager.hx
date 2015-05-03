@@ -66,12 +66,14 @@ class Flambe2_5DViewManager implements IDisplayObjectManager
 				var l_sceneEntity:IGameEntity = p_gameEntity.getState(p_state);
 				
 				l_view2_5D.scene = _renderer.createScene(l_sceneEntity);
-				//Console.log("Scene Name: " + l_view2_5D.scene.name);
+				//Console.log("Scene Name: " + l_sceneEntity.getState("name"));
 			case 'camera':
 				var l_cameraEntity:IGameEntity = p_gameEntity.getState(p_state);
 				
 				l_view2_5D.camera = _renderer.createCamera(l_cameraEntity);
-				//Console.log("Camera Name: " + l_view2_5D.camera.name);
+				//Console.log("Camera Name: " + l_cameraEntity.getState("name"));
+			case 'visible':
+				l_view2_5D.setVisible(p_gameEntity.getState(p_state));
 		}
 	}
 	

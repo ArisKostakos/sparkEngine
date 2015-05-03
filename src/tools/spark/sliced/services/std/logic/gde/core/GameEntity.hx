@@ -81,6 +81,12 @@ class GameEntity extends AGameBase implements IGameEntity
 		return possibleActionSet.get(p_actionId);
 	}
 	
+	//Beta feature, not sure. Runs an action, once, immediately.
+	public function forceAction(p_actionId:String):Void
+	{
+		possibleActionSet.get(p_actionId).doPass();
+	}
+	
 	public function startAction(actionId:String):Bool
 	{
 		//Get Action Object
@@ -150,6 +156,15 @@ class GameEntity extends AGameBase implements IGameEntity
 		
 		//Following line is the weak connection between Logic and Display
 		Sliced.display.addDisplayObjectChild(this,p_gameEntity);
+	}
+	
+	public function removeChild(p_gameEntity:IGameEntity):Void
+	{
+		//Add to children
+		children.remove(p_gameEntity);
+		
+		//Following line is the weak connection between Logic and Display
+		Sliced.display.removeDisplayObjectChild(this,p_gameEntity);
 	}
 	
 	public function getChildren():Array<IGameEntity>

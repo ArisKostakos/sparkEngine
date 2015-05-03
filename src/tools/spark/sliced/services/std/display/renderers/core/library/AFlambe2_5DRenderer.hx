@@ -138,6 +138,25 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		}
 	}
 	
+	public function removeChild(p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void 
+	{
+		//check the parent display type here.. For the childEntity, I'm ASSUMING it's an entity/object.. is that right??
+		//here i remove but not destroy.. think this over..
+		switch (p_parentEntity.getState('displayType'))
+		{
+			case "Scene":
+				if (_scenes[p_parentEntity] != null)
+					_sceneManager.removeFrom(_objects[p_childEntity], _scenes[p_parentEntity]);
+					
+			case "Entity":
+				if (_objects[p_parentEntity] != null)
+					//_objectManager.addTo(createObject(p_childEntity), _objects[p_parentEntity]);
+					Console.warn("FLAMBE RENDERER: REMOVING A CHILD FROM AN OBJECT NOT YET IMPLEMENTED");
+			default:
+				Console.warn("AFlambe2_5DRenderer: Unhandled remove child request: " + p_parentEntity.getState('displayType'));
+		}
+	}
+	
 	inline public function updateState ( p_objectEntity:IGameEntity, p_state:String):Void
 	{
 		//maybe check its display type here..
@@ -147,8 +166,11 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		{
 			_objectManager.updateState(_objects[p_objectEntity], p_objectEntity, p_state);
 		}
-		
-		//else, is it view, do this...  etc
+		//else if it's view, do this:
+		else if (_views[p_objectEntity] != null)
+		{
+			_viewManager.updateState(_views[p_objectEntity], p_objectEntity, p_state);
+		}
 	}
 	
 	inline public function updateFormState ( p_objectEntity:IGameEntity, p_state:String):Void

@@ -28,4 +28,9 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 	{
 		children.push(p_entity2_5D);
 	}
+	
+	public function removeChild( p_entity2_5D:IEntity2_5D):Void
+	{
+		children.remove(p_entity2_5D);
+	}
 }

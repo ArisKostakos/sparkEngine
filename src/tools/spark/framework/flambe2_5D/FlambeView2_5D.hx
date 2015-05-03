@@ -54,13 +54,23 @@ class FlambeView2_5D extends AView2_5D
 		_instanceView.add(l_viewSprite);
 		
 		//Add flambe views that are active on root, for mouse listeners, physics, etc.. make sure you remove them if hidden, not active. remember this is for physics/event listeners only.. view will still render and be visible even if removed from the root
-		System.root.addChild(_instanceView);
+		if (gameEntity.getState('visible'))
+			System.root.addChild(_instanceView);
 	}
 	
 	override public function render():Void
 	{
 		//render
-		Sprite.render(_instanceView, _flambeGraphics);
+		if (gameEntity.getState('visible'))	//I cannot describe how BAD this really is!
+			Sprite.render(_instanceView, _flambeGraphics);
+	}
+	
+	public function setVisible(p_value:Bool):Void
+	{
+		if (p_value)
+			System.root.addChild(_instanceView);
+		else
+			System.root.removeChild(_instanceView);
 	}
 	
 	//i think this belongs to AView2_5D instead.. i don't see any flambe relevant code...
@@ -107,8 +117,11 @@ class FlambeView2_5D extends AView2_5D
 		//@todo: remove previous scene, possibly dispose a lot of stuff..
 		//if I actually do NOT remove the entity instances of a scene of a view here, then when that scene is readded below,
 		//check if their entities correspond with this view before creating them again
-		//if (scene!=null)
-		//...
+		if (scene!=null)
+		{
+			scene = null;
+			_disposeCurrentScene();
+		}
 		
 		//Instanciate current scene
 		scene = p_value;
@@ -157,6 +170,9 @@ class FlambeView2_5D extends AView2_5D
 	private function _disposeCurrentScene():Void
 	{
 		_instanceScene = null;
+		
+		//remove it from view
+		_instanceView.disposeChildren();
 	}
 	
 	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void

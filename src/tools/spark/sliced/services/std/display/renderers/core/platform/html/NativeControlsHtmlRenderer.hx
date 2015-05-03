@@ -130,6 +130,23 @@ class NativeControlsHtmlRenderer extends ANativeControls2_5DRenderer implements 
 		}
 	}
 	
+	override inline public function removeChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void
+	{
+		//check the parent display type here.. For the childEntity, I'm ASSUMING it's an entity/object.. is that right??
+		switch (p_parentEntity.getState('displayType'))
+		{
+			case "Scene":
+				if (_scenes[p_parentEntity] != null)
+					//_sceneManager.addTo(createObject(p_childEntity), _scenes[p_parentEntity]);
+					Console.warn("NC RENDERER: REMOVING A CHILD FROM A SCENE NOT YET IMPLEMENTED");
+			case "Entity":
+				if (_objects[p_parentEntity] != null) //createObject here is wrong.. just take value from array instead
+					_objectManager.removeFrom(createObject(p_childEntity), _objects[p_parentEntity]);
+			default:
+				Console.warn("NativeControlsHtmlRenderer: Unhandled remove child request: " + p_parentEntity.getState('displayType'));
+		}
+	}
+	
 	override inline public function updateState ( p_objectEntity:IGameEntity, p_state:String):Void
 	{
 		//maybe check its display type here..

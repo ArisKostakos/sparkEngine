@@ -155,6 +155,11 @@ class AAway3DRenderer extends A3DRenderer implements ILibrarySpecificRenderer
 		}
 	}
 	
+	public function removeChild(p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void 
+	{
+		
+	}
+	
 	inline public function updateState ( p_objectEntity:IGameEntity, p_state:String):Void
 	{
 		//maybe check its display type here..

@@ -33,6 +33,7 @@
     <library name="flambe" />
     <library name="hscript" />
     <library name="SpriterHaxeEngine" />
+    <library name="nape" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

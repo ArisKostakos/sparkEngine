@@ -18,7 +18,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 class AEntity2_5D extends AInstantiable2_5D implements IEntity2_5D
 {
-	private var _parentScene:IScene2_5D;
+	public var parentScene( default, default ):IScene2_5D;
 	
 	private function new(p_gameEntity:IGameEntity) 
 	{
@@ -38,5 +38,14 @@ class AEntity2_5D extends AInstantiable2_5D implements IEntity2_5D
 	{
 		if (p_childEntity.gameEntity.getState('layoutable') == true)
 			groupInstances[p_view2_5D].children.push(p_childEntity.groupInstances[p_view2_5D]);
+			
+		// wanted to set parentScene here but it would have no effect for children inside children
+		//p_childEntity.parentScene = parentScene;  (i think will be null :(, becayse of the way instantiating goes)
+	}
+	
+	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	{
+		if (p_childEntity.gameEntity.getState('layoutable') == true)
+			groupInstances[p_view2_5D].children.remove(p_childEntity.groupInstances[p_view2_5D]);
 	}
 }

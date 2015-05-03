@@ -33,5 +33,13 @@ class AScene2_5D extends AInstantiable2_5D implements IScene2_5D
 	{
 		if (p_childEntity.gameEntity.getState('layoutable') == true)
 			p_view2_5D.group.children.push(p_childEntity.groupInstances[p_view2_5D]);
+			
+		p_childEntity.parentScene = this;
+	}
+	
+	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	{
+		if (p_childEntity.gameEntity.getState('layoutable') == true)
+			p_view2_5D.group.children.remove(p_childEntity.groupInstances[p_view2_5D]);
 	}
 }

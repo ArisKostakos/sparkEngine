@@ -12,5 +12,5 @@ package tools.spark.framework.space2_5D.interfaces;
 
 interface IEntity2_5D extends IInstantiable2_5D
 {
-	
+	var parentScene( default, default ):IScene2_5D;
 }

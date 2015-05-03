@@ -10,7 +10,7 @@ main: tools.spark.Main
 default_platform: html
 
 # Additional flags to pass to the Haxe compiler
-haxe_flags: -lib hscript
+haxe_flags: -lib hscript -D includeNativeComponents -D flambe_transparent -lib SpriterHaxeEngine
 
 # Additional paths to include in the build
 extra_paths:

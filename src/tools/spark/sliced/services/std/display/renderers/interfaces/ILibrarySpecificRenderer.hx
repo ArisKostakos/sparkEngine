@@ -22,6 +22,7 @@ interface ILibrarySpecificRenderer extends IDimensionSpecificRenderer
 	
 	//delete me
 	function addChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void;
+	function removeChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void;
 	function updateState ( p_objectEntity:IGameEntity, p_state:String):Void;
 	function updateFormState ( p_objectEntity:IGameEntity, p_state:String):Void;
 	

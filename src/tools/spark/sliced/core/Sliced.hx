@@ -47,10 +47,10 @@ class Sliced
 	{
 		//Input Update
 		Sliced.input.update();
-		
+		////Console.error("---------->Logic: EVENT update");
 		//Event Update
 		Sliced.event.update();
-		
+		//Console.error("---------->Logic: LOGIC update");
 		//Logic Update
 		Sliced.logic.update();
 		

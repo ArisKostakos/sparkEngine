@@ -79,6 +79,7 @@ class Display extends AService implements IDisplay
 		_renderStateNames['fontColor'] = true;
 		_renderStateNames['src'] = true;
 		_renderStateNames['overflow'] = true;
+		_renderStateNames['backgroundColor'] = true;
 		
 		_renderStateNames['spaceX'] = true;
 		_renderStateNames['spaceY'] = true;
@@ -206,6 +207,23 @@ class Display extends AService implements IDisplay
 							for (renderer in platformRendererSet)
 								renderer.addChild(f_bufferEntry.source, f_bufferEntry.target);
 					}
+				case REMOVED:
+					switch (f_bufferEntry.source.getState('displayType'))
+					{
+						case "Space":
+							Console.warn("removing something from a space");//...
+						case "Stage":
+							Console.warn("removing something from a stage");//...
+						case "StageArea":
+							Console.warn("removing something from a stageArea");//...
+						case "View":
+							Console.warn("removing something from a view");//...
+							for (renderer in platformRendererSet)
+								Console.warn("removing something from a view, renderer logic");//...
+						default:
+							for (renderer in platformRendererSet)
+								renderer.removeChild(f_bufferEntry.source, f_bufferEntry.target);
+					}
 				case UPDATED_STATE:
 					switch (f_bufferEntry.source.getState('displayType'))
 					{
@@ -253,6 +271,12 @@ class Display extends AService implements IDisplay
 			_addChild(p_gameEntityParent, p_gameEntityChild);
 	}
 	
+	inline public function removeDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void
+	{
+		if (p_gameEntityParent.getState('displayType')!=null && p_gameEntityChild.getState('displayType')!=null)
+			_removeChild(p_gameEntityParent, p_gameEntityChild);
+	}
+	
 	inline public function updateDisplayObjectState(p_gameEntity:IGameEntity, p_state:String):Void
 	{
 		if (p_gameEntity.getState('displayType')!=null && _renderStateNames[p_state]==true)
@@ -268,6 +292,11 @@ class Display extends AService implements IDisplay
 	inline private function _addChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void
 	{
 		_dataBuffer.addEntry(ADDED, p_gameEntityParent, p_gameEntityChild);
+	}
+	
+	inline private function _removeChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void
+	{
+		_dataBuffer.addEntry(REMOVED, p_gameEntityParent, p_gameEntityChild);
 	}
 	
 	inline private function _updateState(p_gameEntity:IGameEntity, p_state:String):Void

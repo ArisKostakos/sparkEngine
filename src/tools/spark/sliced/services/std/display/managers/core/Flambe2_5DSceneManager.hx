@@ -85,7 +85,11 @@ class Flambe2_5DSceneManager implements IDisplayObjectManager
 	
 	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void 
 	{
-		//typecast?
+		//typecast
+		var l_scene2_5D:FlambeScene2_5D = cast(p_objectParent, FlambeScene2_5D);
 		
+		//objetChild may be null if it failed to be typeasted as a display object when being created
+		if (p_objectChild!=null)
+			l_scene2_5D.removeChild(p_objectChild);
 	}
 }
