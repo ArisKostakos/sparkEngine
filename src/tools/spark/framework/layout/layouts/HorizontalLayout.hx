@@ -154,7 +154,7 @@ class HorizontalLayout extends ALayoutBase
         var l_layoutElement:Group;
         
         // columnWidth can be expensive to compute
-        var l_cw:Float = (target.variableColumnWidth) ? 0 : Math.ceil(Std.parseFloat(target.columnWidth));
+        var l_cw:Float = (target.variableColumnWidth) ? 0 : Math.ceil(target.columnWidth);
         var l_totalCount:Int = target.children.length; // number of elements to use in gap calculation
         
         // If the child is flexible, store information about it in the
@@ -243,10 +243,10 @@ class HorizontalLayout extends ALayoutBase
         
         var l_fixedColumnWidth:Null<Float> = null;
         if (!target.variableColumnWidth)
-			if (target.columnWidth == "calculated")
+			if (target.columnWidth == null)
 				l_fixedColumnWidth = typicalLayoutElement.preferredWidth;  // query typicalLayoutElement, elt at index=0
 			else
-				l_fixedColumnWidth = Std.parseFloat(target.columnWidth);
+				l_fixedColumnWidth = target.columnWidth;
         
         // Get the numElementsInLayout clamped to requested min/max
         var l_columnsToMeasure:Int = _getColumsToMeasure(l_numElementsInLayout);

@@ -95,4 +95,11 @@ class Logic extends AService implements ILogic
 		if (p_entity.getState('name') != null)
 			_gameEntitiesByName.set(p_entity.getState('name'), p_entity);
 	}
+	
+	//Helper Functions
+	public function replace(p_source:String, p_regex:String, p_regexParameters:String, p_replaceWith:String):String
+	{
+		var l_regEx:EReg = new EReg(p_regex, p_regexParameters);
+		return l_regEx.replace(p_source, p_replaceWith);
+	}
 }

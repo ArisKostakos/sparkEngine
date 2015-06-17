@@ -60,6 +60,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['touchable'] = _updateTouchable;
 		_updateStateFunctions['visible'] = _updateVisible;
 		_updateStateFunctions['opacity'] = _updateOpacity;
+		_updateStateFunctions['velocityX'] = _updateVelocityX;
+		_updateStateFunctions['velocityY'] = _updateVelocityY;
 		_updateStateFunctions['centerAnchor'] = _centerAnchor;
 		_updateStateFunctions['physicsEntity'] = _updatePhysics;
 		_updateStateFunctions['spaceWidth'] = _updateSpaceWidth;	//this is iffy.. should do it with forms instead
@@ -437,11 +439,17 @@ class FlambeEntity2_5D extends AEntity2_5D
 						var l_sceneInstance:Entity = parentScene.getInstance(p_view2_5D);
 						
 						//Add a child
-						var body:Body;
+						var bodyType:BodyType;
 						if (gameEntity.getState('physicsType') == "Static")
-							body = new Body(BodyType.STATIC);
+							bodyType = BodyType.STATIC;
+						else if (gameEntity.getState('physicsType') == "Kinematic")
+							bodyType = BodyType.KINEMATIC;
+						else if (gameEntity.getState('physicsType') == "Dynamic")
+							bodyType = BodyType.DYNAMIC;
 						else
-							body = new Body();
+							bodyType = BodyType.STATIC;
+							
+						var body:Body = new Body(bodyType);
 						
 						var l_material:Material;
 						
@@ -459,6 +467,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 								l_material = Material.steel();
 							case "Wood":
 								l_material = Material.wood();
+							case "Ellastic":
+								l_material = new Material(1, 0, 0, 1, 0);
 							default:
 								l_material = Material.wood();
 						}
@@ -481,9 +491,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 						body.position = new Vec2(l_mesh.x._, l_mesh.y._);
 						
 						//Initial Velocity
-						if (gameEntity.getState('physicsType') != "Static")
+						if (gameEntity.getState('physicsType') == "Dynamic")
 							body.velocity = new Vec2(gameEntity.getState('initialForceX'), gameEntity.getState('initialForceY'));
-						
+						else if (gameEntity.getState('physicsType') == "Kinematic")
+							body.velocity = new Vec2(gameEntity.getState('velocityX'), gameEntity.getState('velocityY'));
+							
 						//body.rotation = Math.random() * 2*FMath.PI;
 						body.space = l_sceneInstance.get(SpaceComponent).space;
 						
@@ -494,6 +506,28 @@ class FlambeEntity2_5D extends AEntity2_5D
 				}
 			}
 		}
+	}
+	
+	inline private function _updateVelocityX(p_newVel:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		//var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		var body:Body = l_instance.get(BodyComponent).body;
+		
+		body.velocity.x = p_newVel;
+	}
+	
+	inline private function _updateVelocityY(p_newVel:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		//var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		var body:Body = l_instance.get(BodyComponent).body;
+		
+		body.velocity.y = p_newVel;
 	}
 	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void

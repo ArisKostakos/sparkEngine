@@ -156,7 +156,7 @@ class VerticalLayout extends ALayoutBase
         var l_layoutElement:Group;
         
         // rowHeight can be expensive to compute
-        var l_rh:Float = (target.variableRowHeight) ? 0 : Math.ceil(Std.parseFloat(target.rowHeight));
+        var l_rh:Float = (target.variableRowHeight) ? 0 : Math.ceil(target.rowHeight);
         var l_totalCount:Int = target.children.length; // number of elements to use in gap calculation
         
         // If the child is flexible, store information about it in the
@@ -246,10 +246,10 @@ class VerticalLayout extends ALayoutBase
         
         var l_fixedRowHeight:Null<Float> = null;
         if (!target.variableRowHeight)
-			if (target.rowHeight == "calculated")
+			if (target.rowHeight == null)
 				l_fixedRowHeight = typicalLayoutElement.preferredHeight;  // query typicalLayoutElement, elt at index=0
 			else
-				l_fixedRowHeight = Std.parseFloat(target.rowHeight);
+				l_fixedRowHeight = target.rowHeight;
         
         // Get the numElementsInLayout clamped to requested min/max
         var l_rowsToMeasure:Int = _getRowsToMeasure(l_numElementsInLayout);

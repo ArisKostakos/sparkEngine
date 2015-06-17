@@ -5,11 +5,15 @@
  */
 
 package tools.spark.framework.layout.containers;
+import tools.spark.framework.layout.interfaces.EColumnAlign;
 import tools.spark.framework.layout.interfaces.EHorizontalAlign;
+import tools.spark.framework.layout.interfaces.ERowAlign;
+import tools.spark.framework.layout.interfaces.ETileOrientation;
 import tools.spark.framework.layout.interfaces.EVerticalAlign;
 import tools.spark.framework.layout.layouts.ALayoutBase;
 import tools.spark.framework.layout.layouts.BasicLayout;
 import tools.spark.framework.layout.layouts.HorizontalLayout;
+import tools.spark.framework.layout.layouts.TileLayout;
 import tools.spark.framework.layout.layouts.VerticalLayout;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
@@ -34,8 +38,8 @@ class Group
 	public var x( default, default ):Float;
 	public var y( default, default ):Float;
 	//sizes
-	public var width( default, default ):Float;
-	public var height( default, default ):Float;
+	public var width( default, default ):Null<Float>;
+	public var height( default, default ):Null<Float>;
 	
 	//SIZES
 	//auto-calculated size stuff
@@ -81,28 +85,59 @@ class Group
 	public var percentWidth( default, default ):Null<Float>;
 	public var percentHeight( default, default ):Null<Float>;
 
-	//HORIZONTAL-VERTICAL
+	//HORIZONTAL-VERTICAL-TILE
 	public var paddingLeft( default, default ):Float;
 	public var paddingRight( default, default ):Float;
 	public var paddingTop( default, default ):Float;
 	public var paddingBottom( default, default ):Float;
-	public var gap( default, default ):Float;
 	public var horizontalAlign( default, default ):EHorizontalAlign;
 	public var verticalAlign( default, default ):EVerticalAlign;
 	
-	//HORIZONTAL
-	public var columnWidth( default, default ):String;
+	//HORIZONTAL-VERTICAL
+	public var gap( default, default ):Float;
+	
+	//HORIZONTAL-TILE
+	public var columnWidth( default, default ):Null<Float>;
 	public var requestedColumnCount( default, default ):Int;
+	
+	//HORIZONTAL
 	public var requestedMaxColumnCount( default, default ):Int;
 	public var requestedMinColumnCount( default, default ):Int;
 	public var variableColumnWidth( default, default ):Bool;
 	
-	//VERTICAL
-	public var rowHeight( default, default ):String;
+	//VERTICAL-TILE
+	public var rowHeight( default, default ):Null<Float>;
 	public var requestedRowCount( default, default ):Int;
+	
+	//VERTICAL
 	public var requestedMaxRowCount( default, default ):Int;
 	public var requestedMinRowCount( default, default ):Int;
 	public var variableRowHeight( default, default ):Bool;
+	
+	//TILE
+	public var horizontalGap( default, default ):Float;
+	public var verticalGap( default, default ):Float;
+	public var rowAlign( default, default ):ERowAlign;
+	public var columnAlign( default, default ):EColumnAlign;
+	public var orientation( default, default ):ETileOrientation;
+	//(small warning, tile defaults for horizontalAlign & verticalAlign should be justify, but they're not)
+	
+	//Tile Misc	//read only(not in xml)
+	public var tileWidthCached( default, default ):Null<Float>;
+	public var tileHeightCached( default, default ):Null<Float>;
+    public var numElementsCached( default, default ):Int;
+	public var visibleStartIndex( default, default ):Int;   // dataProvider/layout element index 
+	public var visibleEndIndex( default, default ):Int;     // ...
+	public var visibleStartX( default, default ):Float;     // first tile/cell origin
+	public var visibleStartY( default, default ):Float;     // ...
+	
+	public var explicitColumnWidth( default, default ):Null<Float>;
+	public var explicitRowHeight( default, default ):Null<Float>;
+	public var explicitHorizontalGap( default, default ):Float;
+	public var explicitVerticalGap( default, default ):Float;
+	
+	public var rowCount( default, default ):Int;
+	public var columnCount( default, default ):Int;
 	
 	//children (if this group is a container)
 	public var children( default, null):Array<Group>;
@@ -127,6 +162,10 @@ class Group
 		children = new Array<Group>();
 		
 		x = y = width = height = 0;
+		visibleStartX = visibleStartY = 0;
+		visibleStartIndex = visibleEndIndex = numElementsCached = -1;
+		tileWidthCached = tileHeightCached = null;
+		rowCount = columnCount = -1;
 	}
 	
 	public function update():Void
@@ -164,26 +203,45 @@ class Group
 				updateState('paddingRight');
 				updateState('paddingTop');
 				updateState('paddingBottom');
-				updateState('gap');
 				updateState('horizontalAlign');
 				updateState('verticalAlign');
 				
+				if (layout.layoutType == "Horizontal" || layout.layoutType == "Vertical")
+					updateState('gap');
 				
-				if (layout.layoutType == "Horizontal")
+				if (layout.layoutType == "Horizontal" || layout.layoutType == "Tile")
 				{
 					updateState('columnWidth');
 					updateState('requestedColumnCount');
+				}
+					
+				if (layout.layoutType == "Horizontal")
+				{
 					updateState('requestedMaxColumnCount');
 					updateState('requestedMinColumnCount');
 					updateState('variableColumnWidth');
 				}
-				else if (layout.layoutType == "Vertical")
+				
+				if (layout.layoutType == "Vertical" || layout.layoutType == "Tile")
 				{
 					updateState('rowHeight');
 					updateState('requestedRowCount');
+				}
+				
+				if (layout.layoutType == "Vertical")
+				{
 					updateState('requestedMaxRowCount');
 					updateState('requestedMinRowCount');
 					updateState('variableRowHeight');
+				}
+				
+				if (layout.layoutType == "Tile")
+				{
+					updateState('horizontalGap');
+					updateState('verticalGap');
+					updateState('rowAlign');
+					updateState('columnAlign');
+					updateState('orientation');
 				}
 			}
 		}
@@ -230,7 +288,7 @@ class Group
 				if (!Math.isNaN(layoutableEntity.getState(p_state))) 
 					verticalCenter = layoutableEntity.getState(p_state);
 					
-			//Horizontal/Vertical
+			//Horizontal/Vertical/Tile
 			case "paddingLeft":
 				paddingLeft = layoutableEntity.getState(p_state);
 			case "paddingRight":
@@ -258,7 +316,11 @@ class Group
 				
 			//Horizontal
 			case "columnWidth":
-				columnWidth = layoutableEntity.getState(p_state);
+				var s_columnWidth:String = layoutableEntity.getState(p_state);
+				if (s_columnWidth == "calculated")
+					columnWidth = explicitColumnWidth = null;
+				else
+					columnWidth = explicitColumnWidth = Std.parseFloat(s_columnWidth);
 			case "requestedColumnCount":
 				requestedColumnCount = layoutableEntity.getState(p_state);
 			case "requestedMaxColumnCount":
@@ -270,7 +332,11 @@ class Group
 				
 			//Vertical
 			case "rowHeight":
-				rowHeight = layoutableEntity.getState(p_state);
+				var s_rowHeight:String = layoutableEntity.getState(p_state);
+				if (s_rowHeight == "calculated")
+					rowHeight = explicitRowHeight = null;
+				else
+					rowHeight = explicitRowHeight = Std.parseFloat(s_rowHeight);
 			case "requestedRowCount":
 				requestedRowCount = layoutableEntity.getState(p_state);
 			case "requestedMaxRowCount":
@@ -279,6 +345,26 @@ class Group
 				requestedMinRowCount = layoutableEntity.getState(p_state);
 			case "variableRowHeight":
 				variableRowHeight = layoutableEntity.getState(p_state);
+				
+			//Tile
+			case "horizontalGap":
+				horizontalGap = explicitHorizontalGap = layoutableEntity.getState(p_state);
+			case "verticalGap":
+				verticalGap = explicitVerticalGap = layoutableEntity.getState(p_state);
+			case "rowAlign":
+				var s_rowAlignStr:String = layoutableEntity.getState(p_state);
+				if (s_rowAlignStr == "top") rowAlign = ERowAlign.TOP;
+				else if (s_rowAlignStr == "justifyUsingHeight") rowAlign = ERowAlign.JUSTIFY_USING_HEIGHT;
+				else if (s_rowAlignStr == "justifyUsingGap") rowAlign = ERowAlign.JUSTIFY_USING_GAP;
+			case "columnAlign":
+				var s_columnAlignStr:String = layoutableEntity.getState(p_state);
+				if (s_columnAlignStr == "left") columnAlign = EColumnAlign.LEFT;
+				else if (s_columnAlignStr == "justifyUsingWidth") columnAlign = EColumnAlign.JUSTIFY_USING_WIDTH;
+				else if (s_columnAlignStr == "justifyUsingGap") columnAlign = EColumnAlign.JUSTIFY_USING_GAP;
+			case "orientation":
+				var s_orientationStr:String = layoutableEntity.getState(p_state);
+				if (s_orientationStr == "rows") orientation = ETileOrientation.ROWS;
+				else if (s_orientationStr == "columns") orientation = ETileOrientation.COLUMNS;
 		}
 	}
 	
@@ -307,6 +393,14 @@ class Group
 			else
 				if (layout.layoutType != p_stateValue)
 					layout = new VerticalLayout();
+		}
+		else if (p_stateValue == "Tile")
+		{
+			if (layout == null)
+				layout = new TileLayout();
+			else
+				if (layout.layoutType != p_stateValue)
+					layout = new TileLayout();
 		}
 		
 		layout.target = this;
@@ -355,7 +449,7 @@ class Group
 		layout.measure();
 	}
 	
-	public function updateDisplayList(p_width:Float, p_height:Float):Void
+	public function updateDisplayList(p_width:Null<Float>, p_height:Null<Float>):Void
     {
 		layout.updateDisplayList(p_width, p_height);
     }
@@ -375,7 +469,7 @@ class Group
 	}*/
 	
 	//the horror......
-	public function setActualSize(?p_width:Float, ?p_height:Float):Void
+	public function setActualSize(?p_width:Null<Float>, ?p_height:Null<Float>):Void
 	{
 		//Width
 		if (explicitWidth != null)
@@ -420,32 +514,32 @@ class Group
 		}
 	}
 	
-	public function get_preferredWidth():Float
+	public function get_preferredWidth():Null<Float>
     {
         return explicitWidth==null ? measuredWidth : explicitWidth;
     }
 	
-	public function get_preferredHeight():Float
+	public function get_preferredHeight():Null<Float>
     {
         return explicitHeight==null ? measuredHeight : explicitHeight;
     }
 	
-	public function get_preferredMinWidth():Float
+	public function get_preferredMinWidth():Null<Float>
     {
         return explicitMinWidth==null ? measuredMinWidth : explicitMinWidth;
     }
 	
-	public function get_preferredMinHeight():Float
+	public function get_preferredMinHeight():Null<Float>
     {
         return explicitMinHeight==null ? measuredMinHeight : explicitMinHeight;
     }
 	
-	public function get_preferredMaxWidth():Float
+	public function get_preferredMaxWidth():Null<Float>
     {
         return explicitMaxWidth==null ? measuredMaxWidth : explicitMaxWidth;
     }
 	
-	public function get_preferredMaxHeight():Float
+	public function get_preferredMaxHeight():Null<Float>
     {
         return explicitMaxHeight==null ? measuredMaxHeight : explicitMaxHeight;
     }

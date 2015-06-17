@@ -76,10 +76,12 @@ class Display extends AService implements IDisplay
 		_renderStateNames['display'] = true;
 		_renderStateNames['text'] = true;
 		_renderStateNames['fontSize'] = true;
+		_renderStateNames['fontWeight'] = true;
 		_renderStateNames['fontColor'] = true;
 		_renderStateNames['src'] = true;
 		_renderStateNames['overflow'] = true;
 		_renderStateNames['backgroundColor'] = true;
+		_renderStateNames['border'] = true;
 		
 		_renderStateNames['spaceX'] = true;
 		_renderStateNames['spaceY'] = true;
@@ -88,6 +90,9 @@ class Display extends AService implements IDisplay
 		_renderStateNames['scaleX'] = true;
 		_renderStateNames['scaleY'] = true;
 		_renderStateNames['scaleZ'] = true;
+		
+		_renderStateNames['velocityX'] = true; //physics
+		_renderStateNames['velocityY'] = true; //physics
 		
 		_renderStateNames['spaceWidth'] = true;	//just for fillsprites
 		_renderStateNames['spaceHeight'] = true;	//just for fillsprites

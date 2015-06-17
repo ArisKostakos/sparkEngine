@@ -44,10 +44,12 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['fontColor'] = _updateFontColor;
 		_updateStateFunctions['src'] = _updateImageSrc;
 		_updateStateFunctions['fontSize'] = _updateFontSize;
+		_updateStateFunctions['fontWeight'] = _updateFontWeight;
 		_updateStateFunctions['overflow'] = _updateOverflow;
 		_updateStateFunctions['width'] = _updateWidth;
 		_updateStateFunctions['height'] = _updateHeight;
 		_updateStateFunctions['backgroundColor'] = _updateBackgroundColor;
+		_updateStateFunctions['border'] = _updateBorder;
 	}
 	
 	
@@ -111,9 +113,11 @@ class DomEntity2_5D extends AEntity2_5D
 			_updateState('opacity', p_view2_5D);
 			_updateState('display', p_view2_5D);
 			_updateState('fontSize', p_view2_5D);
+			_updateState('fontWeight', p_view2_5D);
 			_updateState('fontColor', p_view2_5D);
 			_updateState('overflow', p_view2_5D);
 			_updateState('backgroundColor', p_view2_5D);
+			_updateState('border', p_view2_5D);
 		}
 		
 		//Update Touchable Stuff
@@ -149,9 +153,6 @@ class DomEntity2_5D extends AEntity2_5D
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
 	inline private function _updateNCstyleable(p_NCstyleable:String, p_view2_5D:IView2_5D):Void
 	{
-		if (gameEntity.getState('border') != null && gameEntity.getState('border')!="Undefined")
-			_instances[p_view2_5D].style.border = gameEntity.getState('border');
-			
 		if (gameEntity.getState('borderRadius') != null && gameEntity.getState('borderRadius')!="Undefined")
 			_instances[p_view2_5D].style.borderRadius = gameEntity.getState('borderRadius');
 			
@@ -254,6 +255,13 @@ class DomEntity2_5D extends AEntity2_5D
 	}
 	
 	//much better way.. should be done for everything
+	inline private function _updateFontWeight(p_fontWeight:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_fontWeight!="Undefined")
+			_instances[p_view2_5D].style.fontWeight = p_fontWeight;
+	}
+	
+	//much better way.. should be done for everything
 	inline private function _updateFontColor(p_fontColor:String, p_view2_5D:IView2_5D):Void
 	{
 		if (p_fontColor!="Undefined")
@@ -278,6 +286,14 @@ class DomEntity2_5D extends AEntity2_5D
 		if (p_backgroundColor!="Undefined")
 			_instances[p_view2_5D].style.backgroundColor = p_backgroundColor;
 	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateBorder(p_border:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_border!="Undefined")
+			_instances[p_view2_5D].style.border = p_border;
+	}
+	
 	
 	//much better way.. should be done for everything
 	inline private function _updateDisplay(p_display:String, p_view2_5D:IView2_5D):Void
