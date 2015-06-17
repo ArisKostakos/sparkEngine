@@ -53,7 +53,7 @@
 cmd /c flambe --config flambe_html_editor.yaml build --$(BuildConfig)</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False">xcopy /E /Y "C:\Users\Aris\Dropbox\Spark_Projects\SparkEditor" "$(ProjectDir)\build\web"
-xcopy /E /Y "$(ProjectDir)\build\web" "C:\Users\Aris\SparkEditorServer\web-server\public\spark"</postBuildCommand>
+xcopy /E /Y "$(ProjectDir)\build\web" "C:\Users\Aris\Dropbox\SparkEditorServer\web-server\public\spark"</postBuildCommand>
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="True" />
