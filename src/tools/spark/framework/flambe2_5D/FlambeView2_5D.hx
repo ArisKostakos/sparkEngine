@@ -183,5 +183,11 @@ class FlambeView2_5D extends AView2_5D
 		if (p_y != null) l_viewSprite.y._ = p_y;
 		//if (p_width != null) l_viewSprite.scissor.width = p_width;
 		//if (p_height != null) l_viewSprite.scissor.height = p_height;
+		
+		//iieeehkk
+		gameEntity.setState('feedbackX', p_x);
+		gameEntity.setState('feedbackY', p_y);
+		gameEntity.setState('feedbackWidth', p_width);
+		gameEntity.setState('feedbackHeight', p_height);
 	}
 }

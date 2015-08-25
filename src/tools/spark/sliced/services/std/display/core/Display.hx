@@ -93,6 +93,9 @@ class Display extends AService implements IDisplay
 		
 		_renderStateNames['velocityX'] = true; //physics
 		_renderStateNames['velocityY'] = true; //physics
+		_renderStateNames['applyImpulseX'] = true; //physics
+		_renderStateNames['applyImpulseY'] = true; //physics
+		
 		
 		_renderStateNames['spaceWidth'] = true;	//just for fillsprites
 		_renderStateNames['spaceHeight'] = true;	//just for fillsprites

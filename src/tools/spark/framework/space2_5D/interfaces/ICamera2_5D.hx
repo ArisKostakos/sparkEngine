@@ -13,4 +13,5 @@ package tools.spark.framework.space2_5D.interfaces;
 interface ICamera2_5D extends IObject2_5D
 {
 	function attachToView(p_view2_5D:IView2_5D):Dynamic;
+	function updateState(p_state:String, ?p_view2_5D:IView2_5D):Void;
 }

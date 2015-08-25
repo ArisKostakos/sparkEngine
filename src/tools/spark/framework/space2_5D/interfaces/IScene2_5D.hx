@@ -12,5 +12,5 @@ package tools.spark.framework.space2_5D.interfaces;
 
 interface IScene2_5D extends IInstantiable2_5D
 {
-
+	function updateCamera(p_view:IView2_5D, p_camera:ICamera2_5D):Void;
 }

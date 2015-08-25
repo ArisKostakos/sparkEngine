@@ -17,4 +17,5 @@ interface IView2_5D extends IBase2_5D
 	var camera( default, set ):ICamera2_5D;
 	var group( default, null ):Group;
 	function render():Void;
+	function updateCamera():Void;
 }

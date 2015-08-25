@@ -7,6 +7,7 @@
 package tools.spark.sliced.services.std.input.core;
 
 import tools.spark.sliced.services.std.input.devices.core.KeyboardDevice;
+import tools.spark.sliced.services.std.input.devices.core.MouseDevice;
 import tools.spark.sliced.services.std.input.devices.core.PointerDevice;
 import tools.spark.sliced.interfaces.IInput;
 import tools.spark.sliced.core.AService;
@@ -19,6 +20,7 @@ class Input extends AService implements IInput
 {
 	public var keyboard( default, null ):KeyboardDevice;
 	public var pointer( default, null ):PointerDevice;
+	public var mouse( default, null ):MouseDevice;
 	
 	public function new() 
 	{
@@ -33,11 +35,13 @@ class Input extends AService implements IInput
 		
 		keyboard = new KeyboardDevice();
 		pointer = new PointerDevice();
+		mouse = new MouseDevice();
 	}
 	
 	public function update():Void
 	{
 		keyboard.update();
 		pointer.update();
+		mouse.update();
 	}
 }

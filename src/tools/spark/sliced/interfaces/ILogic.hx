@@ -31,4 +31,7 @@ interface ILogic extends IService
 	
 	//Helper Functions
 	function replace(p_source:String, p_regex:String, p_regexParameters:String, p_replaceWith:String):String;
+	function getDt():Float;
+	function reflectField(p_object: Dynamic, p_field:String):Dynamic;
+	function reflectFieldOfField(p_object: Dynamic, p_field:String, p_field2:String):Dynamic;
 }

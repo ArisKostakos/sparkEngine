@@ -6,6 +6,7 @@
 
 package tools.spark.sliced.services.std.logic.core;
 
+import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.interfaces.ILogic;
 import tools.spark.sliced.core.AService;
 import tools.spark.sliced.services.std.logic.gde.core.GameFactory;
@@ -27,7 +28,6 @@ class Logic extends AService implements ILogic
 	public var scriptInterpreter( default, null ):IInterpreter;
 	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
-	
 	private var _gameEntitiesByName:Map<String, IGameEntity>;
 	
 	public function new() 
@@ -101,5 +101,20 @@ class Logic extends AService implements ILogic
 	{
 		var l_regEx:EReg = new EReg(p_regex, p_regexParameters);
 		return l_regEx.replace(p_source, p_replaceWith);
+	}
+	
+	public function getDt():Float
+	{
+		return Sliced.dt;
+	}
+	
+	public function reflectField(p_object: Dynamic, p_field:String):Dynamic
+	{
+		return Reflect.getProperty(p_object, p_field);
+	}
+	
+	public function reflectFieldOfField(p_object: Dynamic, p_field:String, p_field2:String):Dynamic
+	{
+		return Reflect.getProperty(Reflect.getProperty(p_object, p_field), p_field2); 
 	}
 }

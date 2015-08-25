@@ -51,8 +51,10 @@ class Flambe2_5DCameraManager implements IDisplayObjectManager
 	
 	public function updateState(p_object:Dynamic, p_gameEntity:IGameEntity, p_state:String):Void 
 	{
-		//typecast?
+		//typecast
+		var l_camera2_5D:FlambeCamera2_5D = cast(p_object, FlambeCamera2_5D);
 		
+		l_camera2_5D.updateState(p_state);
 	}
 	
 	public function updateFormState(p_object:Dynamic, p_gameForm:IGameForm, p_state:String):Void 

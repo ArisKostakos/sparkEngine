@@ -8,6 +8,7 @@ package tools.spark.sliced.interfaces;
 import flambe.input.Key;
 import tools.spark.sliced.services.std.input.devices.core.KeyboardDevice;
 import tools.spark.sliced.services.std.input.devices.core.PointerDevice;
+import tools.spark.sliced.services.std.input.devices.core.MouseDevice;
 
 /**
  * ...
@@ -19,4 +20,5 @@ interface IInput extends IService
 	
 	var keyboard( default, null ):KeyboardDevice;
 	var pointer( default, null ):PointerDevice;
+	var mouse( default, null ):MouseDevice;
 }

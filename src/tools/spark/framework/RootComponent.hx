@@ -34,6 +34,6 @@ class RootComponent extends Component
 
 	override public function onUpdate (dt :Float)
 	{
-		Sliced.update();
+		Sliced.update(dt);
 	}
 }

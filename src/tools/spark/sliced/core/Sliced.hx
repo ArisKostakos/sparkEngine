@@ -24,6 +24,7 @@ class Sliced
 	public static var comms( default, null ):IComms;
 	public static var event( default, null ):IEvent;
 	public static var display( default, null ):IDisplay;
+	public static var dt( default, null ):Float;
 	
 	public static function init():Void
 	{
@@ -43,8 +44,11 @@ class Sliced
 	}
 	
 	//@todo: maybe inline all the update functions?
-	inline public static function update():Void
+	inline public static function update(p_dt :Float):Void
 	{
+		//Update time value
+		dt = p_dt;
+		
 		//Input Update
 		Sliced.input.update();
 		////Console.error("---------->Logic: EVENT update");

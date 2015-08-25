@@ -35,4 +35,37 @@ class ACamera2_5D extends AObject2_5D implements ICamera2_5D
 		
 		return null;
 	}
+	
+	inline public function updateState(p_state:String, ?p_view2_5D:IView2_5D):Void
+	{
+		if (p_view2_5D == null)
+		{
+			//do for all instances
+			for (f_view in _attachedToViews.keys())
+				_updateStateForView(p_state, f_view);
+		}
+		else
+		{
+			//do for p_View2_5D instance
+			_updateStateForView(p_state, p_view2_5D);
+		}
+	}
+	
+	//@think: inline here, good idea or not?
+	inline private function _updateStateForView(p_state:String, p_view2_5D:IView2_5D):Void
+	{
+		switch (p_state)
+		{
+			case 'spaceX':
+				p_view2_5D.updateCamera();
+			case 'spaceY':
+				p_view2_5D.updateCamera();
+			case 'scaleX':
+				p_view2_5D.updateCamera();
+			case 'scaleY':
+				p_view2_5D.updateCamera();
+			default:
+				Console.warn('Unhandled Camera State value: ' + p_state);
+		}
+	}
 }

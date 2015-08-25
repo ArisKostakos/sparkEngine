@@ -36,6 +36,8 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		_updateStateFunctions['NCmeshType'] = _updateNCmeshType;
 		_updateStateFunctions['touchable'] = _updateTouchable;
+		_updateStateFunctions['draggable'] = _updateDraggable;
+		_updateStateFunctions['dropTarget'] = _updateDropTarget;
 		_updateStateFunctions['NCstyleable'] = _updateNCstyleable;
 		_updateStateFunctions['visibility'] = _updateVisibility;
 		_updateStateFunctions['opacity'] = _updateOpacity;
@@ -122,6 +124,12 @@ class DomEntity2_5D extends AEntity2_5D
 		
 		//Update Touchable Stuff
 		_updateState('touchable', p_view2_5D);
+		
+		//Update Draggable Stuff
+		_updateState('draggable', p_view2_5D);
+		
+		//Update DropTarget Stuff
+		_updateState('dropTarget', p_view2_5D);
 		
 		//Update Text Stuff
 		if (gameEntity.getState('text')!=null)
@@ -428,6 +436,8 @@ class DomEntity2_5D extends AEntity2_5D
 				*/
 				
 				l_instance.onclick = _onPointerClick;
+				l_instance.onmousedown = _onMouseDown;
+				l_instance.onmouseup = _onMouseUp;
 			}
 			else
 			{
@@ -438,6 +448,97 @@ class DomEntity2_5D extends AEntity2_5D
 			
 		}
 	}
+	
+	private function _updateDraggable(p_flag:Bool, p_view2_5D:IView2_5D):Void
+	{
+		//Gt Mesh
+		var l_instance:Element = _instances[p_view2_5D];
+		
+		if (l_instance != null)
+		{
+			if (p_flag)
+			{
+				l_instance.ondragstart = _onDragStart;
+				l_instance.ondrag = _onDrag;
+				l_instance.ondragend = _onDragEnd;
+			}
+			else
+			{
+				//@todo: should really consider actually removing those listeners, here....
+			}
+			
+		}
+	}
+	
+	private function _onDragStart(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.event.raiseEvent(ON_DRAG_START, gameEntity);
+	}
+	
+	private function _onDrag(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.event.raiseEvent(ON_DRAG, gameEntity);
+	}
+	
+	private function _onDragEnd(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.event.raiseEvent(ON_DRAG_END, gameEntity);
+	}
+	
+	
+	private function _updateDropTarget(p_flag:Bool, p_view2_5D:IView2_5D):Void
+	{
+		//Gt Mesh
+		var l_instance:Element = _instances[p_view2_5D];
+		
+		if (l_instance != null)
+		{
+			if (p_flag)
+			{
+				l_instance.ondragenter = _onDragEnter;
+				l_instance.ondragover = _onDragOver;
+				l_instance.ondragleave = _onDragLeave;
+				l_instance.ondrop = _onDrop;
+			}
+			else
+			{
+				//@todo: should really consider actually removing those listeners, here....
+			}
+			
+		}
+	}
+	
+	private function _onDragEnter(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.event.raiseEvent(ON_DRAG_ENTER, gameEntity);
+	}
+	
+	private function _onDragOver(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		p_event.preventDefault();
+		Sliced.event.raiseEvent(ON_DRAG_OVER, gameEntity);
+	}
+	
+	private function _onDragLeave(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.event.raiseEvent(ON_DRAG_LEAVE, gameEntity);
+	}
+	
+	private function _onDrop(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		p_event.preventDefault();
+		Sliced.event.raiseEvent(ON_DROP, gameEntity);
+	}
+	
+	
+	
 	/*
 	private function _onPointerIn(p_pointerEvent:PointerEvent):Void
 	{
@@ -449,9 +550,22 @@ class DomEntity2_5D extends AEntity2_5D
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT, gameEntity);
 	}
 	*/
-	private function _onPointerClick(p_pointerEvent:Dynamic):Void
+	private function _onPointerClick(p_event:Dynamic):Void
 	{
+		gameEntity.setState('eventObject', p_event);
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+	}
+	
+	private function _onMouseDown(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.input.pointer.submitPointerEvent(MOUSE_DOWN, gameEntity);
+	}
+	
+	private function _onMouseUp(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.input.pointer.submitPointerEvent(MOUSE_UP, gameEntity);
 	}
 	
 	private function _onChange(p_changeEvent:Dynamic):Void

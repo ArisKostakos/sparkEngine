@@ -21,15 +21,15 @@ class BodyComponent extends Component
     override public function onUpdate (dt :Float)
     {
         var pos = body.position;
-        if (pos.y > System.stage.height+100) {
+        /*if (pos.y > System.stage.height+100) {
             owner.dispose();
 
-        } else {
+        } else {*/
             var sprite = owner.get(Sprite);
             sprite.x._ = pos.x;
             sprite.y._ = pos.y;
             sprite.rotation._ = FMath.toDegrees(body.rotation);
-        }
+        //}
     }
 
     override public function onRemoved ()

@@ -62,6 +62,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['opacity'] = _updateOpacity;
 		_updateStateFunctions['velocityX'] = _updateVelocityX;
 		_updateStateFunctions['velocityY'] = _updateVelocityY;
+		_updateStateFunctions['applyImpulseX'] = _updateApplyImpulseX;
+		_updateStateFunctions['applyImpulseY'] = _updateApplyImpulseY;
 		_updateStateFunctions['centerAnchor'] = _centerAnchor;
 		_updateStateFunctions['physicsEntity'] = _updatePhysics;
 		_updateStateFunctions['spaceWidth'] = _updateSpaceWidth;	//this is iffy.. should do it with forms instead
@@ -112,7 +114,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//_updateState('2DMeshImageForm', p_view2_5D); //this is nested.. not for global update i think
 		//_updateState('2DMeshSpriterForm', p_view2_5D); //this is nested.. not for global update i think
 		//more spriter nested things exist also don't update them
-		_updateState('centerAnchor', p_view2_5D);
+		//_updateState('centerAnchor', p_view2_5D);
 		_updateState('physicsEntity', p_view2_5D);
 		
 		
@@ -236,6 +238,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 	}
 	
 	private function _update2DMeshFillRectForm(p_2DMeshFillRectForm:String, p_view2_5D:IView2_5D):Void
+	
 	{
 		//If the Entity's mesh type is not image, ignore this update
 		if (gameEntity.getState('2DmeshType') != 'FillRect')
@@ -270,7 +273,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		}
 		else
 		{
-			//l_mesh.color =
+			
+			l_mesh.color = gameEntity.gameForm.getState( p_2DMeshFillRectForm );
 			//l_mesh.setSize = 
 		}
 	}
@@ -281,15 +285,15 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (gameEntity.getState('2DmeshType') != 'Sprite')
 			return;
 			
-		//If the Form Name is Undefined, ignore this update
-		if (p_2DMeshSpriteForm == 'Undefined')
-			return;
+		//If the Form Name is Undefined, ignore this update  FUCK THIS SHIT.... grmf.. for now..
+		//if (p_2DMeshSpriteForm == 'Undefined')
+			//return;
 			
 		//Get the instance we're updating
 		var l_instance:Entity = _instances[p_view2_5D];
 		
 		var l_mesh:Sprite;
-		
+
 		if (_instancesMesh[p_view2_5D]!=null)	//Get it's existing mesh, if any
 			l_mesh= cast(_instancesMesh[p_view2_5D],Sprite); //(the cast should always work due to logic.. but not very sure..)
 		else
@@ -300,7 +304,6 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			l_mesh = new Sprite();
 			l_mesh.blendMode = BlendMode.Copy;
-			
 			//do Layout Call??????????????
 			//...
 			//if (gameEntity.getState('layoutable') == true)
@@ -349,9 +352,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 	{
 		//Get Mesh
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
-		
+
 		if (l_mesh != null) //this really nesseccery?
+		{
 			l_mesh.x._ = p_newPos;
+		}
 	}
 	
 	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
@@ -438,6 +443,9 @@ class FlambeEntity2_5D extends AEntity2_5D
 					{
 						var l_sceneInstance:Entity = parentScene.getInstance(p_view2_5D);
 						
+						//Center Anchor (Only for physics objects)
+						l_mesh.centerAnchor();
+						
 						//Add a child
 						var bodyType:BodyType;
 						if (gameEntity.getState('physicsType') == "Static")
@@ -469,35 +477,61 @@ class FlambeEntity2_5D extends AEntity2_5D
 								l_material = Material.wood();
 							case "Ellastic":
 								l_material = new Material(1, 0, 0, 1, 0);
+							case "Biped":
+								l_material = new Material(0, 1, 2, 1, 0.001);
 							default:
 								l_material = Material.wood();
 						}
 						
-						var l_shape:Shape;
 						
-						switch (gameEntity.getState('physicsShape'))
+						//Console.error("Yo: width: " + l_mesh.getNaturalWidth());
+						//Console.error("Yo: height: " + l_mesh.getNaturalHeight());
+						
+						if (gameEntity.getState('2DmeshType') != 'Spriter')
 						{
-							case "Circle":
-								//I take the medium between width and hight (w+h)/2 and then divide by 2 cause we need radius which is half
-								var l_radious = (l_mesh.getNaturalWidth() * l_mesh.scaleX._ + l_mesh.getNaturalHeight() * l_mesh.scaleY._) / 4;
-								l_shape = new Circle(l_radious, l_material);
-							case "Polygon":
-								l_shape = new Polygon(Polygon.box(l_mesh.getNaturalWidth() * l_mesh.scaleX._, l_mesh.getNaturalHeight() * l_mesh.scaleY._), l_material); 
-							default:
-								l_shape = new Polygon(Polygon.box(l_mesh.getNaturalWidth() * l_mesh.scaleX._, l_mesh.getNaturalHeight() * l_mesh.scaleY._), l_material);
+							var l_shape:Shape;
+							switch (gameEntity.getState('physicsShape'))
+							{
+								case "Circle":
+									//I take the medium between width and hight (w+h)/2 and then divide by 2 cause we need radius which is half
+									var l_radious = (l_mesh.getNaturalWidth() * l_mesh.scaleX._ + l_mesh.getNaturalHeight() * l_mesh.scaleY._) / 4;
+									l_shape = new Circle(l_radious, l_material);
+								case "Polygon":
+									l_shape = new Polygon(Polygon.box(l_mesh.getNaturalWidth() * l_mesh.scaleX._, l_mesh.getNaturalHeight() * l_mesh.scaleY._), l_material);
+								default:
+									l_shape = new Polygon(Polygon.box(l_mesh.getNaturalWidth() * l_mesh.scaleX._, l_mesh.getNaturalHeight() * l_mesh.scaleY._), l_material);
+							}
+							
+							body.shapes.add(l_shape);
+						}
+						else
+						{
+							if (gameEntity.getState('physicsShape') == "Biped")
+							{
+								_appendPhysicsBipedShapes(body, 76, 180, l_mesh.scaleX._, 0, -0.09, l_material);
+								
+								body.allowRotation = false;
+							}
+							else
+							{
+								//Default..
+								body.shapes.add(new Polygon(Polygon.box(100, 100), l_material));
+							}
 						}
 						
-						body.shapes.add(l_shape);
+						
 						body.position = new Vec2(l_mesh.x._, l_mesh.y._);
 						
 						//Initial Velocity
 						if (gameEntity.getState('physicsType') == "Dynamic")
-							body.velocity = new Vec2(gameEntity.getState('initialForceX'), gameEntity.getState('initialForceY'));
+							body.velocity = new Vec2(gameEntity.getState('velocityX'), gameEntity.getState('velocityY'));
 						else if (gameEntity.getState('physicsType') == "Kinematic")
 							body.velocity = new Vec2(gameEntity.getState('velocityX'), gameEntity.getState('velocityY'));
 							
 						//body.rotation = Math.random() * 2*FMath.PI;
 						body.space = l_sceneInstance.get(SpaceComponent).space;
+						
+						body.userData.gameEntity = gameEntity;
 						
 						l_instance.add(new BodyComponent(body));
 						//var childEntity:Entity = new Entity().add(new BodyComponent(body));
@@ -508,11 +542,40 @@ class FlambeEntity2_5D extends AEntity2_5D
 		}
 	}
 	
+	private function _appendPhysicsBipedShapes(p_body:Body, p_width:Float, p_height:Float, ?p_scale:Float = 1, ?p_offsetX:Float = 0, ?p_offsetY:Float = 0, p_bodyMaterial:Material, p_feetMaterial:Material=null, p_headMaterial:Material=null):Void
+	{
+		var l_widthScaled:Float = p_width*p_scale;
+		var l_heightScaled:Float = p_height*p_scale;
+		var l_offsetXScaled:Float = p_offsetX *l_widthScaled;
+		var l_offsetYScaled:Float = p_offsetY * l_heightScaled;
+		
+		var l_circleRadious:Float = l_widthScaled / 2;
+		var l_rectHeight:Float = l_heightScaled - l_circleRadious * 2;
+		
+		var l_head:Circle = new Circle(l_circleRadious, new Vec2(l_offsetXScaled, -l_rectHeight / 2 + l_offsetYScaled), p_bodyMaterial);
+		var l_main:Polygon = new Polygon(Polygon.rect( -l_widthScaled / 2 + l_offsetXScaled, -l_rectHeight / 2 + l_offsetYScaled, l_widthScaled, l_rectHeight), p_bodyMaterial);
+		var l_feet:Circle = new Circle(l_circleRadious, new Vec2(l_offsetXScaled, l_rectHeight / 2 + l_offsetYScaled), p_bodyMaterial);
+		var l_feetSensor:Polygon = new Polygon(Polygon.rect( -l_widthScaled/2 / 2 + l_offsetXScaled, l_rectHeight / 2 + l_offsetYScaled + l_circleRadious - l_heightScaled*0.05/2, l_widthScaled/2, l_heightScaled*0.05), p_bodyMaterial);
+		
+		l_feetSensor.sensorEnabled = true;
+		l_feetSensor.cbTypes.add(FlambeScene2_5D.BIPED_FEET);
+		
+		p_body.shapes.add(l_head);
+		p_body.shapes.add(l_main);
+		p_body.shapes.add(l_feet);
+		p_body.shapes.add(l_feetSensor);
+		
+		gameEntity.setState('physicsBody', p_body);
+	}
+	
+	
 	inline private function _updateVelocityX(p_newVel:Float, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
 		var l_instance:Entity = _instances[p_view2_5D];
 		//var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_instance.get(BodyComponent) == null) return;
 		
 		var body:Body = l_instance.get(BodyComponent).body;
 		
@@ -525,10 +588,39 @@ class FlambeEntity2_5D extends AEntity2_5D
 		var l_instance:Entity = _instances[p_view2_5D];
 		//var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
+		if (l_instance.get(BodyComponent) == null) return;
+		
 		var body:Body = l_instance.get(BodyComponent).body;
 		
 		body.velocity.y = p_newVel;
 	}
+	
+	inline private function _updateApplyImpulseX(p_newVel:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		//var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_instance.get(BodyComponent) == null) return;
+		
+		var body:Body = l_instance.get(BodyComponent).body;
+		
+		body.applyImpulse(Vec2.weak(p_newVel, 0));
+	}
+	
+	inline private function _updateApplyImpulseY(p_newVel:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		//var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_instance.get(BodyComponent) == null) return;
+		
+		var body:Body = l_instance.get(BodyComponent).body;
+		
+		body.applyImpulse(Vec2.weak(0, p_newVel));
+	}
+	
 	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void
 	{
@@ -622,6 +714,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_fillSprite != null) 
 		{
 			l_fillSprite.width._ = p_spaceWidth;
+			//l_fillSprite.centerAnchor(); //eek
 		}
 	}
 	
@@ -634,6 +727,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_fillSprite != null) 
 		{
 			l_fillSprite.height._ = p_spaceHeight;
+			//l_fillSprite.centerAnchor(); //eek
 		}
 	}
 	

@@ -90,7 +90,9 @@ class Event extends AService implements IEvent
 				l_eventType == MOUSE_RIGHT_CLICK ||
 				l_eventType == MOUSE_ENTERED ||
 				l_eventType == MOUSE_MOVED ||
-				l_eventType == MOUSE_LEFT
+				l_eventType == MOUSE_LEFT ||
+				l_eventType == MOUSE_DOWN ||
+				l_eventType == MOUSE_UP
 		   )
 		{
 			Sliced.input.pointer.registerTrigger(l_eventType,l_eventFilter);
@@ -140,7 +142,7 @@ class Event extends AService implements IEvent
 	public function update():Void
 	{
 		//@FIX ME SOON!: In this case, and the other for loop two lines below, we enumerate the keys(). But in the doTriggers() function deep inside, it maybe be
-		//possible that it will run some lionscript code that adds a new kew.. this will produce problems like it did with the logic service. Maybe store the 
+		//possible that it will run some lionscript code that adds a new key.. this will produce problems like it did with the logic service. Maybe store the 
 		//enumeration list somewhere prior, like you did in the logic service to be safe. This means it will check for the newly activated(added) filter, the next frame.
 		//Search for '//Solution to html5 bug' in GameClassParser.hx
 		for (flag in _eventTypeFilterFlags.keys())
@@ -175,11 +177,29 @@ class Event extends AService implements IEvent
 		_prefabConvertToType[EEventPrefab.FILETRANSFER_SENDREQUEST] = EEventType.FILETRANSFER_SENDREQUEST;
 		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_CLICK] = EEventType.MOUSE_LEFT_CLICK;
 		_prefabConvertToType[EEventPrefab.MOUSE_RIGHT_CLICK] = EEventType.MOUSE_RIGHT_CLICK;
+		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_DOWN] = EEventType.MOUSE_LEFT_DOWN;
+		_prefabConvertToType[EEventPrefab.MOUSE_RIGHT_DOWN] = EEventType.MOUSE_RIGHT_DOWN;
+		_prefabConvertToType[EEventPrefab.MOUSE_SCROLL] = EEventType.MOUSE_SCROLL;
 		_prefabConvertToType[EEventPrefab.MOUSE_LEFT_CLICKED] = EEventType.MOUSE_LEFT_CLICK;
 		_prefabConvertToType[EEventPrefab.MOUSE_RIGHT_CLICKED] = EEventType.MOUSE_RIGHT_CLICK;
 		_prefabConvertToType[EEventPrefab.MOUSE_ENTERED] = EEventType.MOUSE_ENTERED;
 		_prefabConvertToType[EEventPrefab.MOUSE_MOVED] = EEventType.MOUSE_MOVED;
 		_prefabConvertToType[EEventPrefab.MOUSE_LEFT] = EEventType.MOUSE_LEFT;
+		_prefabConvertToType[EEventPrefab.MOUSE_DOWN] = EEventType.MOUSE_DOWN;
+		_prefabConvertToType[EEventPrefab.MOUSE_UP] = EEventType.MOUSE_UP;
+		_prefabConvertToType[EEventPrefab.ON_DRAG_START] = EEventType.ON_DRAG_START;
+		_prefabConvertToType[EEventPrefab.ON_DRAG] = EEventType.ON_DRAG;
+		_prefabConvertToType[EEventPrefab.ON_DRAG_END] = EEventType.ON_DRAG_END;
+		_prefabConvertToType[EEventPrefab.ON_DRAG_ENTER] = EEventType.ON_DRAG_ENTER;
+		_prefabConvertToType[EEventPrefab.ON_DRAG_OVER] = EEventType.ON_DRAG_OVER;
+		_prefabConvertToType[EEventPrefab.ON_DRAG_LEAVE] = EEventType.ON_DRAG_LEAVE;
+		_prefabConvertToType[EEventPrefab.ON_DROP] = EEventType.ON_DROP;
+		_prefabConvertToType[EEventPrefab.PHYSICS_COLLISION_START] = EEventType.PHYSICS_COLLISION_START;
+		_prefabConvertToType[EEventPrefab.PHYSICS_COLLISION_END] = EEventType.PHYSICS_COLLISION_END;
+		_prefabConvertToType[EEventPrefab.PHYSICS_SENSOR_START] = EEventType.PHYSICS_SENSOR_START;
+		_prefabConvertToType[EEventPrefab.PHYSICS_SENSOR_START_BIPED_FEET] = EEventType.PHYSICS_SENSOR_START_BIPED_FEET;
+		_prefabConvertToType[EEventPrefab.PHYSICS_SENSOR_END] = EEventType.PHYSICS_SENSOR_END;
+		_prefabConvertToType[EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET] = EEventType.PHYSICS_SENSOR_END_BIPED_FEET;
 		_prefabConvertToType[EEventPrefab.KEY_PRESSED] = EEventType.KEY_PRESSED;
 		_prefabConvertToType[EEventPrefab.KEY_RELEASED] = EEventType.KEY_RELEASED;
 		_prefabConvertToType[EEventPrefab.KEY_PRESSED_ALT] = EEventType.KEY_PRESSED;
@@ -400,11 +420,29 @@ class Event extends AService implements IEvent
 		_prefabConvertToFilter.set(EEventPrefab.FILETRANSFER_SENDREQUEST , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT_CLICK , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_RIGHT_CLICK , _NO_FILTER);
+		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT_DOWN , _NO_FILTER);
+		_prefabConvertToFilter.set(EEventPrefab.MOUSE_RIGHT_DOWN , _NO_FILTER);
+		_prefabConvertToFilter.set(EEventPrefab.MOUSE_SCROLL , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT_CLICKED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_RIGHT_CLICKED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_ENTERED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_MOVED , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.MOUSE_LEFT , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.MOUSE_DOWN , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.MOUSE_UP , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.ON_DRAG_START , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.ON_DRAG , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.ON_DRAG_END , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.ON_DRAG_ENTER , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.ON_DRAG_OVER , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.ON_DRAG_LEAVE , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.ON_DROP , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_COLLISION_START , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_COLLISION_END , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_SENSOR_START , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_SENSOR_START_BIPED_FEET , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_SENSOR_END , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_PRESSED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_RELEASED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_PRESSED_ALT, Key.Alt);

@@ -17,6 +17,7 @@ import tools.spark.framework.Framework;
 import tools.spark.framework.Assets;
 import haxe.xml.Fast;
 import EReg;
+import flambe.input.MouseButton;
 
 /**
  * ...
@@ -59,6 +60,7 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Fast", Fast); // share the Fast class
 		_interpreter.variables.set("StringTools", StringTools); // share the StringTools class
 		_interpreter.variables.set("EReg", EReg); // share the EReg class
+		_interpreter.variables.set("MouseButton", MouseButton); // share the MouseButton class
 		//_interpreter.variables.set("Int", Int); // share the Int
 		
 		//so bad..
@@ -95,6 +97,7 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Fast", Fast); // share the Fast class
 		_interpreter.variables.set("StringTools", StringTools); // share the StringTools class
 		_interpreter.variables.set("EReg", EReg); // share the EReg class
+		_interpreter.variables.set("MouseButton", MouseButton); // share the MouseButton class
 		//_interpreter.variables.set("Int", Int); // share the Int
 
 		//so bad..

@@ -332,11 +332,34 @@ class GameClassParser implements IGameClassParser
 		
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICK] = "MouseLeftClick";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICK] = "MouseRightClick";
+		_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_DOWN] = "MouseLeftDown";
+		_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_DOWN] = "MouseRightDown";
+		_xmlEventPrefabToName[EEventPrefab.MOUSE_SCROLL] = "MouseScroll";
+		
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICKED] = "MouseLeftClicked";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICKED] = "MouseRightClicked";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_ENTERED] = "MouseEntered";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_MOVED] = "MouseMoved";
 		_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT] = "MouseLeft";
+		_xmlEventPrefabToName[EEventPrefab.MOUSE_DOWN] = "MouseDown";
+		_xmlEventPrefabToName[EEventPrefab.MOUSE_UP] = "MouseUp";
+		
+		_xmlEventPrefabToName[EEventPrefab.ON_DRAG_START] = "OnDragStart";
+		_xmlEventPrefabToName[EEventPrefab.ON_DRAG] = "OnDrag";
+		_xmlEventPrefabToName[EEventPrefab.ON_DRAG_END] = "OnDragEnd";
+		
+		_xmlEventPrefabToName[EEventPrefab.ON_DRAG_ENTER] = "OnDragEnter";
+		_xmlEventPrefabToName[EEventPrefab.ON_DRAG_OVER] = "OnDragOver";
+		_xmlEventPrefabToName[EEventPrefab.ON_DRAG_LEAVE] = "OnDragLeave";
+		_xmlEventPrefabToName[EEventPrefab.ON_DROP] = "OnDrop";
+		
+		_xmlEventPrefabToName[EEventPrefab.PHYSICS_COLLISION_START] = "PhysicsCollisionStart";
+		_xmlEventPrefabToName[EEventPrefab.PHYSICS_COLLISION_END] = "PhysicsCollisionEnd";
+		_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_START] = "PhysicsSensorStart";
+		_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_START_BIPED_FEET] = "PhysicsSensorStartBipedFeet";
+		_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_END] = "PhysicsSensorEnd";
+		_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET] = "PhysicsSensorEndBipedFeet";
+		
 		_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED] = "KeyPressed";
 		_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED] = "KeyReleased";
 				
@@ -558,11 +581,31 @@ class GameClassParser implements IGameClassParser
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.FILETRANSFER_SENDREQUEST]] = EEventPrefab.FILETRANSFER_SENDREQUEST;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICK]] = EEventPrefab.MOUSE_LEFT_CLICK;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICK]] = EEventPrefab.MOUSE_RIGHT_CLICK;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_DOWN]] = EEventPrefab.MOUSE_LEFT_DOWN;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_DOWN]] = EEventPrefab.MOUSE_RIGHT_DOWN;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_SCROLL]] = EEventPrefab.MOUSE_SCROLL;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT_CLICKED]] = EEventPrefab.MOUSE_LEFT_CLICKED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_RIGHT_CLICKED]] = EEventPrefab.MOUSE_RIGHT_CLICKED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_ENTERED]] = EEventPrefab.MOUSE_ENTERED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_MOVED]] = EEventPrefab.MOUSE_MOVED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_LEFT]] = EEventPrefab.MOUSE_LEFT;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_DOWN]] = EEventPrefab.MOUSE_DOWN;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.MOUSE_UP]] = EEventPrefab.MOUSE_UP;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.ON_DRAG_START]] = EEventPrefab.ON_DRAG_START;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.ON_DRAG]] = EEventPrefab.ON_DRAG;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.ON_DRAG_END]] = EEventPrefab.ON_DRAG_END;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.ON_DRAG_ENTER]] = EEventPrefab.ON_DRAG_ENTER;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.ON_DRAG_OVER]] = EEventPrefab.ON_DRAG_OVER;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.ON_DRAG_LEAVE]] = EEventPrefab.ON_DRAG_LEAVE;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.ON_DROP]] = EEventPrefab.ON_DROP;
+		
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.PHYSICS_COLLISION_START]] = EEventPrefab.PHYSICS_COLLISION_START;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.PHYSICS_COLLISION_END]] = EEventPrefab.PHYSICS_COLLISION_END;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_START]] = EEventPrefab.PHYSICS_SENSOR_START;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_START_BIPED_FEET]] = EEventPrefab.PHYSICS_SENSOR_START_BIPED_FEET;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_END]] = EEventPrefab.PHYSICS_SENSOR_END;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET]] = EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET;
+		
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED]] = EEventPrefab.KEY_PRESSED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED]] = EEventPrefab.KEY_RELEASED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED_ALT]] = EEventPrefab.KEY_PRESSED_ALT;
