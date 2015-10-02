@@ -55,6 +55,9 @@ class ServiceFactory implements IServiceFactory
 		var l_displayService:IDisplay = _reflectService(ENodeType.DISPLAY_SERVICE);
 		
 		Sliced.assignServices(l_soundService, l_logicService, l_inputService, l_commsService, l_eventService, l_displayService);
+		
+		//Create Logic's Interpreters, now that Sliced is fully built
+		Sliced.logic.createInterpreters();
 	}
 	
 	inline private function _reflectService(p_slicedService:ENodeType):Dynamic

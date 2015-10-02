@@ -51,12 +51,14 @@ class HaxeInterpreter implements IInterpreter
 		_parser =  new hscript.Parser();
 		_interpreter = new hscript.Interp();
 		
+		
 		//Static variables
 		_interpreter.variables.set("Game", Sliced); // share the Game class
 		_interpreter.variables.set("Sound", Sliced.sound); // share the Sound class
 		_interpreter.variables.set("Logic", Sliced.logic); // share the Logic class
 		_interpreter.variables.set("Input", Sliced.input); // share the Input class
 		_interpreter.variables.set("Comms", Sliced.comms); // share the Comms class
+		_interpreter.variables.set("Event", Sliced.event); // share the Event class
 		_interpreter.variables.set("Display", Sliced.display); // share the Display class
 		_interpreter.variables.set("Key", Key); // share the Key enum
 		_interpreter.variables.set("Console", Console); // share the Console
@@ -83,44 +85,7 @@ class HaxeInterpreter implements IInterpreter
 	
 	public function run(hashId:Int, parameters:Map<String,Dynamic>):Bool
 	{
-		//@todo: V.EASY/IMPORTANT/ASAP: don't create a new parser and interpenter EVERY SINGLE TIME!!!!
-		//Console.time("interpreting");
-		
-		//@todo: PARSE EVERYTHING IN THE HASH ONCE AND STORE DUMMY!
 		var program:Expr = _get(hashId);
-		
-		
-		//_interpreter = new hscript.Interp();
-		
-		//Static variables
-		_interpreter.variables.set("Game", Sliced); // share the Game class
-		_interpreter.variables.set("Sound", Sliced.sound); // share the Sound class
-		_interpreter.variables.set("Logic", Sliced.logic); // share the Logic class
-		_interpreter.variables.set("Input", Sliced.input); // share the Input class
-		_interpreter.variables.set("Comms", Sliced.comms); // share the Comms class
-		_interpreter.variables.set("Display", Sliced.display); // share the Display class
-		_interpreter.variables.set("Key", Key); // share the Key enum
-		_interpreter.variables.set("Console", Console); // share the Console
-		_interpreter.variables.set("Math", Math); // share the Math
-		_interpreter.variables.set("Std", Std); // share the Std
-		_interpreter.variables.set("String", String); // share the String
-		//_interpreter.variables.set("Framework", Framework); // share the Framework class
-		_interpreter.variables.set("Assets", Assets); // share the Assets class
-		_interpreter.variables.set("Xml", Xml); // share the Xml class
-		_interpreter.variables.set("Fast", Fast); // share the Fast class
-		_interpreter.variables.set("StringTools", StringTools); // share the StringTools class
-		_interpreter.variables.set("EReg", EReg); // share the EReg class
-		_interpreter.variables.set("MouseButton", MouseButton); // share the MouseButton class
-		//_interpreter.variables.set("Int", Int); // share the Int
-		_interpreter.variables.set("StringMap", StringMap); // share the StringMap
-		_interpreter.variables.set("IntMap", IntMap); // share the IntMap
-		_interpreter.variables.set("ObjectMap", ObjectMap); // share the ObjectMap
-
-		//so bad..
-		#if html
-		_interpreter.variables.set("XMLHttpRequest", js.html.XMLHttpRequest); // share the XMLHttpRequest
-		#end
-		
 		
 		//Dynamic Variables
 		for (varName in parameters.keys())
@@ -128,9 +93,7 @@ class HaxeInterpreter implements IInterpreter
 			_interpreter.variables.set(varName, parameters[varName]);
 		}
 		
-		//Console.timeEnd("interpreting");
 		//Console.warn("Interpenter Executing: " + hashId);
-		
 		try
 		{
 			//We keep this, for much later when we do real js parsing and this returns a function we can just execute instead of running interprenter again and again
@@ -155,7 +118,7 @@ class HaxeInterpreter implements IInterpreter
 		}
 		catch (e:Dynamic)
 		{
-			Console.error("<<<<<SPARK SCRIPT PARSING ERROR>>>>>: " + e);
+			Console.error("<<<<<SPARK SCRIPT PARSING ERROR [Line: " + _parser.line + "]>>>>>: " + e);
 			Console.error("Stack: " + script);
 			
 			var errorMsg:String = "Display.error('This script failed to parse. Look at stack above.'); CouldNotParseScript;";

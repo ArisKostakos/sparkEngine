@@ -34,4 +34,6 @@ interface ILogic extends IService
 	function getDt():Float;
 	function reflectField(p_object: Dynamic, p_field:String):Dynamic;
 	function reflectFieldOfField(p_object: Dynamic, p_field:String, p_field2:String):Dynamic;
+	
+	function createInterpreters():Void;
 }

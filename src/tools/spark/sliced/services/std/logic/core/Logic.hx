@@ -37,15 +37,9 @@ class Logic extends AService implements ILogic
 		_init();
 	}
 	
-	private function _init():Void
+	public function _init():Void
 	{
 		Console.log("Init Logic std Service...");
-		
-		//Create Script Interpreter
-		scriptInterpreter = new HaxeInterpreter();
-		
-		//Create Gml Interpreter
-		gmlInterpreter = new GmlInterpreter();
 		
 		//Create GameFactory
 		gameFactory = new GameFactory();
@@ -54,6 +48,16 @@ class Logic extends AService implements ILogic
 		rootGameEntitiesRunning = new Map<String, IGameEntity>();
 		rootGameEntitiesPaused = new Map<String, IGameEntity>();
 		_gameEntitiesByName = new Map<String, IGameEntity>();
+	}
+	
+	//This is taken out from _init because we need to create the Interpreters after Sliced is fully built, to feed the services as parameters for the interpreters
+	public function createInterpreters():Void
+	{
+		//Create Script Interpreter
+		scriptInterpreter = new HaxeInterpreter();
+		
+		//Create Gml Interpreter
+		gmlInterpreter = new GmlInterpreter();
 	}
 	
 	public function update():Void
