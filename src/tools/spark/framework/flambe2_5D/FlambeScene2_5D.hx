@@ -13,6 +13,7 @@ import tools.spark.framework.space2_5D.core.AScene2_5D;
 import tools.spark.framework.space2_5D.interfaces.ICamera2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
+import tools.spark.sliced.services.std.logic.gde.core.GameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.core.Sliced;
@@ -40,6 +41,10 @@ import nape.callbacks.InteractionListener;
 class FlambeScene2_5D extends AScene2_5D
 {
 	public static var BIPED_FEET = new CbType();
+	//public static var COLLECTABLE = new CbType();
+	//public static var PLAYER = new CbType();
+	//public static var ENEMY = new CbType();
+	//public static var SPIKE = new CbType();
 	
 	public function new(p_gameEntity:IGameEntity)
 	{
@@ -83,8 +88,15 @@ class FlambeScene2_5D extends AScene2_5D
 	
 	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
 	{
+		/*
+		//SUPER hack to add a 'background' object at the beginning of flambe's display array (I know, it's bad.. fix it by correctly implementing layers
+		var appendChild:Bool = true;
+		if (p_childEntity.gameEntity.getState('name') == "Background")
+			appendChild = false;
+		*/
+		
 		//This is an 'instance' addChild... a flambe addChild..
-		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity));
+		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity)/*, appendChild*/);
 		
 		super._createChildOfInstance(p_childEntity, p_view2_5D);
 	}
@@ -109,6 +121,38 @@ class FlambeScene2_5D extends AScene2_5D
 		//Apply temp values
 		l_instanceSprite.setXY(_tempX, _tempY);
 		l_instanceSprite.setScaleXY(_scaleX, _scaleY);
+		
+		//Console.error("UPDATING CAMERA X: " + _tempX);
+		//Console.error("UPDATING CAMERA Y: " + _tempY);
+		//Console.error("UPDATING CAMERA Scale: " + _scaleX);
+		
+		//Clusterfuck hack to move background indepentantly
+		//until layers are implemented..
+		if (p_view.scene.gameEntity.getState('backgroundEntity') != null && p_camera.gameEntity.getState('name')!="Editor Scene Edit Camera")
+		{
+			var background:IGameEntity = cast(p_view.scene.gameEntity.getState('backgroundEntity'), IGameEntity);
+			
+			var backgroundWidth:Float = background.getState('boundsRect').width;
+			var sceneMaxBounds:Float = p_view.scene.gameEntity.getState('boundsWidth');
+			var viewWidth:Float = p_view.gameEntity.getState('feedbackWidth');
+			var sceneBoundX:Float = p_view.scene.gameEntity.getState('boundsX') + sceneMaxBounds;
+			
+			var originPoint:Float = backgroundWidth / 2 - _tempX / _scaleX;
+			var totalDistance:Float = (backgroundWidth - viewWidth / _scaleX);
+			var cameraXMin:Float = p_view.scene.gameEntity.getState('boundsX');
+			var cameraXMax:Float = sceneBoundX - p_camera.gameEntity.getState('captureAreaWidth');
+			var cameraCurrent:Float =  _tempX / _scaleX * ( -1);
+			var coveredPercent:Float = (cameraCurrent - cameraXMin) / (cameraXMax - cameraXMin);
+			
+			background.setState('spaceX', originPoint - totalDistance*coveredPercent);
+			
+			//background.setState('spaceX', backgroundWidth/2-_tempX/_scaleX); //0,0
+			//background.setState('spaceX', backgroundWidth / 2 - _tempX / _scaleX - (backgroundWidth-viewWidth/_scaleX)); //end
+			
+			//Console.error("CAMERA _tempX: " + _tempX + ", spaceX: " + background.getState('spaceX') + ", _scaleX: " + _scaleX);
+			//Console.error("CAMERA cameraXMin: " + cameraXMin+ ", cameraXMax: " + cameraXMax + ", _tempX: " + cameraCurrent);
+			//Console.error("CAMERA coveredPercent: " + coveredPercent);
+		}
 	}
 	
 	private function _updatePhysics(p_physicsFlag:Bool, p_view2_5D:IView2_5D):Void
@@ -118,7 +162,7 @@ class FlambeScene2_5D extends AScene2_5D
 		
 		if (p_physicsFlag)
 		{
-			Console.error("UPDATING PHYSICS SCENE: " + gameEntity.getState('name'));
+			//Console.error("UPDATING PHYSICS SCENE: " + gameEntity.getState('name'));
 			//BodyComponent
 			var spaceComponent:SpaceComponent = new SpaceComponent(gameEntity.getState('gravityX'),gameEntity.getState('gravityY'));
 			l_instance.add(spaceComponent);
@@ -131,10 +175,14 @@ class FlambeScene2_5D extends AScene2_5D
 		p_space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, CbType.ANY_BODY, CbType.ANY_BODY, _beginHandlerCollision));
 		p_space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbType.ANY_BODY, CbType.ANY_BODY, _endHandlerCollision));
 		
+		p_space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.ANY, CbType.ANY_BODY, CbType.ANY_BODY, _beginHandlerSensor));
+		p_space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.ANY, CbType.ANY_BODY, CbType.ANY_BODY, _endHandlerSensor));
+		
 		p_space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.SENSOR, BIPED_FEET, CbType.ANY_BODY, _beginHandlerSensorFeet));
 		p_space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.SENSOR, BIPED_FEET, CbType.ANY_BODY, _endHandlerSensorFeet));
     }
 	
+	//Collision
 	function _beginHandlerCollision(cb:InteractionCallback):Void
 	{
 		if (cb.int1.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_START, cb.int1.userData.gameEntity);
@@ -147,6 +195,27 @@ class FlambeScene2_5D extends AScene2_5D
 		if (cb.int2.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_END, cb.int2.userData.gameEntity);
 	}
 	
+	//Sensor
+	function _beginHandlerSensor(cb:InteractionCallback):Void
+	{
+		
+		//this is the shape.. get it's containing body
+		//var int1Parent:Body = cb.int1;// .castShape.body;
+		//Console.error("SENSOR STARTTTTTTTTTT: " + int1Parent.userData.gameEntity.getState('name'));
+		if (cb.int1.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_START, cb.int1.userData.gameEntity);
+		if (cb.int2.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_START, cb.int2.userData.gameEntity);
+	}
+	
+	function _endHandlerSensor(cb:InteractionCallback):Void
+	{
+		//this is the shape.. get it's containing body
+		//var int1Parent:Body = cb.int1;// .castShape.body;
+		//Console.error("SENSOR ENDDDDDDDDDDD: " + int1Parent.userData.gameEntity.getState('name'));
+		if (cb.int1.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END, cb.int1.userData.gameEntity);
+		if (cb.int2.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END, cb.int2.userData.gameEntity);
+	}
+	
+	//Sensor Feet
 	function _beginHandlerSensorFeet(cb:InteractionCallback):Void
 	{
 		//this is the shape.. get it's containing body

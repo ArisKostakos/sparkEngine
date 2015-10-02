@@ -43,6 +43,9 @@ enum EEventType
 	ON_DRAG_OVER;	//fires when the dragged element is over the drop target
 	ON_DRAG_LEAVE;	//fires when the dragged element leaves the drop target
 	ON_DROP;	//fires when the dragged element is dropped on the drop target
+	KEY_PRESSED_LOCAL;
+	KEY_RELEASED_LOCAL;
+	KEY_DOWN_LOCAL;
 	KEY_PRESSED;
 	KEY_RELEASED;
 }

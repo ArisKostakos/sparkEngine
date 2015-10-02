@@ -19,6 +19,11 @@ import haxe.xml.Fast;
 import EReg;
 import flambe.input.MouseButton;
 
+import haxe.ds.StringMap;
+import haxe.ds.IntMap;
+import haxe.ds.ObjectMap;
+
+
 /**
  * ...
  * @author Aris Kostakos
@@ -37,6 +42,10 @@ class HaxeInterpreter implements IInterpreter
 	
 	private function _init():Void
 	{
+		//Here we use somethings for no other reason than to prevent DCE to eliminate the classes. We want to include them so they can be reflected with the interprenter
+		var dummy:Int = Std.random(1);
+		//end of DCE prevention
+		
 		_hashTable = new Map<Int,Expr>();
 		
 		_parser =  new hscript.Parser();
@@ -62,6 +71,9 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("EReg", EReg); // share the EReg class
 		_interpreter.variables.set("MouseButton", MouseButton); // share the MouseButton class
 		//_interpreter.variables.set("Int", Int); // share the Int
+		_interpreter.variables.set("StringMap", StringMap); // share the StringMap
+		_interpreter.variables.set("IntMap", IntMap); // share the IntMap
+		_interpreter.variables.set("ObjectMap", ObjectMap); // share the ObjectMap
 		
 		//so bad..
 		#if html
@@ -79,6 +91,7 @@ class HaxeInterpreter implements IInterpreter
 		
 		
 		//_interpreter = new hscript.Interp();
+		
 		//Static variables
 		_interpreter.variables.set("Game", Sliced); // share the Game class
 		_interpreter.variables.set("Sound", Sliced.sound); // share the Sound class
@@ -99,6 +112,9 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("EReg", EReg); // share the EReg class
 		_interpreter.variables.set("MouseButton", MouseButton); // share the MouseButton class
 		//_interpreter.variables.set("Int", Int); // share the Int
+		_interpreter.variables.set("StringMap", StringMap); // share the StringMap
+		_interpreter.variables.set("IntMap", IntMap); // share the IntMap
+		_interpreter.variables.set("ObjectMap", ObjectMap); // share the ObjectMap
 
 		//so bad..
 		#if html
@@ -114,13 +130,38 @@ class HaxeInterpreter implements IInterpreter
 		
 		//Console.timeEnd("interpreting");
 		//Console.warn("Interpenter Executing: " + hashId);
-		return _interpreter.execute(program);
+		
+		try
+		{
+			//We keep this, for much later when we do real js parsing and this returns a function we can just execute instead of running interprenter again and again
+			var returnedValue:Dynamic = _interpreter.execute(program);
+			
+			return true;
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("<<<<<SPARK SCRIPT RUN-TIME ERROR>>>>>: " + e);
+			
+			return false;
+		}
 	}
 	
 	
 	public function hash(script:String):Int
 	{
-		return _store(_parser.parseString(script), Crc32.make(Bytes.ofString(script)));
+		try
+		{
+			return _store(_parser.parseString(script), Crc32.make(Bytes.ofString(script)));
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("<<<<<SPARK SCRIPT PARSING ERROR>>>>>: " + e);
+			Console.error("Stack: " + script);
+			
+			var errorMsg:String = "Display.error('This script failed to parse. Look at stack above.'); CouldNotParseScript;";
+			
+			return _store(_parser.parseString(errorMsg), Crc32.make(Bytes.ofString(errorMsg)));
+		}
 	}
 	
 	

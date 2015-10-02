@@ -200,6 +200,9 @@ class Event extends AService implements IEvent
 		_prefabConvertToType[EEventPrefab.PHYSICS_SENSOR_START_BIPED_FEET] = EEventType.PHYSICS_SENSOR_START_BIPED_FEET;
 		_prefabConvertToType[EEventPrefab.PHYSICS_SENSOR_END] = EEventType.PHYSICS_SENSOR_END;
 		_prefabConvertToType[EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET] = EEventType.PHYSICS_SENSOR_END_BIPED_FEET;
+		_prefabConvertToType[EEventPrefab.KEY_PRESSED_LOCAL] = EEventType.KEY_PRESSED_LOCAL;
+		_prefabConvertToType[EEventPrefab.KEY_RELEASED_LOCAL] = EEventType.KEY_RELEASED_LOCAL;
+		_prefabConvertToType[EEventPrefab.KEY_DOWN_LOCAL] = EEventType.KEY_DOWN_LOCAL;
 		_prefabConvertToType[EEventPrefab.KEY_PRESSED] = EEventType.KEY_PRESSED;
 		_prefabConvertToType[EEventPrefab.KEY_RELEASED] = EEventType.KEY_RELEASED;
 		_prefabConvertToType[EEventPrefab.KEY_PRESSED_ALT] = EEventType.KEY_PRESSED;
@@ -443,6 +446,9 @@ class Event extends AService implements IEvent
 		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_SENSOR_START_BIPED_FEET , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_SENSOR_END , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.KEY_PRESSED_LOCAL , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.KEY_RELEASED_LOCAL , _FILTER_VARIABLE_USER_ENTITY);
+		_prefabConvertToFilter.set(EEventPrefab.KEY_DOWN_LOCAL , _FILTER_VARIABLE_USER_ENTITY);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_PRESSED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_RELEASED , _NO_FILTER);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_PRESSED_ALT, Key.Alt);

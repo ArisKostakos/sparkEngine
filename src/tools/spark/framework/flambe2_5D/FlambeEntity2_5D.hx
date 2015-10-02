@@ -14,6 +14,7 @@ import flambe.input.PointerEvent;
 import flambe.math.Rectangle;
 import flambe.math.FMath;
 import nape.shape.Shape;
+import tools.spark.framework.flambe2_5D.spritesheet.SpriteSheetPlayer;
 import tools.spark.framework.space2_5D.core.AEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
@@ -70,6 +71,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['spaceHeight'] = _updateSpaceHeight;	//this is iffy.. should do it with forms instead
 		_updateStateFunctions['2DMeshImageForm'] = _update2DMeshImageForm;
 		_updateStateFunctions['2DMeshSpriterForm'] = _update2DMeshSpriterForm;
+		_updateStateFunctions['2DMeshSpritesheetForm'] = _update2DMeshSpritesheetForm;
 		_updateStateFunctions['2DMeshFillRectForm'] = _update2DMeshFillRectForm;
 		_updateStateFunctions['2DMeshSpriteForm'] = _update2DMeshSpriteForm;
 		_updateStateFunctions['2DMeshSpriterAnimForm'] = _update2DMeshSpriterAnimForm;
@@ -94,7 +96,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 	override public function update(?p_view2_5D:IView2_5D):Void
 	{
 		_updateState('2DmeshType', p_view2_5D); //THIS NEEDS TO BE FIRST AT THE UPDATE TO GET THE SPRITE!!!!!!
-		
+
 		if (gameEntity.getState('layoutable') == null || gameEntity.getState('layoutable') == false)
 		{
 			_updateState('spaceX',p_view2_5D);
@@ -114,7 +116,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//_updateState('2DMeshImageForm', p_view2_5D); //this is nested.. not for global update i think
 		//_updateState('2DMeshSpriterForm', p_view2_5D); //this is nested.. not for global update i think
 		//more spriter nested things exist also don't update them
-		//_updateState('centerAnchor', p_view2_5D);
+		_updateState('centerAnchor', p_view2_5D);
 		_updateState('physicsEntity', p_view2_5D);
 		
 		
@@ -149,6 +151,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 				_updateStateOfInstance('2DMeshImageForm', p_view2_5D);
 			case 'Spriter':
 				_updateStateOfInstance('2DMeshSpriterForm', p_view2_5D);
+			case 'Spritesheet':
+				_updateStateOfInstance('2DMeshSpritesheetForm', p_view2_5D);
 			case 'FillRect':
 				_updateStateOfInstance('2DMeshFillRectForm', p_view2_5D);
 			case 'Sprite':
@@ -221,6 +225,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_mesh == null)
 		{
 			l_mesh = new Sprite();
+			
 			var l_SpriterFormName:String = gameEntity.gameForm.getState( p_2DMeshSpriterForm );
 			var l_spriterMovie:SpriterMovie = new SpriterMovie(Assets.getAssetPackOf(l_SpriterFormName), l_SpriterFormName, null); //this null thing is supposed to be character name (string).. doesn't work though... always plays first character found
 			l_mesh.blendMode = BlendMode.Copy;
@@ -235,6 +240,50 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		//Play Animation (nesting)
 		_updateStateOfInstance('2DMeshSpriterAnimForm', p_view2_5D);
+	}
+	
+	private function _update2DMeshSpritesheetForm(p_2DMeshSpritesheetForm:String, p_view2_5D:IView2_5D):Void
+	{
+		//If the Entity's mesh type is not a spritesheet, ignore this update
+		if (gameEntity.getState('2DmeshType') != 'Spritesheet')
+			return;
+			
+		//If the Form Name is Undefined, ignore this update
+		if (p_2DMeshSpritesheetForm == 'Undefined')
+			return;
+			
+		//Get the instance we're updating
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		//Get it's existing mesh, if any. Not sure if this mesh is guaranteed to be a mesh used previously by Spritesheet, or something else.
+		//should be fine due to logic but not sure. by logic i mean, if we update 2dmeshtype it will always reset mesh and stuff
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh == null)
+		{
+			l_mesh = new Sprite();
+			
+			var l_SpritesheetFormName:String = gameEntity.gameForm.getState( p_2DMeshSpritesheetForm );
+			var l_spritesheetPlayer:SpriteSheetPlayer = new SpriteSheetPlayer(Assets.getAssetPackOf(l_SpritesheetFormName), l_SpritesheetFormName);
+			
+			l_mesh.blendMode = BlendMode.Copy;
+			l_instance.add(l_mesh);
+			l_instance.add( l_spritesheetPlayer);
+			_instancesMesh[p_view2_5D] = l_mesh;
+		}
+		else
+		{
+			//l_mesh.texture = Assets.getTexture(gameEntity.gameForm.getState( l_imageForm ));	
+		}
+		
+		//Play Animation (nesting)
+		//_updateStateOfInstance('2DMeshSpriterAnimForm', p_view2_5D);
+		var l_spritesheetPlayeTemp:SpriteSheetPlayer = l_instance.get(SpriteSheetPlayer);
+		if (gameEntity.getState('AnimationLoop') == true)
+			l_spritesheetPlayeTemp.loop();
+		else
+			l_spritesheetPlayeTemp.play();
+		l_spritesheetPlayeTemp.setSpeed(gameEntity.getState('AnimationSpeed'));
 	}
 	
 	private function _update2DMeshFillRectForm(p_2DMeshFillRectForm:String, p_view2_5D:IView2_5D):Void
@@ -267,6 +316,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 			//if (gameEntity.getState('layoutable') == true)
 				//l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),groupInstances[p_view2_5D].width, groupInstances[p_view2_5D].height);
 			l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),gameEntity.getState( 'spaceWidth' ), gameEntity.getState( 'spaceHeight' ));
+			l_mesh.scissor = new Rectangle(0, 0, gameEntity.getState( 'spaceWidth' ), gameEntity.getState( 'spaceHeight' ));
 			l_mesh.blendMode = BlendMode.Copy;
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
@@ -444,7 +494,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 						var l_sceneInstance:Entity = parentScene.getInstance(p_view2_5D);
 						
 						//Center Anchor (Only for physics objects)
-						l_mesh.centerAnchor();
+						//l_mesh.centerAnchor();
 						
 						//Add a child
 						var bodyType:BodyType;
@@ -478,14 +528,14 @@ class FlambeEntity2_5D extends AEntity2_5D
 							case "Ellastic":
 								l_material = new Material(1, 0, 0, 1, 0);
 							case "Biped":
-								l_material = new Material(0, 1, 2, 1, 0.001);
+								l_material = new Material(-5, 1, 2, 1, 0.001);
 							default:
 								l_material = Material.wood();
 						}
 						
-						
-						//Console.error("Yo: width: " + l_mesh.getNaturalWidth());
-						//Console.error("Yo: height: " + l_mesh.getNaturalHeight());
+						var l_meshWidth:Float = Sprite.getBounds(l_instance).width;	// l_mesh.getNaturalWidth();
+						var l_meshHeight:Float = Sprite.getBounds(l_instance).height;	// l_mesh.getNaturalHeight();
+						//get bounds gets scaled mesh, so no need to multiply scale below
 						
 						if (gameEntity.getState('2DmeshType') != 'Spriter')
 						{
@@ -494,20 +544,23 @@ class FlambeEntity2_5D extends AEntity2_5D
 							{
 								case "Circle":
 									//I take the medium between width and hight (w+h)/2 and then divide by 2 cause we need radius which is half
-									var l_radious = (l_mesh.getNaturalWidth() * l_mesh.scaleX._ + l_mesh.getNaturalHeight() * l_mesh.scaleY._) / 4;
+									var l_radious = (l_meshWidth + l_meshHeight ) / 4;
 									l_shape = new Circle(l_radious, l_material);
 								case "Polygon":
-									l_shape = new Polygon(Polygon.box(l_mesh.getNaturalWidth() * l_mesh.scaleX._, l_mesh.getNaturalHeight() * l_mesh.scaleY._), l_material);
+									l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
 								default:
-									l_shape = new Polygon(Polygon.box(l_mesh.getNaturalWidth() * l_mesh.scaleX._, l_mesh.getNaturalHeight() * l_mesh.scaleY._), l_material);
+									l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
 							}
 							
+							//IsSensor
+							l_shape.sensorEnabled = gameEntity.getState('physicsSensorFlag');
+						
 							body.shapes.add(l_shape);
 						}
 						else
 						{
 							if (gameEntity.getState('physicsShape') == "Biped")
-							{
+							{	//we multiply with scale here, since we don't use the getBounds method
 								_appendPhysicsBipedShapes(body, 76, 180, l_mesh.scaleX._, 0, -0.09, l_material);
 								
 								body.allowRotation = false;
@@ -519,8 +572,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 							}
 						}
 						
+						//Body CbType
+						//body.cbTypes.add
 						
+						//Position
 						body.position = new Vec2(l_mesh.x._, l_mesh.y._);
+						
 						
 						//Initial Velocity
 						if (gameEntity.getState('physicsType') == "Dynamic")
@@ -714,7 +771,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_fillSprite != null) 
 		{
 			l_fillSprite.width._ = p_spaceWidth;
-			//l_fillSprite.centerAnchor(); //eek
+			l_fillSprite.centerAnchor(); //eek
+			l_fillSprite.scissor.width = p_spaceWidth;
 		}
 	}
 	
@@ -727,7 +785,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_fillSprite != null) 
 		{
 			l_fillSprite.height._ = p_spaceHeight;
-			//l_fillSprite.centerAnchor(); //eek
+			l_fillSprite.centerAnchor(); //eek
+			l_fillSprite.scissor.height = p_spaceHeight; //uuk
 		}
 	}
 	
@@ -739,7 +798,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 
 		if (l_instance != null)
 		{
-			gameEntity.setState('boundsRect', Sprite.getBounds(l_instance));
+			//Spriter hack
+			if (gameEntity.getState('2DmeshType') == 'Spriter')
+				gameEntity.setState('boundsRect', new Rectangle(-55,-112,140,190));
+			else
+				gameEntity.setState('boundsRect', Sprite.getBounds(l_instance));
 		}
 	}
 }

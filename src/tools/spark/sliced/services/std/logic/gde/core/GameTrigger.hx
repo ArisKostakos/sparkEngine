@@ -43,6 +43,7 @@ class GameTrigger extends AGameBase implements IGameTrigger
 	{
 		for (hashId in scriptSet)
 		{
+			//This would only work if we return what execute returns.. no it returns false if it failed to run..
 			//if (Sliced.logic.interpreter.run(hashId) == false)
 				//Console.warn('Trigger $event:HashId $hashId returned false');
 			if (hashId == -1)
@@ -51,7 +52,10 @@ class GameTrigger extends AGameBase implements IGameTrigger
 			}
 			else
 			{
-				Sliced.logic.scriptInterpreter.run(hashId, [ "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
+				if (Sliced.logic.scriptInterpreter.run(hashId, [ "me" => parentEntity, "parent" => parentEntity.parentEntity ]) == false)
+				{
+					Console.error('Error: Failed to run Trigger [$eventPrefab].');
+				}
 			}
 		}
 	}

@@ -56,13 +56,13 @@ class ACamera2_5D extends AObject2_5D implements ICamera2_5D
 	{
 		switch (p_state)
 		{
-			case 'spaceX':
+			case 'captureAreaX':
 				p_view2_5D.updateCamera();
-			case 'spaceY':
+			case 'captureAreaY':
 				p_view2_5D.updateCamera();
-			case 'scaleX':
+			case 'captureAreaWidth':
 				p_view2_5D.updateCamera();
-			case 'scaleY':
+			case 'captureAreaHeight':
 				p_view2_5D.updateCamera();
 			default:
 				Console.warn('Unhandled Camera State value: ' + p_state);

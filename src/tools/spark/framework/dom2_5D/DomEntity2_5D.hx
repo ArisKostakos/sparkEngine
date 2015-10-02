@@ -36,6 +36,7 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		_updateStateFunctions['NCmeshType'] = _updateNCmeshType;
 		_updateStateFunctions['touchable'] = _updateTouchable;
+		_updateStateFunctions['acceptsKeyboardInput'] = _updateAcceptsKeyboardInput;
 		_updateStateFunctions['draggable'] = _updateDraggable;
 		_updateStateFunctions['dropTarget'] = _updateDropTarget;
 		_updateStateFunctions['NCstyleable'] = _updateNCstyleable;
@@ -125,6 +126,9 @@ class DomEntity2_5D extends AEntity2_5D
 		//Update Touchable Stuff
 		_updateState('touchable', p_view2_5D);
 		
+		//Update Accepts Keyboard Input Stuff
+		_updateState('acceptsKeyboardInput', p_view2_5D);
+		
 		//Update Draggable Stuff
 		_updateState('draggable', p_view2_5D);
 		
@@ -187,6 +191,17 @@ class DomEntity2_5D extends AEntity2_5D
 			
 		if (gameEntity.getState('white-space') != null && gameEntity.getState('white-space')!="Undefined")
 			_instances[p_view2_5D].style.whiteSpace = gameEntity.getState('white-space');
+			
+		if (gameEntity.getState('selectable') != null)
+		{
+			if (gameEntity.getState('selectable') == false)
+			{
+				_instances[p_view2_5D].style.setProperty("-webkit-user-select","none"); /* Chrome all / Safari all */
+				_instances[p_view2_5D].style.setProperty("-moz-user-select","none"); /* Firefox all */
+				_instances[p_view2_5D].style.setProperty("-ms-user-select","none"); /* IE 10+ */
+				_instances[p_view2_5D].style.setProperty("user-select","none"); /* Likely future */        
+			}
+		}
 	}
 	
 
@@ -449,6 +464,41 @@ class DomEntity2_5D extends AEntity2_5D
 		}
 	}
 	
+	private function _updateAcceptsKeyboardInput(p_acceptsKeyboardInputFlag:Bool, p_view2_5D:IView2_5D):Void
+	{
+		//Gt Mesh
+		var l_instance:Element = _instances[p_view2_5D];
+		
+		if (l_instance != null)
+		{
+			if (p_acceptsKeyboardInputFlag)
+			{
+				//@think: another way to do this without having a p_acceptsKeyboardInputFlag flag it to check if there are triggers actually connected to the gameEntity that want these signals, ad play like that
+				//also be sure to update if someone adds a trigger to the entity at runtime (do an addTrigger event, the same fashion you update states, childs, etc)
+				//l_instance.pointerEnabled = true;
+				
+				/*
+				if (!l_instance.pointerIn.hasListeners())
+					l_instance.pointerIn.connect(_onPointerIn);
+					
+				if (!l_instance.pointerOut.hasListeners())
+					l_instance.pointerOut.connect(_onPointerOut);
+				*/
+				
+				l_instance.onkeypress = _onKeyPress;
+				l_instance.onkeyup = _onKeyRelease;
+				l_instance.onkeydown = _onKeyDown;
+			}
+			else
+			{
+				//@todo: should really consider actually removing those listeners, here.... use the disposer component thing
+				//if you don't want to store the signal Connections..and retrieve disposer here, from the entity. Disposer way looks better anyway...
+				//l_instance.pointerEnabled = false;
+			}
+			
+		}
+	}
+	
 	private function _updateDraggable(p_flag:Bool, p_view2_5D:IView2_5D):Void
 	{
 		//Gt Mesh
@@ -517,6 +567,7 @@ class DomEntity2_5D extends AEntity2_5D
 		Sliced.event.raiseEvent(ON_DRAG_ENTER, gameEntity);
 	}
 	
+	
 	private function _onDragOver(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObject', p_event);
@@ -550,6 +601,26 @@ class DomEntity2_5D extends AEntity2_5D
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT, gameEntity);
 	}
 	*/
+	
+	
+	private function _onKeyPress(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObjectKeyPress', p_event);
+		Sliced.event.raiseEvent(EEventType.KEY_PRESSED_LOCAL, gameEntity);
+	}
+	
+	private function _onKeyRelease(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObjectKeyRelease', p_event);
+		Sliced.event.raiseEvent(EEventType.KEY_RELEASED_LOCAL, gameEntity);
+	}
+	
+	private function _onKeyDown(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObjectKeyDown', p_event);
+		Sliced.event.raiseEvent(EEventType.KEY_DOWN_LOCAL, gameEntity);
+	}
+	
 	private function _onPointerClick(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObject', p_event);

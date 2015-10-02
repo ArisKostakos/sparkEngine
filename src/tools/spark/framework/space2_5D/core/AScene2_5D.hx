@@ -56,15 +56,20 @@ class AScene2_5D extends AInstantiable2_5D implements IScene2_5D
 	
 	public function updateCamera(p_view:IView2_5D, p_camera:ICamera2_5D):Void
 	{
+		var l_captureAreaX:Float = p_camera.gameEntity.getState('captureAreaX');
+		var l_captureAreaY:Float = p_camera.gameEntity.getState('captureAreaY');
+		var l_captureAreaWidth:Float = p_camera.gameEntity.getState('captureAreaWidth');
+		var l_captureAreaHeight:Float = p_camera.gameEntity.getState('captureAreaHeight');
 		
 		//if camera x is whatever and y whatever and size whatever and view width, x, y, whatever, then.... scene's instance x and y must be : X, Y
-		_scaleX = _scaleY = p_camera.gameEntity.getState('scaleX');
+		var l_scale = p_view.gameEntity.getState('feedbackWidth') / l_captureAreaWidth;
 		
-		_tempX = p_camera.gameEntity.getState('spaceX');
-		_tempY = p_camera.gameEntity.getState('spaceY');
+		//after calculations, store them somewhere privately and let the overriding function actually do it (good enough for now..:/)
+		//set scale
+		_scaleX = _scaleY = l_scale;
 		
-		//after calculations, store them somewhere privately and let the overriding function actually do it
-		
-		//its good enough :/
+		//set pos
+		_tempX = -l_captureAreaX * l_scale;
+		_tempY = -l_captureAreaY * l_scale;
 	}
 }

@@ -51,17 +51,23 @@ class GameAction extends AGameBase implements IGameAction
 	
 	public function doPass():Void
 	{
+		//This would only work if we return what execute returns.. no it returns false if it failed to run..
+		//if (Sliced.logic.interpreter.run(hashId) == false)
+			//Console.warn('Action $id:HashId $hashId returned false');
+			
 		for (hashId in scriptSet)
 		{
-			//if (Sliced.logic.interpreter.run(hashId) == false)
-			//	Console.warn('Action $id:HashId $hashId returned false');
 			if (hashId == -1)
 			{
 				Sliced.logic.gmlInterpreter.run(hashId, [ "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
 			}
 			else
 			{
-				Sliced.logic.scriptInterpreter.run(hashId, [ "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
+				if (Sliced.logic.scriptInterpreter.run(hashId, [ "me" => parentEntity, "parent" => parentEntity.parentEntity ]) == false)
+				{
+					Console.error('Error: Failed to run Action [$id].');
+					parentEntity.stopAction(id);
+				}
 			}
 		}
 	}

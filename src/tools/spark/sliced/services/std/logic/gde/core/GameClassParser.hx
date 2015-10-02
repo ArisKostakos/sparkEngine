@@ -359,6 +359,10 @@ class GameClassParser implements IGameClassParser
 		_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_START_BIPED_FEET] = "PhysicsSensorStartBipedFeet";
 		_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_END] = "PhysicsSensorEnd";
 		_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET] = "PhysicsSensorEndBipedFeet";
+
+		_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED_LOCAL] = "KeyPressedLocal";
+		_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED_LOCAL] = "KeyReleasedLocal";
+		_xmlEventPrefabToName[EEventPrefab.KEY_DOWN_LOCAL] = "KeyDownLocal";
 		
 		_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED] = "KeyPressed";
 		_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED] = "KeyReleased";
@@ -606,6 +610,10 @@ class GameClassParser implements IGameClassParser
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_END]] = EEventPrefab.PHYSICS_SENSOR_END;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET]] = EEventPrefab.PHYSICS_SENSOR_END_BIPED_FEET;
 		
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED_LOCAL]] = EEventPrefab.KEY_PRESSED_LOCAL;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED_LOCAL]] = EEventPrefab.KEY_RELEASED_LOCAL;
+		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_DOWN_LOCAL]] = EEventPrefab.KEY_DOWN_LOCAL;
+		
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED]] = EEventPrefab.KEY_PRESSED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_RELEASED]] = EEventPrefab.KEY_RELEASED;
 		_xmlEventNameToPrefab[_xmlEventPrefabToName[EEventPrefab.KEY_PRESSED_ALT]] = EEventPrefab.KEY_PRESSED_ALT;
@@ -819,28 +827,28 @@ class GameClassParser implements IGameClassParser
 	public function parseGameNode(p_gameNode:Xml):Bool
 	{
 		//extend
-		Console.info('Extending ' + p_gameNode.nodeName + ' Node...');
+		//Console.info('Extending ' + p_gameNode.nodeName + ' Node...');
 		if (_extendGameNode(p_gameNode))
 		{
 			//Display the full Node after extending it
 			//Console.debug(p_gameNode.toString());
-			Console.info('Extending ' + p_gameNode.nodeName + ' Node COMPLETED');
+			//Console.info('Extending ' + p_gameNode.nodeName + ' Node COMPLETED');
 			
 			//merge
-			Console.info('Merging ' + p_gameNode.nodeName + ' Node...');
+			//Console.info('Merging ' + p_gameNode.nodeName + ' Node...');
 			_mergeGameNode(p_gameNode);
 
 			//Display the full Node after merging it
 			//Console.debug(p_gameNode.toString());
-			Console.info('Merging ' + p_gameNode.nodeName + ' Node COMPLETED');
+			//Console.info('Merging ' + p_gameNode.nodeName + ' Node COMPLETED');
 			
 			//Validate
-			Console.info('Validating ' + p_gameNode.nodeName + ' Node...');
+			//Console.info('Validating ' + p_gameNode.nodeName + ' Node...');
 			if (_validateGameNode(p_gameNode))
 			{
 				//Display the full Node after validating it
 				//Console.debug(p_gameNode.toString());
-				Console.info('Validating ' + p_gameNode.nodeName + ' Node COMPLETED');
+				//Console.info('Validating ' + p_gameNode.nodeName + ' Node COMPLETED');
 				
 				return true;
 			}
