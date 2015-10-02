@@ -1,0 +1,2 @@
+For some reason, we need to create a folder called assets here..
+We created this txt so git can also create the folder (assets) for us
