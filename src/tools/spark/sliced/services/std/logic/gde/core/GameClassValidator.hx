@@ -65,6 +65,9 @@ class GameClassValidator implements IGameClassValidator
 		_xmlNodeTypeToNodeRule[ENodeType.TRIGGERS] = _createTriggersNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.TRIGGER] = _createTriggerNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.EVENT] = _createEventNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.PARAMETER] = _createParameterNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.TARGET] = _createTargetNodeRule();
+		_xmlNodeTypeToNodeRule[ENodeType.TARGET_TYPE] = _createTargetTypeNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.CONCURRENCY] = _createConcurrencyNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.ID] = _createIdNodeRule();
 		_xmlNodeTypeToNodeRule[ENodeType.SPACE] = _createSpaceNodeRule();
@@ -242,6 +245,9 @@ class GameClassValidator implements IGameClassValidator
 		var l_children:Rule = RList(
 			[
 				RNode(_xmlNodeTypeToNodeName[ENodeType.EVENT]),
+				ROptional(RNode(_xmlNodeTypeToNodeName[ENodeType.PARAMETER])),
+				ROptional(RNode(_xmlNodeTypeToNodeName[ENodeType.TARGET])),
+				ROptional(RNode(_xmlNodeTypeToNodeName[ENodeType.TARGET_TYPE])),
 				RNode(_xmlNodeTypeToNodeName[ENodeType.SCRIPTS])
 			],
 			false
@@ -250,6 +256,26 @@ class GameClassValidator implements IGameClassValidator
 		return RNode(_xmlNodeTypeToNodeName[ENodeType.TRIGGER], [], l_children);
 	}
 
+	inline private function _createParameterNodeRule():Rule
+	{
+		var l_children:Rule = RData();
+
+		return RNode(_xmlNodeTypeToNodeName[ENodeType.PARAMETER], [], l_children);
+	}
+	inline private function _createTargetNodeRule():Rule
+	{
+		var l_children:Rule = RData();
+
+		return RNode(_xmlNodeTypeToNodeName[ENodeType.TARGET], [], l_children);
+	}
+	inline private function _createTargetTypeNodeRule():Rule
+	{
+		var l_children:Rule = RData();
+
+		return RNode(_xmlNodeTypeToNodeName[ENodeType.TARGET_TYPE], [], l_children);
+	}
+	
+	
 	inline private function _createConcurrencyNodeRule():Rule
 	{
 		var l_children:Rule = RData(FEnum([_xmlConcurrencyTypeToName[EConcurrencyType.PARALLEL],

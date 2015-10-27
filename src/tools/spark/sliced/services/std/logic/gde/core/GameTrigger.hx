@@ -48,11 +48,11 @@ class GameTrigger extends AGameBase implements IGameTrigger
 				//Console.warn('Trigger $event:HashId $hashId returned false');
 			if (hashId == -1)
 			{
-				Sliced.logic.gmlInterpreter.run(hashId, [ "me" => parentEntity, "parent" => parentEntity.parentEntity ]);
+				Sliced.logic.gmlInterpreter.run(hashId, ["this" => this, "me" => parentEntity, "parent" => parentEntity.parentEntity ]);
 			}
 			else
 			{
-				if (Sliced.logic.scriptInterpreter.run(hashId, [ "me" => parentEntity, "parent" => parentEntity.parentEntity ]) == false)
+				if (Sliced.logic.scriptInterpreter.run(hashId, ["this" => this, "me" => parentEntity, "parent" => parentEntity.parentEntity ]) == false)
 				{
 					Console.error('Error: Failed to run Trigger [$eventPrefab].');
 				}

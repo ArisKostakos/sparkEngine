@@ -10,6 +10,7 @@ import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.interfaces.ILogic;
 import tools.spark.sliced.core.AService;
 import tools.spark.sliced.services.std.logic.gde.core.GameFactory;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameFactory;
 import tools.spark.sliced.services.std.logic.interpreter.core.GmlInterpreter;
@@ -48,6 +49,9 @@ class Logic extends AService implements ILogic
 		rootGameEntitiesRunning = new Map<String, IGameEntity>();
 		rootGameEntitiesPaused = new Map<String, IGameEntity>();
 		_gameEntitiesByName = new Map<String, IGameEntity>();
+		
+		//Init event types
+		EventType.init();
 	}
 	
 	//This is taken out from _init because we need to create the Interpreters after Sliced is fully built, to feed the services as parameters for the interpreters
@@ -120,5 +124,11 @@ class Logic extends AService implements ILogic
 	public function reflectFieldOfField(p_object: Dynamic, p_field:String, p_field2:String):Dynamic
 	{
 		return Reflect.getProperty(Reflect.getProperty(p_object, p_field), p_field2); 
+	}
+	
+	//Intepreter's toString() doesn't work well for Xml objects on Release mode.
+	public function xmlToString(p_object:Xml):String
+	{
+		return p_object.toString();
 	}
 }

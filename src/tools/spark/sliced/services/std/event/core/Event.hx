@@ -17,7 +17,7 @@ import tools.spark.sliced.core.Sliced;
 
 /**
  * This one needs a lot of reworking. apart from the comments below, consider this as well. If we try to raise an event but there are no triggers
- * established for this event, there's no reason raising the event at all!!!! So may optimizations here.. rework it asap
+ * established for this event, there's no reason raising the event at all!!!! So many optimizations here.. rework it asap
  * @author Aris Kostakos
  */
 class Event extends AService implements IEvent
@@ -59,7 +59,14 @@ class Event extends AService implements IEvent
 		_initPrefabConvertToFilterMap();
 	}
 	
-	
+	//NEXT: This thingie.. prefabs won't cut it.. I might end up deprecating them altogether.. I do like this.. god I do...all these arrays..
+	//and it's so much a pain in this ass to add a new one.. would be SOOOO cool to make this abstract.. SOOOOOOOOOOO COOOOOOOOOOOOLLL
+	//first think what eventsheets require for the new Trigger.. then think the implications on normal Triggers as I use them now.. unify that shit..
+	//With triggers fixed, and the two other event fixes noted way above, Event Service will be FULLY REPAIRED!!!! very excited...
+	//Why it def. doesn't work now.. cause I can't specify WHICH group I want.. I would pass what? the only dynamic way i got now is passing gameEntity
+	//but with groups, you have to specify a group name... no game entity AT ALL..
+	//groups aren't game entities.. just egcs.. never exist as a sole game entity.. never will..
+	//do u wanna add states to Triggers? ://.... not really... maybe? nuhh..
 	public function addTrigger(p_gameTrigger:IGameTrigger):Void
 	{
 		var l_eventType:EEventType = _prefabConvertToType[p_gameTrigger.eventPrefab];
@@ -99,7 +106,7 @@ class Event extends AService implements IEvent
 		}
 	}
 	
-	public function raiseEvent(p_eventType:EEventType, ?p_eventFilter:Dynamic):Void
+	public function raiseEvent(p_eventType:EEventType, ?p_eventFilter:Dynamic):Void  //gameFilterType maybe
 	{
 		if (p_eventFilter == null)
 			p_eventFilter = _NO_FILTER;
@@ -125,6 +132,9 @@ class Event extends AService implements IEvent
 				//Console.warn("Triggers exist");
 				for (gameTrigger in _eventTypeFilterTriggers[p_eventType].get(p_eventFilter))
 				{
+					//@note: This is what we need to change if we want ordered events (for ace)
+					//instead of a doPass, store them in an array, with a priority id that each trigger will need to have
+					//there's no other way
 					gameTrigger.doPass();
 				}
 			}

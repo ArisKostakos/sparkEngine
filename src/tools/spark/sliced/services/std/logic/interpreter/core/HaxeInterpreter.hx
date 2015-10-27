@@ -37,6 +37,7 @@ class HaxeInterpreter implements IInterpreter
 	public function new() 
 	{
 		Console.log("Init Haxe Interpreter...");
+		Console.error("YOYOYO: " + tools.spark.sliced.services.std.logic.gde.interfaces.EEventType.CHANGED);
 		_init();
 	}
 	

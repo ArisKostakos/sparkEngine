@@ -62,7 +62,13 @@ class AScene2_5D extends AInstantiable2_5D implements IScene2_5D
 		var l_captureAreaHeight:Float = p_camera.gameEntity.getState('captureAreaHeight');
 		
 		//if camera x is whatever and y whatever and size whatever and view width, x, y, whatever, then.... scene's instance x and y must be : X, Y
-		var l_scale = p_view.gameEntity.getState('feedbackWidth') / l_captureAreaWidth;
+		
+		var l_requestedWidthScale:Float = p_view.gameEntity.getState('feedbackWidth') / l_captureAreaWidth;
+		var l_requestedHeightScale:Float = p_view.gameEntity.getState('feedbackHeight') / l_captureAreaHeight;
+		
+		//Haven't thought this thouroughly, but i think to maintain that we keep both width and height in sight, we need to respect the scale
+		//of the dimension that requires as to do the smaller scale..
+		var l_scale = Math.min(l_requestedWidthScale,l_requestedHeightScale);
 		
 		//after calculations, store them somewhere privately and let the overriding function actually do it (good enough for now..:/)
 		//set scale

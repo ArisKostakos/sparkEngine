@@ -213,7 +213,7 @@ class DomEntity2_5D extends AEntity2_5D
 		
 		if (p_src != "Undefined")
 		{
-			 //hack.. for full length dom image urls
+			 //hack.. for full length dom image urls //CHECK IF THIS HACK NO LONGER REQUIRED. I DONT THINK I USE ../ FOR ANYTHING ANYMORE!!!
 			if (p_src.indexOf('assets/') == -1)
 			{
 				//Normal loading (but not quite, still there's the DoNotLoad hacky thing, for Dom stuff..)

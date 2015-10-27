@@ -103,6 +103,9 @@ class GameClassParser implements IGameClassParser
 		_xmlNodeTypeToNodeName[ENodeType.TRIGGERS] = "Triggers";
 		_xmlNodeTypeToNodeName[ENodeType.TRIGGER] = "Trigger";
 		_xmlNodeTypeToNodeName[ENodeType.EVENT] = "Event";
+		_xmlNodeTypeToNodeName[ENodeType.PARAMETER] = "Parameter";
+		_xmlNodeTypeToNodeName[ENodeType.TARGET] = "Target";
+		_xmlNodeTypeToNodeName[ENodeType.TARGET_TYPE] = "TargetType";
 		_xmlNodeTypeToNodeName[ENodeType.CONCURRENCY] = "Concurrency";
 		_xmlNodeTypeToNodeName[ENodeType.ID] = "Id";
 		_xmlNodeTypeToNodeName[ENodeType.SPACE] = "Space";
@@ -128,6 +131,9 @@ class GameClassParser implements IGameClassParser
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.TRIGGERS]] = ENodeType.TRIGGERS;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.TRIGGER]] = ENodeType.TRIGGER;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.EVENT]] = ENodeType.EVENT;
+		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.PARAMETER]] = ENodeType.PARAMETER;
+		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.TARGET]] = ENodeType.TARGET;
+		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.TARGET_TYPE]] = ENodeType.TARGET_TYPE;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.CONCURRENCY]] = ENodeType.CONCURRENCY;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.ID]] = ENodeType.ID;
 		_xmlNodeNameToNodeType[_xmlNodeTypeToNodeName[ENodeType.SPACE]] = ENodeType.SPACE;
@@ -190,6 +196,9 @@ class GameClassParser implements IGameClassParser
 		_isNodeExtendable[ENodeType.TRIGGERS] = false;
 		_isNodeExtendable[ENodeType.TRIGGER] = true;
 		_isNodeExtendable[ENodeType.EVENT] = false;
+		_isNodeExtendable[ENodeType.PARAMETER] = false;
+		_isNodeExtendable[ENodeType.TARGET] = false;
+		_isNodeExtendable[ENodeType.TARGET_TYPE] = false;
 		_isNodeExtendable[ENodeType.CONCURRENCY] = false;
 		_isNodeExtendable[ENodeType.ID] = false;
 		_isNodeExtendable[ENodeType.SPACE] = true;
@@ -208,13 +217,16 @@ class GameClassParser implements IGameClassParser
 		_isNodeMergable[ENodeType.ACTIONS] = true;
 		_isNodeMergable[ENodeType.ENTITIES] = true;
 		_isNodeMergable[ENodeType.ENTITY] = false;
-		_isNodeMergable[ENodeType.FORM] = true;
+		_isNodeMergable[ENodeType.FORM] = true; //should this be false? this code is 2 years old, can't remember. maybe its fine.. i guess its fine..
 		_isNodeMergable[ENodeType.SCRIPTS] = true;
 		_isNodeMergable[ENodeType.SCRIPT] = false;
 		_isNodeMergable[ENodeType.GML] = false;
 		_isNodeMergable[ENodeType.TRIGGERS] = true;
 		_isNodeMergable[ENodeType.TRIGGER] = false;
 		_isNodeMergable[ENodeType.EVENT] = false;
+		_isNodeMergable[ENodeType.PARAMETER] = false;
+		_isNodeMergable[ENodeType.TARGET] = false;
+		_isNodeMergable[ENodeType.TARGET_TYPE] = false;
 		_isNodeMergable[ENodeType.CONCURRENCY] = false;
 		_isNodeMergable[ENodeType.ID] = false;
 		_isNodeMergable[ENodeType.SPACE] = true;
@@ -240,6 +252,9 @@ class GameClassParser implements IGameClassParser
 		_isNodeTargetMergable[ENodeType.TRIGGERS] = false;
 		_isNodeTargetMergable[ENodeType.TRIGGER] = false;
 		_isNodeTargetMergable[ENodeType.EVENT] = false;
+		_isNodeTargetMergable[ENodeType.PARAMETER] = false;
+		_isNodeTargetMergable[ENodeType.TARGET] = false;
+		_isNodeTargetMergable[ENodeType.TARGET_TYPE] = false;
 		_isNodeTargetMergable[ENodeType.CONCURRENCY] = false;
 		_isNodeTargetMergable[ENodeType.ID] = false;
 		_isNodeTargetMergable[ENodeType.SPACE] = false;
@@ -265,6 +280,9 @@ class GameClassParser implements IGameClassParser
 		_isNodeArray[ENodeType.TRIGGERS] = true;
 		_isNodeArray[ENodeType.TRIGGER] = false;
 		_isNodeArray[ENodeType.EVENT] = false;
+		_isNodeArray[ENodeType.PARAMETER] = false;
+		_isNodeArray[ENodeType.TARGET] = false;
+		_isNodeArray[ENodeType.TARGET_TYPE] = false;
 		_isNodeArray[ENodeType.CONCURRENCY] = false;
 		_isNodeArray[ENodeType.ID] = false;
 		_isNodeArray[ENodeType.SPACE] = false;
@@ -1231,6 +1249,7 @@ class GameClassParser implements IGameClassParser
 		catch (err:Dynamic) 
 		{
 			Console.error(Std.string(err));
+			Console.error("Spark Parser Error: Entity [" + p_stringAssetUrl + "] has not been loaded!");
 			return null;
 		}
 	}

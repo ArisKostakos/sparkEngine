@@ -772,7 +772,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			l_fillSprite.width._ = p_spaceWidth;
 			l_fillSprite.centerAnchor(); //eek
-			l_fillSprite.scissor.width = p_spaceWidth;
+			l_fillSprite.scissor.width = p_spaceWidth; //uuk
 		}
 	}
 	
