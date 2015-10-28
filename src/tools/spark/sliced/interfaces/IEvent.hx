@@ -6,6 +6,7 @@
 
 package tools.spark.sliced.interfaces;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameTrigger;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 
 /**
@@ -16,5 +17,5 @@ interface IEvent extends IService
 {
 	function update():Void;
 	function addTrigger(p_gameTrigger:IGameTrigger):Void;
-	function raiseEvent(p_eventType:EEventType, ?p_eventFilter:Dynamic):Void;
+	function raiseEvent(p_eventType:EEventType, ?p_eventTarget:IGameEntity, ?p_eventParameter:Dynamic):Void;
 }

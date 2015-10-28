@@ -25,14 +25,15 @@ class GameEntity extends AGameBase implements IGameEntity
 	public var possibleActionSet( default, null ):Map<String,IGameAction>;
 	public var currentActionSet( default, null ):Map < String, Array<IGameAction> > ;
 	public var children ( get, never ):Array<IGameEntity>; 
-	
+	public var uid ( default, null ):Int;
 	//Constructor
 	
-	public function new() 
+	public function new(p_uid:Int) 
 	{
 		super();
-		//Console.log ("Game Entity Created");
 		
+		uid = p_uid;
+		//Console.log ("Game Entity Created: " + uid);
 		_init();
 	}
 	

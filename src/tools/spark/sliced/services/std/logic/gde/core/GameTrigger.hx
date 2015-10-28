@@ -7,7 +7,7 @@
 package tools.spark.sliced.services.std.logic.gde.core;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameTrigger;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EEventPrefab;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 import tools.spark.sliced.core.Sliced;
 
 /**
@@ -17,9 +17,12 @@ import tools.spark.sliced.core.Sliced;
 class GameTrigger extends AGameBase implements IGameTrigger
 {
 	//Properties
-	public var eventPrefab( default, default ):EEventPrefab;
+	public var eventType( default, default ):EEventType;
+	public var parameter( default, default ):Dynamic; //Could be Key, or String, or..
+	public var target( default, default ):String; //Could be gameEntity uid(String), or name(String), or group(String), or..
+	public var targetType( default, default ):String; //Describes what the target is, depending on the event, etc..
 	public var scriptSet( default, null ):Array<Int>;
-	
+	public var pickedObject( default, default ):IGameEntity;
 	
 	//Constructor
 	
@@ -54,7 +57,7 @@ class GameTrigger extends AGameBase implements IGameTrigger
 			{
 				if (Sliced.logic.scriptInterpreter.run(hashId, ["this" => this, "me" => parentEntity, "parent" => parentEntity.parentEntity ]) == false)
 				{
-					Console.error('Error: Failed to run Trigger [$eventPrefab].');
+					Console.error('Error: Failed to run Trigger [$eventType].');
 				}
 			}
 		}

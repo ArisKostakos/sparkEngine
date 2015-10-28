@@ -7,36 +7,38 @@
 package tools.spark.sliced.services.std.event.core;
 
 import flambe.input.Key;
-import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 import tools.spark.sliced.interfaces.IEvent;
 import tools.spark.sliced.core.AService;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EEventPrefab;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameTrigger;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.core.Sliced;
 
 /**
- * This one needs a lot of reworking. apart from the comments below, consider this as well. If we try to raise an event but there are no triggers
- * established for this event, there's no reason raising the event at all!!!! So many optimizations here.. rework it asap
  * @author Aris Kostakos
  */
 class Event extends AService implements IEvent
 {
-	//@TODO: The way I'm doing this now is having a map of triggers, and in turn it has a map of filters. The values of the second map is: for eventTypeFilterFlags
-		//it's a Boolean, for eventTypeFilterTriggers it's an array of triggers. For eventTypeFilterFlags, I check in every update of the service if each Boolean is
-		//true. But I could instead just add the filter entry and remove the filter entry all together and not check for Booleans. This would optimize it a bit.
-		//Also, instead of the NO_TRIGGER filter, you just check if i have ANY filters for that event. if true, then raise the NO_FILTER. Small optimization but
-		//it could be worth it in the long run. Checking for true/false flags on EVERY FRAME is costly and dangerous.
-	private var _eventTypeFilterFlags:Map < EEventType, ObjectMap < Dynamic, Bool >> ;
-	private var _eventTypeFilterTriggers:Map < EEventType, ObjectMap < Dynamic, Array<IGameTrigger> >> ;
+	//Ok so Event is REALLY IMPROVED.. one thing left... the way I'm doing it now, parameters are not hashed.. To not create so many maps on every raise event..
+	//What I could do is define some EventTypes, to have Targets, or not have targets.. and also to have parameters, or not to have parameters..
+	//So now for events that have targets, an extra bool array is created, instead of just a bool... if it also has parameters, then it doesn't create a bool array,
+	//it creates an objerct.object map and on that end we create a bool array.. you see what I mean.. dynamic.. but I think that's also some overhead
+	//so maybe it balances itself out with the way i do it
+	//problem with this method is, if I have like 100 triggers about an event each with a different parameter, when this trigger is raised, ALL triggers will be raised,
+	//and later check their parameter to see if its valid... so that only maybe 1 will run at the end..
 	
-	//@note: There are dumb objects that will serve as keys to the filter arrays above. I just needed something to give a unique pointer
-		//Btw, a String would not work since in JavaScript a string is apparently a primitive, not an object. So Empty arrays should do the trick
-	private var _NO_FILTER:Array<Dynamic>;
-	private var _FILTER_VARIABLE_USER_ENTITY:Array<Dynamic>;
 	
-	private var _prefabConvertToType:Map<EEventPrefab,EEventType>;
-	private var _prefabConvertToFilter:Map<EEventPrefab,Dynamic>;
+	//Also, instead of the NO_TRIGGER filter, you just check if i have ANY filters for that event. if true, then raise the NO_FILTER. Small optimization but
+	//it could be worth it in the long run. Checking for true/false flags on EVERY FRAME is costly and dangerous.
+	private var _eventTypeRaisedFlags:Map < EEventType, StringMap <IGameEntity >> ; //eventType(Map)->eventTarget(Map)->IGameEntity We use the GameEntity to pick the gameEntity that caused the trigger, if any (else null)
+	private var _eventTypeRegisteredTriggers:Map < EEventType, StringMap <Array<IGameTrigger> >> ; //eventType(Map)->eventTarget(Map)->Triggers(Array)
+	
+	private var _isExecutingEvents:Bool;
+	private var _eventTypeRaisedFlagsFuture:Map < EEventType, StringMap <IGameEntity >> ;
+	//For Optimization, I think we should keep a 2 level hash like we do now and don't hash the event parameter.. If this even is triggered, check for parameters
+	//before you actually trigger it.. This way we don't create Maps all the time.. How costly is creating a Map I wonder..
 	
 	public function new() 
 	{
@@ -49,49 +51,39 @@ class Event extends AService implements IEvent
 	{
 		Console.log("Init Event std Service...");
 		
-		_NO_FILTER = new Array<Dynamic>();
-		_FILTER_VARIABLE_USER_ENTITY = new Array<Dynamic>();
-		
-		_eventTypeFilterFlags = new Map < EEventType, ObjectMap < Dynamic, Bool >> ();
-		_eventTypeFilterTriggers = new Map < EEventType, ObjectMap < Dynamic, Array<IGameTrigger> >> ();
-		
-		_initPrefabConvertToTypeMap();
-		_initPrefabConvertToFilterMap();
+		_eventTypeRaisedFlags = new Map < EEventType, StringMap <IGameEntity >> ();
+		_eventTypeRegisteredTriggers = new Map < EEventType, StringMap < Array<IGameTrigger> >> ();
+		_isExecutingEvents = false;
 	}
 	
-	//NEXT: This thingie.. prefabs won't cut it.. I might end up deprecating them altogether.. I do like this.. god I do...all these arrays..
-	//and it's so much a pain in this ass to add a new one.. would be SOOOO cool to make this abstract.. SOOOOOOOOOOO COOOOOOOOOOOOLLL
-	//first think what eventsheets require for the new Trigger.. then think the implications on normal Triggers as I use them now.. unify that shit..
-	//With triggers fixed, and the two other event fixes noted way above, Event Service will be FULLY REPAIRED!!!! very excited...
-	//Why it def. doesn't work now.. cause I can't specify WHICH group I want.. I would pass what? the only dynamic way i got now is passing gameEntity
-	//but with groups, you have to specify a group name... no game entity AT ALL..
-	//groups aren't game entities.. just egcs.. never exist as a sole game entity.. never will..
-	//do u wanna add states to Triggers? ://.... not really... maybe? nuhh..
 	public function addTrigger(p_gameTrigger:IGameTrigger):Void
 	{
-		var l_eventType:EEventType = _prefabConvertToType[p_gameTrigger.eventPrefab];
-		var l_eventFilter:Dynamic = _prefabConvertToFilter[p_gameTrigger.eventPrefab];
+		var l_eventType:EEventType = p_gameTrigger.eventType;
+		var l_eventTarget:String = p_gameTrigger.target;
 		
+		//Console.error("l_eventType: " + l_eventType);
+		//Console.error("l_eventTarget: " + l_eventTarget);
 		//Replace Filter with an appropriate variable if needed
-		if (l_eventFilter == _FILTER_VARIABLE_USER_ENTITY)
+		if (l_eventTarget == EventType.TARGET_VAR_ME)
 		{
-			l_eventFilter = p_gameTrigger.parentEntity;
+			l_eventTarget = Std.string(p_gameTrigger.parentEntity.uid);
 		}
 		
 		//Add additional filter variable changes here
 		//...
 		
-		//Create a slot for the eventType included in the trigger's prefab
-		if (_eventTypeFilterTriggers.exists(l_eventType) == false)
-			_eventTypeFilterTriggers.set(l_eventType, new ObjectMap < Dynamic, Array<IGameTrigger> > () );
+		//Create a slot for the eventType
+		if (_eventTypeRegisteredTriggers.exists(l_eventType) == false)
+			_eventTypeRegisteredTriggers.set(l_eventType, new StringMap <Array<IGameTrigger> > () );
 		
-		//Create a slot for the eventFilter included in the trigger's prefab
-		if (_eventTypeFilterTriggers[l_eventType].exists(l_eventFilter) == false)
-			_eventTypeFilterTriggers[l_eventType].set(l_eventFilter, new Array<IGameTrigger>() );
+		//Create a slot for the eventTarget
+		if (_eventTypeRegisteredTriggers[l_eventType].exists(l_eventTarget) == false)
+			_eventTypeRegisteredTriggers[l_eventType].set(l_eventTarget, new Array<IGameTrigger>() );
 		
 		//Push the trigger to the correct slot
-		_eventTypeFilterTriggers.get(l_eventType).get(l_eventFilter).push(p_gameTrigger);
+		_eventTypeRegisteredTriggers.get(l_eventType).get(l_eventTarget).push(p_gameTrigger);
 		
+		/*
 		//Register Triggers to appropriate Services (where needed)
 		if (	l_eventType == MOUSE_LEFT_CLICK ||
 				l_eventType == MOUSE_RIGHT_CLICK ||
@@ -102,77 +94,120 @@ class Event extends AService implements IEvent
 				l_eventType == MOUSE_UP
 		   )
 		{
-			Sliced.input.pointer.registerTrigger(l_eventType,l_eventFilter);
+			Sliced.input.pointer.registerTrigger(l_eventType,l_eventTarget);
+		}
+		*/
+	}
+	
+	public function raiseEvent(p_eventType:EEventType, ?p_eventTarget:IGameEntity, ?p_eventParameter:Dynamic):Void
+	{
+		/*
+		Console.info("Considering raising event for: " + p_eventType);
+		if (p_eventTarget!=null) 
+			Console.info("Id: " + p_eventTarget.uid + ", name: " + p_eventTarget.getState('name'));
+		*/
+			
+		//ONLY RAISE EVENT, IF WE HAVE A REGISTERED TRIGGER FOR THIS COMBINATION
+		if (_eventTypeRegisteredTriggers.exists(p_eventType))
+		{
+			//Find all the different targets to raise en event for
+			var l_eventTargets:Array<String> = new Array<String>();
+		
+			if (p_eventTarget == null)
+				l_eventTargets.push(EventType.TARGET_NONE);
+			else
+			{
+				//This is for a generic call that 'an' entity did something.. any entity.. meh..
+				//l_eventTargets.push(EventType.TARGET_NONE);
+				
+				//Raise the uid
+				l_eventTargets.push(Std.string(p_eventTarget.uid));
+				
+				//Raise the name
+				l_eventTargets.push(Std.string(p_eventTarget.getState('name')));
+				
+				//Raise the groups
+				//..
+			}
+			
+			if (_isExecutingEvents)
+			{
+				if (_eventTypeRaisedFlagsFuture==null)
+					_eventTypeRaisedFlagsFuture = new Map < EEventType, StringMap < IGameEntity >> ();
+					
+				_raiseFlags(l_eventTargets, p_eventType, p_eventTarget, _eventTypeRaisedFlagsFuture);
+			}
+			else
+				_raiseFlags(l_eventTargets, p_eventType, p_eventTarget, _eventTypeRaisedFlags);
 		}
 	}
 	
-	public function raiseEvent(p_eventType:EEventType, ?p_eventFilter:Dynamic):Void  //gameFilterType maybe
+	inline private function _raiseFlags(p_eventTargets:Array<String>, p_eventType:EEventType, p_eventTarget:IGameEntity, p_flagsArray:Map < EEventType, StringMap <IGameEntity >>):Void
 	{
-		if (p_eventFilter == null)
-			p_eventFilter = _NO_FILTER;
-			
-		//Create a slot for the raised eventType
-		if (_eventTypeFilterFlags.exists(p_eventType) == false)
-			_eventTypeFilterFlags[p_eventType] = new ObjectMap < Dynamic, Bool > ();
-			
-		_eventTypeFilterFlags[p_eventType].set(p_eventFilter, true);
-		
-		if (p_eventFilter != _NO_FILTER)
-			_eventTypeFilterFlags[p_eventType].set(_NO_FILTER, true);
+		for (f_eventTarget in p_eventTargets)
+		{
+			if (_eventTypeRegisteredTriggers[p_eventType].exists(f_eventTarget))
+			{
+				//Create a slot for the raised eventType
+				if (p_flagsArray.exists(p_eventType) == false)
+					p_flagsArray[p_eventType] = new StringMap <IGameEntity > ();
+					
+				p_flagsArray[p_eventType].set(f_eventTarget, p_eventTarget); //p_eventTarget is stored so we can pick the object triggering stuff, if there is one
+				//Console.info("Event Raised: " + p_eventType + ", f_eventTarget: " + f_eventTarget + ", for next frame: " + _isExecutingEvents);
+			}
+		}
 	}
 	
-	inline private function _doTriggers(p_eventType:EEventType, p_eventFilter:Dynamic):Void
+	
+	inline private function _doTriggers(p_eventType:EEventType, p_eventTargetString:String, p_pickedObject:IGameEntity):Void
 	{
 		//Console.info("Activating triggers for: " + p_eventType);
 		
-		if (_eventTypeFilterTriggers.exists(p_eventType))
+		for (gameTrigger in _eventTypeRegisteredTriggers[p_eventType].get(p_eventTargetString))
 		{
-			if (_eventTypeFilterTriggers[p_eventType].exists(p_eventFilter))
-			{
-				//Console.warn("Triggers exist");
-				for (gameTrigger in _eventTypeFilterTriggers[p_eventType].get(p_eventFilter))
-				{
-					//@note: This is what we need to change if we want ordered events (for ace)
-					//instead of a doPass, store them in an array, with a priority id that each trigger will need to have
-					//there's no other way
-					gameTrigger.doPass();
-				}
-			}
-			else
-			{
-				//Console.warn("Triggers map don't exist in this event's filter");
-			}
-		}
-		else
-		{
-			//Console.warn("Triggers map don't exist in this event");
+			//@note: This is what we need to change if we want ordered events (for ace)
+			//instead of a doPass, store them in an array, with a priority id that each trigger will need to have
+			//there's no other way
+			gameTrigger.pickedObject = p_pickedObject;
+			
+			gameTrigger.doPass();
 		}
 	}
 	
 	public function update():Void
 	{
-		//@FIX ME SOON!: In this case, and the other for loop two lines below, we enumerate the keys(). But in the doTriggers() function deep inside, it maybe be
-		//possible that it will run some lionscript code that adds a new key.. this will produce problems like it did with the logic service. Maybe store the 
-		//enumeration list somewhere prior, like you did in the logic service to be safe. This means it will check for the newly activated(added) filter, the next frame.
-		//Search for '//Solution to html5 bug' in GameClassParser.hx
-		for (flag in _eventTypeFilterFlags.keys())
+		_isExecutingEvents = true;
+		
+		for (flag in _eventTypeRaisedFlags.keys())
 		{
-			if (_eventTypeFilterFlags[flag].get(_NO_FILTER) == true)
-			{
-				for (filterFlag in _eventTypeFilterFlags[flag].keys())
+			//Console.warn("TRAVERSED an EVENTTYPE: " + flag);
+			//if (_eventTypeFilterFlags[flag].get(_NO_FILTER) == true)
+			//{
+				for (targetFlag in _eventTypeRaisedFlags[flag].keys())
 				{
-					if (_eventTypeFilterFlags[flag].get(filterFlag) == true)
-					{
-						_eventTypeFilterFlags[flag].set(filterFlag, false);
-						_doTriggers(flag, filterFlag);
-					}
+					//Console.warn("DOING TRIGGERS FOR EVENTTYPE->TARGET: " + targetFlag);
+					//if (_eventTypeFilterFlags[flag].get(filterFlag) == true)
+					//{
+						//_eventTypeFilterFlags[flag].set(targetFlag, false);
+						_doTriggers(flag, targetFlag, _eventTypeRaisedFlags[flag].get(targetFlag));
+					//}
 				}
-			}
+			//}
+		}
+		_isExecutingEvents = false;
+
+		//Reset the Flags
+		if (_eventTypeRaisedFlagsFuture==null)
+			_eventTypeRaisedFlags = new Map < EEventType, StringMap < IGameEntity >> ();
+		else
+		{
+			_eventTypeRaisedFlags = _eventTypeRaisedFlagsFuture;
+			_eventTypeRaisedFlagsFuture = null;
 		}
 	}
 	
 	///////////////////////////
-	
+	/*
 	private function _initPrefabConvertToTypeMap():Void
 	{
 		_prefabConvertToType = new Map<EEventPrefab,EEventType>();
@@ -663,5 +698,5 @@ class Event extends AService implements IEvent
 		_prefabConvertToFilter.set(EEventPrefab.KEY_RELEASED_ANDROIDMENU, Key.Menu);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_RELEASED_ANDROIDSEARCH, Key.Search);
 		_prefabConvertToFilter.set(EEventPrefab.KEY_RELEASED_UNKNOWN, Key.Unknown);
-	}
+	}*/
 }

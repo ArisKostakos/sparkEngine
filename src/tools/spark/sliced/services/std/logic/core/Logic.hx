@@ -29,7 +29,7 @@ class Logic extends AService implements ILogic
 	public var scriptInterpreter( default, null ):IInterpreter;
 	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
-	private var _gameEntitiesByName:Map<String, IGameEntity>;
+	private var _gameEntitiesByName:Map<String, Array<IGameEntity>>;
 	
 	public function new() 
 	{
@@ -42,16 +42,16 @@ class Logic extends AService implements ILogic
 	{
 		Console.log("Init Logic std Service...");
 		
+		//Init event types (before we create the factory, which needs the eventTypes set)
+		EventType.init();
+		
 		//Create GameFactory
 		gameFactory = new GameFactory();
 		
 		//Create Maps
 		rootGameEntitiesRunning = new Map<String, IGameEntity>();
 		rootGameEntitiesPaused = new Map<String, IGameEntity>();
-		_gameEntitiesByName = new Map<String, IGameEntity>();
-		
-		//Init event types
-		EventType.init();
+		_gameEntitiesByName = new Map<String, Array<IGameEntity>>();
 	}
 	
 	//This is taken out from _init because we need to create the Interpreters after Sliced is fully built, to feed the services as parameters for the interpreters
@@ -93,15 +93,30 @@ class Logic extends AService implements ILogic
 		rootGameEntitiesPaused[p_gameEntityUrl] = gameFactory.createGameEntity(p_gameEntityUrl);
 	}
 	
-	public function getEntityByName(p_stateName:String):IGameEntity
+	public function getAllEntitiesByName(p_stateName:String):Array<IGameEntity>
 	{
 		return _gameEntitiesByName.get(p_stateName);
+	}
+	
+	public function getEntityByName(p_stateName:String):IGameEntity
+	{
+		if (_gameEntitiesByName.exists(p_stateName))
+			return _gameEntitiesByName.get(p_stateName)[ _gameEntitiesByName.get(p_stateName).length-1];
+		else
+			return null;
 	}
 	
 	public function registerEntityByName(p_entity:IGameEntity):Void
 	{
 		if (p_entity.getState('name') != null)
-			_gameEntitiesByName.set(p_entity.getState('name'), p_entity);
+		{
+			var l_entityName:String = p_entity.getState('name');
+			
+			if (_gameEntitiesByName.exists(l_entityName) == false)
+				_gameEntitiesByName.set(l_entityName, new Array<IGameEntity>());
+			
+			_gameEntitiesByName.get(l_entityName).push(p_entity);
+		}
 	}
 	
 	//Helper Functions

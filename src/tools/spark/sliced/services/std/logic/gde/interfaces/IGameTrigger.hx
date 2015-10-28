@@ -12,9 +12,12 @@ package tools.spark.sliced.services.std.logic.gde.interfaces;
  */
 interface IGameTrigger extends IGameBase
 {
-	var eventPrefab( default, default ):EEventPrefab;
+	var eventType( default, default ):EEventType;
+	var parameter( default, default ):Dynamic; //Could be Key, or String, or..
+	var target( default, default ):String; //Could be gameEntity UId(String), or name(String), or group(String), or..
+	var targetType( default, default ):String; //Describes what the target is, depending on the event, etc..
 	var scriptSet( default, null ):Array<Int>;
-
+	var pickedObject( default, default ):IGameEntity;
 	
 	
 	//uses ????????

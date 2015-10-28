@@ -17,7 +17,7 @@ interface IGameEntity extends IGameBase
 	var possibleActionSet( default, null ):Map<String,IGameAction>;
 	var currentActionSet( default, null ):Map < String, Array<IGameAction> > ;
 	var children ( get, never ):Array<IGameEntity>;
-	
+	var uid ( default, null ):Int;
 	//uses IGameSpace
 	//uses IGameEntity (through IGameSpace)
 	

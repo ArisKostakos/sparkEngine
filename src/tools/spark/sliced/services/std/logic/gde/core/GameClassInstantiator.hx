@@ -9,7 +9,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.ENodeType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EConcurrencyType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EStateType;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EEventPrefab;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameAction;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameClassInstantiator;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
@@ -29,28 +29,33 @@ class GameClassInstantiator implements IGameClassInstantiator
 	private var _xmlNodeTypeToNodeName:Map<ENodeType,String>;
 	private var _xmlConcurrencyNameToType:Map<String,EConcurrencyType>;
 	private var _xmlStateNameToType:Map<String,EStateType>;
-	private var _xmlEventNameToPrefab:Map<String,EEventPrefab>;
 	
-	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>, p_xmlConcurrencyNameToType:Map<String,EConcurrencyType>, p_xmlStateNameToType:Map<String,EStateType>, p_xmlEventNameToPrefab:Map<String,EEventPrefab>) 
+	private var _numObjects:Int;
+	
+	private function issueUID():Int
+	{
+		return _numObjects++;
+	}
+	
+	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>, p_xmlConcurrencyNameToType:Map<String,EConcurrencyType>, p_xmlStateNameToType:Map<String,EStateType>) 
 	{
 		Console.log("Creating Game Class Instantiator");
 		_xmlNodeTypeToNodeName = p_xmlNodeTypeToNodeName;
 		_xmlConcurrencyNameToType = p_xmlConcurrencyNameToType;
 		_xmlStateNameToType = p_xmlStateNameToType;
-		_xmlEventNameToPrefab = p_xmlEventNameToPrefab;
 		_init();
 	}
 	
 	private function _init():Void
 	{
-		
+		_numObjects = 0;
 	}
 		
 	
 	
 	public function instantiateEntity(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameEntity
 	{
-		var l_gameEntity:IGameEntity = new GameEntity();
+		var l_gameEntity:IGameEntity = new GameEntity(issueUID());
 		
 		//Parent Entity
 		l_gameEntity.parentEntity = p_parentEntity;
@@ -238,7 +243,34 @@ class GameClassInstantiator implements IGameClassInstantiator
 		l_gameTrigger.parentEntity = p_parentEntity;
 		
 		//Create the Trigger's Event Type
-		l_gameTrigger.eventPrefab = _xmlEventNameToPrefab[p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EVENT]).next().firstChild().nodeValue];
+		l_gameTrigger.eventType = EventType.eventTypesMapReverse.get(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EVENT]).next().firstChild().nodeValue);
+		
+		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
+			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
+		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PARAMETER]).hasNext())
+		{
+			var l_parameter:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PARAMETER]).next();
+			l_gameTrigger.parameter = l_parameter.firstChild().nodeValue; //gonna be a string.. convert it here?
+		}
+		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
+			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
+		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TARGET]).hasNext())
+		{
+			var l_target:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TARGET]).next();
+			l_gameTrigger.target = l_target.firstChild().nodeValue; //gonna be a string.. convert it here?
+		}
+		else
+		{
+			l_gameTrigger.target = EventType.TARGET_VAR_ME;
+		}
+		
+		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
+			//I actually search through the xml TWICE. Instead, save the iterator from the first call(the hasNext), and use that to do the next()
+		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TARGET_TYPE]).hasNext())
+		{
+			var l_targetType:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TARGET_TYPE]).next();
+			l_gameTrigger.targetType = l_targetType.firstChild().nodeValue;
+		}
 		
 		//Create the Trigger's Scripts
 		var scripts:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SCRIPTS]).next();

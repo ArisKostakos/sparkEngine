@@ -83,7 +83,7 @@ import tools.spark.sliced.core.Sliced;
 	
 	public function submitPointerEvent(p_eventType:EEventType, p_eventFilter:Dynamic):Void
 	{
-		if (_getTrigger(p_eventType, p_eventFilter) != null)
+		//if (_getTrigger(p_eventType, p_eventFilter) != null)
 			Sliced.event.raiseEvent(p_eventType, p_eventFilter);
 	}
 	
