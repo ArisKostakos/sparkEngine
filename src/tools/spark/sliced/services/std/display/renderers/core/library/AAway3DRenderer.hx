@@ -173,6 +173,34 @@ class AAway3DRenderer extends A3DRenderer implements ILibrarySpecificRenderer
 		//else, is it view, do this...  etc
 	}
 	
+	override public function getRealObject(p_gameEntity:IGameEntity):Dynamic
+	{
+		//is it object, do this:
+		if (_objects[p_gameEntity] != null)
+		{
+			return _objects[p_gameEntity];
+		}
+		//else if it's view, do this:
+		else if (_views[p_gameEntity] != null)
+		{
+			return _views[p_gameEntity];
+		}
+		//else if it's view, do this:
+		else if (_cameras[p_gameEntity] != null)
+		{
+			return _cameras[p_gameEntity];
+		}
+		//else if it's scene, do this:
+		else if (_scenes[p_gameEntity] != null)
+		{
+			return _scenes[p_gameEntity];
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
 	inline public function updateFormState ( p_objectEntity:IGameEntity, p_state:String):Void
 	{
 		//maybe check its display type here..

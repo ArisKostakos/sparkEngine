@@ -194,5 +194,7 @@ class DomView2_5D extends AView2_5D
 		if (p_y != null) _instanceView.style.top = Std.string(p_y) + "px";
 		if (p_width != null) _instanceView.style.width = Std.string(p_width) + "px";
 		if (p_height != null) _instanceView.style.height = Std.string(p_height) + "px";
+		
+		super.setPosSize(p_x,p_y,p_width,p_height,p_view);
 	}
 }

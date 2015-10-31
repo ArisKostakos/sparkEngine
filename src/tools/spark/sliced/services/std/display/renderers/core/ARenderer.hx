@@ -24,4 +24,10 @@ class ARenderer implements IRenderer
 	{
 		
 	}
+	
+	public function getRealObject(p_gameEntity:IGameEntity):Dynamic
+	{
+		//override me...
+		return null;
+	}
 }

@@ -157,6 +157,9 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		}
 	}
 	
+	//CUT COSTS by unifying all maps (_objects,_views,etc) into one, deep in ARenderer, so you don't do the IF here for every updateState
+	//also will help not rewritting several functions, since we can now move those deep in ARenderer somewhere..
+	//what was I thinking.....
 	inline public function updateState ( p_objectEntity:IGameEntity, p_state:String):Void
 	{
 		//maybe check its display type here..
@@ -175,6 +178,34 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		else if (_cameras[p_objectEntity] != null)
 		{
 			_cameraManager.updateState(_cameras[p_objectEntity], p_objectEntity, p_state);
+		}
+	}
+	
+	override public function getRealObject(p_gameEntity:IGameEntity):Dynamic
+	{
+		//is it object, do this:
+		if (_objects[p_gameEntity] != null)
+		{
+			return _objects[p_gameEntity];
+		}
+		//else if it's view, do this:
+		else if (_views[p_gameEntity] != null)
+		{
+			return _views[p_gameEntity];
+		}
+		//else if it's view, do this:
+		else if (_cameras[p_gameEntity] != null)
+		{
+			return _cameras[p_gameEntity];
+		}
+		//else if it's scene, do this:
+		else if (_scenes[p_gameEntity] != null)
+		{
+			return _scenes[p_gameEntity];
+		}
+		else
+		{
+			return null;
 		}
 	}
 	

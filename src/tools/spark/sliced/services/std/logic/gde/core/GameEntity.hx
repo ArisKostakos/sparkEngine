@@ -147,6 +147,26 @@ class GameEntity extends AGameBase implements IGameEntity
 		return gameStateSet.get(p_stateId).value;
 	}
 	
+	public function addToState(p_stateId:String, p_value:Dynamic):Dynamic
+	{
+		gameStateSet.get(p_stateId).value += p_value;
+		
+		//Following line is the weak connection between Logic and Display
+		Sliced.display.updateDisplayObjectState(this,p_stateId);	
+		
+		return gameStateSet.get(p_stateId).value;
+	}
+	
+	public function subtractFromState(p_stateId:String, p_value:Dynamic):Dynamic
+	{
+		gameStateSet.get(p_stateId).value -= p_value;
+		
+		//Following line is the weak connection between Logic and Display
+		Sliced.display.updateDisplayObjectState(this,p_stateId);	
+		
+		return gameStateSet.get(p_stateId).value;
+	}
+	
 	public function addChild(p_gameEntity:IGameEntity):Void
 	{
 		//Add to children
@@ -159,6 +179,18 @@ class GameEntity extends AGameBase implements IGameEntity
 		Sliced.display.addDisplayObjectChild(this,p_gameEntity);
 	}
 	
+	public function insertChild(p_gameEntity:IGameEntity, p_pos:Int):Void
+	{
+		//Add to children
+		children.insert(p_pos, p_gameEntity);
+		
+		//Set Parent to Child
+		p_gameEntity.parentEntity = this;
+		
+		//Following line is the weak connection between Logic and Display
+		Sliced.display.addDisplayObjectChild(this,p_gameEntity); //For group layout stuff to work, you need to do a new insert child here, to make an insert on the group objects
+	}
+	
 	public function removeChild(p_gameEntity:IGameEntity):Void
 	{
 		//Add to children
@@ -166,6 +198,20 @@ class GameEntity extends AGameBase implements IGameEntity
 		
 		//Following line is the weak connection between Logic and Display
 		Sliced.display.removeDisplayObjectChild(this,p_gameEntity);
+	}
+	
+	//Removes all children
+	public function removeChildren():Void
+	{
+		//html bug
+		var l_children = [];
+		for (f_child in children)
+			l_children.push(f_child);
+			
+		for (f_child in l_children)
+		{
+			removeChild(f_child);
+		}
 	}
 	
 	public function getChildren():Array<IGameEntity>

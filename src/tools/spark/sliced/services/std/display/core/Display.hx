@@ -72,6 +72,8 @@ class Display extends AService implements IDisplay
 		_renderStateNames['visible'] = true;
 		_renderStateNames['width'] = true;
 		_renderStateNames['height'] = true;
+		_renderStateNames['top'] = true;
+		_renderStateNames['left'] = true;
 		_renderStateNames['opacity'] = true;
 		_renderStateNames['display'] = true;
 		_renderStateNames['text'] = true;
@@ -82,6 +84,7 @@ class Display extends AService implements IDisplay
 		_renderStateNames['overflow'] = true;
 		_renderStateNames['backgroundColor'] = true;
 		_renderStateNames['border'] = true;
+		_renderStateNames['borderColor'] = true;
 		
 		_renderStateNames['spaceX'] = true;
 		_renderStateNames['spaceY'] = true;
@@ -190,6 +193,35 @@ class Display extends AService implements IDisplay
 			projectActiveSpaceReference = _activeReferenceMediator.createSpaceReference(p_spaceEntity);
 			_activeReferenceMediator.spaceReferenceManager.update(projectActiveSpaceReference, p_spaceEntity);
 		}
+	}
+	
+	//Invalidates the active layout manager for the active space/stage..
+	public function invalidateLayout():Void
+	{
+		projectActiveSpaceReference.activeStageReference.layoutManager.validated = false;
+	}
+	
+	public function getSpace2_5Object(p_gameEntity:IGameEntity, p_bAllRenderers:Bool = false):Dynamic //hash for all renderers, space object otherwise
+	{
+		if (p_bAllRenderers)
+		{
+			//Create Hash, do the for, return it
+			//Not yet implemented
+			return null;
+		}
+		else
+		{
+			var l_realObject:Dynamic;
+			
+			for (renderer in platformRendererSet)
+			{
+				l_realObject = renderer.getRealObject(p_gameEntity);
+				if (l_realObject != null) break;
+			}
+			
+			return l_realObject;
+		}
+		
 	}
 	
 	public function update():Void 

@@ -83,9 +83,13 @@ class DomSceneManager implements IDisplayObjectManager
 			l_scene2_5D.addChild(p_objectChild);
 	}
 	
-	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void 
+	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void
 	{
-		//typecast?
+		//typecast
+		var l_scene2_5D:DomScene2_5D = cast(p_objectParent, DomScene2_5D);
 		
+		//objetChild may be null if it failed to be typecasted as a display object when being created
+		if (p_objectChild!=null)
+			l_scene2_5D.removeChild(p_objectChild);
 	}
 }

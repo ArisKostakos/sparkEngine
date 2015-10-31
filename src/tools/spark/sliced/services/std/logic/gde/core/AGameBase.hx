@@ -15,7 +15,14 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 @:keepSub class AGameBase implements IGameBase
 {
 	public var parentEntity( default, default ):IGameEntity;
+	public var parent( get, null ):IGameEntity; //Alias for parentEntity
 	
+	
+	private function get_parent()  //Still doesn't work inside spark script. I think because it can't handle a getter calling another getter
+	{
+		return parentEntity;
+	}
+  
 	private function new() 
 	{
 

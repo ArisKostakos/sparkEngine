@@ -27,9 +27,10 @@ interface IDisplay extends IService
 	function removeDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void;
 	function updateDisplayObjectState(p_gameEntity:IGameEntity, p_state:String):Void;
 	function updateDisplayObjectFormState(p_gameEntity:IGameEntity, p_state:String):Void;
-	
+	function getSpace2_5Object(p_gameEntity:IGameEntity, p_bAllRenderers:Bool = false):Dynamic;
 	
 	function update():Void;
+	function invalidateLayout():Void;
 	
 	function log(message:String):Void;
 	function info(message:String):Void;

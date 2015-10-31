@@ -6,6 +6,7 @@
 
 package tools.spark.framework.dom2_5D;
 
+import flambe.math.Point;
 import js.html.DivElement;
 import js.html.InputElement;
 import js.html.ImageElement;
@@ -51,8 +52,13 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['overflow'] = _updateOverflow;
 		_updateStateFunctions['width'] = _updateWidth;
 		_updateStateFunctions['height'] = _updateHeight;
+		_updateStateFunctions['top'] = _updateTop;
+		_updateStateFunctions['left'] = _updateLeft;
 		_updateStateFunctions['backgroundColor'] = _updateBackgroundColor;
 		_updateStateFunctions['border'] = _updateBorder;
+		_updateStateFunctions['borderColor'] = _updateBorderColor;
+		
+		_queryFunctions['globalPosition'] = _queryGlobalPosition;
 	}
 	
 	
@@ -121,6 +127,7 @@ class DomEntity2_5D extends AEntity2_5D
 			_updateState('overflow', p_view2_5D);
 			_updateState('backgroundColor', p_view2_5D);
 			_updateState('border', p_view2_5D);
+			_updateState('borderColor', p_view2_5D);
 		}
 		
 		//Update Touchable Stuff
@@ -151,15 +158,17 @@ class DomEntity2_5D extends AEntity2_5D
 	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void
 	{
 		//Get Mesh
-		var l_mesh:Element = _instances[p_view];
+		var l_mesh:Element = _instances[p_view]; //So yeah... I guess setPos only works for 1 View.. haven't done it to support multiple views..
 		
 		if (l_mesh != null)		
 		{
-			if (p_x != null) l_mesh.style.left = Std.string(p_x) + "px";
+			if (p_x != null)  l_mesh.style.left = Std.string(p_x) + "px";
 			if (p_y != null) l_mesh.style.top = Std.string(p_y) + "px";
 			if (p_width != null) l_mesh.style.width = Std.string(p_width) + "px";
 			if (p_height != null) l_mesh.style.height = Std.string(p_height) + "px";
 		}
+		
+		super.setPosSize(p_x,p_y,p_width,p_height,p_view);
 	}
 	
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
@@ -167,6 +176,12 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		if (gameEntity.getState('borderRadius') != null && gameEntity.getState('borderRadius')!="Undefined")
 			_instances[p_view2_5D].style.borderRadius = gameEntity.getState('borderRadius');
+			
+		if (gameEntity.getState('borderStyle') != null && gameEntity.getState('borderStyle')!="Undefined")
+			_instances[p_view2_5D].style.borderStyle = gameEntity.getState('borderStyle');
+			
+		if (gameEntity.getState('borderWidth') != null && gameEntity.getState('borderWidth')!="Undefined")
+			_instances[p_view2_5D].style.borderWidth = gameEntity.getState('borderWidth');
 			
 		if (gameEntity.getState('boxShadow') != null && gameEntity.getState('boxShadow')!="Undefined")
 			_instances[p_view2_5D].style.boxShadow = gameEntity.getState('boxShadow');
@@ -263,6 +278,38 @@ class DomEntity2_5D extends AEntity2_5D
 		}
 	}
 	
+	inline private function _updateTop(p_top:String, p_view2_5D:IView2_5D):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			groupInstances[p_view2_5D].updateState('top');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.invalidateLayout();
+		}
+		else
+		{
+			//..
+		}
+	}
+	
+	inline private function _updateLeft(p_left:String, p_view2_5D:IView2_5D):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			groupInstances[p_view2_5D].updateState('left');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.invalidateLayout();
+		}
+		else
+		{
+			//..
+		}
+	}
+	
 	//much better way.. should be done for everything
 	inline private function _updateOverflow(p_overflow:String, p_view2_5D:IView2_5D):Void
 	{
@@ -310,13 +357,17 @@ class DomEntity2_5D extends AEntity2_5D
 			_instances[p_view2_5D].style.backgroundColor = p_backgroundColor;
 	}
 	
-	//much better way.. should be done for everything
 	inline private function _updateBorder(p_border:String, p_view2_5D:IView2_5D):Void
 	{
 		if (p_border!="Undefined")
 			_instances[p_view2_5D].style.border = p_border;
 	}
 	
+	inline private function _updateBorderColor(p_borderColor:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_borderColor!="Undefined")
+			_instances[p_view2_5D].style.borderColor = p_borderColor;
+	}
 	
 	//much better way.. should be done for everything
 	inline private function _updateDisplay(p_display:String, p_view2_5D:IView2_5D):Void
@@ -344,7 +395,6 @@ class DomEntity2_5D extends AEntity2_5D
 				default:
 			}
 	}
-	
 	
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
 	inline private function _updateNCmeshType(p_NCmeshType:String, p_view2_5D:IView2_5D):Void
@@ -518,6 +568,24 @@ class DomEntity2_5D extends AEntity2_5D
 			}
 			
 		}
+	}
+	
+	//QUERIES
+	inline private function _queryGlobalPosition(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		var l_instance:Element = _instances[p_view2_5D];
+		
+		var l_top:Int = 0;
+		var l_left:Int = 0;
+		
+		do {
+			l_top += l_instance.offsetTop;
+			l_left += l_instance.offsetLeft;
+			l_instance = l_instance.offsetParent;
+		} while (l_instance!=null);
+	
+	
+		return new Point(l_left, l_top);
 	}
 	
 	private function _onDragStart(p_event:Dynamic):Void

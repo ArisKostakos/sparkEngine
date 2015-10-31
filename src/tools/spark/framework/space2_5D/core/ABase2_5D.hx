@@ -26,5 +26,14 @@ class ABase2_5D implements IBase2_5D
 	{
 		//override me
 		//..
+		
+		//I hope this doesn't cause to much drain
+		if (gameEntity.getState('layoutable') == true)
+		{	
+			if (p_x != null) gameEntity.setState('feedbackX', p_x);
+			if (p_y != null) gameEntity.setState('feedbackY', p_y);
+			if (p_width != null) gameEntity.setState('feedbackWidth', p_width);
+			if (p_height != null) gameEntity.setState('feedbackHeight', p_height);
+		}
 	}
 }

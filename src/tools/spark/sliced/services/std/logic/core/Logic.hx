@@ -106,6 +106,26 @@ class Logic extends AService implements ILogic
 			return null;
 	}
 	
+	public function queryGameEntity(p_gameEntity:IGameEntity, p_query:String, ?queryArgument:Dynamic, p_bAllRenderers:Bool = false, p_bAllInstances:Bool = false):Dynamic //result query for false,false, hash otherwise
+	{
+		if (p_bAllRenderers == false && p_bAllInstances == false)
+		{
+			var l_realObject:Dynamic = Sliced.display.getSpace2_5Object(p_gameEntity);
+			
+			if (l_realObject != null)
+			{
+				return l_realObject.query(p_query, queryArgument); //right now only AInstantiable have a query function. Implement for the rest (AView,etc)
+			}
+			else
+				return null;
+		}
+		else
+		{
+			//Not yet implemented
+			return null;
+		}
+	}
+	
 	public function registerEntityByName(p_entity:IGameEntity):Void
 	{
 		if (p_entity.getState('name') != null)

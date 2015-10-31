@@ -13,4 +13,5 @@ package tools.spark.sliced.services.std.logic.gde.interfaces;
 interface IGameBase
 {
 	var parentEntity( default, default ):IGameEntity;
+	var parent( get, null ):IGameEntity;
 }

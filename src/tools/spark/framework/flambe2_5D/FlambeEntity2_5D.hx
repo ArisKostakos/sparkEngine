@@ -760,6 +760,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			l_fillSprite.setSize(p_width,p_height);
 		}
+		
+		super.setPosSize(p_x,p_y,p_width,p_height,p_view);
 	}
 	
 	private function _updateSpaceWidth(p_spaceWidth:Float, p_view2_5D:IView2_5D):Void

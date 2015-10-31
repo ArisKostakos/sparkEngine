@@ -54,9 +54,17 @@ class DomScene2_5D extends AScene2_5D
 	
 	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
 	{
-		//This is an 'instance' addChild... a flambe addChild..
+		//This is an 'instance' addChild... a dom addChild..
 		_instances[p_view2_5D].appendChild(cast(p_childEntity.createInstance(p_view2_5D), Element));
 		
 		super._createChildOfInstance(p_childEntity, p_view2_5D);
+	}
+	
+	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	{
+		//This is an 'instance' removeChild... a dom removeChild..
+		_instances[p_view2_5D].removeChild(cast(p_childEntity.getInstance(p_view2_5D), Element));
+		
+		super._removeChildOfInstance(p_childEntity, p_view2_5D);
 	}
 }

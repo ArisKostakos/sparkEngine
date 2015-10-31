@@ -15,4 +15,5 @@ interface IRenderer
 {
 	//var name( default, null ):String;
 	//var uses3DEngine( default, null ):Bool;
+	function getRealObject(p_gameEntity:IGameEntity):Dynamic;
 }

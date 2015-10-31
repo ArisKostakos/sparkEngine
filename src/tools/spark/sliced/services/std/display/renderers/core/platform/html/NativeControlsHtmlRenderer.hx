@@ -137,14 +137,18 @@ class NativeControlsHtmlRenderer extends ANativeControls2_5DRenderer implements 
 		{
 			case "Scene":
 				if (_scenes[p_parentEntity] != null)
-					//_sceneManager.addTo(createObject(p_childEntity), _scenes[p_parentEntity]);
-					Console.warn("NC RENDERER: REMOVING A CHILD FROM A SCENE NOT YET IMPLEMENTED");
+					_sceneManager.removeFrom(_objects[p_childEntity], _scenes[p_parentEntity]);
 			case "Entity":
 				if (_objects[p_parentEntity] != null) //createObject here is wrong.. just take value from array instead
-					_objectManager.removeFrom(createObject(p_childEntity), _objects[p_parentEntity]);
+					_objectManager.removeFrom(_objects[p_childEntity], _objects[p_parentEntity]);
 			default:
 				Console.warn("NativeControlsHtmlRenderer: Unhandled remove child request: " + p_parentEntity.getState('displayType'));
 		}
+		
+		//_objects[p_childEntity] = null; Want to try to start on garbage collect
+		//but I guess I should do this on destroy, not just remove?
+		//and destroy all its children too..
+		//this needs to be done much more carefuly than this:)
 	}
 	
 	override inline public function updateState ( p_objectEntity:IGameEntity, p_state:String):Void
@@ -159,6 +163,34 @@ class NativeControlsHtmlRenderer extends ANativeControls2_5DRenderer implements 
 		else if (_views[p_objectEntity] != null)
 		{
 			_viewManager.updateState(_views[p_objectEntity], p_objectEntity, p_state);
+		}
+	}
+	
+	override public function getRealObject(p_gameEntity:IGameEntity):Dynamic
+	{
+		//is it object, do this:
+		if (_objects[p_gameEntity] != null)
+		{
+			return _objects[p_gameEntity];
+		}
+		//else if it's view, do this:
+		else if (_views[p_gameEntity] != null)
+		{
+			return _views[p_gameEntity];
+		}
+		//else if it's view, do this:
+		else if (_cameras[p_gameEntity] != null)
+		{
+			return _cameras[p_gameEntity];
+		}
+		//else if it's scene, do this:
+		else if (_scenes[p_gameEntity] != null)
+		{
+			return _scenes[p_gameEntity];
+		}
+		else
+		{
+			return null;
 		}
 	}
 	
