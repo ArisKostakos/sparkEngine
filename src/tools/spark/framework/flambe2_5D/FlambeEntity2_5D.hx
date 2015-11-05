@@ -96,7 +96,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 	override public function update(?p_view2_5D:IView2_5D):Void
 	{
 		_updateState('2DmeshType', p_view2_5D); //THIS NEEDS TO BE FIRST AT THE UPDATE TO GET THE SPRITE!!!!!!
-
+		_updateState('centerAnchor', p_view2_5D);
+		_updateState('physicsEntity', p_view2_5D);
 		if (gameEntity.getState('layoutable') == null || gameEntity.getState('layoutable') == false)
 		{
 			_updateState('spaceX',p_view2_5D);
@@ -116,8 +117,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//_updateState('2DMeshImageForm', p_view2_5D); //this is nested.. not for global update i think
 		//_updateState('2DMeshSpriterForm', p_view2_5D); //this is nested.. not for global update i think
 		//more spriter nested things exist also don't update them
-		_updateState('centerAnchor', p_view2_5D);
-		_updateState('physicsEntity', p_view2_5D);
+
 		
 		
 		//Update my layoutObject
@@ -402,11 +402,14 @@ class FlambeEntity2_5D extends AEntity2_5D
 	{
 		//Get Mesh
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
-
-		if (l_mesh != null) //this really nesseccery?
-		{
-			l_mesh.x._ = p_newPos;
-		}
+		
+		//if (l_mesh != null) //this really nesseccery?
+		//{
+			if (gameEntity.getState('physicsEntity'))
+				cast(gameEntity.getState('physicsBody'),Body).position.x=p_newPos; //should also check if NOT Static
+			else
+				l_mesh.x._ = p_newPos;
+		//}
 	}
 	
 	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
@@ -414,9 +417,14 @@ class FlambeEntity2_5D extends AEntity2_5D
 	{
 		//Get Mesh
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
-		
-		if (l_mesh != null) //this really nesseccery?
-			l_mesh.y._ = p_newPos;
+	
+		//if (l_mesh != null) //this really nesseccery?
+		//{
+			if (gameEntity.getState('physicsEntity'))
+				cast(gameEntity.getState('physicsBody'),Body).position.y=p_newPos; //should also check if NOT Static
+			else
+				l_mesh.y._ = p_newPos;
+		//}
 	}
 	
 	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
@@ -485,7 +493,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			if (p_physicsFlag)
 			{
-				Console.error("UPDATING PHYSICS ENTITY: " + gameEntity.getState('name') + ": " + gameEntity.getState('physicsType'));
+				//Console.error("UPDATING PHYSICS ENTITY: " + gameEntity.getState('name') + ": " + gameEntity.getState('physicsType'));
 
 				if (parentScene != null)
 				{
@@ -575,8 +583,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 						//Body CbType
 						//body.cbTypes.add
 						
+						//Store body
+						gameEntity.setState('physicsBody', body);
+						
 						//Position
-						body.position = new Vec2(l_mesh.x._, l_mesh.y._);
+						//body.position = new Vec2(l_mesh.x._, l_mesh.y._);
 						
 						
 						//Initial Velocity
@@ -590,6 +601,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 						
 						body.userData.gameEntity = gameEntity;
 						
+
 						l_instance.add(new BodyComponent(body));
 						//var childEntity:Entity = new Entity().add(new BodyComponent(body));
 						//childEntity.add(new FillSprite(0x00ff00, 64, 64).centerAnchor());
@@ -622,7 +634,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		p_body.shapes.add(l_feet);
 		p_body.shapes.add(l_feetSensor);
 		
-		gameEntity.setState('physicsBody', p_body);
+		//gameEntity.setState('physicsBody', p_body);
 	}
 	
 	

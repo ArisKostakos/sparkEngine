@@ -185,34 +185,77 @@ class FlambeScene2_5D extends AScene2_5D
 	//Collision
 	function _beginHandlerCollision(cb:InteractionCallback):Void
 	{
-		if (cb.int1.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_START, cb.int1.userData.gameEntity);
-		if (cb.int2.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_START, cb.int2.userData.gameEntity);
+		//kinda hacky way of stoing colliding object
+		//cb.int1.userData.gameEntity.setState('collidedWith', cb.int2.userData.gameEntity);
+		//cb.int2.userData.gameEntity.setState('collidedWith', cb.int1.userData.gameEntity);
+		
+		if (cb.int1.userData.gameEntity != null && cb.int2.userData.gameEntity != null) 
+		{
+			Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_START, cb.int1.userData.gameEntity);
+			Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_START, cb.int2.userData.gameEntity);
+			
+			Console.error("REAL COLLISION START!");
+		}
 	}
 	
 	function _endHandlerCollision(cb:InteractionCallback):Void
 	{
-		if (cb.int1.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_END, cb.int1.userData.gameEntity);
-		if (cb.int2.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_END, cb.int2.userData.gameEntity);
+		//kinda hacky way of stoing colliding object
+		//cb.int1.userData.gameEntity.setState('collidedWith', cb.int2.userData.gameEntity);
+		//cb.int2.userData.gameEntity.setState('collidedWith', cb.int1.userData.gameEntity);
+		
+		if (cb.int1.userData.gameEntity != null && cb.int2.userData.gameEntity != null) 
+		{
+			Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_END, cb.int1.userData.gameEntity);
+			Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_END, cb.int2.userData.gameEntity);
+			
+			Console.error("REAL COLLISION END!");
+		}
 	}
 	
 	//Sensor
 	function _beginHandlerSensor(cb:InteractionCallback):Void
 	{
+		//kinda hacky way of stoing colliding object
+		//cast(cb.int1.userData.gameEntity,IGameEntity).setState('collidedWith', cb.int2.userData.gameEntity);
+		//cast(cb.int2.userData.gameEntity,IGameEntity).setState('collidedWith', cb.int1.userData.gameEntity);
+		
+		//Console.error("int1: " + cb.int1.userData.gameEntity);
+		//Console.error("int2: " + cb.int2.userData.gameEntity);
 		
 		//this is the shape.. get it's containing body
 		//var int1Parent:Body = cb.int1;// .castShape.body;
 		//Console.error("SENSOR STARTTTTTTTTTT: " + int1Parent.userData.gameEntity.getState('name'));
-		if (cb.int1.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_START, cb.int1.userData.gameEntity);
-		if (cb.int2.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_START, cb.int2.userData.gameEntity);
+		
+		if (cb.int1.userData.gameEntity != null && cb.int2.userData.gameEntity != null) 
+		{
+			Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_START, cb.int1.userData.gameEntity);
+			Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_START, cb.int2.userData.gameEntity);
+			
+			//kinda hacky way of stoing colliding object
+			cb.int1.userData.gameEntity.setState('collidedWith', cb.int2.userData.gameEntity);
+			cb.int2.userData.gameEntity.setState('collidedWith', cb.int1.userData.gameEntity);
+			
+			Console.error("SENSOR COLLISION START!");
+		}
 	}
 	
 	function _endHandlerSensor(cb:InteractionCallback):Void
 	{
+		//kinda hacky way of stoing colliding object
+		//cb.int1.userData.gameEntity.setState('collidedWith', cb.int2.userData.gameEntity);
+		//cb.int2.userData.gameEntity.setState('collidedWith', cb.int1.userData.gameEntity);
+		
 		//this is the shape.. get it's containing body
 		//var int1Parent:Body = cb.int1;// .castShape.body;
 		//Console.error("SENSOR ENDDDDDDDDDDD: " + int1Parent.userData.gameEntity.getState('name'));
-		if (cb.int1.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END, cb.int1.userData.gameEntity);
-		if (cb.int2.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END, cb.int2.userData.gameEntity);
+		if (cb.int1.userData.gameEntity != null && cb.int2.userData.gameEntity != null) 
+		{
+			Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END, cb.int1.userData.gameEntity);
+			Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END, cb.int2.userData.gameEntity);
+			
+			Console.error("SENSOR COLLISION END!");
+		}
 	}
 	
 	//Sensor Feet

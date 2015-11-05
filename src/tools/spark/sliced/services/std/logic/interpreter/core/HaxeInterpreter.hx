@@ -5,7 +5,6 @@
  */
 
 package tools.spark.sliced.services.std.logic.interpreter.core;
-import hscript.Interp;
 import hscript.Parser;
 import tools.spark.sliced.core.Sliced;
 import flambe.input.Key;
@@ -37,7 +36,6 @@ class HaxeInterpreter implements IInterpreter
 	public function new() 
 	{
 		Console.log("Init Haxe Interpreter...");
-		Console.error("YOYOYO: " + tools.spark.sliced.services.std.logic.gde.interfaces.EEventType.CHANGED);
 		_init();
 	}
 	
@@ -49,8 +47,8 @@ class HaxeInterpreter implements IInterpreter
 		
 		_hashTable = new Map<Int,Expr>();
 		
-		_parser =  new hscript.Parser();
-		_interpreter = new hscript.Interp();
+		_parser =  new Parser();
+		_interpreter = new Interp();
 		
 		
 		//Static variables
@@ -91,7 +89,7 @@ class HaxeInterpreter implements IInterpreter
 		//Dynamic Variables
 		for (varName in parameters.keys())
 		{
-			_interpreter.variables.set(varName, parameters[varName]);
+			_interpreter.setVariableSafe(varName, parameters[varName]);
 		}
 		
 		//Console.warn("Interpenter Executing: " + hashId);

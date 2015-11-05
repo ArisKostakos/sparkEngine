@@ -166,4 +166,145 @@ class Logic extends AService implements ILogic
 	{
 		return p_object.toString();
 	}
+	
+	//Xml functions
+	public function xml_createDocument():Xml
+	{
+		return Xml.createDocument();
+	}
+	
+	public function xml_clone(p_xml:Xml):Xml
+	{
+		return Xml.parse(xmlToString(p_xml)).firstElement();
+	}
+	
+	public function xml_createElements(p_xmlNodes:Array<String>):Dynamic
+	{
+		var l_Return:Dynamic = { };
+		
+		l_Return.first = null;
+		l_Return.last = null;
+		
+		for (xmlNodeStr in p_xmlNodes)
+		{
+			var f_xml:Xml = Xml.createElement(xmlNodeStr);
+			
+			if (l_Return.first==null)
+				l_Return.first = f_xml;
+			else
+				l_Return.last.addChild(f_xml);
+			
+			l_Return.last = f_xml;
+		}
+		
+		return l_Return;
+	}
+	
+	public function xml_createElement(p_xmlNode:String):Xml
+	{
+		return Xml.createElement(p_xmlNode);
+	}
+	
+	public function xml_createElementAttr(p_xmlNode:String, p_attrName:String, p_attrValue:String):Xml
+	{
+		var l_xml:Xml = Xml.createElement(p_xmlNode);
+		
+		l_xml.set(p_attrName, p_attrValue);
+		
+		return l_xml;
+	}
+	
+	public function xml_entity_addMState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Xml
+	{
+		var l_groupName:String;
+		if (p_merge) l_groupName = "_States";
+			else l_groupName = "States";
+		
+		//Check if group exists, else create it
+		var l_group:Xml;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		else
+		{
+			l_group = Xml.createElement(l_groupName);
+			p_EntityXml.addChild(l_group);
+		}
+		
+		//Create it and add it
+		var l_state:Xml = Xml.createElement("_State");
+		l_group.addChild(l_state);
+		
+		//Check for stuff
+		if (p_State.id != null)
+		{
+			l_state.set("id", p_State.id);
+		}
+		
+		if (p_State.value != null)
+		{
+			var l_xml:Xml = Xml.createElement("Value");
+			l_state.addChild(l_xml);
+			
+			l_xml.addChild(Xml.createPCData(p_State.value));
+		}
+		
+		return l_state;
+	}
+	
+	public function xml_entity_addTrigger(p_EntityXml:Xml, p_Trigger:Dynamic, p_merge:Bool):Xml
+	{
+		var l_groupName:String;
+		if (p_merge) l_groupName = "_Triggers";
+			else l_groupName = "Triggers";
+		
+		//Check if group exists, else create it
+		var l_group:Xml;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		else
+		{
+			l_group = Xml.createElement(l_groupName);
+			p_EntityXml.addChild(l_group);
+		}
+		
+		//Create it and add it
+		var l_trigger:Xml = Xml.createElement("Trigger");
+		l_group.addChild(l_trigger);
+		
+		//Check for stuff
+		if (p_Trigger.ext != null)
+		{
+			l_trigger.set("extends", p_Trigger.ext);
+		}
+		
+		if (p_Trigger.event != null)
+		{
+			var l_xml:Xml = Xml.createElement("Event");
+			l_trigger.addChild(l_xml);
+			
+			l_xml.addChild(Xml.createPCData(p_Trigger.event));
+		}
+		
+		if (p_Trigger.target != null)
+		{
+			var l_xml:Xml = Xml.createElement("Target");
+			l_trigger.addChild(l_xml);
+			
+			l_xml.addChild(Xml.createPCData(p_Trigger.target));
+		}
+		
+		if (p_Trigger.parameter != null)
+		{
+			var l_xml:Xml = Xml.createElement("Parameter");
+			l_trigger.addChild(l_xml);
+			
+			l_xml.addChild(Xml.createPCData(p_Trigger.parameter));
+		}
+		
+		return l_trigger;
+	}
 }

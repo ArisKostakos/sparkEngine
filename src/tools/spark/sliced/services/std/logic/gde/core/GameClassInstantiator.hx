@@ -257,7 +257,7 @@ class GameClassInstantiator implements IGameClassInstantiator
 		if (p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TARGET]).hasNext())
 		{
 			var l_target:Xml = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TARGET]).next();
-			l_gameTrigger.target = l_target.firstChild().nodeValue; //gonna be a string.. convert it here?
+			l_gameTrigger.target = l_target.firstChild().nodeValue; //gonna be a string.. convert it here? No.. leave it we convert it at addTrigger
 		}
 		else
 		{

@@ -33,6 +33,7 @@ class Event extends AService implements IEvent
 	//Also, instead of the NO_TRIGGER filter, you just check if i have ANY filters for that event. if true, then raise the NO_FILTER. Small optimization but
 	//it could be worth it in the long run. Checking for true/false flags on EVERY FRAME is costly and dangerous.
 	private var _eventTypeRaisedFlags:Map < EEventType, StringMap <IGameEntity >> ; //eventType(Map)->eventTarget(Map)->IGameEntity We use the GameEntity to pick the gameEntity that caused the trigger, if any (else null)
+	private var _eventTypeRaisedFlagsParameters:Map < EEventType, Dynamic> ; //More Lightweight, but may cause problems, if two events of the same target with different Parametes, execute at the same frame
 	private var _eventTypeRegisteredTriggers:Map < EEventType, StringMap <Array<IGameTrigger> >> ; //eventType(Map)->eventTarget(Map)->Triggers(Array)
 	
 	private var _isExecutingEvents:Bool;
@@ -53,6 +54,7 @@ class Event extends AService implements IEvent
 		
 		_eventTypeRaisedFlags = new Map < EEventType, StringMap <IGameEntity >> ();
 		_eventTypeRegisteredTriggers = new Map < EEventType, StringMap < Array<IGameTrigger> >> ();
+		_eventTypeRaisedFlagsParameters = new Map < EEventType, Dynamic>();
 		_isExecutingEvents = false;
 	}
 	
@@ -71,6 +73,13 @@ class Event extends AService implements IEvent
 		
 		//Add additional filter variable changes here
 		//...
+		
+		//Convert parameter if nesseccery
+		if (p_gameTrigger.parameter != null)
+		{
+			if (EventType.keyboardStringToKey.exists(p_gameTrigger.parameter))
+				p_gameTrigger.parameter = EventType.keyboardStringToKey[p_gameTrigger.parameter];
+		}
 		
 		//Create a slot for the eventType
 		if (_eventTypeRegisteredTriggers.exists(l_eventType) == false)
@@ -101,11 +110,11 @@ class Event extends AService implements IEvent
 	
 	public function raiseEvent(p_eventType:EEventType, ?p_eventTarget:IGameEntity, ?p_eventParameter:Dynamic):Void
 	{
-		/*
-		Console.info("Considering raising event for: " + p_eventType);
-		if (p_eventTarget!=null) 
-			Console.info("Id: " + p_eventTarget.uid + ", name: " + p_eventTarget.getState('name'));
-		*/
+		
+		//Console.info("Considering raising event for: " + p_eventType + ", eventParameter: " + p_eventParameter);
+		//if (p_eventTarget!=null) 
+			//Console.info("Id: " + p_eventTarget.uid + ", name: " + p_eventTarget.getState('name'));
+		
 			
 		//ONLY RAISE EVENT, IF WE HAVE A REGISTERED TRIGGER FOR THIS COMBINATION
 		if (_eventTypeRegisteredTriggers.exists(p_eventType))
@@ -130,6 +139,7 @@ class Event extends AService implements IEvent
 				//..
 			}
 			
+			//Raise Actual Flags
 			if (_isExecutingEvents)
 			{
 				if (_eventTypeRaisedFlagsFuture==null)
@@ -139,6 +149,9 @@ class Event extends AService implements IEvent
 			}
 			else
 				_raiseFlags(l_eventTargets, p_eventType, p_eventTarget, _eventTypeRaisedFlags);
+				
+			//Store the Parameter for this Event (lightweight solution.. this array does not get refreshed or anything..)
+			_eventTypeRaisedFlagsParameters[p_eventType] = p_eventParameter;
 		}
 	}
 	
@@ -170,7 +183,8 @@ class Event extends AService implements IEvent
 			//there's no other way
 			gameTrigger.pickedObject = p_pickedObject;
 			
-			gameTrigger.doPass();
+			if (gameTrigger.parameter == null || gameTrigger.parameter==_eventTypeRaisedFlagsParameters[p_eventType])
+				gameTrigger.doPass();
 		}
 	}
 	

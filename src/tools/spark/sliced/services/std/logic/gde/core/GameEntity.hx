@@ -201,12 +201,15 @@ class GameEntity extends AGameBase implements IGameEntity
 	}
 	
 	//Removes all children
-	public function removeChildren():Void
+	public function removeChildren(p_ignoreFirst:Bool=false):Void
 	{
 		//html bug
 		var l_children = [];
 		for (f_child in children)
 			l_children.push(f_child);
+		
+		if (p_ignoreFirst)
+			l_children.shift();
 			
 		for (f_child in l_children)
 		{

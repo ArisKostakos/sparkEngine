@@ -120,7 +120,6 @@ class DomEntity2_5D extends AEntity2_5D
 			_updateState('NCstyleable', p_view2_5D);
 			_updateState('visibility', p_view2_5D);
 			_updateState('opacity', p_view2_5D);
-			_updateState('display', p_view2_5D);
 			_updateState('fontSize', p_view2_5D);
 			_updateState('fontWeight', p_view2_5D);
 			_updateState('fontColor', p_view2_5D);
@@ -129,6 +128,9 @@ class DomEntity2_5D extends AEntity2_5D
 			_updateState('border', p_view2_5D);
 			_updateState('borderColor', p_view2_5D);
 		}
+		
+		//Update display Stuff
+		_updateState('display', p_view2_5D);
 		
 		//Update Touchable Stuff
 		_updateState('touchable', p_view2_5D);
@@ -503,6 +505,8 @@ class DomEntity2_5D extends AEntity2_5D
 				l_instance.onclick = _onPointerClick;
 				l_instance.onmousedown = _onMouseDown;
 				l_instance.onmouseup = _onMouseUp;
+				l_instance.onmouseenter = _onMouseEnter;
+				l_instance.onmouseleave = _onMouseLeave;
 			}
 			else
 			{
@@ -538,6 +542,8 @@ class DomEntity2_5D extends AEntity2_5D
 				l_instance.onkeypress = _onKeyPress;
 				l_instance.onkeyup = _onKeyRelease;
 				l_instance.onkeydown = _onKeyDown;
+				
+				l_instance.tabIndex = 1;
 			}
 			else
 			{
@@ -674,18 +680,21 @@ class DomEntity2_5D extends AEntity2_5D
 	private function _onKeyPress(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObjectKeyPress', p_event);
+		p_event.preventDefault();
 		Sliced.event.raiseEvent(EEventType.KEY_PRESSED_LOCAL, gameEntity);
 	}
 	
 	private function _onKeyRelease(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObjectKeyRelease', p_event);
+		p_event.preventDefault();
 		Sliced.event.raiseEvent(EEventType.KEY_RELEASED_LOCAL, gameEntity);
 	}
 	
 	private function _onKeyDown(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObjectKeyDown', p_event);
+		p_event.preventDefault();
 		Sliced.event.raiseEvent(EEventType.KEY_DOWN_LOCAL, gameEntity);
 	}
 	
@@ -705,6 +714,18 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		gameEntity.setState('eventObject', p_event);
 		Sliced.input.pointer.submitPointerEvent(MOUSE_UP, gameEntity);
+	}
+	
+	private function _onMouseEnter(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.input.pointer.submitPointerEvent(MOUSE_ENTERED, gameEntity);
+	}
+	
+	private function _onMouseLeave(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT, gameEntity);
 	}
 	
 	private function _onChange(p_changeEvent:Dynamic):Void
