@@ -6,6 +6,7 @@
 
 package tools.spark.framework.flambe2_5D;
 
+import flambe.Component;
 import flambe.display.Sprite;
 import flambe.display.BlendMode;
 import flambe.Entity;
@@ -104,7 +105,14 @@ class FlambeScene2_5D extends AScene2_5D
 	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
 	{
 		//This is an 'instance' removeChild... a flambe removeChild..
-		_instances[p_view2_5D].removeChild(cast(p_childEntity.getInstance(p_view2_5D), Entity));
+		var l_flambeEntity:Entity = cast(p_childEntity.getInstance(p_view2_5D), Entity);
+		
+		//Remove Physics Body
+		var l_bodyComponent:Component = l_flambeEntity.get(BodyComponent);
+		if (l_bodyComponent!=null) l_flambeEntity.remove(l_bodyComponent);
+		
+		//Remove the child
+		_instances[p_view2_5D].removeChild(l_flambeEntity);
 		
 		super._removeChildOfInstance(p_childEntity, p_view2_5D);
 	}
@@ -194,7 +202,7 @@ class FlambeScene2_5D extends AScene2_5D
 			Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_START, cb.int1.userData.gameEntity);
 			Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_START, cb.int2.userData.gameEntity);
 			
-			Console.error("REAL COLLISION START!");
+			//Console.error("REAL COLLISION START!");
 		}
 	}
 	
@@ -209,7 +217,7 @@ class FlambeScene2_5D extends AScene2_5D
 			Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_END, cb.int1.userData.gameEntity);
 			Sliced.event.raiseEvent(EEventType.PHYSICS_COLLISION_END, cb.int2.userData.gameEntity);
 			
-			Console.error("REAL COLLISION END!");
+			//Console.error("REAL COLLISION END!");
 		}
 	}
 	
@@ -236,7 +244,7 @@ class FlambeScene2_5D extends AScene2_5D
 			cb.int1.userData.gameEntity.setState('collidedWith', cb.int2.userData.gameEntity);
 			cb.int2.userData.gameEntity.setState('collidedWith', cb.int1.userData.gameEntity);
 			
-			Console.error("SENSOR COLLISION START!");
+			//Console.error("SENSOR COLLISION START!");
 		}
 	}
 	
@@ -254,7 +262,7 @@ class FlambeScene2_5D extends AScene2_5D
 			Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END, cb.int1.userData.gameEntity);
 			Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END, cb.int2.userData.gameEntity);
 			
-			Console.error("SENSOR COLLISION END!");
+			//Console.error("SENSOR COLLISION END!");
 		}
 	}
 	

@@ -239,8 +239,11 @@ class DomEntity2_5D extends AEntity2_5D
 			}
 			else
 			{
+				//Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
 				//pass whole url hack ( and another hack for relative url)
-				l_instance.src = "../" + p_src;
+				//l_instance.src = "../" + p_src;
+				l_instance.src = "http://130.211.172.86" + p_src;
+				//END OF //Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
 			}
 		}
 	}
@@ -503,6 +506,7 @@ class DomEntity2_5D extends AEntity2_5D
 				*/
 				
 				l_instance.onclick = _onPointerClick;
+				l_instance.oncontextmenu = _onMouseRightClick;
 				l_instance.onmousedown = _onMouseDown;
 				l_instance.onmouseup = _onMouseUp;
 				l_instance.onmouseenter = _onMouseEnter;
@@ -513,9 +517,23 @@ class DomEntity2_5D extends AEntity2_5D
 				//@todo: should really consider actually removing those listeners, here.... use the disposer component thing
 				//if you don't want to store the signal Connections..and retrieve disposer here, from the entity. Disposer way looks better anyway...
 				//l_instance.pointerEnabled = false;
+				
+				
+				//This should be on its own function...  or not.. in any case, we need this even if its not touchable.. for convenience i guess and it makes sense
+				if (gameEntity.getState('preventDefaultEvents'))
+				{
+					l_instance.oncontextmenu = _preventDefault;
+				}
 			}
 			
+			
+			
 		}
+	}
+	
+	private function _preventDefault():Bool
+	{
+		return false;
 	}
 	
 	private function _updateAcceptsKeyboardInput(p_acceptsKeyboardInputFlag:Bool, p_view2_5D:IView2_5D):Void
@@ -680,21 +698,24 @@ class DomEntity2_5D extends AEntity2_5D
 	private function _onKeyPress(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObjectKeyPress', p_event);
-		p_event.preventDefault();
+		if (gameEntity.getState('preventDefaultEvents'))
+			p_event.preventDefault();
 		Sliced.event.raiseEvent(EEventType.KEY_PRESSED_LOCAL, gameEntity);
 	}
 	
 	private function _onKeyRelease(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObjectKeyRelease', p_event);
-		p_event.preventDefault();
+		if (gameEntity.getState('preventDefaultEvents'))
+			p_event.preventDefault();
 		Sliced.event.raiseEvent(EEventType.KEY_RELEASED_LOCAL, gameEntity);
 	}
 	
 	private function _onKeyDown(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObjectKeyDown', p_event);
-		p_event.preventDefault();
+		if (gameEntity.getState('preventDefaultEvents'))
+			p_event.preventDefault();
 		Sliced.event.raiseEvent(EEventType.KEY_DOWN_LOCAL, gameEntity);
 	}
 	
@@ -702,6 +723,15 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		gameEntity.setState('eventObject', p_event);
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+	}
+	
+	private function _onMouseRightClick(p_event:Dynamic):Void
+	{
+		if (gameEntity.getState('preventDefaultEvents'))
+			p_event.preventDefault();
+			
+		gameEntity.setState('eventObject', p_event);
+		Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
 	}
 	
 	private function _onMouseDown(p_event:Dynamic):Void

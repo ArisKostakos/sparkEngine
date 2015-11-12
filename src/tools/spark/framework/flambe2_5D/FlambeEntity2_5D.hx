@@ -98,6 +98,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateState('2DmeshType', p_view2_5D); //THIS NEEDS TO BE FIRST AT THE UPDATE TO GET THE SPRITE!!!!!!
 		_updateState('centerAnchor', p_view2_5D);
 		_updateState('physicsEntity', p_view2_5D);
+		
 		if (gameEntity.getState('layoutable') == null || gameEntity.getState('layoutable') == false)
 		{
 			_updateState('spaceX',p_view2_5D);
@@ -406,7 +407,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//if (l_mesh != null) //this really nesseccery?
 		//{
 			if (gameEntity.getState('physicsEntity'))
-				cast(gameEntity.getState('physicsBody'),Body).position.x=p_newPos; //should also check if NOT Static
+			{
+				if (gameEntity.getState('physicsType')!="Static")
+					cast(gameEntity.getState('physicsBody'), Body).position.x = p_newPos; //should also check if NOT Static
+			}
 			else
 				l_mesh.x._ = p_newPos;
 		//}
@@ -421,7 +425,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//if (l_mesh != null) //this really nesseccery?
 		//{
 			if (gameEntity.getState('physicsEntity'))
-				cast(gameEntity.getState('physicsBody'),Body).position.y=p_newPos; //should also check if NOT Static
+			{
+				if (gameEntity.getState('physicsType')!="Static")
+					cast(gameEntity.getState('physicsBody'), Body).position.y = p_newPos; //should also check if NOT Static
+			}
 			else
 				l_mesh.y._ = p_newPos;
 		//}
@@ -497,8 +504,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 
 				if (parentScene != null)
 				{
+					//Console.error("update2");
 					if (parentScene.gameEntity.getState('physicsScene'))
 					{
+						//Console.error("update3");
 						var l_sceneInstance:Entity = parentScene.getInstance(p_view2_5D);
 						
 						//Center Anchor (Only for physics objects)
@@ -588,6 +597,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 						
 						//Position
 						//body.position = new Vec2(l_mesh.x._, l_mesh.y._);
+						body.position = new Vec2(gameEntity.getState('spaceX'), gameEntity.getState('spaceY')); //My only chance to set position of a static object
 						
 						
 						//Initial Velocity
@@ -606,6 +616,16 @@ class FlambeEntity2_5D extends AEntity2_5D
 						//var childEntity:Entity = new Entity().add(new BodyComponent(body));
 						//childEntity.add(new FillSprite(0x00ff00, 64, 64).centerAnchor());
 					}
+					else
+					{
+						gameEntity.setState('physicsEntity', false);
+						Console.warn("Entity " + gameEntity.getState('name') + " failed to become a physics object.");
+					}
+				}
+				else
+				{
+					gameEntity.setState('physicsEntity', false);
+					Console.warn("Entity " + gameEntity.getState('name') + " failed to become a physics object.");
 				}
 			}
 		}
@@ -715,6 +735,9 @@ class FlambeEntity2_5D extends AEntity2_5D
 					
 				if (!l_mesh.pointerDown.hasListeners())
 					l_mesh.pointerDown.connect(_onPointerDown);
+					
+				if (!l_mesh.pointerUp.hasListeners())
+					l_mesh.pointerUp.connect(_onPointerUp);
 			}
 			else
 			{
@@ -749,7 +772,18 @@ class FlambeEntity2_5D extends AEntity2_5D
 	
 	private function _onPointerDown(p_pointerEvent:PointerEvent):Void
 	{
-		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+		//if (Sliced.input.mouse.isDown(flambe.input.MouseButton.Right))
+		//	Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
+		if (Sliced.input.mouse.isDown(flambe.input.MouseButton.Left))
+			Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+	}
+	
+	private function _onPointerUp(p_pointerEvent:PointerEvent):Void
+	{
+		if (Sliced.input.mouse.lastMouseButton==flambe.input.MouseButton.Right)
+			Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
+		//else
+			//Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
 	}
 	
 	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void

@@ -71,6 +71,14 @@ class Assets
 	{
 		if (p_name == null) p_name = p_url;
 		
+		//Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
+		if (p_url.indexOf('/assets') != -1)
+		{
+			p_url = "http://130.211.172.86" + p_url;
+		}
+		//END OF Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
+		
+		Console.error("LOADER: " + p_url);
 		_loader.addFile(p_name, p_url, p_forceLoadAsData);
 	}
 	

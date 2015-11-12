@@ -178,6 +178,56 @@ class Logic extends AService implements ILogic
 		return Xml.parse(xmlToString(p_xml)).firstElement();
 	}
 	
+	public function xml_getElements(p_xml:Xml, p_xmlNodes:Array<String>):Dynamic
+	{
+		var l_xmlNode:Xml = p_xml;
+		for (xmlNodeStr in p_xmlNodes)
+		{
+			l_xmlNode = xml_getElement(l_xmlNode, xmlNodeStr);
+			if (l_xmlNode == null)
+				return null;
+		}
+		
+		return l_xmlNode;
+	}
+	
+	public function xml_getAllMStates(p_xml:Xml, p_merge:Bool):Map<String, String>
+	{
+		var l_states:Map<String, String> = new Map<String, String>();
+		
+		var l_groupName:String;
+		if (p_merge) l_groupName = "_States";
+			else l_groupName = "States";
+			
+		var l_statesNode:Xml = xml_getElement(p_xml, l_groupName);
+		
+		if (l_statesNode != null)
+		{
+			var l_statesChildren:Iterator<Xml> = l_statesNode.elementsNamed('_State');
+			//for each [entity] in [form.space.entities]
+			while (l_statesChildren.hasNext())
+			{
+				var f_state:Xml = l_statesChildren.next();
+				var f_value:Xml = xml_getElement(f_state, "Value");
+				l_states.set(f_state.get("id"), f_value.firstChild().toString());
+			}
+			return l_states;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public function xml_getElement(p_xml:Xml, p_xmlNode:String):Xml
+	{
+		var p_iterator:Iterator<Xml> = p_xml.elementsNamed(p_xmlNode);
+		if (p_iterator.hasNext())
+			return p_iterator.next();
+		else
+			return null;
+	}
+	
 	public function xml_createElements(p_xmlNodes:Array<String>):Dynamic
 	{
 		var l_Return:Dynamic = { };
@@ -212,6 +262,60 @@ class Logic extends AService implements ILogic
 		l_xml.set(p_attrName, p_attrValue);
 		
 		return l_xml;
+	}
+	
+	public function xml_entity_addExtend(p_EntityXml:Xml, p_Entity:Dynamic):Xml
+	{
+		var l_groupName:String = "Extends";
+		
+		//Check if group exists, else create it
+		var l_group:Xml;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		else
+		{
+			l_group = Xml.createElement(l_groupName);
+			p_EntityXml.addChild(l_group);
+		}
+		
+		//Create it and add it
+		var l_entity:Xml = Xml.createElement("Entity");
+		l_group.addChild(l_entity);
+		
+		//Check for stuff
+		if (p_Entity.ext != null)
+		{
+			l_entity.set("extends", p_Entity.ext);
+		}
+		
+		return l_entity;
+	}
+	
+	public function xml_entity_getExtendsEntityNames(p_EntityXml:Xml):Array<String>
+	{
+		var l_array:Array<String> = new Array<String>();
+		
+		var l_groupName:String = "Extends";
+		
+		//Check if group exists, else create it
+		var l_group:Xml = null;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		
+		if (l_group != null)
+		{
+			var l_entities:Iterator<Xml> = l_group.elementsNamed("Entity");
+			for (entity in l_entities)
+			{
+				l_array.push(entity.get("extends"));
+			}
+		}
+		
+		return l_array;
 	}
 	
 	public function xml_entity_addMState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Xml

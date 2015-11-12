@@ -35,6 +35,8 @@ import tools.spark.sliced.core.Sliced;
 	private var _mouseLeftDown:Bool;
 	private var _mouseRightDown:Bool;
 	
+	public var lastMouseButton:MouseButton;
+	
 	public function new() 
 	{
 		_init();
@@ -93,6 +95,8 @@ import tools.spark.sliced.core.Sliced;
 		else if (p_mouseEvent.button == MouseButton.Right)
 			_mouseRightDown = true;
 		//else if Middle..
+		
+		lastMouseButton = p_mouseEvent.button;
 	}
 	
 	public function registerTrigger(p_eventType:EEventType, p_eventFilter:Dynamic):Void
