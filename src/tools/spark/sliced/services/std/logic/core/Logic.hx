@@ -264,6 +264,17 @@ class Logic extends AService implements ILogic
 		return l_xml;
 	}
 	
+	public function xml_entity_removeNode(p_EntityXml:Xml, p_xmlNodeName:String):Xml
+	{
+		//Check if node exists
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(p_xmlNodeName);
+		
+		if (l_elements.hasNext())
+			p_EntityXml.removeChild(l_elements.next());
+		
+		return p_EntityXml;
+	}
+	
 	public function xml_entity_addExtend(p_EntityXml:Xml, p_Entity:Dynamic):Xml
 	{
 		var l_groupName:String = "Extends";
