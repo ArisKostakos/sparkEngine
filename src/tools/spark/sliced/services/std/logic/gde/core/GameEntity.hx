@@ -139,20 +139,20 @@ class GameEntity extends AGameBase implements IGameEntity
 	
 	public function setState(p_stateId:String, p_value:Dynamic):Dynamic
 	{
-		//try
-		//{
+		try //Remove this try for optimization reasons at some point...
+		{
 			gameStateSet.get(p_stateId).value = p_value;
 			
 			//Following line is the weak connection between Logic and Display
 			Sliced.display.updateDisplayObjectState(this,p_stateId);	
 			
 			return gameStateSet.get(p_stateId).value;
-		//}
-		//catch (e:Dynamic) 
-		//{ 
-		//	Console.error("Could not Set State " + p_stateId + " to: " + p_value + ", for entity: " + getState("name")); 
-		//	return null;
-		//}
+		}
+		catch (e:Dynamic) 
+		{ 
+			Console.error("Could not Set State " + p_stateId + " to: " + p_value + ", for entity: " + getState("name")); 
+			return null;
+		}
 	}
 	
 	public function addToState(p_stateId:String, p_value:Dynamic):Dynamic

@@ -850,7 +850,15 @@ class FlambeEntity2_5D extends AEntity2_5D
 			if (gameEntity.getState('2DmeshType') == 'Spriter')
 				gameEntity.setState('boundsRect', new Rectangle(-55,-112,140,190));
 			else
+			{
+				//Console.error("Before: Update Bounds [" + gameEntity.getState('name') + "]: " + gameEntity.getState('boundsRect'));
 				gameEntity.setState('boundsRect', Sprite.getBounds(l_instance));
+				//Console.error("After: Update Bounds [" + gameEntity.getState('name') + "]: " + gameEntity.getState('boundsRect'));
+			}
+		}
+		else
+		{
+			Console.error("Update Bounds: Instance is null");
 		}
 	}
 }

@@ -16,21 +16,31 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  */
 class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 {
-	public var children( default, null ):Array<IEntity2_5D>;
+	public var children( default, null ):Array<IEntity2_5D>; // for order
+	public var childrenMap( default, null ):Map<IEntity2_5D,Bool>; // for checking if child already exists (not great but...)
 	
 	private function new(p_gameEntity:IGameEntity) 
 	{
 		super(p_gameEntity);
 		children = new Array<IEntity2_5D>();
+		childrenMap = new Map<IEntity2_5D,Bool>();
 	}
 	
-	public function addChild( p_entity2_5D:IEntity2_5D):Void
+	public function addChild( p_entity2_5D:IEntity2_5D):Bool
 	{
-		children.push(p_entity2_5D);
+		if (childrenMap.exists(p_entity2_5D) == false)
+		{
+			children.push(p_entity2_5D);
+			childrenMap.set(p_entity2_5D, true);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	public function removeChild( p_entity2_5D:IEntity2_5D):Void
 	{
 		children.remove(p_entity2_5D);
+		childrenMap.remove(p_entity2_5D);
 	}
 }
