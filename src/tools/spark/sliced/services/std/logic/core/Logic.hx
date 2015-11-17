@@ -191,6 +191,38 @@ class Logic extends AService implements ILogic
 		return l_xmlNode;
 	}
 	
+	public function xml_getAllStates(p_xml:Xml, p_merge:Bool):Map<String, Dynamic>
+	{
+		var l_states:Map<String, Dynamic> = new Map<String, Dynamic>();
+		
+		var l_groupName:String;
+		if (p_merge) l_groupName = "_States";
+			else l_groupName = "States";
+			
+		var l_statesNode:Xml = xml_getElement(p_xml, l_groupName);
+		
+		if (l_statesNode != null)
+		{
+			var l_statesChildren:Iterator<Xml> = l_statesNode.elementsNamed('State');
+			//for each [entity] in [form.space.entities]
+			while (l_statesChildren.hasNext())
+			{
+				var f_state:Xml = l_statesChildren.next();
+				
+				var f_id:String = xml_getElement(f_state, "Id").firstChild().toString();
+				var f_type:String = xml_getElement(f_state, "Type").firstChild().toString();
+				var f_value:String = xml_getElement(f_state, "Value").firstChild().toString();
+				
+				l_states.set(f_id,{id: f_id, type: f_type, value: f_value});
+			}
+			return l_states;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
 	public function xml_getAllMStates(p_xml:Xml, p_merge:Bool):Map<String, String>
 	{
 		var l_states:Map<String, String> = new Map<String, String>();
@@ -275,6 +307,17 @@ class Logic extends AService implements ILogic
 		return p_EntityXml;
 	}
 	
+	public function xml_entity_removeAllNodes(p_EntityXml:Xml, p_xmlNodeName:String):Xml
+	{
+		//Check if node exists
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(p_xmlNodeName);
+		
+		while (l_elements.hasNext())
+			p_EntityXml.removeChild(l_elements.next());
+		
+		return p_EntityXml;
+	}
+	
 	public function xml_entity_addExtend(p_EntityXml:Xml, p_Entity:Dynamic):Xml
 	{
 		var l_groupName:String = "Extends";
@@ -327,6 +370,56 @@ class Logic extends AService implements ILogic
 		}
 		
 		return l_array;
+	}
+	
+	public function xml_entity_addState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Xml
+	{
+		var l_groupName:String;
+		if (p_merge) l_groupName = "_States";
+			else l_groupName = "States";
+		
+		//Check if group exists, else create it
+		var l_group:Xml;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		else
+		{
+			l_group = Xml.createElement(l_groupName);
+			p_EntityXml.addChild(l_group);
+		}
+		
+		//Create it and add it
+		var l_state:Xml = Xml.createElement("State");
+		l_group.addChild(l_state);
+		
+		//Check for stuff
+		if (p_State.id != null)
+		{
+			var l_xml:Xml = Xml.createElement("Id");
+			l_state.addChild(l_xml);
+			
+			l_xml.addChild(Xml.createPCData(p_State.id));
+		}
+		
+		if (p_State.type != null)
+		{
+			var l_xml:Xml = Xml.createElement("Type");
+			l_state.addChild(l_xml);
+			
+			l_xml.addChild(Xml.createPCData(p_State.type));
+		}
+		
+		if (p_State.value != null)
+		{
+			var l_xml:Xml = Xml.createElement("Value");
+			l_state.addChild(l_xml);
+			
+			l_xml.addChild(Xml.createPCData(p_State.value));
+		}
+		
+		return l_state;
 	}
 	
 	public function xml_entity_addMState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Xml
