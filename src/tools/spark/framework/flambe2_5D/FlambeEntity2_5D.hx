@@ -7,8 +7,10 @@
 package tools.spark.framework.flambe2_5D;
 
 import flambe.display.FillSprite;
+import flambe.display.Font;
 import flambe.display.ImageSprite;
 import flambe.display.Sprite;
+import flambe.display.TextSprite;
 import flambe.Entity;
 import flambe.input.PointerEvent;
 import flambe.math.Rectangle;
@@ -70,11 +72,13 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['spaceWidth'] = _updateSpaceWidth;	//this is iffy.. should do it with forms instead
 		_updateStateFunctions['spaceHeight'] = _updateSpaceHeight;	//this is iffy.. should do it with forms instead
 		_updateStateFunctions['2DMeshImageForm'] = _update2DMeshImageForm;
+		_updateStateFunctions['2DMeshTextForm'] = _update2DMeshTextForm;
 		_updateStateFunctions['2DMeshSpriterForm'] = _update2DMeshSpriterForm;
 		_updateStateFunctions['2DMeshSpritesheetForm'] = _update2DMeshSpritesheetForm;
 		_updateStateFunctions['2DMeshFillRectForm'] = _update2DMeshFillRectForm;
 		_updateStateFunctions['2DMeshSpriteForm'] = _update2DMeshSpriteForm;
 		_updateStateFunctions['2DMeshSpriterAnimForm'] = _update2DMeshSpriterAnimForm;
+		_updateStateFunctions['command_zOrder'] = _updateZOrder;
 	}
 	
 	
@@ -158,6 +162,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 				_updateStateOfInstance('2DMeshFillRectForm', p_view2_5D);
 			case 'Sprite':
 				_updateStateOfInstance('2DMeshSpriteForm', p_view2_5D);
+			case 'Text':
+				_updateStateOfInstance('2DMeshTextForm', p_view2_5D);
 			case 'Undefined':
 				Console.warn('Undefined 2DmeshType value');
 			default:
@@ -205,6 +211,47 @@ class FlambeEntity2_5D extends AEntity2_5D
 			l_mesh.texture = Assets.getTexture(gameEntity.gameForm.getState( p_2DMeshImageForm ));	
 		}
 	}
+	
+	private function _update2DMeshTextForm(p_2DMeshTextForm:String, p_view2_5D:IView2_5D):Void
+	{
+		//If the Entity's mesh type is not image, ignore this update
+		if (gameEntity.getState('2DmeshType') != 'Text')
+			return;
+			
+		//If the Form Name is Undefined, ignore this update
+		if (p_2DMeshTextForm == 'Undefined')
+			return;
+			
+		//Get the instance we're updating
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		var l_mesh:TextSprite;
+		
+		if (_instancesMesh[p_view2_5D]!=null)	//Get it's existing mesh, if any
+			l_mesh= cast(_instancesMesh[p_view2_5D],TextSprite); //(the cast should always work due to logic.. but not very sure..)
+		else
+			l_mesh = null;
+			
+			
+		if (l_mesh == null)
+		{
+			var l_fontName:String = gameEntity.gameForm.getState( p_2DMeshTextForm );
+			
+			var l_font:Font = new Font(Assets.getAssetPackOf(l_fontName+".fnt"), l_fontName);
+			
+			l_mesh = new TextSprite(l_font, "hihihihi\nyoyoyoyo");
+			//l_mesh.wrapWidth._ = 100;
+			//l_mesh.
+			l_mesh.blendMode = BlendMode.Copy;
+			l_instance.add(l_mesh);
+			_instancesMesh[p_view2_5D] = l_mesh;
+		}
+		else
+		{
+			//l_mesh.texture = Assets.getTexture(gameEntity.gameForm.getState( p_2DMeshImageForm ));	
+		}
+	}
+	
 	
 	private function _update2DMeshSpriterForm(p_2DMeshSpriterForm:String, p_view2_5D:IView2_5D):Void
 	{
@@ -477,6 +524,13 @@ class FlambeEntity2_5D extends AEntity2_5D
 	}
 	
 	
+	private function _updateZOrder(p_zOrder:Int, p_view2_5D:IView2_5D):Void
+	{
+		//Center Anchor State doesn't exist yet, we do it for everyone
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		l_instance.setZOrder(p_zOrder);
+	}
 
 	private function _centerAnchor(p_centerAnchorFlag:Dynamic, p_view2_5D:IView2_5D):Void
 	{

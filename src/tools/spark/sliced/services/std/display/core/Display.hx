@@ -62,6 +62,7 @@ class Display extends AService implements IDisplay
 		_renderStateNames['3DmeshType'] = true;
 		_renderStateNames['touchable'] = true;
 		_renderStateNames['2DMeshImageForm'] = true;
+		_renderStateNames['2DMeshTextForm'] = true;
 		_renderStateNames['2DMeshSpriterForm'] = true;
 		_renderStateNames['2DMeshFillRectForm'] = true;
 		_renderStateNames['2DMeshSpriteForm'] = true;
@@ -85,6 +86,7 @@ class Display extends AService implements IDisplay
 		_renderStateNames['backgroundColor'] = true;
 		_renderStateNames['border'] = true;
 		_renderStateNames['borderColor'] = true;
+		_renderStateNames['command_zOrder'] = true;
 		
 		_renderStateNames['spaceX'] = true;
 		_renderStateNames['spaceY'] = true;

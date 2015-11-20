@@ -187,6 +187,29 @@ class GameEntity extends AGameBase implements IGameEntity
 		Sliced.display.addDisplayObjectChild(this,p_gameEntity);
 	}
 	
+	public function setZorder(p_location:String):Void
+	{
+		var l_index:Int = parentEntity.children.indexOf(this);
+		parentEntity.children.remove(this);
+		Console.error("MY INDEX IS: " + l_index);
+		
+		switch(p_location)
+		{
+			case "top":
+				parentEntity.children.push(this);
+			case "oneUp":
+				parentEntity.children.insert(l_index + 1, this);
+			case "oneDown":
+				parentEntity.children.insert(Std.int(Math.max(0,l_index - 1)), this);
+			case "bottom":
+				parentEntity.children.insert(0,this);
+			default:
+		}
+		
+		//Following line is the weak connection between Logic and Display
+		setState('command_zOrder', parentEntity.children.indexOf(this));
+	}
+	
 	public function insertChild(p_gameEntity:IGameEntity, p_pos:Int):Void
 	{
 		//Add to children
