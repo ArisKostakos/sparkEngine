@@ -353,7 +353,7 @@ class Logic extends AService implements ILogic
 		
 		var l_groupName:String = "Extends";
 		
-		//Check if group exists, else create it
+		//Check if group exists
 		var l_group:Xml = null;
 		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
 		
@@ -370,6 +370,27 @@ class Logic extends AService implements ILogic
 		}
 		
 		return l_array;
+	}
+	
+	public function xml_entity_addFormState(p_EntityXml:Xml, p_State:Dynamic, p_mergeForm:Bool, p_mergeStates:Bool):Xml
+	{
+		var l_groupName:String;
+		if (p_mergeForm) l_groupName = "_Form";
+			else l_groupName = "Form";
+		
+		//Check if group exists, else create it
+		var l_group:Xml;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		else
+		{
+			l_group = Xml.createElement(l_groupName);
+			p_EntityXml.addChild(l_group);
+		}
+		
+		return xml_entity_addState(l_group, p_State, p_mergeStates);
 	}
 	
 	public function xml_entity_addState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Xml
