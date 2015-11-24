@@ -137,6 +137,12 @@ class GameEntity extends AGameBase implements IGameEntity
 		else return gameStateSet.get(p_stateId).value;
 	}
 	
+	public function getStateType(p_stateId:String):String
+	{
+		if (gameStateSet.get(p_stateId) == null) return null;
+		else return gameStateSet.get(p_stateId).type.getName();
+	}
+	
 	public function setState(p_stateId:String, p_value:Dynamic):Dynamic
 	{
 		try //Remove this try for optimization reasons at some point...

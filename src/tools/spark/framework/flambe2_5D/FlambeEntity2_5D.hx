@@ -78,6 +78,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['2DMeshFillRectForm'] = _update2DMeshFillRectForm;
 		_updateStateFunctions['2DMeshSpriteForm'] = _update2DMeshSpriteForm;
 		_updateStateFunctions['2DMeshSpriterAnimForm'] = _update2DMeshSpriterAnimForm;
+		_updateStateFunctions['text'] = _updateText;
+		_updateStateFunctions['font'] = _updateFont;
+		_updateStateFunctions['align'] = _updateAlign;
+		_updateStateFunctions['wrapWidth'] = _updateWrapWidth;
+		_updateStateFunctions['letterSpacing'] = _updateLetterSpacing;
+		_updateStateFunctions['lineSpacing'] = _updateLineSpacing;
 		_updateStateFunctions['command_zOrder'] = _updateZOrder;
 	}
 	
@@ -523,6 +529,78 @@ class FlambeEntity2_5D extends AEntity2_5D
 		}
 	}
 	
+	private function _updateText(p_par:String, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:TextSprite = cast(_instancesMesh[p_view2_5D],TextSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.text = p_par;
+		}
+	}
+	
+	private function _updateFont(p_par:String, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:TextSprite = cast(_instancesMesh[p_view2_5D],TextSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.font = new Font(Assets.getAssetPackOf(p_par+".fnt"), p_par);
+		}
+	}
+	
+	private function _updateAlign(p_par:String, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:TextSprite = cast(_instancesMesh[p_view2_5D],TextSprite);
+		
+		if (l_mesh != null)
+		{
+			switch (p_par)
+			{
+				case "Left": l_mesh.setAlign(TextAlign.Left);
+				case "Center": l_mesh.setAlign(TextAlign.Center);
+				case "Right": l_mesh.setAlign(TextAlign.Right);
+				default:
+			}
+			
+		}
+	}
+	
+	private function _updateWrapWidth(p_par:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:TextSprite = cast(_instancesMesh[p_view2_5D],TextSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.setWrapWidth(p_par);
+		}
+	}
+	
+	private function _updateLetterSpacing(p_par:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:TextSprite = cast(_instancesMesh[p_view2_5D],TextSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.setLetterSpacing(p_par);
+		}
+	}
+	
+	private function _updateLineSpacing(p_par:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:TextSprite = cast(_instancesMesh[p_view2_5D],TextSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.setLineSpacing(p_par);
+		}
+	}
 	
 	private function _updateZOrder(p_zOrder:Int, p_view2_5D:IView2_5D):Void
 	{
