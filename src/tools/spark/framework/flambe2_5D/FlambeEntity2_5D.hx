@@ -239,7 +239,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 			
 			var l_font:Font = new Font(Assets.getAssetPackOf(l_fontName+".fnt"), l_fontName);
 			
-			l_mesh = new TextSprite(l_font, "hihihihi\nyoyoyoyo");
+			l_mesh = new TextSprite(l_font, gameEntity.getState('text'));
 			//l_mesh.wrapWidth._ = 100;
 			//l_mesh.
 			l_mesh.blendMode = BlendMode.Copy;
