@@ -511,6 +511,7 @@ class DomEntity2_5D extends AEntity2_5D
 				l_instance.onmouseup = _onMouseUp;
 				l_instance.onmouseenter = _onMouseEnter;
 				l_instance.onmouseleave = _onMouseLeave;
+				l_instance.onwheel = _onScroll;
 			}
 			else
 			{
@@ -756,6 +757,12 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		gameEntity.setState('eventObject', p_event);
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT, gameEntity);
+	}
+	
+		private function _onScroll(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObject', p_event);
+		Sliced.input.pointer.submitPointerEvent(MOUSE_SCROLL, gameEntity);
 	}
 	
 	private function _onChange(p_changeEvent:Dynamic):Void
