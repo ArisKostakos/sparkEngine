@@ -11,6 +11,7 @@ import flambe.input.Key;
 import hscript.Expr;
 import haxe.io.Bytes;
 import haxe.crypto.Crc32;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
 import tools.spark.framework.Framework;
 import tools.spark.framework.Assets;
@@ -75,6 +76,7 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("StringMap", StringMap); // share the StringMap
 		_interpreter.variables.set("IntMap", IntMap); // share the IntMap
 		_interpreter.variables.set("ObjectMap", ObjectMap); // share the ObjectMap
+		_interpreter.variables.set("EEventType", EEventType); // share the EEventType
 		
 		//so bad..
 		#if html

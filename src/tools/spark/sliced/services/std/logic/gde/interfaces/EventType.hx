@@ -60,6 +60,8 @@ class EventType
 		eventTypesMap[KEY_PRESSED] = "KeyPressed";
 		eventTypesMap[KEY_RELEASED] = "KeyReleased";
 		
+		eventTypesMap[STATE_CHANGED] = "StateChanged";
+		
 		//Reverse Map
 		for (eventType in eventTypesMap.keys())
 			eventTypesMapReverse[eventTypesMap.get(eventType)] = eventType;
