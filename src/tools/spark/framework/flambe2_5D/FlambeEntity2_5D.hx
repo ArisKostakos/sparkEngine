@@ -875,7 +875,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 			{
 				//@todo: should really consider actually removing those listeners, here.... use the disposer component thing
 				//if you don't want to store the signal Connections..and retrieve disposer here, from the entity. Disposer way looks better anyway...
-				//l_mesh.pointerEnabled = false;
+				l_mesh.pointerEnabled = false;
+				Console.error("POIUNTER DISABLED");
 			}
 			
 		}
