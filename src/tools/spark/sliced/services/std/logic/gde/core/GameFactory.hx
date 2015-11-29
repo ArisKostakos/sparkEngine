@@ -22,6 +22,8 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 {
 	private var _gameClassParser:IGameClassParser;
 	
+	public var instancesCreated:Int = 0;
+	
 	public function new() 
 	{
 		Console.log("Creating Game Factory");
@@ -50,6 +52,12 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 	
 	public function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml):IGameEntity
 	{
+		instancesCreated += 1;
+		if (p_gameClassName!=null)
+			Console.log("Created Game Entity: " + instancesCreated + ", name: " + p_gameClassName);
+		else
+			Console.log("Created Game Entity: " + instancesCreated + ", By Xml");
+			
 		//Get the class from the embedded assets folder(preloaded)
 		var l_gameNode:Xml = _gameClassParser.getGameNode(EGameType.ENTITY, p_gameClassName, p_gameClassNode);
 		

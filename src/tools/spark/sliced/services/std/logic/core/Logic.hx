@@ -14,7 +14,6 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameFactory;
 import tools.spark.sliced.services.std.logic.interpreter.core.GmlInterpreter;
-import tools.spark.sliced.services.std.logic.interpreter.core.HaxeInterpreter;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
 
 /**
@@ -58,8 +57,15 @@ class Logic extends AService implements ILogic
 	public function createInterpreters():Void
 	{
 		//Create Script Interpreter
-		scriptInterpreter = new HaxeInterpreter();
-		
+		#if html
+			#if UseHaxeInterpreter
+				scriptInterpreter = new tools.spark.sliced.services.std.logic.interpreter.core.HaxeInterpreter();
+			#else
+				scriptInterpreter = new tools.spark.sliced.services.std.logic.interpreter.core.platform.html.HaxeJsInterpreter();
+			#end
+		#else
+			scriptInterpreter = new tools.spark.sliced.services.std.logic.interpreter.core.HaxeInterpreter();
+		#end
 		//Create Gml Interpreter
 		gmlInterpreter = new GmlInterpreter();
 	}

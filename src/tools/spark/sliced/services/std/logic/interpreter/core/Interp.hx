@@ -60,7 +60,7 @@ class Interp {
 	private var _declaredHistory:Array<Array<{ n : String, old : { r : Dynamic } }>>;
 	private var _meHistory:Array<Dynamic>;
 	private var _parentHistory:Array<Dynamic>;
-	private var _thisHistory:Array<Dynamic>;
+	private var _itHistory:Array<Dynamic>;
 	
 	public function new() {
 		#if haxe3
@@ -78,7 +78,7 @@ class Interp {
 		_declaredHistory = new Array<Array<{ n : String, old : { r : Dynamic } }>>();
 		_meHistory = new Array<Dynamic>();
 		_parentHistory = new Array<Dynamic>();
-		_thisHistory = new Array<Dynamic>();
+		_itHistory = new Array<Dynamic>();
 		
 		variables.set("null",null);
 		variables.set("true",true);
@@ -227,8 +227,8 @@ class Interp {
 				_meHistory.push(variables.get(p_varName));
 			else if (p_varName=="parent")
 				_parentHistory.push(variables.get(p_varName));
-			else if (p_varName=="this")
-				_thisHistory.push(variables.get(p_varName));
+			else if (p_varName=="it")
+				_itHistory.push(variables.get(p_varName));
 		}
 		
 		variables.set(p_varName, p_varValue);
@@ -292,7 +292,7 @@ class Interp {
 			
 			variables.set("me", _meHistory.pop());
 			variables.set("parent", _parentHistory.pop());
-			variables.set("target", _thisHistory.pop());
+			variables.set("it", _itHistory.pop());
 		}
 		
 		return l_return;
@@ -347,6 +347,7 @@ class Interp {
 	}
 
 	function resolve( id : String ) : Dynamic {
+		
 		var l = locals.get(id);
 		if( l != null )
 			return l.r;

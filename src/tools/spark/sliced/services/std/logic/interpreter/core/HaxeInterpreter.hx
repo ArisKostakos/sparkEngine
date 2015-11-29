@@ -5,7 +5,6 @@
  */
 
 package tools.spark.sliced.services.std.logic.interpreter.core;
-import hscript.Parser;
 import tools.spark.sliced.core.Sliced;
 import flambe.input.Key;
 import hscript.Expr;
@@ -113,19 +112,7 @@ class HaxeInterpreter implements IInterpreter
 	
 	public function hash(script:String):Int
 	{
-		try
-		{
-			return _store(_parser.parseString(script), Crc32.make(Bytes.ofString(script)));
-		}
-		catch (e:Dynamic)
-		{
-			Console.error("<<<<<SPARK SCRIPT PARSING ERROR [Line: " + _parser.line + "]>>>>>: " + e);
-			Console.error("Stack: " + script);
-			
-			var errorMsg:String = "Display.error('This script failed to parse. Look at stack above.'); CouldNotParseScript;";
-			
-			return _store(_parser.parseString(errorMsg), Crc32.make(Bytes.ofString(errorMsg)));
-		}
+		return _store(script, Crc32.make(Bytes.ofString(script)));
 	}
 	
 	
@@ -139,10 +126,11 @@ class HaxeInterpreter implements IInterpreter
 		return script;
 	}
 	
-	private function _store(script:Expr, hashId: Int):Int
+	private function _store(script:String, hashId: Int):Int
 	{
 		if (_hashTable[hashId] != null)
 		{
+			/*
 			if (Std.string(script) == Std.string(_hashTable[hashId]))
 			{
 				//Console.log('Same Script found: [$script] in hashId: [$hashId]');
@@ -153,12 +141,27 @@ class HaxeInterpreter implements IInterpreter
 				Console.warn('Collision detected with hashId: [$hashId] and script [$script]. Previous Stored Entry Script: ' + _hashTable[hashId]);
 				return _store(script, ++hashId);
 			}
+			*/
+			return hashId;
 		}
 		else
 		{
 			//Console.log('Entering hashId: [$hashId] with Script: $script');
-			_hashTable[hashId] = script;
-			return hashId;
+			
+			try
+			{
+				_hashTable[hashId] = _parser.parseString(script);
+				return hashId;
+			}
+			catch (e:Dynamic)
+			{
+				Console.error("<<<<<SPARK SCRIPT PARSING ERROR [Line: " + _parser.line + "]>>>>>: " + e);
+				Console.error("Stack: " + script);
+				return hashId; //it will occur a MISSING SCRIPT MSG when tried to execute i think.. which is good enough..
+				
+				//var errorMsg:String = "Display.error('This script failed to parse. Look at stack above.'); CouldNotParseScript;";
+				//return _store(_parser.parseString(errorMsg), Crc32.make(Bytes.ofString(errorMsg)));
+			}
 		}
 	}
 }

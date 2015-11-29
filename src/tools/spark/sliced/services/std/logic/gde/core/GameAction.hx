@@ -59,11 +59,11 @@ class GameAction extends AGameBase implements IGameAction
 		{
 			if (hashId == -1)
 			{
-				Sliced.logic.gmlInterpreter.run(hashId, ["this" => this, "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
+				Sliced.logic.gmlInterpreter.run(hashId, ["it" => this, "me"=>parentEntity, "parent"=>parentEntity.parentEntity ]);
 			}
 			else
 			{
-				if (Sliced.logic.scriptInterpreter.run(hashId, ["this" => this, "me" => parentEntity, "parent" => parentEntity.parentEntity ]) == false)
+				if (Sliced.logic.scriptInterpreter.run(hashId, ["it" => this, "me" => parentEntity, "parent" => parentEntity.parentEntity ]) == false)
 				{
 					Console.error('Error: Failed to run Action [$id].');
 					parentEntity.stopAction(id);
