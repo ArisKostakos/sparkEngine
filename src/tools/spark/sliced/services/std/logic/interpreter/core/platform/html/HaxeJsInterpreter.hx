@@ -141,7 +141,7 @@ class HaxeJsInterpreter implements IInterpreter
 			{
 				_hashTable[hashId] = System.external.call("eval", [ script ]);
 				_lalala += 1;
-				Console.log("Parsed Something: " + _lalala);
+				//Console.log("Parsed Something: " + _lalala);
 				return hashId;
 			}
 			catch (e:Dynamic)

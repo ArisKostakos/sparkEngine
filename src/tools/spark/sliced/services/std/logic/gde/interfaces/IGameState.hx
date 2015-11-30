@@ -15,4 +15,6 @@ interface IGameState extends IGameBase
 	var id( default, default ):String;
 	var type( default, default ):EStateType;
 	var value( default, default ):Dynamic;
+	
+	function clone(?p_parentEntity:IGameEntity):IGameState;
 }

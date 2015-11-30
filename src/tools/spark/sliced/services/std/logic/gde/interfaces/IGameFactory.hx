@@ -14,7 +14,7 @@ interface IGameFactory
 {
 	function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml):IGameEntity;
 	function createGameEntityExtended(p_gameClassName:String, p_extendGameClassName:String):IGameEntity;
-
+	function issueUID():Int;
 	/*
 	function createGameForm(p_gameClassName:String):IGameForm;
 	function createGameSpace(p_gameClassName:String):IGameSpace;

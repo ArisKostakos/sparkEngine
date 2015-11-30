@@ -7,6 +7,7 @@
 package tools.spark.sliced.services.std.logic.gde.core;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameState;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EStateType;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -36,5 +37,24 @@ class GameState extends AGameBase implements IGameState
 	private function _init():Void
 	{
 
+	}
+	
+	public function clone(?p_parentEntity:IGameEntity):IGameState
+	{
+		var l_clonedState:IGameState =  new GameState();
+		
+		//Parent
+		l_clonedState.parentEntity = p_parentEntity;
+		
+		//Clone the State's Id
+		l_clonedState.id = id;
+		
+		//Clone the State's Type
+		l_clonedState.type = type;
+		
+		//Clone the State's Value
+		l_clonedState.value = value; //Good for freshly created states, not good for Dynamic Object States, that will be copied by reference(which we don't want)
+		
+		return l_clonedState;
 	}
 }

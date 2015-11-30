@@ -22,7 +22,17 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 {
 	private var _gameClassParser:IGameClassParser;
 	
-	public var instancesCreated:Int = 0;
+	public var instancesCreated:Int = 0; //delete me
+	private var _cache:Map<String,IGameEntity>; //external cache
+	//later, cache not only factory created entities, but from inside the parser stuff as well
+	
+	
+	private var _numObjects:Int;
+	
+	public function issueUID():Int
+	{
+		return _numObjects++;
+	}
 	
 	public function new() 
 	{
@@ -34,6 +44,8 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 	private function _init():Void
 	{
 		_gameClassParser = new GameClassParser();
+		_cache = new Map<String,IGameEntity>();
+		_numObjects = 0;
 	}
 	
 	public function createGameEntityExtended(p_gameClassName:String, p_extendGameClassName:String):IGameEntity
@@ -53,10 +65,18 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 	public function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml):IGameEntity
 	{
 		instancesCreated += 1;
-		if (p_gameClassName!=null)
-			Console.log("Created Game Entity: " + instancesCreated + ", name: " + p_gameClassName);
-		else
-			Console.log("Created Game Entity: " + instancesCreated + ", By Xml");
+		
+		if (p_gameClassName != null)
+		{
+			if (_cache.exists(p_gameClassName))
+			{
+				if (_cache.get(p_gameClassName) != null)
+				{
+					Console.warn("Game Entity exists and not null. CLONING FROM CACHE!!!!");
+					return _cache.get(p_gameClassName).clone();
+				}
+			}
+		}
 			
 		//Get the class from the embedded assets folder(preloaded)
 		var l_gameNode:Xml = _gameClassParser.getGameNode(EGameType.ENTITY, p_gameClassName, p_gameClassNode);
@@ -71,6 +91,32 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 				if (l_gameEntity != null)
 				{
 					//Console.debug(l_gameNode.toString());
+					if (p_gameClassName != null)
+					{
+						Console.log("Created Game Entity: " + instancesCreated + ", name: " + p_gameClassName);
+						if (_cache.exists(p_gameClassName))
+						{
+							if (_cache.get(p_gameClassName) == null)
+							{
+								Console.log("Game Entity exists and is null. Cloning for cache...");
+								_cache.set(p_gameClassName, l_gameEntity.clone());
+							}
+							else
+							{
+								Console.warn("Game Entity exists and is not null. WE SHOULDN'T BE HERE! SOMETHING IS WRONG!!!!!!!!!!!!!!!!!!!");
+							}
+						}
+						else
+						{
+							Console.log("Game Entity does not exist");
+							_cache.set(p_gameClassName, null);
+						}
+					}
+					else
+					{
+						Console.log("Created Game Entity: " + instancesCreated + ", By Xml");
+					}
+					
 					return l_gameEntity;
 				}
 				else

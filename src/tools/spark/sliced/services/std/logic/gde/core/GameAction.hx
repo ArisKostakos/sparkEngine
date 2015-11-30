@@ -41,6 +41,30 @@ class GameAction extends AGameBase implements IGameAction
 		gameStateSet = new Map<String,IGameState>();
 	}
 	
+	public function clone(?p_parentEntity:IGameEntity):IGameAction
+	{
+		var l_clonedAction:IGameAction =  new GameAction();
+		
+		//Parent
+		l_clonedAction.parentEntity = p_parentEntity;
+		
+		//Clone the Action's Id
+		l_clonedAction.id = id;
+		
+		//Clone the Actions's Concurrency
+		l_clonedAction.concurrency = concurrency;
+		
+		//Clone the Action's Scripts
+		for (scriptId in scriptSet)
+			l_clonedAction.scriptSet.push(scriptId);
+		
+		//Clone the Action's States
+		for (state in gameStateSet)
+			l_clonedAction.addState(state.clone(p_parentEntity));
+		
+		return l_clonedAction;
+	}
+	
 	public function addState(gameState:IGameState):Void
 	{
 		if (gameStateSet[gameState.id] != null)

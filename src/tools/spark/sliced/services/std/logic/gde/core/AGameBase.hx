@@ -27,7 +27,4 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 	{
 
 	}
-	
-	//Clone function here that will be overriden...
-	//do it bitch!
 }

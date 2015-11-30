@@ -30,12 +30,6 @@ class GameClassInstantiator implements IGameClassInstantiator
 	private var _xmlConcurrencyNameToType:Map<String,EConcurrencyType>;
 	private var _xmlStateNameToType:Map<String,EStateType>;
 	
-	private var _numObjects:Int;
-	
-	private function issueUID():Int
-	{
-		return _numObjects++;
-	}
 	
 	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>, p_xmlConcurrencyNameToType:Map<String,EConcurrencyType>, p_xmlStateNameToType:Map<String,EStateType>) 
 	{
@@ -43,19 +37,13 @@ class GameClassInstantiator implements IGameClassInstantiator
 		_xmlNodeTypeToNodeName = p_xmlNodeTypeToNodeName;
 		_xmlConcurrencyNameToType = p_xmlConcurrencyNameToType;
 		_xmlStateNameToType = p_xmlStateNameToType;
-		_init();
+		//_init();
 	}
-	
-	private function _init():Void
-	{
-		_numObjects = 0;
-	}
-		
 	
 	
 	public function instantiateEntity(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameEntity
 	{
-		var l_gameEntity:IGameEntity = new GameEntity(issueUID());
+		var l_gameEntity:IGameEntity = new GameEntity();
 		
 		//Parent Entity
 		l_gameEntity.parentEntity = p_parentEntity;
@@ -99,7 +87,7 @@ class GameClassInstantiator implements IGameClassInstantiator
 			{
 				var f_gameTrigger:IGameTrigger = instantiateTrigger(trigger,l_gameEntity);
 				
-				Sliced.event.addTrigger(f_gameTrigger);
+				l_gameEntity.addTrigger(f_gameTrigger);
 			}
 		}
 		

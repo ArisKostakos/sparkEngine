@@ -23,4 +23,5 @@ interface IGameTrigger extends IGameBase
 	//uses ????????
 	
 	function doPass():Void;
+	function clone(?p_parentEntity:IGameEntity):IGameTrigger;
 }

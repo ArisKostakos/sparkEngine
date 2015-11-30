@@ -36,4 +36,18 @@ class GameSpace extends AGameBase implements IGameSpace
 	{
 		gameEntitySet = new Array<IGameEntity>();
 	}
+	
+	public function clone(?p_parentEntity:IGameEntity):IGameSpace
+	{
+		var l_clonedSpace:IGameSpace =  new GameSpace();
+		
+		//Parent
+		l_clonedSpace.parentEntity = p_parentEntity;
+		
+		//Clone Entities
+		for (entity in gameEntitySet)
+			l_clonedSpace.gameEntitySet.push(entity.clone(p_parentEntity));
+		
+		return l_clonedSpace;
+	}
 }

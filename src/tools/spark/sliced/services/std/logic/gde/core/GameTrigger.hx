@@ -41,6 +41,32 @@ class GameTrigger extends AGameBase implements IGameTrigger
 
 	
 	//Methods
+	
+	public function clone(?p_parentEntity:IGameEntity):IGameTrigger
+	{
+		var l_clonedTrigger:IGameTrigger =  new GameTrigger();
+		
+		//Parent
+		l_clonedTrigger.parentEntity = p_parentEntity;
+		
+		//Clone the Trigger's Event Type
+		l_clonedTrigger.eventType = eventType;
+		
+		//Clone the Trigger's Parameter
+		l_clonedTrigger.parameter = parameter;
+		
+		//Clone the Trigger's Target
+		l_clonedTrigger.target = target;
+		
+		//Clone the Trigger's TargetType
+		l_clonedTrigger.targetType = targetType;
+		
+		//Clone the Trigger's Scripts
+		for (scriptId in scriptSet)
+			l_clonedTrigger.scriptSet.push(scriptId);
+		
+		return l_clonedTrigger;
+	}
 
 	public function doPass():Void
 	{

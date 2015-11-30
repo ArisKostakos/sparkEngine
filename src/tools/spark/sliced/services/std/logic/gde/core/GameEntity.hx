@@ -6,11 +6,14 @@
 
 package tools.spark.sliced.services.std.logic.gde.core;
 import tools.spark.sliced.core.Sliced;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameBase;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameState;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameAction;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameForm;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameTrigger;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EConcurrencyType;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 
 /**
  * ...
@@ -22,17 +25,18 @@ class GameEntity extends AGameBase implements IGameEntity
 	
 	public var gameStateSet( default, null ):Map<String,IGameState>;
 	public var gameForm( default, default ):IGameForm;
+	public var triggerSet( default, default ):Array<IGameTrigger>; //Trigger references, currently used only for cloning..
 	public var possibleActionSet( default, null ):Map<String,IGameAction>;
 	public var currentActionSet( default, null ):Map < String, Array<IGameAction> > ;
 	public var children ( get, never ):Array<IGameEntity>; 
 	public var uid ( default, null ):Int;
 	//Constructor
 	
-	public function new(p_uid:Int) 
+	public function new() 
 	{
 		super();
 		
-		uid = p_uid;
+		uid = Sliced.logic.gameFactory.issueUID();
 		//Console.log ("Game Entity Created: " + uid);
 		_init();
 	}
@@ -43,8 +47,40 @@ class GameEntity extends AGameBase implements IGameEntity
 	private function _init():Void
 	{
 		gameStateSet = new Map<String,IGameState>();
+		triggerSet = new Array<IGameTrigger>();
 		possibleActionSet = new Map<String,IGameAction>();
 		currentActionSet = new Map<String,Array<IGameAction>>();
+	}
+	
+	public function clone(?p_parentEntity:IGameEntity):IGameEntity
+	{
+		var l_clonedEntity:IGameEntity =  new GameEntity();
+		
+		//Parent
+		l_clonedEntity.parentEntity = p_parentEntity;
+		
+		//Clone Form
+		l_clonedEntity.gameForm = gameForm.clone(l_clonedEntity);
+		
+		//Clone States
+		for (state in gameStateSet)
+			l_clonedEntity.addState(state.clone(l_clonedEntity));
+		
+		//Clone Possible Actions
+		for (action in possibleActionSet)
+			l_clonedEntity.addAction(action.clone(l_clonedEntity));
+			
+		//Clone Triggers
+		for (trigger in triggerSet)
+			l_clonedEntity.addTrigger(trigger.clone(l_clonedEntity));
+			
+		//Register
+		Sliced.logic.registerEntityByName(l_clonedEntity);
+		
+		//Trigger Event
+		Sliced.event.raiseEvent(EEventType.CREATED, l_clonedEntity);
+		
+		return l_clonedEntity;
 	}
 	
 	public function doActions():Void
@@ -75,6 +111,12 @@ class GameEntity extends AGameBase implements IGameEntity
 			currentActionSet[gameAction.id] = new Array<IGameAction>();
 		
 		possibleActionSet[gameAction.id] = gameAction;
+	}
+	
+	public function addTrigger(gameTrigger:IGameTrigger):Void
+	{
+		triggerSet.push(gameTrigger);
+		Sliced.event.addTrigger(gameTrigger); //This might need to be removed to when this entity actually becomes part of the ACTIVE SPACE
 	}
 	
 	public function getAction(p_actionId:String):IGameAction

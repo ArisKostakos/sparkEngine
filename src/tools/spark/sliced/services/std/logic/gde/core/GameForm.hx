@@ -9,6 +9,7 @@ import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameForm;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameState;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameSpace;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -38,6 +39,23 @@ class GameForm extends AGameBase implements IGameForm
 	private function _init():Void
 	{
 		gameStateSet = new Map<String,IGameState>();
+	}
+	
+	public function clone(?p_parentEntity:IGameEntity):IGameForm
+	{
+		var l_clonedForm:IGameForm =  new GameForm();
+		
+		//Parent
+		l_clonedForm.parentEntity = p_parentEntity;
+		
+		//Clone States
+		for (state in gameStateSet)
+			l_clonedForm.addState(state.clone(p_parentEntity));
+			
+		//Clone Space
+		l_clonedForm.gameSpace = gameSpace.clone(p_parentEntity);
+		
+		return l_clonedForm;
 	}
 	
 	public function addState(gameState:IGameState):Void

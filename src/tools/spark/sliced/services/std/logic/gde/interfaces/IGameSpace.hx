@@ -13,4 +13,5 @@ package tools.spark.sliced.services.std.logic.gde.interfaces;
 interface IGameSpace extends IGameBase
 {
 	var gameEntitySet( default, null ):Array<IGameEntity>;
+	function clone(?p_parentEntity:IGameEntity):IGameSpace;
 }

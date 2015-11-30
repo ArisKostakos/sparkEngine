@@ -14,6 +14,7 @@ interface IGameEntity extends IGameBase
 {
 	var gameStateSet( default, null ):Map<String,IGameState>;
 	var gameForm( default, default ):IGameForm;
+	var triggerSet( default, default ):Array<IGameTrigger>; //Trigger references, currently used only for cloning..
 	var possibleActionSet( default, null ):Map<String,IGameAction>;
 	var currentActionSet( default, null ):Map < String, Array<IGameAction> > ;
 	var children ( get, never ):Array<IGameEntity>;
@@ -31,6 +32,7 @@ interface IGameEntity extends IGameBase
 	
 	function addState(gameState:IGameState):Void;
 	function addAction(gameAction:IGameAction):Void;
+	function addTrigger(gameTrigger:IGameTrigger):Void;
 	
 	function getAction(p_actionId:String):IGameAction;
 	function forceAction(p_actionId:String):Void;
@@ -43,4 +45,6 @@ interface IGameEntity extends IGameBase
 	function setState(p_stateId:String, p_value:Dynamic):Dynamic;
 	
 	function getChildren():Array<IGameEntity>;
+	
+	function clone(?p_parentEntity:IGameEntity):IGameEntity;
 }
