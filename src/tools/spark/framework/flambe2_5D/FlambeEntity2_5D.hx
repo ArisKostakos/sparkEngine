@@ -907,14 +907,24 @@ class FlambeEntity2_5D extends AEntity2_5D
 	{
 		//if (Sliced.input.mouse.isDown(flambe.input.MouseButton.Right))
 		//	Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
-		if (Sliced.input.mouse.isDown(flambe.input.MouseButton.Left))
+		
+		if (p_pointerEvent.source.getName() == "Mouse")
+		{
+			if (Sliced.input.mouse.isDown(flambe.input.MouseButton.Left))
+				Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+		}
+		else
+		{
 			Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+		}
 	}
 	
 	private function _onPointerUp(p_pointerEvent:PointerEvent):Void
 	{
-		if (Sliced.input.mouse.lastMouseButton==flambe.input.MouseButton.Right)
-			Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
+		if (p_pointerEvent.source.getName() == "Mouse")
+			if (Sliced.input.mouse.lastMouseButton==flambe.input.MouseButton.Right)
+				Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
+			
 		//else
 			//Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
 	}

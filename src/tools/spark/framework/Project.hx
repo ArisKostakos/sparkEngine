@@ -23,7 +23,7 @@ import tools.spark.sliced.core.Sliced;
 	public var type( default, default ):ENodeType;
 	public var executeModules( default, null ):Array< String>;
 	public var sliced( default, default ):Map< ENodeType, String>;
-	public var paths( default, default ):Map< String, Map < String, String > >; //Location, Type, Url
+	public var paths( default, null ):Map< String, Map < String, String > >; //Location, Type, Url
 	public var modules( default, null ):Map< String, Module>;
 	
 	public static function init():Void

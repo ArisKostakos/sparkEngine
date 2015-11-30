@@ -152,8 +152,8 @@ class HaxeJsInterpreter implements IInterpreter
 			catch (e:Dynamic)
 			{
 				Console.error("<<<<<SPARK SCRIPT PARSING ERROR: " + e);
-				Console.error("Stack: " + script);
-				
+				System.external.call("console.log", [ e ]);
+				System.external.call("console.log", [ script ]);
 				return -1;
 			}
 			

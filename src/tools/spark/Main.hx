@@ -69,9 +69,11 @@ class Main
 	{
 		try
 		{
-			var l_skcUrl:String = System.external.call("getMainSparkClientUrl");
-			if (l_skcUrl.length==0) return "main.skc";
-			else return l_skcUrl;
+			var l_urlPars:Dynamic = System.external.call("getMainSparkClientUrl");
+			if (l_urlPars.user != null && l_urlPars.project != null)
+				return "/assets/" + l_urlPars.user + "/project/" + l_urlPars.project + "/main.skc";
+			else
+				return "main.skc";
 		}
 		catch (e : Dynamic)
 			return "main.skc";

@@ -108,7 +108,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 						}
 						else
 						{
-							Console.log("Game Entity does not exist");
+							Console.log("Game Entity does not exist, so doing nothing(this is normal)");
 							_cache.set(p_gameClassName, null);
 						}
 					}
