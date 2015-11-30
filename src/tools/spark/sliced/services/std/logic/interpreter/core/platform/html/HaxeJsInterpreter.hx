@@ -42,6 +42,11 @@ class HaxeJsInterpreter implements IInterpreter
 		untyped __js__('window.Event = Sliced.event;');
 		untyped __js__('window.Display = Sliced.display;');
 		
+		untyped __js__('window.Project = Sliced._Project;');
+		untyped __js__('window.Module = Sliced._Module;');
+		untyped __js__('window.Asset = Sliced._Asset;');
+		
+		
 		untyped __js__('window.Std = Sliced._Std;');
 		untyped __js__('window.StringMap = Sliced._StringMap;');
 		untyped __js__('window.IntMap = Sliced._IntMap;');

@@ -123,7 +123,7 @@ class ModuleManager
 		{
 			if (isModuleExecutable(p_moduleName))
 			{
-				Sliced.logic.createAndRun(Project.modules[p_moduleName].executeEntity);
+				Sliced.logic.createAndRun(Project.main.modules[p_moduleName].executeEntity);
 				_moduleStates[p_moduleName] = RUNNING;
 			}
 			else
@@ -136,7 +136,7 @@ class ModuleManager
 	
 	public static function isModuleExecutable(p_moduleName:String):Bool
 	{
-		if (Project.modules[p_moduleName].executeEntity == "none")
+		if (Project.main.modules[p_moduleName].executeEntity == "none")
 			return false;
 		else
 			return true;
@@ -148,7 +148,7 @@ class ModuleManager
 		if (getModuleState(p_moduleName) == NOT_LOADED)
 		{
 			//@todo Watch for Recursion for two modules both requiring one another!
-			for (f_requiredModuleName in Project.modules[p_moduleName].requiresModules)
+			for (f_requiredModuleName in Project.main.modules[p_moduleName].requiresModules)
 			{
 				Console.log("LOADING MODULE REQUIREMENT: " + f_requiredModuleName);
 				if (getModuleState(f_requiredModuleName) == NOT_LOADED)
@@ -164,7 +164,7 @@ class ModuleManager
 	{
 		var l_bytes:Int = 0;
 		
-		for (asset in Project.modules[p_moduleName].assets)
+		for (asset in Project.main.modules[p_moduleName].assets)
 			l_bytes += Std.parseInt(asset.bytes);
 		
 		_moduleStates[p_moduleName] = LOADING;
@@ -188,10 +188,10 @@ class ModuleManager
 			
 			Assets.initiateBatch();
 			
-			for (asset in Project.modules[l_moduleName].assets)
+			for (asset in Project.main.modules[l_moduleName].assets)
 			{
 				//Console.log("adding file: " + asset.id);
-				Assets.addFile(Project.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true");
+				Assets.addFile(Project.main.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true");
 			}
 			Assets.loadBatch();
 			

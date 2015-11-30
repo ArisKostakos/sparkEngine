@@ -57,7 +57,7 @@ class Main
 		Framework.createDisplayRenderers();
 		
 		//Execute Modules
-		for (moduleName in Project.executeModules)
+		for (moduleName in Project.main.executeModules)
 			ModuleManager.execute(moduleName);
 			
 		//Create Spark's Flambe Root Component

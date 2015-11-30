@@ -63,7 +63,7 @@ class ServiceFactory implements IServiceFactory
 	inline private function _reflectService(p_slicedService:ENodeType):Dynamic
 	{
 		//@todo: create throw/catch for an exception when the url cannot be resolved or cannot be created.
-		var l_classPath:String = Project.sliced[p_slicedService];
+		var l_classPath:String = Project.main.sliced[p_slicedService];
 		return Type.createInstance(Type.resolveClass(l_classPath), []);
 	}
 }

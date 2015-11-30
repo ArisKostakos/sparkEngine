@@ -288,9 +288,16 @@ class Logic extends AService implements ILogic
 		return l_Return;
 	}
 	
-	public function xml_createElement(p_xmlNode:String):Xml
+	public function xml_createElement(p_xmlNode:String, ?p_pcdataChild:String):Xml
 	{
-		return Xml.createElement(p_xmlNode);
+		if (p_pcdataChild==null)
+			return Xml.createElement(p_xmlNode);
+		else
+		{
+			var l_xmlNode:Xml = Xml.createElement(p_xmlNode);
+			l_xmlNode.addChild(Xml.createPCData(p_pcdataChild));
+			return l_xmlNode;
+		}
 	}
 	
 	public function xml_createElementAttr(p_xmlNode:String, p_attrName:String, p_attrValue:String):Xml

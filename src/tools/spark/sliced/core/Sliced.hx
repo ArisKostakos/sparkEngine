@@ -10,6 +10,9 @@ import haxe.ds.IntMap;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
 import tools.spark.framework.Assets;
+import tools.spark.framework.assets.Asset;
+import tools.spark.framework.assets.Module;
+import tools.spark.framework.Project;
 import tools.spark.sliced.interfaces.ISound;
 import tools.spark.sliced.interfaces.ILogic;
 import tools.spark.sliced.interfaces.IInput;
@@ -44,6 +47,10 @@ import flambe.input.Key;
 	public static var _MouseButton:Dynamic;
 	public static var _EEventType:Dynamic;
 	public static var _Key:Dynamic;
+	public static var _Project:Dynamic;
+	public static var _Module:Dynamic;
+	public static var _Asset:Dynamic;
+	
 	
 	public static function init():Void
 	{
@@ -70,6 +77,9 @@ import flambe.input.Key;
 		_MouseButton = MouseButton;
 		_EEventType = EEventType;
 		_Key = Key;
+		_Project = Project;
+		_Module = Module;
+		_Asset = Asset;
 	}
 	
 	//@todo: maybe inline all the update functions?

@@ -35,6 +35,7 @@ interface ILogic extends IService
 	function reflectField(p_object: Dynamic, p_field:String):Dynamic;
 	function reflectFieldOfField(p_object: Dynamic, p_field:String, p_field2:String):Dynamic;
 	function xmlToString(p_object:Dynamic):String;
+	function xml_createElement(p_xmlNode:String, ?p_pcdataChild:String):Xml;
 	
 	function createInterpreters():Void;
 }

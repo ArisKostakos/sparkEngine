@@ -5,6 +5,9 @@
  */
 
 package tools.spark.sliced.services.std.logic.interpreter.core;
+import tools.spark.framework.assets.Asset;
+import tools.spark.framework.assets.Module;
+import tools.spark.framework.Project;
 import tools.spark.sliced.core.Sliced;
 import flambe.input.Key;
 import hscript.Expr;
@@ -59,6 +62,9 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Comms", Sliced.comms); // share the Comms class
 		_interpreter.variables.set("Event", Sliced.event); // share the Event class
 		_interpreter.variables.set("Display", Sliced.display); // share the Display class
+		_interpreter.variables.set("Project", Project); // share the Project class
+		_interpreter.variables.set("Module", Module); // share the Module class
+		_interpreter.variables.set("Asset", Asset); // share the Asset class
 		_interpreter.variables.set("Key", Key); // share the Key enum
 		_interpreter.variables.set("Console", Console); // share the Console
 		_interpreter.variables.set("Math", Math); // share the Math

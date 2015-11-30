@@ -234,8 +234,8 @@ class DomEntity2_5D extends AEntity2_5D
 			if (p_src.indexOf('assets/') == -1)
 			{
 				//Normal loading (but not quite, still there's the DoNotLoad hacky thing, for Dom stuff..)
-				var l_asset:Asset = Project.modules["DoNotLoad"].assets[p_src];
-				l_instance.src = Project.getPath(l_asset.location, l_asset.type) + l_asset.url;
+				var l_asset:Asset = Project.main.modules["DoNotLoad"].assets[p_src];
+				l_instance.src = Project.main.getPath(l_asset.location, l_asset.type) + l_asset.url;
 			}
 			else
 			{

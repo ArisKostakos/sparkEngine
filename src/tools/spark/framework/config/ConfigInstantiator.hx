@@ -36,20 +36,20 @@ class ConfigInstantiator
 		var l_projectNode:Xml = _configNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PROJECT]).next();
 		
 		//Project Name
-		Project.name = l_projectNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PROJECT_NAME]).next().firstChild().nodeValue;
+		Project.main.name = l_projectNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PROJECT_NAME]).next().firstChild().nodeValue;
 		
 		//Project Version
-		Project.version = l_projectNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PROJECT_VERSION]).next().firstChild().nodeValue;
+		Project.main.version = l_projectNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.PROJECT_VERSION]).next().firstChild().nodeValue;
 		
 		//Project Type
-		Project.type = _rootNodeType;
+		Project.main.type = _rootNodeType;
 		
 		//Project Execute Modules Node
 		var l_ExecuteModules:Xml = l_projectNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EXECUTE_AT_LAUNCH]).next();
 		
 		for ( executeModule in l_ExecuteModules.elements()) 
 		{
-			Project.executeModules.push(executeModule.firstChild().nodeValue);
+			Project.main.executeModules.push(executeModule.firstChild().nodeValue);
 		}
 	}
 	
@@ -59,16 +59,16 @@ class ConfigInstantiator
 		var l_slicedNode:Xml = _configNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SLICED]).next();
 		
 		//Common
-		Project.sliced[ENodeType.LOGIC_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.LOGIC_SERVICE]).next().firstChild().nodeValue;
-		Project.sliced[ENodeType.COMMUNICATIONS_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.COMMUNICATIONS_SERVICE]).next().firstChild().nodeValue;
-		Project.sliced[ENodeType.EVENT_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EVENT_SERVICE]).next().firstChild().nodeValue;
+		Project.main.sliced[ENodeType.LOGIC_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.LOGIC_SERVICE]).next().firstChild().nodeValue;
+		Project.main.sliced[ENodeType.COMMUNICATIONS_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.COMMUNICATIONS_SERVICE]).next().firstChild().nodeValue;
+		Project.main.sliced[ENodeType.EVENT_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.EVENT_SERVICE]).next().firstChild().nodeValue;
 		
 		//Client Only
-		if (Project.type == ENodeType.CLIENT)
+		if (Project.main.type == ENodeType.CLIENT)
 		{
-			Project.sliced[ENodeType.SOUND_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SOUND_SERVICE]).next().firstChild().nodeValue;
-			Project.sliced[ENodeType.INPUT_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.INPUT_SERVICE]).next().firstChild().nodeValue;
-			Project.sliced[ENodeType.DISPLAY_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.DISPLAY_SERVICE]).next().firstChild().nodeValue;
+			Project.main.sliced[ENodeType.SOUND_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.SOUND_SERVICE]).next().firstChild().nodeValue;
+			Project.main.sliced[ENodeType.INPUT_SERVICE] = l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.INPUT_SERVICE]).next().firstChild().nodeValue;
+			Project.main.sliced[ENodeType.DISPLAY_SERVICE]= l_slicedNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.DISPLAY_SERVICE]).next().firstChild().nodeValue;
 		}
 	}
 	
@@ -79,7 +79,7 @@ class ConfigInstantiator
 
 		for ( f_pathNode in l_pathsNode.elements()) 
 		{
-			Project.setPath(f_pathNode.get("location"), f_pathNode.get("type"), f_pathNode.firstChild().nodeValue);
+			Project.main.setPath(f_pathNode.get("location"), f_pathNode.get("type"), f_pathNode.firstChild().nodeValue);
 		}
 	}
 	
@@ -91,7 +91,7 @@ class ConfigInstantiator
 		//Modules
 		for ( f_moduleNode in l_assetsNode.elements()) 
 		{
-			Project.modules[f_moduleNode.get("id")] = _instantiateModule(f_moduleNode);
+			Project.main.modules[f_moduleNode.get("id")] = _instantiateModule(f_moduleNode);
 		}
 		
 	}
