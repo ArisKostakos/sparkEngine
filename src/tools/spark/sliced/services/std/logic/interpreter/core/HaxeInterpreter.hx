@@ -86,6 +86,7 @@ class HaxeInterpreter implements IInterpreter
 		//so bad..
 		#if html
 		_interpreter.variables.set("XMLHttpRequest", js.html.XMLHttpRequest); // share the XMLHttpRequest
+		_interpreter.variables.set("window", js.Browser.window); // share the window
 		#end
 	}
 	

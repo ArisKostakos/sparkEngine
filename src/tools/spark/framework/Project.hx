@@ -158,7 +158,7 @@ import tools.spark.sliced.core.Sliced;
 		return l_xmlClient;
 	}
 	
-	//Mapping //WARNING... I CLITERALY LIFTED THIS FROM Config.hx because to lazy to access Config.hx..
+	//Mapping //WARNING... I LITERALY LIFTED THIS FROM Config.hx because to lazy to access Config.hx..
 	//Duplicate mapping!!! Fix it soon pllzzz!
 	private static function _initNodeNamesMap():Void
 	{

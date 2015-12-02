@@ -10,7 +10,7 @@ main: tools.spark.Main
 default_platform: html
 
 # Additional flags to pass to the Haxe compiler -D UseHaxeInterpreter
-haxe_flags: -lib hscript -D includeNativeComponents -D flambe_transparent -lib nape -D NAPE_RELEASE_BUILD -D flambe_keep_logs 
+haxe_flags: -lib hscript -D includeNativeComponents -D flambe_transparent -lib nape -D NAPE_RELEASE_BUILD -D flambe_keep_logs
 
 # Additional paths to include in the build
 extra_paths:
