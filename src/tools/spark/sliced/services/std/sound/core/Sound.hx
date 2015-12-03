@@ -17,6 +17,8 @@ import tools.spark.sliced.core.AService;
  */
 class Sound extends AService implements ISound
 {
+	private var _playBacks:Map<String,Playback>;
+	
 	public function new() 
 	{
 		super();
@@ -26,15 +28,41 @@ class Sound extends AService implements ISound
 	private function _init():Void
 	{
 		Console.log("Init Sound std Service...");
+		_playBacks = new Map<String,Playback>();
 	}
 	
 	public function playSound(p_soundName:String, ?volume :Float):Playback
 	{
-		return Assets.getSound(p_soundName).play(volume);
+		var l_playback:Playback = Assets.getSound(p_soundName).play(volume);
+		_playBacks[p_soundName] = l_playback;
+		return l_playback;
 	}
 	
 	public function loopSound(p_soundName:String, ?volume :Float):Playback
 	{
-		return Assets.getSound(p_soundName).loop(volume);
+		var l_playback:Playback = Assets.getSound(p_soundName).loop(volume);
+		_playBacks[p_soundName] = l_playback;
+		return l_playback;
+	}
+	
+	public function stopAllSounds(?p_fadeOut:Float):Void
+	{
+		//For all registered playbacks
+		for (f_playback in _playBacks)
+		{
+			//If playback is still playing
+			if (f_playback.complete._ == false)
+			{
+				if (p_fadeOut == null)
+				{
+					f_playback.dispose();
+				}
+				else
+				{
+					f_playback.volume.animateTo(0, p_fadeOut);
+					//Warning.. this will never actually dispose the playback!!!!
+				}
+			}
+		}
 	}
 }

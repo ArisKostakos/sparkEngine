@@ -50,4 +50,6 @@ enum EEventType
 	KEY_RELEASED;
 	
 	STATE_CHANGED;
+	
+	SCENE_CREATED;
 }

@@ -61,6 +61,7 @@ class EventType
 		eventTypesMap[KEY_RELEASED] = "KeyReleased";
 		
 		eventTypesMap[STATE_CHANGED] = "StateChanged";
+		eventTypesMap[SCENE_CREATED] = "SceneCreated";
 		
 		//Reverse Map
 		for (eventType in eventTypesMap.keys())

@@ -16,4 +16,5 @@ interface ISound extends IService
 {
 	function playSound(p_soundName:String, ?volume :Float):Playback;
 	function loopSound(p_soundName:String, ?volume :Float):Playback;
+	function stopAllSounds(?p_fadeOut:Float):Void;
 }

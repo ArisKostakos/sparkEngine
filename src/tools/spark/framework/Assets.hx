@@ -90,22 +90,54 @@ class Assets
 	
 	public static function getAssetPackOf(p_name:String):AssetPack
 	{
-		return _loader.getAssetPackOf(p_name);
+		try 
+		{
+			return _loader.getAssetPackOf(p_name);
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("ERROR: Could not find assetPack of: " + p_name);
+			return null;
+		}
 	}
 	
 	public static function getFile(p_name:String):File
 	{
-		return _loader.getFile(p_name);
+		try 
+		{
+			return _loader.getFile(p_name);
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("ERROR: Could not find file: " + p_name);
+			return null;
+		}
 	}
 	
 	public static function getTexture(p_name:String):Texture
 	{
-		return _loader.getTexture(p_name);
+		try 
+		{
+			return _loader.getTexture(p_name);
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("ERROR: Could not find texture: " + p_name);
+			return null;
+		}
 	}
 	
 	public static function getSound(p_name:String):Sound
 	{
-		return _loader.getSound(p_name);
+		try 
+		{
+			return _loader.getSound(p_name);
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("ERROR: Could not find sound: " + p_name);
+			return null;
+		}
 	}
 	
 	public static function testLoadFile(p_name:String, p_url:String, p_forceLoadAsData:Bool):Void
