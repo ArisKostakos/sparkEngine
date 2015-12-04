@@ -925,6 +925,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 			if (Sliced.input.mouse.lastMouseButton==flambe.input.MouseButton.Right)
 				Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
 			
+		//Fucking iOS..
+		Sliced.sound.playSound("sound_quiz_game_2.timeout",0);
 		//else
 			//Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
 	}
