@@ -104,7 +104,8 @@ class HaxeJsInterpreter implements IInterpreter
 	
 	public function hash(script:String):Int
 	{
-		var l_script:String = "(function(me,parent,it,spark){" + script + "})";
+		//var l_script:String = "(function(me,parent,it,spark){" + script + "})";
+		var l_script:String = "(function(me,parent,it){" + script + "})";
 		
 		return _store(l_script, Crc32.make(Bytes.ofString(l_script)));
 	}
