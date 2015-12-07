@@ -60,6 +60,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['spaceY'] = _updatePositionY; //for pure 2d.. for 3d coordinates, its not that simple..
 		_updateStateFunctions['scaleX'] = _updateSizeX; //for pure 2d.. for 3d coordinates, its not that simple..
 		_updateStateFunctions['scaleY'] = _updateSizeY; //for pure 2d.. for 3d coordinates, its not that simple..
+		_updateStateFunctions['rotation'] = _updateRotation;
 		_updateStateFunctions['touchable'] = _updateTouchable;
 		_updateStateFunctions['visible'] = _updateVisible;
 		_updateStateFunctions['opacity'] = _updateOpacity;
@@ -119,6 +120,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateState('scaleX',p_view2_5D);
 		_updateState('scaleY',p_view2_5D);
 		//_updateState('scaleZ', p_view2_5D);
+		
+		_updateState('rotation',p_view2_5D);
 		
 		_updateState('touchable', p_view2_5D);
 		
@@ -507,6 +510,25 @@ class FlambeEntity2_5D extends AEntity2_5D
 			l_mesh.scaleY._ = p_newScale;
 	}
 	
+	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
+	inline private function _updateRotation(p_newRotation:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		//if (l_mesh != null) //this really nesseccery?
+		//{
+			if (gameEntity.getState('physicsEntity'))
+			{
+				if (gameEntity.getState('physicsType')!="Static")
+					cast(gameEntity.getState('physicsBody'), Body).rotation = FMath.toRadians(p_newRotation); //should also check if NOT Static
+			}
+			else
+				l_mesh.rotation._ = p_newRotation;
+		//}
+	}
+	
+	
 	private function _updateVisible(p_visibleFlag:Bool, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
@@ -682,8 +704,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 								l_material = Material.wood();
 						}
 						
-						var l_meshWidth:Float = Sprite.getBounds(l_instance).width;	// l_mesh.getNaturalWidth();
-						var l_meshHeight:Float = Sprite.getBounds(l_instance).height;	// l_mesh.getNaturalHeight();
+						var l_meshWidth:Float = Sprite.getBounds(l_instance).width*gameEntity.getState('scaleX');	// l_mesh.getNaturalWidth();
+						var l_meshHeight:Float = Sprite.getBounds(l_instance).height*gameEntity.getState('scaleY');	// l_mesh.getNaturalHeight();
 						//get bounds gets scaled mesh, so no need to multiply scale below
 						
 						if (gameEntity.getState('2DmeshType') != 'Spriter')
@@ -730,7 +752,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 						//Position
 						//body.position = new Vec2(l_mesh.x._, l_mesh.y._);
 						body.position = new Vec2(gameEntity.getState('spaceX'), gameEntity.getState('spaceY')); //My only chance to set position of a static object
-						
+						body.rotation = FMath.toRadians(gameEntity.getState('rotation'));
 						
 						//Initial Velocity
 						if (gameEntity.getState('physicsType') == "Dynamic")
@@ -882,11 +904,6 @@ class FlambeEntity2_5D extends AEntity2_5D
 		}
 	}
 	
-	inline private function _updateRotation():Void
-	{
-		
-	}
-	
 	
 	private function _onPointerIn(p_pointerEvent:PointerEvent):Void
 	{
@@ -924,11 +941,13 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (p_pointerEvent.source.getName() == "Mouse")
 			if (Sliced.input.mouse.lastMouseButton==flambe.input.MouseButton.Right)
 				Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
+			//else
+				//Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+			
 			
 		//Fucking iOS..
-		Sliced.sound.playSound("sound_quiz_game_2.timeout",0);
-		//else
-			//Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+		//Sliced.sound.playSound("sound_quiz_game_2.timeout",0);
+		//Sliced.sound.playSound("sound_physics_puzzle_game.b",0);
 	}
 	
 	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void
