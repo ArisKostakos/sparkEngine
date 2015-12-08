@@ -18,6 +18,7 @@ import tools.spark.sliced.core.AService;
 class Sound extends AService implements ISound
 {
 	private var _playBacks:Map<String,Playback>;
+	public var iOSPlayedBlankSound( default, null ):Bool;
 	
 	public function new() 
 	{
@@ -29,6 +30,7 @@ class Sound extends AService implements ISound
 	{
 		Console.log("Init Sound std Service...");
 		_playBacks = new Map<String,Playback>();
+		iOSPlayedBlankSound = false;
 	}
 	
 	public function playSound(p_soundName:String, ?volume :Float):Playback
@@ -43,6 +45,12 @@ class Sound extends AService implements ISound
 		var l_playback:Playback = Assets.getSound(p_soundName).loop(volume);
 		_playBacks[p_soundName] = l_playback;
 		return l_playback;
+	}
+	
+	public function iOSPlayBlankSound():Void
+	{
+		playSound("_blankSound", 0);
+		iOSPlayedBlankSound = true;
 	}
 	
 	public function stopAllSounds(?p_fadeOut:Float):Void

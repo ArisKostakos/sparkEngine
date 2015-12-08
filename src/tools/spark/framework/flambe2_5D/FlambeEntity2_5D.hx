@@ -946,8 +946,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 			
 			
 		//Fucking iOS..
-		//Sliced.sound.playSound("sound_quiz_game_2.timeout",0);
-		//Sliced.sound.playSound("sound_physics_puzzle_game.b",0);
+		#if html
+			if (Sliced.sound.iOSPlayedBlankSound == false)
+				Sliced.sound.iOSPlayBlankSound();
+		#end
 	}
 	
 	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void
