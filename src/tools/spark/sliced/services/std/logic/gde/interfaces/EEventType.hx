@@ -51,5 +51,7 @@ enum EEventType
 	
 	STATE_CHANGED;
 	
+	CUSTOM_TRIGGER;
+	
 	SCENE_CREATED;
 }

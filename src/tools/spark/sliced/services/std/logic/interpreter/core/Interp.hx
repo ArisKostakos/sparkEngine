@@ -234,29 +234,6 @@ class Interp {
 		variables.set(p_varName, p_varValue);
 	}
 	
-	//Aris.. This will be used for calculating expressions
-	public function runCode ( expr : Expr ) : Dynamic
-	{
-		//I think this should work like this
-		//store everything but me,parent,this variables
-		
-		depth = 0;
-		#if haxe3
-		locals = new Map();
-		#else
-		locals = new Hash();
-		#end
-		declared = new Array();
-		
-		//and here, pop everything back, but variables.. do nothing to them..
-		
-		//and dont worry about nesting, this happens flat once..
-		//actually.. the me,parent,this.. wont helpp AT ALL.. 
-		// so don't worry about it, if this all is replaced with immediate js code..
-		
-		return exprReturn(expr);
-	}
-	
 	public function execute( expr : Expr ) : Dynamic {
 		_instances += 1;
 		

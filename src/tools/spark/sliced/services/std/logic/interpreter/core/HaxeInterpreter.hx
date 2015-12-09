@@ -20,6 +20,7 @@ import tools.spark.framework.Assets;
 import haxe.xml.Fast;
 import EReg;
 import flambe.input.MouseButton;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameBase;
 
 import haxe.ds.StringMap;
 import haxe.ds.IntMap;
@@ -30,7 +31,7 @@ import haxe.ds.ObjectMap;
  * ...
  * @author Aris Kostakos
  */
-class HaxeInterpreter implements IInterpreter
+@:keep class HaxeInterpreter implements IInterpreter
 {
 	private var _hashTable:Map<Int,Expr>;
 	private var _parser:Parser;
@@ -62,9 +63,11 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("Comms", Sliced.comms); // share the Comms class
 		_interpreter.variables.set("Event", Sliced.event); // share the Event class
 		_interpreter.variables.set("Display", Sliced.display); // share the Display class
+		
 		_interpreter.variables.set("Project", Project); // share the Project class
 		_interpreter.variables.set("Module", Module); // share the Module class
 		_interpreter.variables.set("Asset", Asset); // share the Asset class
+		
 		_interpreter.variables.set("Key", Key); // share the Key enum
 		_interpreter.variables.set("Console", Console); // share the Console
 		_interpreter.variables.set("Math", Math); // share the Math
@@ -82,6 +85,11 @@ class HaxeInterpreter implements IInterpreter
 		_interpreter.variables.set("IntMap", IntMap); // share the IntMap
 		_interpreter.variables.set("ObjectMap", ObjectMap); // share the ObjectMap
 		_interpreter.variables.set("EEventType", EEventType); // share the EEventType
+		
+		//Shortcuts
+		_interpreter.variables.set("expr", runExpr);
+		_interpreter.variables.set("e", Sliced.logic.getEntityByName);
+		_interpreter.variables.set("string", Std.string);
 		
 		//so bad..
 		#if html
@@ -116,6 +124,34 @@ class HaxeInterpreter implements IInterpreter
 		}
 	}
 	
+	
+	public function runExpr(hashId:Int, ?p_me:IGameBase, ?p_parent:IGameBase, ?p_it:IGameBase):Dynamic
+	{
+		var program:Expr = _get(hashId);
+		
+		//Dynamic Variables
+		_interpreter.setVariableSafe("me", p_me);
+		_interpreter.setVariableSafe("parent", p_parent);
+		_interpreter.setVariableSafe("it", p_it);
+		
+		try
+		{
+			return _interpreter.execute(program);
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("<<<<<SPARK EXPRESSION RUN-TIME ERROR>>>>>: " + e);
+			
+			return null;
+		}
+	}
+	
+	public function hashExpr(script:String):Int
+	{
+		var l_script:String = "var _returnExpr = " + script + "; _returnExpr;";
+		
+		return _store(l_script, Crc32.make(Bytes.ofString(l_script)));
+	}
 	
 	public function hash(script:String):Int
 	{
