@@ -6,6 +6,7 @@
 
 package tools.spark.sliced.services.std.logic.interpreter.core;
 import tools.spark.sliced.core.Sliced;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameBase;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import flambe.input.Key;
 import haxe.io.Bytes;
@@ -49,6 +50,18 @@ class GmlInterpreter implements IInterpreter
 		_interpreter.variables.set("Std", Std); // share the Std
 		//_interpreter.variables.set("Int", Int); // share the Int
 		*/
+	}
+	
+	public function runExpr(hashId:Int, ?p_me:IGameBase, ?p_parent:IGameBase, ?p_it:IGameBase):Dynamic
+	{
+		//dummy
+		return null;
+	}
+	
+	public function hashExpr(script:String):Int
+	{
+		//dummy
+		return null;
 	}
 	
 	public function run(hashId:Int, parameters:Map<String,Dynamic>):Bool

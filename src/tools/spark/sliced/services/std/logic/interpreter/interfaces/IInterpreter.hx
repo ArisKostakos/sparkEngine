@@ -5,6 +5,7 @@
  */
 
 package tools.spark.sliced.services.std.logic.interpreter.interfaces;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameBase;
 
 /**
  * ...
@@ -12,6 +13,8 @@ package tools.spark.sliced.services.std.logic.interpreter.interfaces;
  */
 interface IInterpreter
 {
-	public function hash(script:String):Int;
-	public function run(hashId:Int, parameters:Map<String,Dynamic>):Bool;
+	function hash(script:String):Int;
+	function hashExpr(script:String):Int;
+	function run(hashId:Int, parameters:Map<String,Dynamic>):Bool;
+	function runExpr(hashId:Int, ?p_me:IGameBase, ?p_parent:IGameBase, ?p_it:IGameBase):Dynamic;
 }

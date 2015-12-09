@@ -8,14 +8,26 @@ package tools.spark.sliced.services.std.logic.interpreter.core.platform.html;
 
 import haxe.io.Bytes;
 import haxe.crypto.Crc32;
+import tools.spark.sliced.core.Sliced;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameBase;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
 import flambe.System;
+import haxe.ds.IntMap;
+import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
+import flambe.input.MouseButton;
+import tools.spark.framework.Assets;
+import tools.spark.framework.assets.Asset;
+import tools.spark.framework.assets.Module;
+import tools.spark.framework.Project;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
+import flambe.input.Key;
 
 /**
  * ...
  * @author Aris Kostakos
  */
-class HaxeJsInterpreter implements IInterpreter
+@:keep class HaxeJsInterpreter implements IInterpreter
 {
 	private var _hashTable:Map<Int,Dynamic>;
 	
@@ -35,29 +47,33 @@ class HaxeJsInterpreter implements IInterpreter
 		
 		
 		//Static variables
-		untyped __js__('window.Sound = Sliced.sound;');
-		untyped __js__('window.Logic = Sliced.logic;');
-		untyped __js__('window.Input = Sliced.input;');
-		untyped __js__('window.Comms = Sliced.comms;');
-		untyped __js__('window.Event = Sliced.event;');
-		untyped __js__('window.Display = Sliced.display;');
+		untyped window.Sound = Sliced.sound;
+		untyped window.Logic = Sliced.logic;
+		untyped window.Input = Sliced.input;
+		untyped window.Comms = Sliced.comms;
+		untyped window.Event = Sliced.event;
+		untyped window.Display = Sliced.display;
 		
-		untyped __js__('window.Project = Sliced._Project;');
-		untyped __js__('window.Module = Sliced._Module;');
-		untyped __js__('window.Asset = Sliced._Asset;');
+		untyped window.Project = Project;
+		untyped window.Module = Module;
+		untyped window.Asset = Asset;
 		
 		
-		untyped __js__('window.Std = Sliced._Std;');
-		untyped __js__('window.StringMap = Sliced._StringMap;');
-		untyped __js__('window.IntMap = Sliced._IntMap;');
-		untyped __js__('window.ObjectMap = Sliced._ObjectMap;');
-		untyped __js__('window.Assets = Sliced._Assets;');
-		untyped __js__('window.StringTools = Sliced._StringTools;');
-		untyped __js__('window.Xml = Sliced._Xml;');
-		untyped __js__('window.MouseButton = Sliced._MouseButton;');
-		untyped __js__('window.EEventType = Sliced._EEventType;');
-		untyped __js__('window.Key = Sliced._Key;');
+		untyped window.Std = Std;
+		untyped window.StringMap = StringMap;
+		untyped window.IntMap = IntMap;
+		untyped window.ObjectMap = ObjectMap;
+		untyped window.Assets = Assets;
+		untyped window.StringTools = StringTools;
+		untyped window.Xml = Xml;
+		untyped window.MouseButton = MouseButton;
+		untyped window.EEventType = EEventType;
+		untyped window.Key = Key;
 		
+		//Shortcuts
+		untyped window.expr = runExpr;
+		untyped window.e = Sliced.logic.getEntityByName;
+		untyped window.string = Std.string;
 		
 		//COMMENTED OUT Because we don't use them anywhere in the egcs anymore
 		//_interpreter.variables.set("Console", Console); // share the Console
@@ -101,6 +117,30 @@ class HaxeJsInterpreter implements IInterpreter
 		}
 	}
 	
+	public function runExpr(hashId:Int, ?p_me:IGameBase, ?p_parent:IGameBase, ?p_it:IGameBase):Dynamic
+	{
+		var program:Dynamic = _get(hashId);
+		
+		try
+		{
+			return program(p_me,p_parent,p_it);
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("<<<<<SPARK EXPRESSION RUN-TIME JS ERROR>>>>>: " + e);
+			System.external.call("console.log", [ e ]);
+			System.external.call("console.log", [ program ]);
+			return null;
+		}
+	}
+	
+	public function hashExpr(script:String):Int
+	{
+		//var l_script:String = "(function(me,parent,it,spark){" + script + "})";
+		var l_script:String = "(function(me,parent,it){return(" + script + ");})";
+		
+		return _store(l_script, Crc32.make(Bytes.ofString(l_script)));
+	}
 	
 	public function hash(script:String):Int
 	{

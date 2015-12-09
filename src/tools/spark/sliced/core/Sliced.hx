@@ -5,22 +5,12 @@
  */
 
 package tools.spark.sliced.core;
-import flambe.input.MouseButton;
-import haxe.ds.IntMap;
-import haxe.ds.ObjectMap;
-import haxe.ds.StringMap;
-import tools.spark.framework.Assets;
-import tools.spark.framework.assets.Asset;
-import tools.spark.framework.assets.Module;
-import tools.spark.framework.Project;
 import tools.spark.sliced.interfaces.ISound;
 import tools.spark.sliced.interfaces.ILogic;
 import tools.spark.sliced.interfaces.IInput;
 import tools.spark.sliced.interfaces.IComms;
 import tools.spark.sliced.interfaces.IEvent;
 import tools.spark.sliced.interfaces.IDisplay;
-import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
-import flambe.input.Key;
 
 /**
  * ...
@@ -35,22 +25,6 @@ import flambe.input.Key;
 	public static var event( default, null ):IEvent;
 	public static var display( default, null ):IDisplay;
 	public static var dt( default, null ):Float;
-	
-	//There are references, so in scripting (in Js Interpreter for now) EVERYTHING goes through here.
-	public static var _Std:Dynamic;
-	public static var _StringMap:Dynamic;
-	public static var _IntMap:Dynamic;
-	public static var _ObjectMap:Dynamic;
-	public static var _Assets:Dynamic;
-	public static var _StringTools:Dynamic;
-	public static var _Xml:Dynamic;
-	public static var _MouseButton:Dynamic;
-	public static var _EEventType:Dynamic;
-	public static var _Key:Dynamic;
-	public static var _Project:Dynamic;
-	public static var _Module:Dynamic;
-	public static var _Asset:Dynamic;
-	
 	
 	public static function init():Void
 	{
@@ -67,19 +41,6 @@ import flambe.input.Key;
 		comms = p_comms;
 		event = p_event;
 		display = p_display;
-		_Std = Std;
-		_StringMap = StringMap;
-		_IntMap = IntMap;
-		_ObjectMap = ObjectMap;
-		_Assets = Assets;
-		_StringTools = StringTools;
-		_Xml = Xml;
-		_MouseButton = MouseButton;
-		_EEventType = EEventType;
-		_Key = Key;
-		_Project = Project;
-		_Module = Module;
-		_Asset = Asset;
 	}
 	
 	//@todo: maybe inline all the update functions?
