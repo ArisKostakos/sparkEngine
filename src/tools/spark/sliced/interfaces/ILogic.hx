@@ -20,6 +20,8 @@ interface ILogic extends IService
 	var scriptInterpreter( default, null ):IInterpreter;
 	var gmlInterpreter( default, null ):IInterpreter;
 	var gameFactory( default, null ):IGameFactory;
+	var pauseDt( default, default ):Float;
+	
 	function startAction(entity:IGameEntity, actionId:String):Bool;
 	function update():Void;
 	function createAndRun(p_gameEntityUrl:String):Void;

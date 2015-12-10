@@ -6,6 +6,7 @@
 
 package tools.spark.sliced.services.std.logic.core;
 
+import flambe.System;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.interfaces.ILogic;
 import tools.spark.sliced.core.AService;
@@ -28,6 +29,7 @@ class Logic extends AService implements ILogic
 	public var scriptInterpreter( default, null ):IInterpreter;
 	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
+	public var pauseDt( default, default ):Float;
 	private var _gameEntitiesByName:Map<String, Array<IGameEntity>>;
 	
 	public function new() 
@@ -91,6 +93,10 @@ class Logic extends AService implements ILogic
 		//Create GameEntity
 		rootGameEntitiesRunning[p_gameEntityUrl] = gameFactory.createGameEntity(p_gameEntityUrl);
 		Console.warn("Logic Service: Create and Running entity: " + p_gameEntityUrl);
+		
+		//Extremely temp place to put this..
+		//Remove Loading Screen
+		System.external.call("hideLoadingImage");
 	}
 	
 	public function createAndPause(p_gameEntityUrl:String):Void

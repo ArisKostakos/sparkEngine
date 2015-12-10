@@ -15,6 +15,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameTrigger;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.core.Sliced;
+import flambe.System;
 
 /**
  * @author Aris Kostakos
@@ -48,6 +49,8 @@ class Event extends AService implements IEvent
 		_init();
 	}
 	
+	private var _timeBeforePause:Float;
+	
 	private function _init():Void
 	{
 		Console.log("Init Event std Service...");
@@ -56,6 +59,22 @@ class Event extends AService implements IEvent
 		
 		//_isExecutingEvents = false;
 		_eventEntries = new Array<Dynamic>();
+		
+		//Raise Trigger for Pause/Unpause
+		System.hidden.changed.connect(function (hidden,_) {
+            if (hidden)
+			{
+				_timeBeforePause = System.time;
+				Console.error("_timeBeforePause: " + _timeBeforePause);
+				raiseEvent(EEventType.PROJECT_PAUSED);
+			}
+            else
+			{
+				Sliced.logic.pauseDt = System.time - _timeBeforePause;
+				Console.error("_timeDuringPause: " + Sliced.logic.pauseDt);
+				raiseEvent(EEventType.PROJECT_RESUMED);
+			}
+        });
 	}
 	
 	public function addTrigger(p_gameTrigger:IGameTrigger):Void

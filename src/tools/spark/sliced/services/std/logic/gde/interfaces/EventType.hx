@@ -64,6 +64,9 @@ class EventType
 		eventTypesMap[CUSTOM_TRIGGER] = "CustomTrigger";
 		eventTypesMap[SCENE_CREATED] = "SceneCreated";
 		
+		eventTypesMap[PROJECT_PAUSED] = "ProjectPaused";
+		eventTypesMap[PROJECT_RESUMED] = "ProjectResumed";
+		
 		//Reverse Map
 		for (eventType in eventTypesMap.keys())
 			eventTypesMapReverse[eventTypesMap.get(eventType)] = eventType;
