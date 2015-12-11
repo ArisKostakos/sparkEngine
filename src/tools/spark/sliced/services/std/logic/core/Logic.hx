@@ -30,8 +30,10 @@ class Logic extends AService implements ILogic
 	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
 	public var pauseDt( default, default ):Float;
-	private var _gameEntitiesByName:Map<String, Array<IGameEntity>>;
 	
+	public var gameEntitiesByName( default, default ):Map<String, Array<IGameEntity>>;
+	public var gameEntitiesByNameBackup( default, default ):Map<String, Array<IGameEntity>>;
+	public var registerToBackupActive( default, default ):Bool;
 	public function new() 
 	{
 		super();
@@ -52,7 +54,9 @@ class Logic extends AService implements ILogic
 		//Create Maps
 		rootGameEntitiesRunning = new Map<String, IGameEntity>();
 		rootGameEntitiesPaused = new Map<String, IGameEntity>();
-		_gameEntitiesByName = new Map<String, Array<IGameEntity>>();
+		gameEntitiesByName = new Map<String, Array<IGameEntity>>();
+		
+		registerToBackupActive = false;
 	}
 	
 	//This is taken out from _init because we need to create the Interpreters after Sliced is fully built, to feed the services as parameters for the interpreters
@@ -107,13 +111,13 @@ class Logic extends AService implements ILogic
 	
 	public function getAllEntitiesByName(p_stateName:String):Array<IGameEntity>
 	{
-		return _gameEntitiesByName.get(p_stateName);
+		return gameEntitiesByName.get(p_stateName);
 	}
 	
 	public function getEntityByName(p_stateName:String):IGameEntity
 	{
-		if (_gameEntitiesByName.exists(p_stateName))
-			return _gameEntitiesByName.get(p_stateName)[ _gameEntitiesByName.get(p_stateName).length-1];
+		if (gameEntitiesByName.exists(p_stateName))
+			return gameEntitiesByName.get(p_stateName)[ gameEntitiesByName.get(p_stateName).length-1];
 		else
 			return null;
 	}
@@ -144,10 +148,17 @@ class Logic extends AService implements ILogic
 		{
 			var l_entityName:String = p_entity.getState('name');
 			
-			if (_gameEntitiesByName.exists(l_entityName) == false)
-				_gameEntitiesByName.set(l_entityName, new Array<IGameEntity>());
+			var l_gameEntitiesHash:Map<String, Array<IGameEntity>>;
 			
-			_gameEntitiesByName.get(l_entityName).push(p_entity);
+			if (registerToBackupActive)
+				l_gameEntitiesHash = gameEntitiesByNameBackup;
+			else
+				l_gameEntitiesHash = gameEntitiesByName;
+			
+			if (l_gameEntitiesHash.exists(l_entityName) == false)
+				l_gameEntitiesHash.set(l_entityName, new Array<IGameEntity>());
+			
+			l_gameEntitiesHash.get(l_entityName).push(p_entity);
 		}
 	}
 	
