@@ -130,6 +130,22 @@ class NativeControlsHtmlRenderer extends ANativeControls2_5DRenderer implements 
 		}
 	}
 	
+	override inline public function insertChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity, p_index:Int):Void
+	{
+		//check the parent display type here.. For the childEntity, I'm ASSUMING it's an entity/object.. is that right??
+		switch (p_parentEntity.getState('displayType'))
+		{
+			case "Scene":
+				if (_scenes[p_parentEntity] != null)
+					_sceneManager.insertTo(createObject(p_childEntity), _scenes[p_parentEntity], p_index);
+			case "Entity":
+				if (_objects[p_parentEntity] != null)
+					_objectManager.insertTo(createObject(p_childEntity), _objects[p_parentEntity], p_index);
+			default:
+				Console.warn("NativeControlsHtmlRenderer: Unhandled insert child request: " + p_parentEntity.getState('displayType'));
+		}
+	}
+	
 	override inline public function removeChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void
 	{
 		//check the parent display type here.. For the childEntity, I'm ASSUMING it's an entity/object.. is that right??

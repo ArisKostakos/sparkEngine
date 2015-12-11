@@ -38,6 +38,18 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 			return false;
 	}
 	
+	public function insertChild( p_entity2_5D:IEntity2_5D, p_index:Int):Bool
+	{
+		if (childrenMap.exists(p_entity2_5D) == false)
+		{
+			children.insert(p_index, p_entity2_5D);
+			childrenMap.set(p_entity2_5D, true);
+			return true;
+		}
+		else
+			return false;
+	}
+	
 	public function removeChild( p_entity2_5D:IEntity2_5D):Void
 	{
 		children.remove(p_entity2_5D);

@@ -183,6 +183,26 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 		return true;
 	}
 	
+	override public function insertChild( p_entity2_5D:IEntity2_5D, p_index:Int):Bool
+	{
+		//Console.error("adding child (instanciable here)");
+		if (super.insertChild(p_entity2_5D, p_index))
+		{
+			//do for all instances (hack?)
+			for (f_view in _instances.keys())
+			{
+				_createChildOfInstance(p_entity2_5D, f_view);
+				p_entity2_5D.update(f_view);
+			}
+		}
+		else
+		{
+			Console.warn("Child Already exists!");
+		}
+		
+		return true;
+	}
+	
 	override public function removeChild( p_entity2_5D:IEntity2_5D):Void
 	{
 		//Console.error("adding child (instanciable here)");

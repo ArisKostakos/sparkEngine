@@ -92,6 +92,16 @@ class DomObjectManager implements IDisplayObjectManager
 			l_entity2_5D.addChild(p_objectChild);
 	}
 	
+	public function insertTo(p_objectChild:Dynamic, p_objectParent:Dynamic, p_index:Int):Void
+	{
+		//typecast
+		var l_entity2_5D:DomEntity2_5D = cast(p_objectParent, DomEntity2_5D);
+		
+		//objetChild may be null if it failed to be typecasted as a display object when being created
+		if (p_objectChild!=null)
+			l_entity2_5D.insertChild(p_objectChild, p_index);
+	}
+	
 	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void
 	{
 		//typecast

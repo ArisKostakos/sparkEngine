@@ -265,16 +265,21 @@ class GameEntity extends AGameBase implements IGameEntity
 		setState('command_zOrder', parentEntity.children.indexOf(this));
 	}
 	
+	public function get_zIndex():Int
+	{
+		return parentEntity.children.indexOf(this);
+	}
+	
 	public function insertChild(p_gameEntity:IGameEntity, p_pos:Int):Void
 	{
-		//Add to children
+		//Insert to children
 		children.insert(p_pos, p_gameEntity);
 		
 		//Set Parent to Child
 		p_gameEntity.parentEntity = this;
 		
 		//Following line is the weak connection between Logic and Display
-		Sliced.display.addDisplayObjectChild(this,p_gameEntity); //For group layout stuff to work, you need to do a new insert child here, to make an insert on the group objects
+		Sliced.display.insertDisplayObjectChild(this,p_gameEntity,p_pos); //For group layout stuff to work, you need to do a new insert child here, to make an insert on the group objects
 	}
 	
 	public function removeChild(p_gameEntity:IGameEntity):Void

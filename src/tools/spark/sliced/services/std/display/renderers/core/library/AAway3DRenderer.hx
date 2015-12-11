@@ -155,6 +155,11 @@ class AAway3DRenderer extends A3DRenderer implements ILibrarySpecificRenderer
 		}
 	}
 	
+	inline public function insertChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity, p_index:Int):Void
+	{
+		Console.error("AAway3DRenderer: Insert Child NOT Supported yet!!!");
+	}
+	
 	public function removeChild(p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void 
 	{
 		

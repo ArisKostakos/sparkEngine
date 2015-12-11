@@ -245,7 +245,7 @@ class Display extends AService implements IDisplay
 			{
 				case SET_SPACE:
 					_setActiveSpace(f_bufferEntry.source);
-				case ADDED:
+				case ADDED, INSERTED:
 					switch (f_bufferEntry.source.getState('displayType'))
 					{
 						case "Space":
@@ -259,8 +259,15 @@ class Display extends AService implements IDisplay
 							for (renderer in platformRendererSet)
 								Console.warn("adding something to a view, renderer logic");//...
 						default:
+							//HUGE PROBLEM HERE
+							//An object is created even for renderers that don't really render it's parent view
 							for (renderer in platformRendererSet)
-								renderer.addChild(f_bufferEntry.source, f_bufferEntry.target);
+							{
+								if (f_bufferEntry.type==ADDED)
+									renderer.addChild(f_bufferEntry.source, f_bufferEntry.target);
+								else if (f_bufferEntry.type == INSERTED)
+									renderer.insertChild(f_bufferEntry.source, f_bufferEntry.target, Std.parseInt(f_bufferEntry.field));
+							}
 					}
 				case REMOVED:
 					switch (f_bufferEntry.source.getState('displayType'))
@@ -326,6 +333,12 @@ class Display extends AService implements IDisplay
 			_addChild(p_gameEntityParent, p_gameEntityChild);
 	}
 	
+	inline public function insertDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity, p_index:Int):Void
+	{
+		if (p_gameEntityParent.getState('displayType')!=null && p_gameEntityChild.getState('displayType')!=null)
+			_insertChild(p_gameEntityParent, p_gameEntityChild, p_index);
+	}
+	
 	inline public function removeDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void
 	{
 		if (p_gameEntityParent.getState('displayType')!=null && p_gameEntityChild.getState('displayType')!=null)
@@ -347,6 +360,11 @@ class Display extends AService implements IDisplay
 	inline private function _addChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void
 	{
 		_dataBuffer.addEntry(ADDED, p_gameEntityParent, p_gameEntityChild);
+	}
+	
+	inline private function _insertChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity, p_index:Int):Void
+	{
+		_dataBuffer.addEntry(INSERTED, p_gameEntityParent, p_gameEntityChild, Std.string(p_index));
 	}
 	
 	inline private function _removeChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void

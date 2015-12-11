@@ -89,6 +89,12 @@ class Flambe2_5DViewManager implements IDisplayObjectManager
 		
 	}
 	
+	public function insertTo(p_objectChild:Dynamic, p_objectParent:Dynamic, p_index:Int):Void
+	{
+		//typecast?
+		
+	}
+	
 	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void
 	{
 		//typecast?

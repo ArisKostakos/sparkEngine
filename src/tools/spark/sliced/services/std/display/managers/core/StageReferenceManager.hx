@@ -181,6 +181,12 @@ class StageReferenceManager implements IDisplayObjectManager
 			Console.warn("A child of a Stage gameEntity is NOT a View or a StageArea! Ignoring...");
 	}
 	
+	public function insertTo(p_objectChild:Dynamic, p_objectParent:Dynamic, p_index:Int):Void
+	{
+		//typecast?
+		
+	}
+	
 	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void
 	{
 		//Check if this gameEntity was Active

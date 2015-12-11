@@ -15,5 +15,6 @@ interface IObjectContainer2_5D extends IObject2_5D
 	//container functions
 	var children( default, null ):Array<IEntity2_5D>;
 	function addChild( p_entity2_5D:IEntity2_5D):Bool;
+	function insertChild( p_entity2_5D:IEntity2_5D, p_index:Int):Bool;
 	function removeChild( p_entity2_5D:IEntity2_5D):Void;
 }

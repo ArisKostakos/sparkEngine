@@ -138,6 +138,11 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		}
 	}
 	
+	inline public function insertChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity, p_index:Int):Void
+	{
+		Console.error("AFlambe2_5DRenderer: Insert Child NOT Supported yet!!!");
+	}
+	
 	public function removeChild(p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void 
 	{
 		//check the parent display type here.. For the childEntity, I'm ASSUMING it's an entity/object.. is that right??

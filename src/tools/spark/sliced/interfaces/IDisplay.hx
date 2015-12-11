@@ -24,6 +24,7 @@ interface IDisplay extends IService
 	
 	function setActiveSpace(p_spaceEntity:IGameEntity):Bool;
 	function addDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void;
+	function insertDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity, p_index:Int):Void;
 	function removeDisplayObjectChild(p_gameEntityParent:IGameEntity, p_gameEntityChild:IGameEntity):Void;
 	function updateDisplayObjectState(p_gameEntity:IGameEntity, p_state:String):Void;
 	function updateDisplayObjectFormState(p_gameEntity:IGameEntity, p_state:String):Void;
