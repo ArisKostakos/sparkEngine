@@ -232,9 +232,9 @@ class Logic extends AService implements ILogic
 			{
 				var f_state:Xml = l_statesChildren.next();
 				
-				var f_id:String = xml_getElement(f_state, "Id").firstChild().toString();
-				var f_type:String = xml_getElement(f_state, "Type").firstChild().toString();
-				var f_value:String = xml_getElement(f_state, "Value").firstChild().toString();
+				var f_id:String = xml_getElement(f_state, "Id").firstChild().nodeValue;
+				var f_type:String = xml_getElement(f_state, "Type").firstChild().nodeValue;
+				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
 				
 				l_states.set(f_id,{id: f_id, type: f_type, value: f_value});
 			}
@@ -264,7 +264,7 @@ class Logic extends AService implements ILogic
 			{
 				var f_state:Xml = l_statesChildren.next();
 				var f_value:Xml = xml_getElement(f_state, "Value");
-				l_states.set(f_state.get("id"), f_value.firstChild().toString());
+				l_states.set(f_state.get("id"), f_value.firstChild().nodeValue);
 			}
 			return l_states;
 		}
@@ -467,7 +467,7 @@ class Logic extends AService implements ILogic
 			var l_xml:Xml = Xml.createElement("Value");
 			l_state.addChild(l_xml);
 			
-			l_xml.addChild(Xml.createPCData(p_State.value));
+			l_xml.addChild(Xml.createCData(p_State.value));
 		}
 		
 		return l_state;
@@ -506,7 +506,7 @@ class Logic extends AService implements ILogic
 			var l_xml:Xml = Xml.createElement("Value");
 			l_state.addChild(l_xml);
 			
-			l_xml.addChild(Xml.createPCData(p_State.value));
+			l_xml.addChild(Xml.createCData(p_State.value));
 		}
 		
 		return l_state;
