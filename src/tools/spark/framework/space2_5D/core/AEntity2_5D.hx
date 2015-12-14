@@ -34,10 +34,15 @@ class AEntity2_5D extends AInstantiable2_5D implements IEntity2_5D
 		return super.createInstance(p_view2_5D);
 	}
 	
-	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D, p_index:Int=-1):Void
 	{
 		if (p_childEntity.gameEntity.getState('layoutable') == true)
-			groupInstances[p_view2_5D].children.push(p_childEntity.groupInstances[p_view2_5D]);
+		{
+			if (p_index==-1)
+				groupInstances[p_view2_5D].children.push(p_childEntity.groupInstances[p_view2_5D]);
+			else
+				groupInstances[p_view2_5D].children.insert(p_index,p_childEntity.groupInstances[p_view2_5D]);
+		}
 			
 		// wanted to set parentScene here but it would have no effect for children inside children
 		//p_childEntity.parentScene = parentScene;  (i think will be null :(, becayse of the way instantiating goes)

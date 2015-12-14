@@ -87,7 +87,7 @@ class FlambeScene2_5D extends AScene2_5D
 			f_childEntity.update(p_view2_5D);
 	}
 	
-	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D, p_index:Int=-1):Void
 	{
 		/*
 		//SUPER hack to add a 'background' object at the beginning of flambe's display array (I know, it's bad.. fix it by correctly implementing layers
@@ -97,9 +97,10 @@ class FlambeScene2_5D extends AScene2_5D
 		*/
 		
 		//This is an 'instance' addChild... a flambe addChild..
+		//@todo: do a flambe insert child something, if p_index is not -1
 		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity)/*, appendChild*/);
 		
-		super._createChildOfInstance(p_childEntity, p_view2_5D);
+		super._createChildOfInstance(p_childEntity, p_view2_5D, p_index);
 	}
 	
 	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void

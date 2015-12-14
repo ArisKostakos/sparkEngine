@@ -52,12 +52,13 @@ class DomScene2_5D extends AScene2_5D
 	}
 	
 	
-	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D, p_index:Int=-1):Void
 	{
 		//This is an 'instance' addChild... a dom addChild..
+		//@todo: do a insertBefore(this.children[p_index]) something, if p_index is not -1
 		_instances[p_view2_5D].appendChild(cast(p_childEntity.createInstance(p_view2_5D), Element));
 		
-		super._createChildOfInstance(p_childEntity, p_view2_5D);
+		super._createChildOfInstance(p_childEntity, p_view2_5D, p_index);
 	}
 	
 	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void

@@ -148,7 +148,7 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 		return _instances[p_view2_5D];
 	}
 	
-	private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D, p_index:Int=-1):Void
 	{
 		//override me!!
 	}
@@ -191,7 +191,7 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 			//do for all instances (hack?)
 			for (f_view in _instances.keys())
 			{
-				_createChildOfInstance(p_entity2_5D, f_view);
+				_createChildOfInstance(p_entity2_5D, f_view, p_index);
 				p_entity2_5D.update(f_view);
 			}
 		}
