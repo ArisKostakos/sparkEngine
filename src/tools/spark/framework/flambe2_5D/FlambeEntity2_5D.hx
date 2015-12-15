@@ -85,7 +85,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['wrapWidth'] = _updateWrapWidth;
 		_updateStateFunctions['letterSpacing'] = _updateLetterSpacing;
 		_updateStateFunctions['lineSpacing'] = _updateLineSpacing;
+		_updateStateFunctions['scissorRect'] = _updateScissorRect;
 		_updateStateFunctions['command_zOrder'] = _updateZOrder;
+		
+		_queryFunctions['realWidth'] = _queryRealWidth;
+		_queryFunctions['realHeight'] = _queryRealHeight;
 	}
 	
 	
@@ -384,6 +388,27 @@ class FlambeEntity2_5D extends AEntity2_5D
 			
 			l_mesh.color = gameEntity.gameForm.getState( p_2DMeshFillRectForm );
 			//l_mesh.setSize = 
+		}
+	}
+	
+	
+	private function _updateScissorRect(p_scissorRect:Dynamic, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh != null) 
+		{
+			if (l_mesh.scissor == null)
+				l_mesh.scissor = new Rectangle(p_scissorRect.x, p_scissorRect.y, p_scissorRect.width, p_scissorRect.height);
+			else
+			{
+				l_mesh.scissor.x = p_scissorRect.x;
+				l_mesh.scissor.y = p_scissorRect.y;
+				l_mesh.scissor.width = p_scissorRect.width;
+				l_mesh.scissor.height = p_scissorRect.height;
+			}
+			
 		}
 	}
 	
@@ -1027,5 +1052,22 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			Console.error("Update Bounds: Instance is null");
 		}
+	}
+	
+	//QUERIES
+	inline private function _queryRealWidth(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		return l_mesh.getNaturalWidth();
+	}
+	
+	inline private function _queryRealHeight(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		return l_mesh.getNaturalHeight();
 	}
 }

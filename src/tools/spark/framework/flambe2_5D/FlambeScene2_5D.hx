@@ -56,6 +56,9 @@ class FlambeScene2_5D extends AScene2_5D
 	private function _initFlambeScene2_5D()
 	{
 		_updateStateFunctions['physicsScene'] = _updatePhysics;
+		
+		_queryFunctions['zoomX'] = _queryZoomX;
+		_queryFunctions['zoomY'] = _queryZoomY;
 	}
 	
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
@@ -286,4 +289,14 @@ class FlambeScene2_5D extends AScene2_5D
 		if (cb.int2.userData.gameEntity!= null) Sliced.event.raiseEvent(EEventType.PHYSICS_SENSOR_END_BIPED_FEET, cb.int2.userData.gameEntity);
 	}
 	
+	//QUERIES
+	inline private function _queryZoomX(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		return _scaleX;
+	}
+	
+	inline private function _queryZoomY(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		return _scaleY;
+	}
 }

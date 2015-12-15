@@ -89,6 +89,7 @@ import haxe.ds.ObjectMap;
 		//Shortcuts
 		_interpreter.variables.set("expr", runExpr);
 		_interpreter.variables.set("e", Sliced.logic.getEntityByName);
+		_interpreter.variables.set("query", Sliced.logic.queryGameEntity);
 		_interpreter.variables.set("string", Std.string);
 		
 		//so bad..

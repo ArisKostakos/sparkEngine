@@ -73,6 +73,7 @@ import flambe.input.Key;
 		//Shortcuts
 		untyped window.expr = runExpr;
 		untyped window.e = Sliced.logic.getEntityByName;
+		untyped window.query = Sliced.logic.queryGameEntity;
 		untyped window.string = Std.string;
 		
 		//COMMENTED OUT Because we don't use them anywhere in the egcs anymore
