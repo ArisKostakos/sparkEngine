@@ -8,8 +8,10 @@ package tools.spark.sliced.services.std.sound.core;
 
 import flambe.sound.Playback;
 import tools.spark.framework.Assets;
+import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.interfaces.ISound;
 import tools.spark.sliced.core.AService;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 
 /**
  * ...
@@ -37,8 +39,16 @@ class Sound extends AService implements ISound
 	{
 		var l_playback:Playback = Assets.getSound(p_soundName).play(volume);
 		_playBacks[p_soundName] = l_playback;
+		
+		l_playback.complete.changed.connect(function (to:Bool, from:Bool)
+		{
+		   Sliced.event.raiseEvent(EEventType.SOUND_COMPLETED, null, p_soundName);
+		});
+		
 		return l_playback;
 	}
+	
+
 	
 	public function loopSound(p_soundName:String, ?volume :Float):Playback
 	{

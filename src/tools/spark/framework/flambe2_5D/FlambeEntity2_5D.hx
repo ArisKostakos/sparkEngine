@@ -66,6 +66,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['opacity'] = _updateOpacity;
 		_updateStateFunctions['velocityX'] = _updateVelocityX;
 		_updateStateFunctions['velocityY'] = _updateVelocityY;
+		_updateStateFunctions['velocityAng'] = _updateVelocityAng;
 		_updateStateFunctions['applyImpulseX'] = _updateApplyImpulseX;
 		_updateStateFunctions['applyImpulseY'] = _updateApplyImpulseY;
 		_updateStateFunctions['centerAnchor'] = _centerAnchor;
@@ -178,6 +179,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 				_updateStateOfInstance('2DMeshSpriteForm', p_view2_5D);
 			case 'Text':
 				_updateStateOfInstance('2DMeshTextForm', p_view2_5D);
+				//_updateState('text', p_view2_5D);
+				_updateState('font', p_view2_5D);//its crazy that this works.. sometimes from form state sometimes from normal state.. messy stuff
+				_updateState('align', p_view2_5D);
+				_updateState('wrapWidth', p_view2_5D);
+				_updateState('letterSpacing', p_view2_5D);
+				_updateState('lineSpacing', p_view2_5D);
 			case 'Undefined':
 				Console.warn('Undefined 2DmeshType value');
 			default:
@@ -781,11 +788,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 						body.rotation = FMath.toRadians(gameEntity.getState('rotation'));
 						
 						//Initial Velocity
-						if (gameEntity.getState('physicsType') == "Dynamic")
+						if (gameEntity.getState('physicsType') == "Dynamic" || gameEntity.getState('physicsType') == "Kinematic")
+						{
 							body.velocity = new Vec2(gameEntity.getState('velocityX'), gameEntity.getState('velocityY'));
-						else if (gameEntity.getState('physicsType') == "Kinematic")
-							body.velocity = new Vec2(gameEntity.getState('velocityX'), gameEntity.getState('velocityY'));
-							
+							body.angularVel = FMath.toRadians(gameEntity.getState('velocityAng'));
+						}
+						
 						//body.rotation = Math.random() * 2*FMath.PI;
 						body.space = l_sceneInstance.get(SpaceComponent).space;
 						
@@ -862,6 +870,19 @@ class FlambeEntity2_5D extends AEntity2_5D
 		var body:Body = l_instance.get(BodyComponent).body;
 		
 		body.velocity.y = p_newVel;
+	}
+	
+	inline private function _updateVelocityAng(p_newVel:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		//var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_instance.get(BodyComponent) == null) return;
+		
+		var body:Body = l_instance.get(BodyComponent).body;
+		
+		body.angularVel = FMath.toRadians(p_newVel);
 	}
 	
 	inline private function _updateApplyImpulseX(p_newVel:Float, p_view2_5D:IView2_5D):Void

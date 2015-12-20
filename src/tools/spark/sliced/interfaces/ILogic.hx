@@ -5,6 +5,7 @@
  */
 
 package tools.spark.sliced.interfaces;
+import flambe.subsystem.StorageSystem;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameFactory;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
@@ -21,6 +22,7 @@ interface ILogic extends IService
 	var gmlInterpreter( default, null ):IInterpreter;
 	var gameFactory( default, null ):IGameFactory;
 	var pauseDt( default, default ):Float;
+	var storage( get, null ):StorageSystem;
 	
 	function startAction(entity:IGameEntity, actionId:String):Bool;
 	function update():Void;

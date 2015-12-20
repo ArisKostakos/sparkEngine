@@ -7,6 +7,7 @@
 package tools.spark.sliced.services.std.logic.core;
 
 import flambe.System;
+import flambe.subsystem.StorageSystem;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.interfaces.ILogic;
 import tools.spark.sliced.core.AService;
@@ -16,6 +17,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameFactory;
 import tools.spark.sliced.services.std.logic.interpreter.core.GmlInterpreter;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
+import tools.spark.framework.Assets;
 
 /**
  * ...
@@ -30,6 +32,7 @@ class Logic extends AService implements ILogic
 	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
 	public var pauseDt( default, default ):Float;
+	public var storage( get, null ):StorageSystem;
 	
 	public var gameEntitiesByName( default, default ):Map<String, Array<IGameEntity>>;
 	public var gameEntitiesByNameBackup( default, default ):Map<String, Array<IGameEntity>>;
@@ -162,7 +165,18 @@ class Logic extends AService implements ILogic
 		}
 	}
 	
+	//Getters
+	private function get_storage():StorageSystem
+	{
+		return System.storage;
+	}
+	
 	//Helper Functions
+	public function getStorage():StorageSystem
+	{
+		return System.storage;
+	}
+	
 	public function replace(p_source:String, p_regex:String, p_regexParameters:String, p_replaceWith:String):String
 	{
 		var l_regEx:EReg = new EReg(p_regex, p_regexParameters);
@@ -182,6 +196,43 @@ class Logic extends AService implements ILogic
 	public function reflectFieldOfField(p_object: Dynamic, p_field:String, p_field2:String):Dynamic
 	{
 		return Reflect.getProperty(Reflect.getProperty(p_object, p_field), p_field2); 
+	}
+	
+	public function insertStr(a:String, b:String, position:Int):String
+	{
+		return a.substr(0, position) + b + a.substr(position);
+	}
+	
+	public function lerp(start:Float, end:Float, percent:Float):Float
+	{
+		if (start == end)
+		{
+			return start;
+		}
+		return (end - start) * percent + start;
+	}
+	
+	public function formatStr(p_par:Dynamic):String
+	{
+		var p_string:String = Std.string(p_par);
+		//awefull..
+		if (p_string.length>9) //billions
+		{
+			p_string = insertStr(p_string,",",p_string.length-9);
+			p_string = insertStr(p_string,",",p_string.length-6);
+			p_string = insertStr(p_string,",",p_string.length-3);
+		}
+		else if (p_string.length>6) //millions
+		{
+			p_string = insertStr(p_string,",",p_string.length-6);
+			p_string = insertStr(p_string,",",p_string.length-3);
+		}
+		else if (p_string.length>3) //thousands
+		{
+			p_string = insertStr(p_string,",",p_string.length-3);
+		}
+		
+		return p_string;
 	}
 	
 	//Intepreter's toString() doesn't work well for Xml objects on Release mode.
@@ -246,9 +297,9 @@ class Logic extends AService implements ILogic
 		}
 	}
 	
-	public function xml_getAllMStates(p_xml:Xml, p_merge:Bool):Map<String, String>
+	public function xml_getAllMStates(p_xml:Xml, p_merge:Bool):Map<String, Dynamic>
 	{
-		var l_states:Map<String, String> = new Map<String, String>();
+		var l_states:Map<String, Dynamic> = new Map<String, Dynamic>();
 		
 		var l_groupName:String;
 		if (p_merge) l_groupName = "_States";
@@ -263,8 +314,11 @@ class Logic extends AService implements ILogic
 			while (l_statesChildren.hasNext())
 			{
 				var f_state:Xml = l_statesChildren.next();
-				var f_value:Xml = xml_getElement(f_state, "Value");
-				l_states.set(f_state.get("id"), f_value.firstChild().nodeValue);
+				
+				var f_id:String = f_state.get("id");
+				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
+				
+				l_states.set(f_id,{id: f_id, value: f_value});
 			}
 			return l_states;
 		}
@@ -272,6 +326,11 @@ class Logic extends AService implements ILogic
 		{
 			return null;
 		}
+	}
+	
+	public function xml_parseAsset(p_asset:Dynamic):Xml
+	{
+		return Xml.parse(Assets.getFile(p_asset.dir + '/' + p_asset.fileName + '.' + p_asset.fileExtension).toString()).firstElement();
 	}
 	
 	public function xml_getElement(p_xml:Xml, p_xmlNode:String):Xml
@@ -423,6 +482,26 @@ class Logic extends AService implements ILogic
 		return xml_entity_addState(l_group, p_State, p_mergeStates);
 	}
 	
+	public function xml_entity_updateFormState(p_EntityXml:Xml, p_State:Dynamic, p_mergeForm:Bool, p_mergeStates:Bool):Bool
+	{
+		var l_groupName:String;
+		if (p_mergeForm) l_groupName = "_Form";
+			else l_groupName = "Form";
+		
+		//Check if group exists, else quit
+		var l_group:Xml;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		else
+		{
+			return false;
+		}
+		
+		return xml_entity_updateState(l_group, p_State, p_mergeStates);
+	}
+	
 	public function xml_entity_addState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Xml
 	{
 		var l_groupName:String;
@@ -471,6 +550,42 @@ class Logic extends AService implements ILogic
 		}
 		
 		return l_state;
+	}
+	
+	public function xml_entity_updateState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Bool
+	{
+		var l_groupName:String;
+		if (p_merge) l_groupName = "_States";
+			else l_groupName = "States";
+		
+		//Check if group exists, else quit
+		var l_group:Xml;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		else
+		{
+			return false;
+		}
+		
+		//Look for State
+		for (stateNode in l_group.elements())
+		{
+			var f_id:String = xml_getElement(stateNode, "Id").firstChild().nodeValue;
+			
+			if (f_id == p_State.id)
+			{
+				var f_valueNode:Xml = xml_getElement(stateNode, "Value");
+				f_valueNode.removeChild(f_valueNode.firstChild());
+				f_valueNode.addChild(Xml.createCData(p_State.value));
+				return true;
+			}
+			
+		}
+		
+		//Didn't found it
+		return false;
 	}
 	
 	public function xml_entity_addMState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Xml

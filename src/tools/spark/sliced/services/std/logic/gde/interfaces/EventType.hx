@@ -67,6 +67,9 @@ class EventType
 		eventTypesMap[PROJECT_PAUSED] = "ProjectPaused";
 		eventTypesMap[PROJECT_RESUMED] = "ProjectResumed";
 		
+		eventTypesMap[SOUND_COMPLETED] = "SoundCompleted";
+		
+		
 		//Reverse Map
 		for (eventType in eventTypesMap.keys())
 			eventTypesMapReverse[eventTypesMap.get(eventType)] = eventType;

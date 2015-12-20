@@ -5,6 +5,7 @@
  */
 
 package tools.spark.sliced.services.std.logic.interpreter.core;
+import flambe.System;
 import tools.spark.framework.assets.Asset;
 import tools.spark.framework.assets.Module;
 import tools.spark.framework.Project;
@@ -47,6 +48,12 @@ import haxe.ds.ObjectMap;
 	{
 		//Here we use somethings for no other reason than to prevent DCE to eliminate the classes. We want to include them so they can be reflected with the interprenter
 		var dummy:Int = Std.random(1);
+		var dummy2:Dynamic = System.storage;
+		dummy2 = System.storage.supported;
+		dummy2 = System.storage.clear;
+		dummy2 = System.storage.get;
+		dummy2 = System.storage.remove;
+		dummy2 = System.storage.set;
 		//end of DCE prevention
 		
 		_hashTable = new Map<Int,Expr>();
