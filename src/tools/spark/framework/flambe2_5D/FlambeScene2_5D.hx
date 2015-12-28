@@ -184,8 +184,8 @@ class FlambeScene2_5D extends AScene2_5D
 	
 	private function _scenePhysicsInit(p_space:Space):Void
 	{
-		p_space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, CbType.ANY_BODY, CbType.ANY_BODY, _beginHandlerCollision));
-		p_space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbType.ANY_BODY, CbType.ANY_BODY, _endHandlerCollision));
+		//p_space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, CbType.ANY_BODY, CbType.ANY_BODY, _beginHandlerCollision));
+		//p_space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, CbType.ANY_BODY, CbType.ANY_BODY, _endHandlerCollision));
 		
 		p_space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.ANY, CbType.ANY_BODY, CbType.ANY_BODY, _beginHandlerSensor));
 		p_space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.ANY, CbType.ANY_BODY, CbType.ANY_BODY, _endHandlerSensor));
@@ -231,10 +231,14 @@ class FlambeScene2_5D extends AScene2_5D
 		//kinda hacky way of stoing colliding object
 		//cast(cb.int1.userData.gameEntity,IGameEntity).setState('collidedWith', cb.int2.userData.gameEntity);
 		//cast(cb.int2.userData.gameEntity,IGameEntity).setState('collidedWith', cb.int1.userData.gameEntity);
-		
-		//Console.error("int1: " + cb.int1.userData.gameEntity);
-		//Console.error("int2: " + cb.int2.userData.gameEntity);
-		
+		/*
+		Console.error("SENSOR COLLISION preSTART!");
+		if (cb.int1.userData.gameEntity!=null)
+			Console.error("int1: " + cb.int1.userData.gameEntity.getState('name'));
+			
+		if (cb.int2.userData.gameEntity!=null)
+		Console.error("int2: " + cb.int2.userData.gameEntity.getState('name'));
+		*/
 		//this is the shape.. get it's containing body
 		//var int1Parent:Body = cb.int1;// .castShape.body;
 		//Console.error("SENSOR STARTTTTTTTTTT: " + int1Parent.userData.gameEntity.getState('name'));

@@ -91,6 +91,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		_queryFunctions['realWidth'] = _queryRealWidth;
 		_queryFunctions['realHeight'] = _queryRealHeight;
+		_queryFunctions['x'] = _queryRealX;
+		_queryFunctions['y'] = _queryRealY;
 	}
 	
 	
@@ -760,6 +762,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 							l_shape.sensorEnabled = gameEntity.getState('physicsSensorFlag');
 						
 							body.shapes.add(l_shape);
+							
+							body.allowRotation = gameEntity.getState('allowRotation');
 						}
 						else
 						{
@@ -775,6 +779,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 								body.shapes.add(new Polygon(Polygon.box(100, 100), l_material));
 							}
 						}
+						
+						
+						//Inertia
+						if (gameEntity.getState('inertia') != 12345)
+							body.inertia = gameEntity.getState('inertia');
 						
 						//Body CbType
 						//body.cbTypes.add
@@ -807,13 +816,13 @@ class FlambeEntity2_5D extends AEntity2_5D
 					else
 					{
 						gameEntity.setState('physicsEntity', false);
-						Console.warn("Entity " + gameEntity.getState('name') + " failed to become a physics object.");
+						Console.warn("Entity " + gameEntity.getState('name') + " failed to become a physics object. ParentScene not physics");
 					}
 				}
 				else
 				{
 					gameEntity.setState('physicsEntity', false);
-					Console.warn("Entity " + gameEntity.getState('name') + " failed to become a physics object.");
+					Console.warn("Entity " + gameEntity.getState('name') + " failed to become a physics object. ParentScene null");
 				}
 			}
 		}
@@ -1090,5 +1099,21 @@ class FlambeEntity2_5D extends AEntity2_5D
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
 		return l_mesh.getNaturalHeight();
+	}
+	
+	inline private function _queryRealX(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		return l_mesh.x._;
+	}
+	
+	inline private function _queryRealY(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		return l_mesh.y._;
 	}
 }

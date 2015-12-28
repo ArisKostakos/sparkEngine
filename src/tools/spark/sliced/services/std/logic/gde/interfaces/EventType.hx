@@ -55,9 +55,10 @@ class EventType
 		eventTypesMap[ON_DRAG_LEAVE] = "OnDragLeave";	//fires when the dragged element leaves the drop target
 		eventTypesMap[ON_DROP] = "OnDrop";	//fires when the dragged element is dropped on the drop target
 		eventTypesMap[KEY_PRESSED_LOCAL] = "KeyPressedLocal";
-		eventTypesMap[KEY_RELEASED_LOCAL] = "KeyReleasedLocal";
 		eventTypesMap[KEY_DOWN_LOCAL] = "KeyDownLocal";
+		eventTypesMap[KEY_RELEASED_LOCAL] = "KeyReleasedLocal";
 		eventTypesMap[KEY_PRESSED] = "KeyPressed";
+		eventTypesMap[KEY_DOWN] = "KeyDown";
 		eventTypesMap[KEY_RELEASED] = "KeyReleased";
 		
 		eventTypesMap[STATE_CHANGED] = "StateChanged";

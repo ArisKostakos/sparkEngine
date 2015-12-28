@@ -18,8 +18,10 @@ import tools.spark.sliced.core.Sliced;
  */
 @:keep class KeyboardDevice implements IInputDevice
 {
-	private var _keysDown:Array<Key>;
-	private var _keysUp:Array<Key>;
+	private var _keysPressed:Array<Key>;
+	private var _keysReleased:Array<Key>;
+	
+	private var _keysDown:Map<Key,Bool>;
 	
 	private var _keysJustPressed:Map<Key,Bool>;
 	private var _keysJustReleased:Map<Key,Bool>;
@@ -31,8 +33,10 @@ import tools.spark.sliced.core.Sliced;
 	
 	private function _init():Void
 	{
-		_keysDown = new Array<Key>();
-		_keysUp = new Array<Key>();
+		_keysPressed = new Array<Key>();
+		_keysReleased = new Array<Key>();
+		
+		_keysDown = new Map<Key,Bool>();
 		
 		_keysJustPressed = new Map<Key,Bool>();
 		_keysJustReleased = new Map<Key,Bool>();
@@ -43,12 +47,16 @@ import tools.spark.sliced.core.Sliced;
 	
 	private function _onKeyDown(p_keyboardEvent:KeyboardEvent):Void
 	{
-		_keysDown.push(p_keyboardEvent.key);
+		_keysPressed.push(p_keyboardEvent.key);
+		
+		_keysDown.set(p_keyboardEvent.key, true);
 	}
 	
 	private function _onKeyUp(p_keyboardEvent:KeyboardEvent):Void
 	{
-		_keysUp.push(p_keyboardEvent.key);
+		_keysReleased.push(p_keyboardEvent.key);
+		
+		_keysDown.remove(p_keyboardEvent.key);
 	}
 	
 	public function update():Void
@@ -56,18 +64,23 @@ import tools.spark.sliced.core.Sliced;
 		_keysJustPressed = new Map<Key,Bool>();
 		_keysJustReleased = new Map<Key,Bool>();
 		
-		while (_keysDown.length>0)
+		while (_keysPressed.length>0)
 		{
-			var w_keyDown:Key = _keysDown.pop();
+			var w_keyDown:Key = _keysPressed.pop();
 			_keysJustPressed[w_keyDown] = true;
 			Sliced.event.raiseEvent(EEventType.KEY_PRESSED, w_keyDown);
 		}
 		
-		while (_keysUp.length>0)
+		while (_keysReleased.length>0)
 		{
-			var w_keyUp:Key = _keysUp.pop();
+			var w_keyUp:Key = _keysReleased.pop();
 			_keysJustReleased[w_keyUp] = true;
 			Sliced.event.raiseEvent(EEventType.KEY_RELEASED, w_keyUp);
+		}
+		
+		for (keyDown in _keysDown.keys())
+		{
+			Sliced.event.raiseEvent(EEventType.KEY_DOWN, keyDown);
 		}
 	}
 	
