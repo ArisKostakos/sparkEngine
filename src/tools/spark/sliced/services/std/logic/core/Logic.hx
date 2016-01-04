@@ -177,6 +177,11 @@ class Logic extends AService implements ILogic
 		return System.storage;
 	}
 	
+	public function random(p_from:Int, p_to:Int):Int
+	{
+		return p_from + Std.random(p_to - p_from + 1);
+	}
+	
 	public function replace(p_source:String, p_regex:String, p_regexParameters:String, p_replaceWith:String):String
 	{
 		var l_regEx:EReg = new EReg(p_regex, p_regexParameters);

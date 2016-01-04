@@ -106,8 +106,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D, p_index:Int=-1):Void
 	{
 		//This is an 'instance' addChild... a flambe addChild..
-		//@todo: do a flambe insert child something, if p_index is not -1
-		_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity));
+		
+		if (p_index == -1)
+			_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity));
+		else
+			_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity), true, p_index);
+			
 		
 		super._createChildOfInstance(p_childEntity, p_view2_5D, p_index);
 	}
@@ -532,7 +536,9 @@ class FlambeEntity2_5D extends AEntity2_5D
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
 		if (l_mesh != null)
+		{
 			l_mesh.scaleX._ = p_newScale;
+		}
 	}
 	
 	//@todo: for pure 2d.. for 3d coordinates, its not that simple..

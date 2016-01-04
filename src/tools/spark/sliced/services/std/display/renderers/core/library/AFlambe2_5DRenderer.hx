@@ -140,7 +140,18 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 	
 	inline public function insertChild ( p_parentEntity:IGameEntity, p_childEntity:IGameEntity, p_index:Int):Void
 	{
-		Console.error("AFlambe2_5DRenderer: Insert Child NOT Supported yet!!!");
+		//check the parent display type here.. For the childEntity, I'm ASSUMING it's an entity/object.. is that right??
+		switch (p_parentEntity.getState('displayType'))
+		{
+			case "Scene":
+				if (_scenes[p_parentEntity] != null)
+					_sceneManager.insertTo(createObject(p_childEntity), _scenes[p_parentEntity], p_index);
+			case "Entity":
+				if (_objects[p_parentEntity] != null)
+					_objectManager.insertTo(createObject(p_childEntity), _objects[p_parentEntity], p_index);
+			default:
+				Console.warn("AFlambe2_5DRenderer: Unhandled insert child request: " + p_parentEntity.getState('displayType'));
+		}
 	}
 	
 	public function removeChild(p_parentEntity:IGameEntity, p_childEntity:IGameEntity):Void 
