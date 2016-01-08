@@ -46,13 +46,13 @@ class Assets
 	
 	private static function _onLoaderSuccess():Void
 	{
-		trace("Assets: SUCCESS!");
+		Console.log("Assets: SUCCESS!");
 		successSignal.emit();
 	}
 	
 	private static function _onLoaderError(p_error:String):Void
 	{
-		trace("Assets: ERROR: " + p_error);
+		Console.log("Assets: ERROR: " + p_error);
 		errorSignal.emit(p_error);
 	}
 	
