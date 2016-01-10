@@ -5,6 +5,8 @@
  */
 
 package tools.spark.framework;
+import flambe.util.SignalConnection;
+import tools.spark.framework.assets.interfaces.IBatchLoader;
 import tools.spark.framework.assets.Module;
 import tools.spark.framework.assets.EModuleState;
 import tools.spark.sliced.core.Sliced;
@@ -20,23 +22,26 @@ class ModuleManager
 	private static var _modulesLoadQueueBytes:Array<Int>;
 	private static var _loadingBatch:Bool;
 	
+	private static var _loaderSignalSuccess:SignalConnection;
+	private static var _loaderSignalError:SignalConnection;
+	private static var _loaderSignalProgress:SignalConnection;
+	
 	public static function init():Void
 	{
 		_moduleStates = new Map<String,EModuleState>();
 		_modulesLoadQueue = new Array<String>();
 		_modulesLoadQueueBytes = new Array<Int>();
 		_loadingBatch = false;
-		
-		Assets.successSignal.connect(_onLoaderSuccess);
-		Assets.errorSignal.connect(_onLoaderError);
-		Assets.progressSignal.connect(_onLoaderProgress);
 	}
 	
 	private static function _onLoaderSuccess():Void
 	{
+		_disposeBatchLoaderSignals();
+		
 		if (_loadingBatch == false)
 		{
 			//Got signal but it wasn't initiated from Module Manager. Ignoring (this solution sucks, see warning at the end)
+			//Jan-2016: I fixed this, so maybe i can remove this check now...
 			return;
 		}
 		
@@ -64,6 +69,8 @@ class ModuleManager
 	
 	private static function _onLoaderError(p_error:String):Void
 	{
+		_disposeBatchLoaderSignals();
+		
 		Console.error("Module Loader: ERROR: " + p_error);
 		//errorSignal.emit(p_error);
 	}
@@ -174,8 +181,6 @@ class ModuleManager
 		if (_loadingBatch==false) _startLoadBatch();
 	}
 	
-	//@warning: If the user uses the Asset Service himself manually, it will interfere with the signals sent here
-	//and fuck everything up! figure it out!
 	private static function _startLoadBatch():Void
 	{
 		//do a check here if _loadingBatch is false? don't have to currently due to logic, but maybe just 
@@ -186,16 +191,31 @@ class ModuleManager
 		{
 			var l_moduleName:String = _modulesLoadQueue[0];
 			
-			Assets.initiateBatch();
+			var l_loader:IBatchLoader = Assets.initiateBatch();
 			
+			//Set up signals..
+			_loaderSignalSuccess = l_loader.successSignal.connect(_onLoaderSuccess);
+			_loaderSignalError = l_loader.errorSignal.connect(_onLoaderError);
+			_loaderSignalProgress = l_loader.progressSignal.connect(_onLoaderProgress);
+			
+			//Add Assets
 			for (asset in Project.main.modules[l_moduleName].assets)
 			{
 				//Console.log("adding file: " + asset.id);
-				Assets.addFile(Project.main.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true");
+				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true");
 			}
-			Assets.loadBatch();
+			
+			//Start Loading
+			l_loader.start();
 			
 			_loadingBatch = true;
 		}
+	}
+	
+	private static function _disposeBatchLoaderSignals():Void
+	{
+		_loaderSignalSuccess.dispose();
+		_loaderSignalError.dispose();
+		_loaderSignalProgress.dispose();
 	}
 }

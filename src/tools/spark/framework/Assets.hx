@@ -14,6 +14,7 @@ import flambe.sound.Sound;
 import flambe.util.Signal0;
 import flambe.util.Signal1;
 import flambe.util.Signal2;
+import tools.spark.framework.assets.interfaces.IBatchLoader;
 
 /**
  * Client Version of the Assets System
@@ -26,11 +27,12 @@ import flambe.util.Signal2;
  */
 class Assets
 { 
+	//These are signals that we pass by from Platform Specific Loader (e.g. flambe loader) to inform us of OVERALL progress of ALL Batch Loaders
 	public static var successSignal:Signal0;
 	public static var errorSignal:Signal1<String>;
 	public static var progressSignal:Signal2<Float,Float>;
 	
-	private static var _loader:FlambeLoader;
+	private static var _loader:FlambeLoader; //When more loaders are supported, ifdef this..
 	
 	public static function init():Void
 	{
@@ -44,6 +46,13 @@ class Assets
 		progressSignal = new Signal2<Float,Float>();
 	}
 	
+	//Start new Batch Load Job (returns IBatchLoader, and user uses that one to complete job)
+	public static function initiateBatch():IBatchLoader
+	{
+		return _loader.startNewBatchLoad();
+	}
+	
+	//Right now, these will never trigger because flambe Loader never emits anything itself
 	private static function _onLoaderSuccess():Void
 	{
 		Console.log("Assets: SUCCESS!");
@@ -62,32 +71,7 @@ class Assets
 		progressSignal.emit(p_progress, p_total);
 	}
 	
-	public static function initiateBatch():Void
-	{
-		_loader.startNewBatchLoad();
-	}
-	
-	public static function addFile(p_url:String, ?p_name:String, p_forceLoadAsData:Bool=false):Void
-	{
-		if (p_name == null) p_name = p_url;
-		
-		//Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
-		if (p_url.indexOf('/assets') != -1)
-		{
-			p_url = "http://130.211.172.86" + p_url;
-		}
-		//END OF Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
-		
-		Console.error("LOADER: " + p_url);
-		_loader.addFile(p_name, p_url, p_forceLoadAsData);
-	}
-	
-	public static function loadBatch():Void
-	{
-		_loader.initiateLoad();
-	}
-	
-	
+	//Wrappers, passing information from Platform Specific Loader
 	public static function getAssetPackOf(p_name:String):AssetPack
 	{
 		try 
@@ -139,11 +123,11 @@ class Assets
 			return null;
 		}
 	}
-	
+	/*
 	public static function testLoadFile(p_name:String, p_url:String, p_forceLoadAsData:Bool):Void
 	{
 		_loader.startNewBatchLoad();
 		_loader.addFile(p_name, p_url, p_forceLoadAsData);
 		_loader.initiateLoad();
-	}
+	}*/
 }

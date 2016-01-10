@@ -6,6 +6,7 @@
 
 package tools.spark;
 
+import tools.spark.framework.assets.interfaces.IBatchLoader;
 import tools.spark.framework.Project;
 import tools.spark.framework.ModuleManager;
 import tools.spark.sliced.core.Sliced;
@@ -32,11 +33,10 @@ class Main
 
 	private static function _loadClientConfig():Void
 	{
-		Assets.successSignal.connect(_onClientConfigLoaded).once();
-		
-		Assets.initiateBatch();
-		Assets.addFile(_getSkcUrl(), "config");
-		Assets.loadBatch();
+		var l_loader:IBatchLoader = Assets.initiateBatch();
+		l_loader.addFile(_getSkcUrl(), "config");
+		l_loader.successSignal.connect(_onClientConfigLoaded).once();
+		l_loader.start();
 	}
 	
 	private static function _onClientConfigLoaded()

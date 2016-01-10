@@ -19,21 +19,15 @@ import flambe.util.Signal2;
 import flambe.util.SignalConnection;
 import flambe.asset.AssetEntry.AssetFormat;
 import flambe.asset.Asset;
+import tools.spark.framework.assets.interfaces.IBatchLoader;
 
 /**
- * Load the config folder statically...
- * Load the lionscript\std folder statically...
- * Load the lionscript\workingProject folder dynamically
- * should also load all other asset folders (data, images, models, sounds)
- * dynamically as well. BUT should load the std parts in those folders
- * statically here. For example a font that I should always have
- * available for ALL projects.. Should be very limited.
- * FOR NOW, load lionscript\workingProject folder statically as well...
- * FOR NOW, load all assets statically...
  * @author Aris Kostakos
  */
 class FlambeLoader
 {	
+	//Ok so.. these signals should be later used for informing Assets of General progress of ALL simutaneous batch loaders
+	//We don't hook FlambeBatchLoader signals yet.. either we do, or we let the Batchloader call a function here..
 	public var successSignal:Signal0;
 	public var errorSignal:Signal1<String>;
 	public var progressSignal:Signal2<Float,Float>;
@@ -41,12 +35,6 @@ class FlambeLoader
 	private var _assetInUse:Map<String,Bool>;
 	private var _assetToBatchLoad:Map<String,Manifest>;
 	private var _batchLoadToAssetPack:Map<Manifest,AssetPack>;
-	
-	private var _manifest:Manifest;
-	private var _promise:Promise<AssetPack>;
-	private var _promiseSignalSuccess:SignalConnection;
-	private var _promiseSignalError:SignalConnection;
-	private var _promiseSignalProgress:SignalConnection;
 	
 	public function new()
 	{
@@ -65,28 +53,23 @@ class FlambeLoader
 	}
 	
 	//Interface function for ServerLoader as well
-	public function startNewBatchLoad():Void
+	public function startNewBatchLoad():IBatchLoader
 	{
-		_manifest = new Manifest();
+		return new FlambeBatchLoader(this);
 	}
 	
-	//Interface function for ServerLoader as well
-	public function addFile(p_name:String, p_url:String, p_forceLoadAsData:Bool):Void
+	//Register Stuff
+	public function registerBatchLoad(p_manifest:Manifest, p_assetPack:AssetPack):Void
 	{
-		if (p_forceLoadAsData)
-		{
-			//_manifest.add(p_name, p_url +"?" + Std.random(10000), 1, AssetFormat.Data);
-			_manifest.add(p_name, p_url, 1, AssetFormat.Data);
-		}
-		else
-		{
-			//_manifest.add(p_name, p_url +"?" + Std.random(10000), 1);
-			_manifest.add(p_name, p_url, 1);
-		}
-		
-		_assetToBatchLoad[p_name]= _manifest;
+		_batchLoadToAssetPack[p_manifest] = p_assetPack;
 	}
 	
+	public function registerAsset(p_manifest:Manifest, p_name:String):Void
+	{
+		_assetToBatchLoad[p_name]= p_manifest;
+	}
+	
+	//Some "getters"
 	public function getAssetPackOf(p_name:String):AssetPack
 	{
 		return _batchLoadToAssetPack[_assetToBatchLoad[p_name]];
@@ -105,43 +88,5 @@ class FlambeLoader
 	public function getSound(p_name:String):Sound
 	{
 		return _batchLoadToAssetPack[_assetToBatchLoad[p_name]].getSound(p_name);
-	}
-	
-	
-	//Interface function for ServerLoader as well.
-	public function initiateLoad():Void
-	{
-		_promise = System.loadAssetPack(_manifest);
-		
-		_promiseSignalSuccess = _promise.success.connect(_onPromiseSuccess);
-		_promiseSignalError = _promise.error.connect(_onPromiseError);
-		_promiseSignalProgress = _promise.progressChanged.connect(_onPromiseProgress);
-	}
-	
-	private function _onPromiseSuccess(p_assettPack:AssetPack):Void
-	{
-		_disposePromiseSignals();
-		
-		_batchLoadToAssetPack[_manifest] = p_assettPack;
-		successSignal.emit();
-	}
-	
-	private function _onPromiseError(p_error:String):Void
-	{
-		_disposePromiseSignals();
-		
-		errorSignal.emit(p_error);
-	}
-	
-	private function _onPromiseProgress():Void
-	{
-		progressSignal.emit(_promise.progress, _promise.total);
-	}
-	
-	private function _disposePromiseSignals():Void
-	{
-		_promiseSignalSuccess.dispose();
-		_promiseSignalError.dispose();
-		_promiseSignalProgress.dispose();
 	}
 }
