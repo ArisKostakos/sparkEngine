@@ -165,6 +165,25 @@ class Logic extends AService implements ILogic
 		}
 	}
 	
+	public function deregisterEntityNameClass(p_entity:IGameEntity):Void
+	{
+		if (p_entity.getState('name') != null)
+		{
+			var l_entityName:String = p_entity.getState('name');
+			
+			var l_gameEntitiesHash:Map<String, Array<IGameEntity>>;
+			
+			if (registerToBackupActive)
+				l_gameEntitiesHash = gameEntitiesByNameBackup;
+			else
+				l_gameEntitiesHash = gameEntitiesByName;
+			
+			if (l_gameEntitiesHash.exists(l_entityName))
+				l_gameEntitiesHash.remove(l_entityName);
+		}
+	}
+	
+	
 	//Getters
 	private function get_storage():StorageSystem
 	{
