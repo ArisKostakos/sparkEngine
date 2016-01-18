@@ -22,7 +22,7 @@ interface IComms extends IService
 	function connectTo(p_hostname:String, p_port:String, ?p_serverIdentifier:String):Void;
 	function request(p_remoteRoute:String, p_message:Dynamic, ?p_requestIdentifier:String):Void;
 	function disconnect():Void;
-	//function notify..
+	function notify(p_route:String, p_msg:Dynamic):Void;
 	function addServerEvent(p_serverEventName:String, ?p_serverEventIdentifier:String):Void;
 	
 	

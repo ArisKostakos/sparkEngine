@@ -30,7 +30,7 @@ class Socket implements ISocket
 		IPomeloClientWebSocketJs.request(p_route, p_msg, p_callBack);
 	}
 	
-	public function notify(p_route:Dynamic, p_msg:Dynamic):Void
+	public function notify(p_route:String, p_msg:Dynamic):Void
 	{
 		IPomeloClientWebSocketJs.notify(p_route, p_msg);
 	}

@@ -140,8 +140,10 @@ class Comms extends AService implements IComms
 	}
 	
 	
-	//public function notify
-	//...
+	public function notify(p_route:String, p_msg:Dynamic):Void
+	{
+		_socket.notify(p_route, p_msg);
+	}
 	
 	
 	public function addServerEvent(p_serverEventName:String, ?p_serverEventIdentifier:String):Void
