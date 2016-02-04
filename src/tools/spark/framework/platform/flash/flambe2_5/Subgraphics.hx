@@ -10,7 +10,7 @@ import tools.spark.sliced.services.std.display.renderers.interfaces.IRenderer;
 import flash.events.Event;
 import flash.Lib;
 import flambe.platform.flash.FlashPlatform;
-import flambe.platform.Renderer;
+import flambe.platform.InternalRenderer;
 import flambe.display.Sprite;
 import flambe.System;
 import tools.spark.sliced.core.Sliced;
@@ -21,7 +21,7 @@ import tools.spark.sliced.core.Sliced;
  */
 class Subgraphics
 {	
-	private static var _flambeDisplaySystem:Renderer;
+	private static var _flambeDisplaySystem:InternalRenderer<Dynamic>;
 	
 	public static function createDisplayRenderers():Void
 	{

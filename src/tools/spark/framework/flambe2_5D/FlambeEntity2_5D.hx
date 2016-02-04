@@ -16,6 +16,7 @@ import flambe.input.PointerEvent;
 import flambe.math.Rectangle;
 import flambe.math.FMath;
 import nape.shape.Shape;
+import tools.spark.framework.flambe2_5D.components.PlanetComponent;
 import tools.spark.framework.flambe2_5D.spritesheet.SpriteSheetPlayer;
 import tools.spark.framework.space2_5D.core.AEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
@@ -740,10 +741,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 							case "Ellastic":
 								l_material = new Material(1, 0, 0, 1, 0);
 							case "Biped":
-								l_material = new Material(-5, 1, 2, 1, 0.001);
+								l_material = new Material(0, 1, 2, 10, 0.001);
 							default:
 								l_material = Material.wood();
 						}
+						//(elasticity:Float=0.0,dynamicFriction:Float=1.0,staticFriction:Float=2.0,density:Float=1,rollingFriction:Float=0.001)
 						
 						var l_meshWidth:Float = Sprite.getBounds(l_instance).width*gameEntity.getState('scaleX');	// l_mesh.getNaturalWidth();
 						var l_meshHeight:Float = Sprite.getBounds(l_instance).height*gameEntity.getState('scaleY');	// l_mesh.getNaturalHeight();
@@ -774,8 +776,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 						else
 						{
 							if (gameEntity.getState('physicsShape') == "Biped")
-							{	//we multiply with scale here, since we don't use the getBounds method
-								_appendPhysicsBipedShapes(body, 76, 180, l_mesh.scaleX._, 0, -0.09, l_material);
+							{	
+								Console.error("LOOOK AT l_mesh.scaleX._: " + l_mesh.scaleX._);
+								body.shapes.add(new Polygon(Polygon.rect(0,0,203, 573), l_material));
+								//we multiply with scale here, since we don't use the getBounds method
+								//_appendPhysicsBipedShapes(body, 263, 573, l_mesh.scaleX._, 0, -0.49, l_material);
 								
 								body.allowRotation = false;
 							}
@@ -816,6 +821,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 						
 
 						l_instance.add(new BodyComponent(body));
+						
+						if (gameEntity.getState('physicsPlanet') == true)
+							l_instance.add(new PlanetComponent(body));
+							
 						//var childEntity:Entity = new Entity().add(new BodyComponent(body));
 						//childEntity.add(new FillSprite(0x00ff00, 64, 64).centerAnchor());
 					}
