@@ -65,13 +65,13 @@ class Event extends AService implements IEvent
             if (hidden)
 			{
 				_timeBeforePause = System.time;
-				Console.error("_timeBeforePause: " + _timeBeforePause);
+				//Console.error("_timeBeforePause: " + _timeBeforePause);
 				raiseEvent(EEventType.PROJECT_PAUSED);
 			}
             else
 			{
 				Sliced.logic.pauseDt = System.time - _timeBeforePause;
-				Console.error("_timeDuringPause: " + Sliced.logic.pauseDt);
+				//Console.error("_timeDuringPause: " + Sliced.logic.pauseDt);
 				raiseEvent(EEventType.PROJECT_RESUMED);
 			}
         });
