@@ -112,6 +112,12 @@ class Logic extends AService implements ILogic
 		rootGameEntitiesPaused[p_gameEntityUrl] = gameFactory.createGameEntity(p_gameEntityUrl);
 	}
 	
+	public function create(p_gameEntityUrl:String):IGameEntity
+	{
+		//Create GameEntity
+		return gameFactory.createGameEntity(p_gameEntityUrl);
+	}
+	
 	public function getAllEntitiesByName(p_stateName:String):Array<IGameEntity>
 	{
 		return gameEntitiesByName.get(p_stateName);

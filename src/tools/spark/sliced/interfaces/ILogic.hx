@@ -28,6 +28,7 @@ interface ILogic extends IService
 	function update():Void;
 	function createAndRun(p_gameEntityUrl:String):Void;
 	function createAndPause(p_gameEntityUrl:String):Void;
+	function create(p_gameEntityUrl:String):IGameEntity;
 	
 	function getEntityByName(p_stateName:String):IGameEntity;
 	function getAllEntitiesByName(p_stateName:String):Array<IGameEntity>;
