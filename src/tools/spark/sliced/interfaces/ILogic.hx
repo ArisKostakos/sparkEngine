@@ -9,6 +9,7 @@ import flambe.subsystem.StorageSystem;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameFactory;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
+import tools.spark.sliced.services.std.logic.level_manager.core.LevelManager;
 /**
  * ...
  * @author Aris Kostakos
@@ -21,6 +22,7 @@ interface ILogic extends IService
 	var scriptInterpreter( default, null ):IInterpreter;
 	var gmlInterpreter( default, null ):IInterpreter;
 	var gameFactory( default, null ):IGameFactory;
+	var levelManager( default, null ):LevelManager;
 	var pauseDt( default, default ):Float;
 	var storage( get, null ):StorageSystem;
 	

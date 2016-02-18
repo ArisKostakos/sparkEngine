@@ -45,6 +45,7 @@ interface IGameEntity extends IGameBase
 	function setState(p_stateId:String, p_value:Dynamic):Dynamic;
 	
 	function getChildren():Array<IGameEntity>;
+	function addChild(p_gameEntity:IGameEntity):Void;
 	
 	function clone(?p_parentEntity:IGameEntity):IGameEntity;
 }

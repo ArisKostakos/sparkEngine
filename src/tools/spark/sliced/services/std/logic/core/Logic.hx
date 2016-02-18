@@ -17,6 +17,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameFactory;
 import tools.spark.sliced.services.std.logic.interpreter.core.GmlInterpreter;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
+import tools.spark.sliced.services.std.logic.level_manager.core.LevelManager;
 import tools.spark.framework.Assets;
 
 /**
@@ -31,6 +32,7 @@ class Logic extends AService implements ILogic
 	public var scriptInterpreter( default, null ):IInterpreter;
 	public var gmlInterpreter( default, null ):IInterpreter;
 	public var gameFactory( default, null ):IGameFactory;
+	public var levelManager( default, null ):LevelManager;
 	public var pauseDt( default, default ):Float;
 	public var storage( get, null ):StorageSystem;
 	
@@ -53,6 +55,9 @@ class Logic extends AService implements ILogic
 		
 		//Create GameFactory
 		gameFactory = new GameFactory();
+		
+		//Create LevelManager
+		levelManager = new LevelManager();
 		
 		//Create Maps
 		rootGameEntitiesRunning = new Map<String, IGameEntity>();
@@ -103,7 +108,7 @@ class Logic extends AService implements ILogic
 		
 		//Extremely temp place to put this..
 		//Remove Loading Screen
-		System.external.call("hideLoadingImage");
+		//System.external.call("hidePreloader"); //hideLoadingImage
 	}
 	
 	public function createAndPause(p_gameEntityUrl:String):Void

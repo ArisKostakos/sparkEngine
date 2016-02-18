@@ -6,6 +6,9 @@
 
 package tools.spark.framework;
 import flambe.util.SignalConnection;
+import flambe.util.Signal0;
+import flambe.util.Signal1;
+import flambe.util.Signal2;
 import tools.spark.framework.assets.interfaces.IBatchLoader;
 import tools.spark.framework.assets.Module;
 import tools.spark.framework.assets.EModuleState;
@@ -22,9 +25,15 @@ class ModuleManager
 	private static var _modulesLoadQueueBytes:Array<Int>;
 	private static var _loadingBatch:Bool;
 	
+	//Signals for ModuleManager<-BatchLoader
 	private static var _loaderSignalSuccess:SignalConnection;
 	private static var _loaderSignalError:SignalConnection;
 	private static var _loaderSignalProgress:SignalConnection;
+	
+	//Signals for ExternalCaller<-ModuleManager
+	public static var successSignal:Signal0; //we might need one more.. one for module loaded, one for all required modules loaded (finished)
+	public static var errorSignal:Signal1<String>;
+	public static var progressSignal:Signal2<Float,Float>;
 	
 	public static function init():Void
 	{
@@ -32,6 +41,10 @@ class ModuleManager
 		_modulesLoadQueue = new Array<String>();
 		_modulesLoadQueueBytes = new Array<Int>();
 		_loadingBatch = false;
+		
+		successSignal = new Signal0();
+		errorSignal = new Signal1<String>();
+		progressSignal = new Signal2<Float,Float>();
 	}
 	
 	private static function _onLoaderSuccess():Void
@@ -72,13 +85,13 @@ class ModuleManager
 		_disposeBatchLoaderSignals();
 		
 		Console.error("Module Loader: ERROR: " + p_error);
-		//errorSignal.emit(p_error);
+		errorSignal.emit(p_error);
 	}
 	
 	private static function _onLoaderProgress(p_progress:Float, p_total:Float):Void
 	{
 		//trace("Module Loader: Progress: Loaded " + p_progress + " Bytes out of " + p_total + " total Bytes...");
-		//progressSignal.emit(p_progress, p_total);
+		progressSignal.emit(p_progress, p_total);
 	}
 	
 	public static function execute(p_moduleName:String):Void
@@ -89,6 +102,8 @@ class ModuleManager
 			_loadModule(p_moduleName);
 		}
 	}
+	
+	//add a public static load function that does not try to execute?? hmmm or not
 	
 	public static function getModuleState(p_ModuleName:String):EModuleState
 	{
@@ -209,6 +224,11 @@ class ModuleManager
 			l_loader.start();
 			
 			_loadingBatch = true;
+		}
+		else
+		{
+			//All done!
+			successSignal.emit();
 		}
 	}
 	
