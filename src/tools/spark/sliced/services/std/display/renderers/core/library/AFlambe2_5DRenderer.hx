@@ -88,6 +88,20 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		return _views[p_viewEntity];
 	}
 	
+	//Right now, this doesn't destroy anything, just removes objects and references..
+	//add a flag, to completely destroy objects
+	//so it doesn't get lost... somehow mark a view as alive, but not added.. stuff like that u know...
+	public function destroyView ( p_viewEntity:IGameEntity):Void
+	{
+		if (_views[p_viewEntity] == null)
+			Console.warn("View " + p_viewEntity.getState('name') + " has not been added to this Flambe2_5DRenderer. Ignoring destroyView...");
+		else
+		{
+			_viewManager.destroy(_views[p_viewEntity]);
+			_views[p_viewEntity] = null;
+		}
+	}
+	
 	public function createScene ( p_sceneEntity:IGameEntity):Dynamic
 	{
 		if (_scenes[p_sceneEntity] != null)

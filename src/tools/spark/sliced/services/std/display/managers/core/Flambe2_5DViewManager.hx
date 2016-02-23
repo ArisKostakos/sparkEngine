@@ -43,8 +43,10 @@ class Flambe2_5DViewManager implements IDisplayObjectManager
 	
 	public function destroy(p_object:Dynamic):Void 
 	{
-		//typecast?
+		//typecast
+		var l_view2_5D:FlambeView2_5D = cast(p_object, FlambeView2_5D);
 		
+		l_view2_5D.destroy();
 	}
 	
 	public function update(p_object:Dynamic, p_gameEntity:IGameEntity):Void

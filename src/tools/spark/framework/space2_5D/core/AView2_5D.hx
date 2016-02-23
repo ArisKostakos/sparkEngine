@@ -49,6 +49,11 @@ class AView2_5D extends ABase2_5D implements IView2_5D
 		scene.updateCamera(this, camera);
 	}
 	
+	public function destroy():Void
+	{
+		//override me
+	}
+	
 	private function set_camera( v : ICamera2_5D ) : ICamera2_5D {
         return camera = v;
     }

@@ -34,10 +34,25 @@ class ViewReferenceManager implements IDisplayObjectManager
 		return l_viewReference;
 	}
 	
+	//This right now weakly removes the view from the renderer.. Doesn't destroy ANYTHING
+	//Later, add an optional flag parameter to this function, that determines if we just remove, or hard destroy EVERYTHING (references, and renderer objects)
 	public function destroy(p_object:Dynamic):Void 
 	{
-		//typecast?
+		//Check if this gameEntity was Active
+		if (p_object == null) return;
 		
+		//typecast
+		var l_viewReference:IActiveViewReference = cast(p_object, IActiveViewReference);
+		
+		if (l_viewReference.renderer != null)
+		{
+			//This is huge... starting to talk to renderers here!! right place to do that??? Sure why not...
+			l_viewReference.renderer.destroyView(l_viewReference.viewEntity); //flag goes here too..
+		}
+		else
+		{
+			Console.error("Tried to remove View from renderer, but view wasn't assigned to one. Ignoring...");
+		}
 	}
 	
 	public function update(p_object:Dynamic, p_gameEntity:IGameEntity):Void

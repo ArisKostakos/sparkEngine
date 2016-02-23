@@ -58,6 +58,12 @@ class FlambeView2_5D extends AView2_5D
 			System.root.addChild(_instanceView);
 	}
 	
+	override public function destroy():Void
+	{
+		//until we actually destroy things, i just remove it from root (for physics etc).. its not getting rendered anyway if its activeViewReference gets removed..
+		System.root.removeChild(_instanceView);
+	}
+	
 	override public function render():Void
 	{
 		//render

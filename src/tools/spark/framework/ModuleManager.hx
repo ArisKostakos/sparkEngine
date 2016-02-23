@@ -18,7 +18,7 @@ import tools.spark.sliced.core.Sliced;
  * ...
  * @author Aris Kostakos
  */
-class ModuleManager
+@:keep class ModuleManager
 {
 	private static var _moduleStates:Map<String,EModuleState>;
 	private static var _modulesLoadQueue:Array<String>;
@@ -47,6 +47,16 @@ class ModuleManager
 		progressSignal = new Signal2<Float,Float>();
 	}
 	
+	public static function getBytesOnQueue():Int
+	{
+		var l_totalBytes:Int = 0;
+		
+		for (bytes in _modulesLoadQueueBytes)
+			l_totalBytes += bytes;
+			
+		return l_totalBytes;
+	}
+	
 	private static function _onLoaderSuccess():Void
 	{
 		_disposeBatchLoaderSignals();
@@ -69,6 +79,9 @@ class ModuleManager
 		//Mark it as loaded
 		_moduleStates[l_moduleName] = LOADED;
 		
+		//Store Bytes Loaded
+		_bytesLoaded += _modulesLoadQueueBytes[0];
+		
 		//Remove module from Queues
 		_modulesLoadQueue.shift();
 		_modulesLoadQueueBytes.shift();
@@ -90,15 +103,27 @@ class ModuleManager
 	
 	private static function _onLoaderProgress(p_progress:Float, p_total:Float):Void
 	{
-		//trace("Module Loader: Progress: Loaded " + p_progress + " Bytes out of " + p_total + " total Bytes...");
-		progressSignal.emit(p_progress, p_total);
+		//Console.warn("Module Loader: Progress: Loaded " + p_progress + " Bytes out of " + p_total + " total Bytes...");
+		
+		//Console.warn("TOTAL: " + _totalBytes + ", LOADED: " + _bytesLoaded + ", module size: " + p_total + ",module loaded: " + p_progress);
+		_percDone = Std.int((_bytesLoaded+p_progress) * 100 / _totalBytes);
+		
+		//Console.warn("Percent Loaded: " + _percDone);
+		progressSignal.emit(_percDone, _totalBytes); //So this is not great.. i changed the parameters a little bit to total percentage.. should reflect this everywhere
 	}
+	
+	private static var _percDone:Int;
+	private static var _totalBytes:Int;
+	private static var _bytesLoaded:Int;
 	
 	public static function execute(p_moduleName:String):Void
 	{
 		if (isModuleLoaded(p_moduleName)) _executeModule(p_moduleName);
 		else
 		{
+			_percDone = 0;
+			_totalBytes = 0;
+			_bytesLoaded = 0;
 			_loadModule(p_moduleName);
 		}
 	}
@@ -181,7 +206,7 @@ class ModuleManager
 		}
 	}
 	
-	//@donow: two things plz. insert bytes to Assets, and the Asset loaded, so we can check here if asset already loaded.
+	//@donow: one things plz. the Asset loaded, so we can check here if asset already loaded.
 	private static function _loadAssetsOfModule(p_moduleName:String):Void
 	{
 		var l_bytes:Int = 0;
@@ -192,6 +217,7 @@ class ModuleManager
 		_moduleStates[p_moduleName] = LOADING;
 		_modulesLoadQueue.push(p_moduleName);
 		_modulesLoadQueueBytes.push(l_bytes);
+		_totalBytes += l_bytes;
 		
 		if (_loadingBatch==false) _startLoadBatch();
 	}
@@ -217,7 +243,7 @@ class ModuleManager
 			for (asset in Project.main.modules[l_moduleName].assets)
 			{
 				//Console.log("adding file: " + asset.id);
-				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true");
+				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true", Std.parseInt(asset.bytes));
 			}
 			
 			//Start Loading

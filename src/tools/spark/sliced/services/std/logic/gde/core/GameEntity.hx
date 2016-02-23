@@ -284,11 +284,17 @@ class GameEntity extends AGameBase implements IGameEntity
 	
 	public function removeChild(p_gameEntity:IGameEntity):Void
 	{
-		//Add to children
+		//Remove from children
 		children.remove(p_gameEntity);
 		
 		//Following line is the weak connection between Logic and Display
 		Sliced.display.removeDisplayObjectChild(this,p_gameEntity);
+	}
+	
+	public function remove():Void
+	{
+		//Remove me
+		parent.removeChild(this);
 	}
 	
 	//Removes all children
