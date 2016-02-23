@@ -96,6 +96,24 @@ class ActiveStageReference implements IActiveStageReference
 		_addLayoutElement(p_stageAreaReference.layoutElement);
 	}
 	
+	public function removeView(p_viewReference:IActiveViewReference):Void
+	{
+		//Push the new View Reference
+		activeViewReferences.remove(p_viewReference);
+		
+		//update layout tree as well
+		_removeLayoutElement(p_viewReference.layoutElement);
+	}
+	
+	public function removeStageArea(p_stageAreaReference:IActiveStageAreaReference):Void
+	{
+		//Push the new StageArea Reference
+		activeStageAreaReferences.remove(p_stageAreaReference);
+		
+		//update layout tree as well
+		_removeLayoutElement(p_stageAreaReference.layoutElement);
+	}
+	
 	private function _addLayoutElement(p_layoutElement:Group):Void
 	{
 		if (p_layoutElement.layoutableEntity.getState('parent') == "Implicit")
@@ -109,6 +127,25 @@ class ActiveStageReference implements IActiveStageReference
 				if (activeStageAreaReference.stageAreaEntity.getState('name') == p_layoutElement.layoutableEntity.getState('parent'))
 				{
 					activeStageAreaReference.layoutElement.children.push(p_layoutElement);
+					break;
+				}
+			}
+		}
+	}
+	
+	private function _removeLayoutElement(p_layoutElement:Group):Void
+	{
+		if (p_layoutElement.layoutableEntity.getState('parent') == "Implicit")
+		{
+			layoutRoot.children.remove(p_layoutElement);
+		}
+		else
+		{
+			for (activeStageAreaReference in activeStageAreaReferences)
+			{
+				if (activeStageAreaReference.stageAreaEntity.getState('name') == p_layoutElement.layoutableEntity.getState('parent'))
+				{
+					activeStageAreaReference.layoutElement.children.remove(p_layoutElement);
 					break;
 				}
 			}

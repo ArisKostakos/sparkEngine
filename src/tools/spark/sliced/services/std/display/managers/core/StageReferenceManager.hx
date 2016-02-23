@@ -194,6 +194,15 @@ class StageReferenceManager implements IDisplayObjectManager
 		
 		//typecast?
 		
+		var l_stageReference:IActiveStageReference = cast(p_objectParent, ActiveStageReference);
+		var l_stageChildEntity:IGameEntity = cast(p_objectChild, GameEntity);
+		
+		if (l_stageChildEntity.getState('displayType') == "View") //weak typecasting
+			_removeView(l_stageReference, l_stageChildEntity);
+		else if (l_stageChildEntity.getState('displayType') == "StageArea") //weak typecasting
+			_removeStageArea(l_stageReference, l_stageChildEntity);
+		else
+			Console.warn("A child of a Stage gameEntity is NOT a View or a StageArea! Ignoring...");
 	}
 	
 	private function _addView(p_stageReference:IActiveStageReference, p_viewReference:IActiveViewReference, p_viewEntity:IGameEntity):Void
@@ -235,6 +244,41 @@ class StageReferenceManager implements IDisplayObjectManager
 		{
 			p_stageReference.addStageArea(p_stageAreaReference);
 			_activeReferenceMediator.stageAreaReferenceManager.update(p_stageAreaReference, p_stageAreaEntity);
+		}
+	}
+	
+	private function _removeView(p_stageReference:IActiveStageReference, p_viewEntity:IGameEntity):Void
+	{
+		var l_activeViewReference = _activeReferenceMediator.getActiveViewReference(p_viewEntity);
+		
+		if (l_activeViewReference == null)
+		{
+			Console.warn("This view object [" + p_viewEntity.getState('name') + "] is not bound to the Active Stage. Ignoring Remove View...");
+			//in this case, the newly created viewReference pointer won't be held anywhere and the viewRererence object will be garbage collected :/
+		}
+		else
+		{
+			//Btw, we handle removing the view, but we leave scene and camera alone..
+			//because it may still be used elsewhere.. but figure out how to easily handle scene/camera removal too.. someplace..
+			
+			p_stageReference.removeView(l_activeViewReference);
+			_activeReferenceMediator.viewReferenceManager.destroy(l_activeViewReference);
+		}
+	}
+	
+	private function _removeStageArea(p_stageReference:IActiveStageReference, p_stageAreaEntity:IGameEntity):Void
+	{
+		var l_activeStageAreaReference = _activeReferenceMediator.getActiveStageAreaReference(p_stageAreaEntity);
+		
+		if (l_activeStageAreaReference == null)
+		{
+			Console.warn("This stageArea object [" + p_stageAreaEntity.getState('name') + "] is not bound to the Active Stage. Ignoring Remove StageArea...");
+			//in this case, the newly created stageAreaReference pointer won't be held anywhere and the stageAreaReference object will be garbage collected :/
+		}
+		else
+		{
+			p_stageReference.removeStageArea(l_activeStageAreaReference);
+			//_activeReferenceMediator.stageAreaReferenceManager.destroy(p_stageAreaReference); //add me
 		}
 	}
 }

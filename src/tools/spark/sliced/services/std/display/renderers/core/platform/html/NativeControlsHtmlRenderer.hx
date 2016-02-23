@@ -73,11 +73,25 @@ class NativeControlsHtmlRenderer extends ANativeControls2_5DRenderer implements 
 	override public function createView ( p_viewEntity:IGameEntity):Dynamic
 	{
 		if (_views[p_viewEntity] != null)
-			Console.warn("View " + p_viewEntity.getState('name') + " has already been added to this NativeControlsHtmlRenderer. Ignoring...");
+			Console.warn("View " + p_viewEntity.getState('name') + " has already been added to this NativeControlsHtmlRenderer. Ignoring createView...");
 		else
 			_views[p_viewEntity] = cast(_viewManager.create(p_viewEntity),DomView2_5D);
 		
 		return _views[p_viewEntity];
+	}
+	
+	//Right now, this doesn't destroy anything, just removes objects and references..
+	//add a flag, to completely destroy objects
+	//so it doesn't get lost... somehow mark a view as alive, but not added.. stuff like that u know...
+	override public function destroyView ( p_viewEntity:IGameEntity):Void
+	{
+		if (_views[p_viewEntity] == null)
+			Console.warn("View " + p_viewEntity.getState('name') + " has not been added to this NativeControlsHtmlRenderer. Ignoring destroyView...");
+		else
+		{
+			_viewManager.destroy(_views[p_viewEntity]);
+			_views[p_viewEntity] = null;
+		}
 	}
 	
 	override public function createScene ( p_sceneEntity:IGameEntity):Dynamic

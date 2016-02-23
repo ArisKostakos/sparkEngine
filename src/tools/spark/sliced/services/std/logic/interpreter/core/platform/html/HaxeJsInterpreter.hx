@@ -8,6 +8,7 @@ package tools.spark.sliced.services.std.logic.interpreter.core.platform.html;
 
 import haxe.io.Bytes;
 import haxe.crypto.Crc32;
+import tools.spark.framework.ModuleManager;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameBase;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
@@ -75,6 +76,8 @@ import flambe.input.Key;
 		untyped window.MouseButton = MouseButton;
 		untyped window.EEventType = EEventType;
 		untyped window.Key = Key;
+		untyped window.System = System;
+		untyped window.ModuleManager = ModuleManager;
 		
 		//Shortcuts
 		untyped window.expr = runExpr;

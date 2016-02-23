@@ -6,6 +6,7 @@
 
 package tools.spark.sliced.services.std.logic.core;
 
+import flambe.subsystem.ExternalSystem;
 import flambe.System;
 import flambe.subsystem.StorageSystem;
 import tools.spark.sliced.core.Sliced;
@@ -205,6 +206,11 @@ class Logic extends AService implements ILogic
 	public function getStorage():StorageSystem
 	{
 		return System.storage;
+	}
+	
+	public function getExternal():ExternalSystem
+	{
+		return System.external;
 	}
 	
 	public function random(p_from:Int, p_to:Int):Int

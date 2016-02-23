@@ -46,6 +46,8 @@ interface IGameEntity extends IGameBase
 	
 	function getChildren():Array<IGameEntity>;
 	function addChild(p_gameEntity:IGameEntity):Void;
+	function removeChild(p_gameEntity:IGameEntity):Void;
+	function remove():Void;
 	
 	function clone(?p_parentEntity:IGameEntity):IGameEntity;
 }

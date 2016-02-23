@@ -32,7 +32,7 @@ class ABatchLoader implements IBatchLoader
 		progressSignal = new Signal2<Float,Float>();
 	}
 	
-	public function addFile(p_url:String, ?p_name:String, p_forceLoadAsData:Bool=false):Void
+	public function addFile(p_url:String, ?p_name:String, p_forceLoadAsData:Bool=false, p_bytes:Int = 50000/*assume 50k*/):Void
 	{
 		if (p_name == null) p_name = p_url;
 		
@@ -44,7 +44,7 @@ class ABatchLoader implements IBatchLoader
 		//END OF Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
 		
 		Console.error("LOAD REQUEST: " + p_url);
-		_addFile(p_name, p_url, p_forceLoadAsData);
+		_addFile(p_name, p_url, p_forceLoadAsData, p_bytes);
 	}
 	
 	public function start():Void
@@ -53,7 +53,7 @@ class ABatchLoader implements IBatchLoader
 		
 	}
 	
-	private function _addFile(p_name:String, p_url:String, p_forceLoadAsData:Bool):Void
+	private function _addFile(p_name:String, p_url:String, p_forceLoadAsData:Bool, p_bytes:Int):Void
 	{
 		//override me
 		

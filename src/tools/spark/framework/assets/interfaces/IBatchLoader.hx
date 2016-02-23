@@ -19,6 +19,6 @@ interface IBatchLoader
 	var errorSignal:Signal1<String>;
 	var progressSignal:Signal2<Float,Float>;
 	
-	function addFile(p_url:String, ?p_name:String, p_forceLoadAsData:Bool = false):Void;
+	function addFile(p_url:String, ?p_name:String, p_forceLoadAsData:Bool = false, p_bytes:Int = 50000/*assume 50k*/):Void;
 	function start():Void;
 }

@@ -1027,11 +1027,21 @@ class FlambeEntity2_5D extends AEntity2_5D
 	{
 		//Get Mesh
 		var l_mesh:Sprite = _instancesMesh[p_view];
-		//Console.error("RESIZING: " + gameEntity.getState('name') + '. width: ' + p_width + ', height: ' + p_height);
+		Console.error("RESIZING: " + gameEntity.getState('name') + '. x: ' + p_x + ', y: ' + p_y);
+		Console.error("RESIZING: " + gameEntity.getState('name') + '. width: ' + p_width + ', height: ' + p_height);
+		
 		if (l_mesh != null)		
 		{
-			if (p_x != null) l_mesh.x._ = p_x;
-			if (p_y != null) l_mesh.y._ = p_y;
+			if (p_x != null)
+			{
+				l_mesh.x._ = p_x;
+				Console.error("wtfXX");
+			}
+			if (p_y != null)
+			{
+				l_mesh.y._ = p_y;
+				Console.error("wtfYY");
+			}
 			//if (p_width != null) l_mesh.scissor.width = p_width;
 			//if (p_height != null) l_mesh.scissor.height = p_height;
 		}

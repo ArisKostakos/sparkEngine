@@ -8,6 +8,7 @@ package tools.spark.sliced.services.std.logic.interpreter.core;
 import flambe.System;
 import tools.spark.framework.assets.Asset;
 import tools.spark.framework.assets.Module;
+import tools.spark.framework.ModuleManager;
 import tools.spark.framework.Project;
 import tools.spark.sliced.core.Sliced;
 import flambe.input.Key;
@@ -92,6 +93,9 @@ import haxe.ds.ObjectMap;
 		_interpreter.variables.set("IntMap", IntMap); // share the IntMap
 		_interpreter.variables.set("ObjectMap", ObjectMap); // share the ObjectMap
 		_interpreter.variables.set("EEventType", EEventType); // share the EEventType
+		_interpreter.variables.set("System", System); // share the System
+		_interpreter.variables.set("ModuleManager", ModuleManager); // share the ModuleManager
+		
 		
 		//Shortcuts
 		_interpreter.variables.set("expr", runExpr);

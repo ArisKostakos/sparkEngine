@@ -23,4 +23,6 @@ interface IActiveStageReference
   
   function addView(p_viewReference:IActiveViewReference):Void;
   function addStageArea(p_stageAreaReference:IActiveStageAreaReference):Void;
+  function removeView(p_viewReference:IActiveViewReference):Void;
+  function removeStageArea(p_stageAreaReference:IActiveStageAreaReference):Void;
 }

@@ -95,6 +95,13 @@ class DomView2_5D extends AView2_5D
 		content.insertBefore(_instanceView, content.firstElementChild);
 	}
 	
+	override public function destroy():Void
+	{
+		var content:Element = Browser.document.getElementById("content");
+		
+		//Remove from 'stage'
+		content.removeChild(_instanceView);
+	}
 	
 	//i think this belongs to AView2_5D instead.. i don't see any flambe relevant code...
 	override private function set_camera( p_value : ICamera2_5D ) : ICamera2_5D 

@@ -33,6 +33,11 @@ class ANativeControls2_5DRenderer extends A2_5DRenderer implements ILibrarySpeci
 		return null;
 	}
 	
+	public function destroyView ( p_viewEntity:IGameEntity):Void
+	{
+		
+	}
+	
 	public function createScene(p_sceneEntity:IGameEntity):Dynamic 
 	{
 		return null;

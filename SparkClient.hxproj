@@ -53,7 +53,8 @@
   <preBuildCommand>xcopy /S /Y $(CompilerPath)\lib\aris-hacks\flambe $(CompilerPath)\lib\flambe\4,1,0\flambe
 cmd /c flambe --config flambe_html_editor.yaml build --$(BuildConfig)</preBuildCommand>
   <!-- Executed after build -->
-  <postBuildCommand alwaysRun="False" />
+  <postBuildCommand alwaysRun="False">xcopy /E /Y "C:\Users\Aris\Dropbox\Spark_Projects\StandardLib" "C:\Users\Aris\spark\build\web"
+xcopy /E /Y "C:\Users\Aris\Dropbox\Spark_Projects\BlankTemplate" "C:\Users\Aris\spark\build\web"</postBuildCommand>
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="True" />
