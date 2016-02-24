@@ -70,6 +70,16 @@ class FlambeLoader
 	}
 	
 	//Some "getters"
+	public function assetLoaded(p_name:String):Bool
+	{
+		if (_assetToBatchLoad.exists(p_name))
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+	
 	public function getAssetPackOf(p_name:String):AssetPack
 	{
 		return _batchLoadToAssetPack[_assetToBatchLoad[p_name]];

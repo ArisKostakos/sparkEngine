@@ -192,17 +192,25 @@ import tools.spark.sliced.core.Sliced;
 	private static function _loadModule(p_moduleName:String):Void
 	{
 		Console.log("LOADING MODULE: " + p_moduleName);
-		if (getModuleState(p_moduleName) == NOT_LOADED)
+		
+		if (Project.main.modules.exists(p_moduleName))
 		{
-			//@todo Watch for Recursion for two modules both requiring one another!
-			for (f_requiredModuleName in Project.main.modules[p_moduleName].requiresModules)
+			if (getModuleState(p_moduleName) == NOT_LOADED)
 			{
-				Console.log("LOADING MODULE REQUIREMENT: " + f_requiredModuleName);
-				if (getModuleState(f_requiredModuleName) == NOT_LOADED)
-					_loadModule(f_requiredModuleName);
+				//@todo Watch for Recursion for two modules both requiring one another!
+				for (f_requiredModuleName in Project.main.modules[p_moduleName].requiresModules)
+				{
+					Console.log("LOADING MODULE REQUIREMENT: " + f_requiredModuleName);
+					if (getModuleState(f_requiredModuleName) == NOT_LOADED)
+						_loadModule(f_requiredModuleName);
+				}
+				
+				_loadAssetsOfModule(p_moduleName);
 			}
-			
-			_loadAssetsOfModule(p_moduleName);
+		}
+		else
+		{
+			Console.error("ERROR LOADING MODULE. Module [" + p_moduleName+"] not found!");
 		}
 	}
 	

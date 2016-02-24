@@ -219,6 +219,13 @@ class DomEntity2_5D extends AEntity2_5D
 				_instances[p_view2_5D].style.setProperty("-ms-user-select","none"); /* IE 10+ */
 				_instances[p_view2_5D].style.setProperty("user-select","none"); /* Likely future */        
 			}
+			else
+			{
+				_instances[p_view2_5D].style.setProperty("-webkit-user-select","initial"); /* Chrome all / Safari all */
+				_instances[p_view2_5D].style.setProperty("-moz-user-select","initial"); /* Firefox all */
+				_instances[p_view2_5D].style.setProperty("-ms-user-select","initial"); /* IE 10+ */
+				_instances[p_view2_5D].style.setProperty("user-select","initial"); /* Likely future */ 
+			}
 		}
 	}
 	

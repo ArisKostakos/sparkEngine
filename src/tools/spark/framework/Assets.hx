@@ -85,6 +85,11 @@ class Assets
 		}
 	}
 	
+	public static function assetLoaded(p_name:String):Bool
+	{
+		return _loader.assetLoaded(p_name);
+	}
+	
 	public static function getFile(p_name:String):File
 	{
 		try 
