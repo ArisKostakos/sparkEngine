@@ -29,7 +29,7 @@ class GameTrigger extends AGameBase implements IGameTrigger
 	public function new() 
 	{
 		super();
-		//Console.log ("Game Trigger Created");
+		//Console.info ("Game Trigger Created");
 		
 		_init();
 	}

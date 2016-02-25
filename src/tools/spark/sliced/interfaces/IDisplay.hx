@@ -33,9 +33,9 @@ interface IDisplay extends IService
 	function update():Void;
 	function invalidateLayout():Void;
 	
-	function log(message:String):Void;
-	function info(message:String):Void;
-	function debug(message:String):Void;
-	function warn(message:String):Void;
-	function error(message:String):Void;
+	function log(message:String, ?args:Array<Dynamic>):Void;
+	function info(message:String, ?args:Array<Dynamic>):Void;
+	function debug(message:String, ?args:Array<Dynamic>):Void;
+	function warn(message:String, ?args:Array<Dynamic>):Void;
+	function error(message:String, ?args:Array<Dynamic>):Void;
 }

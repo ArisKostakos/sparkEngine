@@ -12,6 +12,7 @@ import tools.spark.sliced.services.std.comms.filetransfer.interfaces.IFileTransf
 import tools.spark.sliced.services.std.comms.sockets.interfaces.ISocket;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 //@think: loading sources for both socket io and native websocket will make the runtime file bigger unnessecerily
 //however, adding more ifdefs here (if io, if websocket, if none) etc, will create way, waaay too many runtimes
@@ -69,7 +70,7 @@ class Comms extends AService implements IComms
 	
 	private function _init():Void
 	{
-		Console.log("Init Comms std Service...");
+		Console.info("Init Comms std Service...");
 		
 		//if you remove ifdefs for socket io, include full path of Socket class here.. otherwise, it's ok
 		_socket = new Socket();
@@ -100,7 +101,7 @@ class Comms extends AService implements IComms
 		return _serverEventsData[p_serverEventName];
 	}
 	
-	public function connectTo(p_hostname:String, p_port:String, ?p_serverIdentifier:String):Void
+	public function connectTo(p_hostname:String, p_port:String, ?p_serverIdentifier:String, ?p_gameEntity:IGameEntity):Void
 	{
 		if (p_serverIdentifier == null)
 			p_serverIdentifier = p_hostname+":"+p_port;
@@ -110,13 +111,13 @@ class Comms extends AService implements IComms
 		{
 			isConnected = true;
 			connectedServerName = p_serverIdentifier;
-			Sliced.event.raiseEvent(NETWORK_CONNECTED);
+			Sliced.event.raiseEvent(NETWORK_CONNECTED, p_gameEntity, p_serverIdentifier);
 		}
 		
 		_socket.init(p_hostname, p_port, l_connectToCallback);
 	}
 	
-	public function request(p_remoteRoute:String, p_message:Dynamic, ?p_requestIdentifier:String):Void
+	public function request(p_remoteRoute:String, p_message:Dynamic, ?p_requestIdentifier:String, ?p_gameEntity:IGameEntity):Void
 	{
 		if (p_requestIdentifier == null)
 			p_requestIdentifier = p_remoteRoute;
@@ -125,7 +126,7 @@ class Comms extends AService implements IComms
 		var l_requestCallback:Dynamic->Void = function (p_data:Dynamic) 
 		{
 			_requestsData[p_requestIdentifier] = p_data;
-			Sliced.event.raiseEvent(NETWORK_REQUEST);
+			Sliced.event.raiseEvent(NETWORK_REQUEST,p_gameEntity, p_requestIdentifier);
 		}
 		
 		_socket.request(p_remoteRoute, p_message, l_requestCallback);
@@ -146,7 +147,7 @@ class Comms extends AService implements IComms
 	}
 	
 	
-	public function addServerEvent(p_serverEventName:String, ?p_serverEventIdentifier:String):Void
+	public function addServerEvent(p_serverEventName:String, ?p_serverEventIdentifier:String, ?p_gameEntity:IGameEntity):Void
 	{
 		if (p_serverEventIdentifier == null)
 			p_serverEventIdentifier = p_serverEventName;
@@ -155,7 +156,7 @@ class Comms extends AService implements IComms
 		var l_serverEventCallback:Dynamic->Void = function (p_data:Dynamic) 
 		{
 			_serverEventsData[p_serverEventIdentifier] = p_data;
-			Sliced.event.raiseEvent(NETWORK_SERVER_EVENT);
+			Sliced.event.raiseEvent(NETWORK_SERVER_EVENT, p_gameEntity, p_serverEventIdentifier);
 		}
 		
 		_socket.on(p_serverEventName, l_serverEventCallback);
@@ -165,7 +166,7 @@ class Comms extends AService implements IComms
 	
 	//FILE TRANSFER FUNCTIONS
 	
-	public function file_connectTo(p_hostname:String, p_port:String, ?p_serverIdentifier:String):Void
+	public function file_connectTo(p_hostname:String, p_port:String, ?p_serverIdentifier:String, ?p_gameEntity:IGameEntity):Void
 	{
 		if (file_isConnected)
 		{
@@ -181,7 +182,7 @@ class Comms extends AService implements IComms
 			{
 				file_isConnected = true;
 				file_connectedServerName = p_serverIdentifier;
-				Sliced.event.raiseEvent(FILETRANSFER_CONNECTED);
+				Sliced.event.raiseEvent(FILETRANSFER_CONNECTED, p_gameEntity, p_serverIdentifier);
 			}
 			
 			_fileTransfer = new FileTransfer("ws://" + p_hostname+":" + p_port);
@@ -203,7 +204,7 @@ class Comms extends AService implements IComms
 		file_connectedServerName = null;
 	}
 
-	public function file_sendFileRequest(p_fileReference:Dynamic, p_fileMeta:Dynamic, ?p_fileRequestIdentifier:String):Void
+	public function file_sendFileRequest(p_fileReference:Dynamic, p_fileMeta:Dynamic, ?p_fileRequestIdentifier:String, ?p_gameEntity:IGameEntity):Void
 	{
 		if (!file_isConnected)
 		{
@@ -226,7 +227,7 @@ class Comms extends AService implements IComms
 				p_data.progressPercent = Math.round((clsr_progressBytes / p_fileMeta.size)* 100);
 				
 				_file_requestsData[p_fileRequestIdentifier] = p_data;
-				Sliced.event.raiseEvent(FILETRANSFER_SENDREQUEST);
+				Sliced.event.raiseEvent(FILETRANSFER_SENDREQUEST, p_gameEntity, p_fileRequestIdentifier);
 			}
 			
 			_fileTransfer.sendFile(p_fileReference, p_fileMeta, l_requestCallback);

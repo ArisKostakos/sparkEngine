@@ -25,7 +25,7 @@ class GmlInterpreter implements IInterpreter
 	
 	public function new() 
 	{
-		Console.log("Init Gml Interpreter...");
+		Console.info("Init Gml Interpreter...");
 		_init();
 	}
 	
@@ -144,7 +144,7 @@ class GmlInterpreter implements IInterpreter
 		{
 			if (Std.string(script) == Std.string(_hashTable[hashId]))
 			{
-				Console.log('Same Script found: [$script] in hashId: [$hashId]');
+				Console.info('Same Script found: [$script] in hashId: [$hashId]');
 				return hashId;
 			}
 			else
@@ -155,7 +155,7 @@ class GmlInterpreter implements IInterpreter
 		}
 		else
 		{
-			Console.log('Entering hashId: [$hashId] with Script: $script');
+			Console.info('Entering hashId: [$hashId] with Script: $script');
 			_hashTable[hashId] = script;
 			return hashId;
 		}

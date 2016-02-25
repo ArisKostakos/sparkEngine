@@ -55,7 +55,7 @@ class GameClassParser implements IGameClassParser
 	
 	public function new() 
 	{
-		Console.log("Creating Game Class Parser");
+		Console.info("Creating Game Class Parser");
 		
 		_init();
 	}

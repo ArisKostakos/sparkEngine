@@ -57,7 +57,7 @@ import flambe.util.Signal0;
 	
 	public function new() 
 	{
-		Console.log("Creating Level Manager");
+		Console.info("Creating Level Manager");
 		
 		_init();
 	}
@@ -102,7 +102,7 @@ import flambe.util.Signal0;
 			//Level is already instantiated
 			if (Reflect.hasField(p_levelEntity, 'getState')) //this is a little hacky :(
 			{
-				Console.warn("Level is already instantiated");
+				//Console.warn("Level is already instantiated");
 				l_level = p_levelEntity;
 			}
 			//Level is already instantiated and given as name
@@ -111,13 +111,13 @@ import flambe.util.Signal0;
 			//so look for slashes before looking for dots.. and that's it..
 			else if (p_levelEntity.indexOf('.') == -1)
 			{
-				Console.warn("Level is already instantiated and given as name");
+				//Console.warn("Level is already instantiated and given as name");
 				l_level = Sliced.logic.getEntityByName(p_levelEntity);
 			}
 			//Level is not created and given as url
 			else
 			{
-				Console.warn("Level is not created and given as url");
+				//Console.warn("Level is not created and given as url");
 				
 				//Get file path to determine if file is loaded
 				var l_assetPathName:String = StringTools.replace(p_levelEntity,".","/") + ".egc";
@@ -128,7 +128,7 @@ import flambe.util.Signal0;
 				//Asset not even loaded. Load it, then create it..
 				else
 				{
-					Console.log("Level.egc not loaded.. Loading it now..");
+					//Console.info("Level.egc not loaded.. Loading it now..");
 					
 					//All this... needs to go.. the whole adding a file at runtime code should go somewhere deeper... into a loader somewhere..
 					//or at the very least, as a Logic.helper.. but i think to a loader is better
@@ -196,7 +196,7 @@ import flambe.util.Signal0;
 	//if something else calls modulemanager other than this levelLoader at the same time, everything is royaly screwed
 	private function _onLevelLoaded()
 	{
-		Console.warn("LEVEL LOADED!! yaayyyyee");
+		//Console.warn("LEVEL LOADED!! yaayyyyee");
 		
 		//Send the good news
 		levelLoaded.emit();
@@ -225,13 +225,13 @@ import flambe.util.Signal0;
 			
 			var testView:IGameEntity = Sliced.logic.create(viewReferences[0].getState('url'));
 			l_views.push(testView);
-			Console.warn("View Created: " + testView.getState('name'));
+			//Console.warn("View Created: " + testView.getState('name'));
 			
 			var testScene:IGameEntity = Sliced.logic.create(testView.getState('initSceneName'));
-			Console.warn("Scene Created: " + testScene.getState('name'));
+			//Console.warn("Scene Created: " + testScene.getState('name'));
 			
 			var testCamera:IGameEntity = Sliced.logic.create(testView.getState('initCameraName'));
-			Console.warn("Camera Created: " + testCamera.getState('name'));
+			//Console.warn("Camera Created: " + testCamera.getState('name'));
 			
 			//Set it up so it's ready to be used
 			testView.setState('scene', testScene);

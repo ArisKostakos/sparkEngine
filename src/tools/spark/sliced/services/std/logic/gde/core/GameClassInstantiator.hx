@@ -33,7 +33,7 @@ class GameClassInstantiator implements IGameClassInstantiator
 	
 	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>, p_xmlConcurrencyNameToType:Map<String,EConcurrencyType>, p_xmlStateNameToType:Map<String,EStateType>) 
 	{
-		Console.log("Creating Game Class Instantiator");
+		Console.info("Creating Game Class Instantiator");
 		_xmlNodeTypeToNodeName = p_xmlNodeTypeToNodeName;
 		_xmlConcurrencyNameToType = p_xmlConcurrencyNameToType;
 		_xmlStateNameToType = p_xmlStateNameToType;

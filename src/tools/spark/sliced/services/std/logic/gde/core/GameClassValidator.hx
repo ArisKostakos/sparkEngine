@@ -34,7 +34,7 @@ class GameClassValidator implements IGameClassValidator
 	
 	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>, p_xmlConcurrencyTypeToName:Map<EConcurrencyType,String>, p_xmlStateTypeToName:Map<EStateType,String>) 
 	{
-		Console.log("Creating Game Class Validator");
+		Console.info("Creating Game Class Validator");
 		_xmlNodeTypeToNodeName = p_xmlNodeTypeToNodeName;
 		_xmlConcurrencyTypeToName = p_xmlConcurrencyTypeToName;
 		_xmlStateTypeToName = p_xmlStateTypeToName;

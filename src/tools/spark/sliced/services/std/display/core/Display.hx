@@ -6,6 +6,8 @@
 
 package tools.spark.sliced.services.std.display.core;
 
+import flambe.System;
+import flambe.util.Logger;
 import tools.spark.framework.Framework;
 import tools.spark.sliced.interfaces.IDisplay;
 import tools.spark.sliced.core.AService;
@@ -44,6 +46,7 @@ class Display extends AService implements IDisplay
 	//instead of itterating the virtual world. The Renderer may find this useful.
 	//do i need to itterate anything now that I ditched the logicalSpace?
 	
+	private var _scriptLogger:Logger;
 	
 	private var _dataBuffer:IDataBuffer;
 	
@@ -148,7 +151,7 @@ class Display extends AService implements IDisplay
 	private function _init():Void
 	{
 		//Log
-		Console.log("Init Display std Service...");
+		Console.info("Init Display std Service...");
 		
 		//Init Render StateNames
 		_renderStateNames = new Map<String,Bool>();
@@ -166,6 +169,9 @@ class Display extends AService implements IDisplay
 		
 		//Data Buffer
 		_dataBuffer = new DataBuffer();
+		
+		//Script Logger
+		_scriptLogger = System.createLogger("script");
 	}
 	
 	//@TODO: Quite a lot of public functions here, all dealing with the activeXReferences.. 
@@ -251,17 +257,17 @@ class Display extends AService implements IDisplay
 					switch (f_bufferEntry.source.getState('displayType'))
 					{
 						case "Space":
-							Console.warn("adding something to a space");//...
+							//Console.warn("adding something to a space");//...
 						case "Stage":
-							Console.warn("adding something to a stage");//...
+							//Console.warn("adding something to a stage");//...
 							//gonna just have some fun here.. playing around..
 							_activeReferenceMediator.stageReferenceManager.addTo(f_bufferEntry.target,projectActiveSpaceReference.activeStageReference);
 						case "StageArea":
-							Console.warn("adding something to a stageArea");//...
+							//Console.warn("adding something to a stageArea");//...
 						case "View":
-							Console.warn("adding something to a view");//...
-							for (renderer in platformRendererSet)
-								Console.warn("adding something to a view, renderer logic");//...
+							//Console.warn("adding something to a view");//...
+							//for (renderer in platformRendererSet) //enable me when u want to add things here
+								//Console.warn("adding something to a view, renderer logic");//...
 						default:
 							//HUGE PROBLEM HERE
 							//An object is created even for renderers that don't really render it's parent view
@@ -277,17 +283,17 @@ class Display extends AService implements IDisplay
 					switch (f_bufferEntry.source.getState('displayType'))
 					{
 						case "Space":
-							Console.warn("removing something from a space");//...
+							//Console.warn("removing something from a space");//...
 						case "Stage":
-							Console.warn("removing something from a stage");//...
+							//Console.warn("removing something from a stage");//...
 							//gonna just have some fun here.. playing around..
 							_activeReferenceMediator.stageReferenceManager.removeFrom(f_bufferEntry.target,projectActiveSpaceReference.activeStageReference);
 						case "StageArea":
-							Console.warn("removing something from a stageArea");//...
+							//Console.warn("removing something from a stageArea");//...
 						case "View":
-							Console.warn("removing something from a view");//...
-							for (renderer in platformRendererSet)
-								Console.warn("removing something from a view, renderer logic");//...
+							//Console.warn("removing something from a view");//...
+							//for (renderer in platformRendererSet) //enable me when u want to add things here
+								//Console.warn("removing something from a view, renderer logic");//...
 						default:
 							for (renderer in platformRendererSet)
 								renderer.removeChild(f_bufferEntry.source, f_bufferEntry.target);
@@ -393,29 +399,29 @@ class Display extends AService implements IDisplay
 	//merge mconsole's view with flambe's renderer to make this possible
 	//probably in a separate view created by the Display service
 	//for this purpose alone.
-	public function log(message:String):Void 
+	public function log(message:String, ?args:Array<Dynamic>):Void 
 	{
-		Console.log(message);
+		_scriptLogger.info(message, args);
 	}
 	
-	public function info(message:String):Void 
+	public function info(message:String, ?args:Array<Dynamic>):Void 
 	{
-		Console.info(message);
+		_scriptLogger.info(message, args);
 	}
 	
-	public function debug(message:String):Void 
+	public function debug(message:String, ?args:Array<Dynamic>):Void 
 	{
-		Console.debug(message);
+		_scriptLogger.warn(message, args);
 	}
 	
-	public function warn(message:String):Void 
+	public function warn(message:String, ?args:Array<Dynamic>):Void 
 	{
-		Console.warn(message);
+		_scriptLogger.warn(message, args);
 	}
 	
-	public function error(message:String):Void 
+	public function error(message:String, ?args:Array<Dynamic>):Void 
 	{
-		Console.error(message);
+		_scriptLogger.error(message, args);
 	}
 	
 }

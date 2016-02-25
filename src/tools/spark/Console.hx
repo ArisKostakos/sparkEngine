@@ -4,9 +4,14 @@
  * Written by Aris Kostakos <aris@spark.tools>, October 2013
  */
 
- package tools.spark;
- 
+package tools.spark;
+import flambe.util.PackageLog;
+
 /**
-	An alias for tools.spark.framework.Console
-**/
-typedef Console = tools.spark.framework.Console;
+ * ...
+ * @author Aris Kostakos
+ */
+class Console extends PackageLog//EngineLog
+{
+
+}

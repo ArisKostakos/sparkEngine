@@ -67,11 +67,11 @@ class ActiveStageReference implements IActiveStageReference
 	
 	public function logViewReferences():Void
 	{
-		Console.log("Printing Active Views");
-		Console.log("---------------------");
+		Console.info("Printing Active Views");
+		Console.info("---------------------");
 		for (activeViewReference in activeViewReferences)
 		{
-			Console.log("View " + activeViewReference.viewEntity.getState('name') + " Index: " + activeViewReference.viewEntity.getState('zIndex'));
+			Console.info("View " + activeViewReference.viewEntity.getState('name') + " Index: " + activeViewReference.viewEntity.getState('zIndex'));
 		}
 	}
 	

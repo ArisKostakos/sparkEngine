@@ -26,7 +26,7 @@ class GameState extends AGameBase implements IGameState
 	public function new() 
 	{
 		super();
-		//Console.log ("Game State Created");
+		//Console.info ("Game State Created");
 		
 		_init();
 	}

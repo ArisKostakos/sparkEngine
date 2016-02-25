@@ -28,7 +28,7 @@ class GameForm extends AGameBase implements IGameForm
 	public function new() 
 	{
 		super();
-		//Console.log ("Game Form Created");
+		//Console.info ("Game Form Created");
 		
 		_init();
 	}

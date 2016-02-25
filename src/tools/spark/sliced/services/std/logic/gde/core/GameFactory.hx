@@ -36,7 +36,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 	
 	public function new() 
 	{
-		Console.log("Creating Game Factory");
+		Console.info("Creating Game Factory");
 		
 		_init();
 	}
@@ -72,7 +72,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 			{
 				if (_cache.get(p_gameClassName) != null)
 				{
-					Console.warn("Game Entity exists and not null. CLONING FROM CACHE!!!!");
+					//Console.warn("Game Entity exists and not null. CLONING FROM CACHE!!!!");
 					return _cache.get(p_gameClassName).clone();
 				}
 			}
@@ -93,12 +93,12 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 					//Console.debug(l_gameNode.toString());
 					if (p_gameClassName != null)
 					{
-						Console.log("Created Game Entity: " + instancesCreated + ", name: " + p_gameClassName);
+						//Console.info("Created Game Entity: " + instancesCreated + ", name: " + p_gameClassName);
 						if (_cache.exists(p_gameClassName))
 						{
 							if (_cache.get(p_gameClassName) == null)
 							{
-								Console.log("Game Entity exists and is null. Cloning for cache...");
+								//Console.info("Game Entity exists and is null. Cloning for cache...");
 								_cache.set(p_gameClassName, l_gameEntity.clone());
 							}
 							else
@@ -108,14 +108,15 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 						}
 						else
 						{
-							Console.log("Game Entity does not exist, so doing nothing(this is normal)");
+							//Console.info("Game Entity does not exist, so doing nothing(this is normal)");
 							_cache.set(p_gameClassName, null);
 						}
 					}
+					/*
 					else
 					{
-						Console.log("Created Game Entity: " + instancesCreated + ", By Xml");
-					}
+						Console.info("Created Game Entity: " + instancesCreated + ", By Xml");
+					}*/
 					
 					return l_gameEntity;
 				}
@@ -128,7 +129,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 			else
 			{
 				Console.error('Game Entity could not be parsed');
-				Console.debug(l_gameNode.toString());
+				Console.warn(l_gameNode.toString());
 				return null;
 			}
 		}

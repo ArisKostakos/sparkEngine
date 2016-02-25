@@ -37,7 +37,7 @@ class GameEntity extends AGameBase implements IGameEntity
 		super();
 		
 		uid = Sliced.logic.gameFactory.issueUID();
-		//Console.log ("Game Entity Created: " + uid);
+		//Console.info ("Game Entity Created: " + uid);
 		_init();
 	}
 	

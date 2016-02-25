@@ -53,7 +53,7 @@ class Event extends AService implements IEvent
 	
 	private function _init():Void
 	{
-		Console.log("Init Event std Service...");
+		Console.info("Init Event std Service...");
 		
 		_eventTypeRegisteredTriggers = new Map < EEventType, StringMap < Array<IGameTrigger> >> ();
 		

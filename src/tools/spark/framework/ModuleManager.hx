@@ -74,7 +74,7 @@ import tools.spark.sliced.core.Sliced;
 		//Get loaded module
 		var l_moduleName:String = _modulesLoadQueue[0];
 		
-		Console.log("Module Loader: SUCCESS LOADING: " + l_moduleName);
+		Console.info("Module Loader: Success Loading Module: " + l_moduleName);
 		
 		//Mark it as loaded
 		_moduleStates[l_moduleName] = LOADED;
@@ -163,7 +163,7 @@ import tools.spark.sliced.core.Sliced;
 	{
 		if (isModuleExecuted(p_moduleName))
 		{
-			Console.warn("Error while trying to execute Module [" + p_moduleName + "]. Module already executed. Ignoring..");
+			Console.warn("Warning while trying to execute Module [" + p_moduleName + "]. Module already executed. Ignoring..");
 			return;
 		}
 		else
@@ -175,7 +175,7 @@ import tools.spark.sliced.core.Sliced;
 			}
 			else
 			{
-				Console.warn("Warning while trying to execute Module [" + p_moduleName + "]. Module is not executable. Ignoring..");
+				//Console.warn("Warning while trying to execute Module [" + p_moduleName + "]. Module is not executable. Ignoring..");
 				return;
 			}
 		}
@@ -191,7 +191,7 @@ import tools.spark.sliced.core.Sliced;
 	
 	private static function _loadModule(p_moduleName:String):Void
 	{
-		Console.log("LOADING MODULE: " + p_moduleName);
+		Console.info("Module Manager: Loading module " + p_moduleName);
 		
 		if (Project.main.modules.exists(p_moduleName))
 		{
@@ -200,7 +200,7 @@ import tools.spark.sliced.core.Sliced;
 				//@todo Watch for Recursion for two modules both requiring one another!
 				for (f_requiredModuleName in Project.main.modules[p_moduleName].requiresModules)
 				{
-					Console.log("LOADING MODULE REQUIREMENT: " + f_requiredModuleName);
+					Console.info("Module Manager: Loading required module " + f_requiredModuleName);
 					if (getModuleState(f_requiredModuleName) == NOT_LOADED)
 						_loadModule(f_requiredModuleName);
 				}
@@ -210,7 +210,7 @@ import tools.spark.sliced.core.Sliced;
 		}
 		else
 		{
-			Console.error("ERROR LOADING MODULE. Module [" + p_moduleName+"] not found!");
+			Console.error("Module Manager: Error Loading Module! Module [" + p_moduleName+"] not found!");
 		}
 	}
 	
@@ -250,7 +250,7 @@ import tools.spark.sliced.core.Sliced;
 			//Add Assets
 			for (asset in Project.main.modules[l_moduleName].assets)
 			{
-				//Console.log("adding file: " + asset.id);
+				//Console.info("adding file: " + asset.id);
 				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true", Std.parseInt(asset.bytes));
 			}
 			

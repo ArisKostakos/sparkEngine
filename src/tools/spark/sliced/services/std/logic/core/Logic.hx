@@ -49,7 +49,7 @@ class Logic extends AService implements ILogic
 	
 	public function _init():Void
 	{
-		Console.log("Init Logic std Service...");
+		Console.info("Init Logic std Service...");
 		
 		//Init event types (before we create the factory, which needs the eventTypes set)
 		EventType.init();
@@ -105,7 +105,7 @@ class Logic extends AService implements ILogic
 	{
 		//Create GameEntity
 		rootGameEntitiesRunning[p_gameEntityUrl] = gameFactory.createGameEntity(p_gameEntityUrl);
-		Console.warn("Logic Service: Create and Running entity: " + p_gameEntityUrl);
+		Console.info("Logic Service: Create and Running entity: " + p_gameEntityUrl);
 		
 		//Extremely temp place to put this..
 		//Remove Loading Screen
