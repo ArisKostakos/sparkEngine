@@ -34,7 +34,7 @@ import flambe.input.Key;
 	
 	public function new() 
 	{
-		Console.info("Init HaxeJs Interpreter...");
+		Console.log("Init HaxeJs Interpreter...");
 		_init();
 	}
 	
@@ -180,7 +180,7 @@ import flambe.input.Key;
 			/*
 			if (Std.string(script) == Std.string(_hashTable[hashId]))
 			{
-				//Console.info('Same Script found: [$script] in hashId: [$hashId]');
+				//Console.log('Same Script found: [$script] in hashId: [$hashId]');
 				return hashId;
 			}
 			else
@@ -188,7 +188,7 @@ import flambe.input.Key;
 				Console.warn('Collision detected with hashId: [$hashId] and script [$script]. Previous Stored Entry Script: ' + _hashTable[hashId]);
 				return _store(script, ++hashId);
 			}*/
-			//Console.info("Js Parser: ALREADY EXISTS");
+			//Console.log("Js Parser: ALREADY EXISTS");
 			return hashId;
 		}
 		else
@@ -197,7 +197,7 @@ import flambe.input.Key;
 			{
 				_hashTable[hashId] = System.external.call("eval", [ script ]);
 				_lalala += 1;
-				//Console.info("Parsed Something: " + _lalala);
+				//Console.log("Parsed Something: " + _lalala);
 				return hashId;
 			}
 			catch (e:Dynamic)
@@ -209,7 +209,7 @@ import flambe.input.Key;
 			}
 			
 			/*
-			//Console.info('Entering hashId: [$hashId] with Script: $script');
+			//Console.log('Entering hashId: [$hashId] with Script: $script');
 			var l_expr:Expr;
 			
 			try
@@ -234,7 +234,7 @@ import flambe.input.Key;
 				//if (_lalala < 125)
 				//{
 					_hashTable[hashId] = _interpreter.execute(l_expr);
-					Console.info("Parsed Something: " + _lalala);
+					Console.log("Parsed Something: " + _lalala);
 				//}
 				return hashId;
 			}

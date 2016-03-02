@@ -34,7 +34,7 @@ import tools.spark.sliced.interfaces.IDisplay;
 	
 	public static function assignServices(p_sound:ISound, p_logic:ILogic, p_input:IInput, p_comms:IComms, p_event:IEvent, p_display:IDisplay):Void
 	{
-		Console.info("Init Core (S.L.I.C.E.D.)...");
+		Console.log("Init Core (S.L.I.C.E.D.)...");
 		sound = p_sound;
 		logic = p_logic;
 		input = p_input;

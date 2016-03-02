@@ -27,6 +27,9 @@ class Framework
 			untyped __js__('if (Object.defineProperty) Object.defineProperty(Array.prototype, "__class__", {enumerable: false});');
 		#end
 		
+		// Init Console
+		Console.init();
+		
 		// Init Flambe
 		System.init();
 		

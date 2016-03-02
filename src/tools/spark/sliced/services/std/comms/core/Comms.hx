@@ -70,7 +70,7 @@ class Comms extends AService implements IComms
 	
 	private function _init():Void
 	{
-		Console.info("Init Comms std Service...");
+		Console.log("Init Comms std Service...");
 		
 		//if you remove ifdefs for socket io, include full path of Socket class here.. otherwise, it's ok
 		_socket = new Socket();

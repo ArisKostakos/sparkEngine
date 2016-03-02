@@ -55,13 +55,13 @@ class Assets
 	//Right now, these will never trigger because flambe Loader never emits anything itself
 	private static function _onLoaderSuccess():Void
 	{
-		Console.info("Assets: SUCCESS!");
+		Console.log("Assets: SUCCESS!");
 		successSignal.emit();
 	}
 	
 	private static function _onLoaderError(p_error:String):Void
 	{
-		Console.info("Assets: ERROR: " + p_error);
+		Console.log("Assets: ERROR: " + p_error);
 		errorSignal.emit(p_error);
 	}
 	

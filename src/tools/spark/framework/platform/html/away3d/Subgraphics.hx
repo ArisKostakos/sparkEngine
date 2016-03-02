@@ -69,22 +69,22 @@ class Subgraphics
 						');
 						
 						
-		Console.info("away html init!");
+		Console.log("away html init!");
 		
 		//Create a temp View3D which in away-ts will kind of 'initialize' the engine and the Stage
 		var l_view3D:View3D = new View3D();
 		l_view3D.shareContext = true;
 		l_view3D.layeredView = true;
-		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		//Console.log("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		// Define a new Stage3DManager for the Stage3D objects
 		_stage3DManager = Stage3DManager.getInstance(l_view3D.stage);
-		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		//Console.log("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		// Create a new Stage3D proxy to contain the separate views
 		_stage3DProxy = _stage3DManager.getStage3DProxy(0);
 		
-		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		Console.log("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		l_view3D.dispose();
-		Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		Console.log("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		return _stage3DProxy.stage3D.context3D.gl();
 	}
 	
@@ -118,7 +118,7 @@ class Subgraphics
 		
 		
 		
-		//Console.info("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
+		//Console.log("away html rendering away: " + _stage3DManager.numProxySlotsUsed);
 		
 		// Clear the Context3D object
 		//if (_counterCount < _counterMax) 

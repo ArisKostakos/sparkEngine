@@ -41,7 +41,7 @@ import haxe.ds.ObjectMap;
 	
 	public function new() 
 	{
-		Console.info("Init Haxe Interpreter...");
+		Console.log("Init Haxe Interpreter...");
 		_init();
 	}
 	
@@ -188,7 +188,7 @@ import haxe.ds.ObjectMap;
 			/*
 			if (Std.string(script) == Std.string(_hashTable[hashId]))
 			{
-				//Console.info('Same Script found: [$script] in hashId: [$hashId]');
+				//Console.log('Same Script found: [$script] in hashId: [$hashId]');
 				return hashId;
 			}
 			else
@@ -201,7 +201,7 @@ import haxe.ds.ObjectMap;
 		}
 		else
 		{
-			//Console.info('Entering hashId: [$hashId] with Script: $script');
+			//Console.log('Entering hashId: [$hashId] with Script: $script');
 			
 			try
 			{

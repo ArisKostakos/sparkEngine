@@ -30,6 +30,6 @@ class Flambe2_5DHtmlRenderer extends AFlambe2_5DRenderer implements IPlatformSpe
 	
 	inline private function _flambe2DHtmlRendererInit():Void
 	{
-		Console.info("Creating Flambe 2_5D Html Renderer...");
+		Console.log("Creating Flambe 2_5D Html Renderer...");
 	}
 }

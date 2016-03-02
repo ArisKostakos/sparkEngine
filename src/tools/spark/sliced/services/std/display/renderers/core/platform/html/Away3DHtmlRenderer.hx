@@ -27,7 +27,7 @@ class Away3DHtmlRenderer extends AAway3DRenderer implements IPlatformSpecificRen
 	
 	inline private function _away3DHtmlRendererInit():Void
 	{
-		Console.info("Creating Away3D Html Renderer...");
+		Console.log("Creating Away3D Html Renderer...");
 	}
 	/*
 	override public function createView ( p_viewEntity:IGameEntity):Dynamic
@@ -46,9 +46,9 @@ class Away3DHtmlRenderer extends AAway3DRenderer implements IPlatformSpecificRen
 		_views[p_viewEntity].layeredView =  true;// false;
 		
 		Console.error("CREATED VIEW 3D WITHOUT A GROUP ON HTML RENDERER!!");
-		Console.info("away html new view created. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
+		Console.log("away html new view created. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
 		stage3Dmanager.iRemoveStage3DProxy(stage3Dmanager.getStage3DProxy(1));
-		Console.info("away html view removed. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
+		Console.log("away html view removed. Num of Stage3DProxies: " + stage3Dmanager.numProxySlotsUsed);
 		
 		
 		//temp add childs

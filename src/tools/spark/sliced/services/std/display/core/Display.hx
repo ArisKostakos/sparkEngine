@@ -9,6 +9,7 @@ package tools.spark.sliced.services.std.display.core;
 import flambe.System;
 import flambe.util.Logger;
 import tools.spark.framework.Framework;
+import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.interfaces.IDisplay;
 import tools.spark.sliced.core.AService;
 import tools.spark.sliced.services.std.display.active_displayentity_references.core.ActiveSpaceReference;
@@ -18,6 +19,7 @@ import tools.spark.sliced.services.std.display.databuffer.interfaces.IDataBuffer
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveSpaceReference;
 import tools.spark.sliced.services.std.display.managers.core.ActiveReferenceMediator;
 import tools.spark.sliced.services.std.display.managers.interfaces.IActiveReferenceMediator;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.display.renderers.interfaces.IPlatformSpecificRenderer;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameSpace;
@@ -151,7 +153,7 @@ class Display extends AService implements IDisplay
 	private function _init():Void
 	{
 		//Log
-		Console.info("Init Display std Service...");
+		Console.log("Init Display std Service...");
 		
 		//Init Render StateNames
 		_renderStateNames = new Map<String,Bool>();
@@ -217,6 +219,7 @@ class Display extends AService implements IDisplay
 	public function invalidateLayout():Void
 	{
 		projectActiveSpaceReference.activeStageReference.layoutManager.validated = false;
+		Sliced.event.raiseEvent(EEventType.LAYOUT_INVALIDATED);
 	}
 	
 	public function getSpace2_5Object(p_gameEntity:IGameEntity, p_bAllRenderers:Bool = false):Dynamic //hash for all renderers, space object otherwise
@@ -404,16 +407,6 @@ class Display extends AService implements IDisplay
 		_scriptLogger.info(message, args);
 	}
 	
-	public function info(message:String, ?args:Array<Dynamic>):Void 
-	{
-		_scriptLogger.info(message, args);
-	}
-	
-	public function debug(message:String, ?args:Array<Dynamic>):Void 
-	{
-		_scriptLogger.warn(message, args);
-	}
-	
 	public function warn(message:String, ?args:Array<Dynamic>):Void 
 	{
 		_scriptLogger.warn(message, args);
@@ -424,4 +417,18 @@ class Display extends AService implements IDisplay
 		_scriptLogger.error(message, args);
 	}
 	
+	public function dl(message:String, ?args:Array<Dynamic>):Void 
+	{
+		_scriptLogger.info('DEBUG->' + message, args);
+	}
+	
+	public function dw(message:String, ?args:Array<Dynamic>):Void 
+	{
+		_scriptLogger.warn('DEBUG->' + message, args);
+	}
+	
+	public function de(message:String, ?args:Array<Dynamic>):Void 
+	{
+		_scriptLogger.error('DEBUG->' + message, args);
+	}
 }

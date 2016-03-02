@@ -34,7 +34,7 @@ class GameClassValidator implements IGameClassValidator
 	
 	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>, p_xmlConcurrencyTypeToName:Map<EConcurrencyType,String>, p_xmlStateTypeToName:Map<EStateType,String>) 
 	{
-		Console.info("Creating Game Class Validator");
+		Console.log("Creating Game Class Validator");
 		_xmlNodeTypeToNodeName = p_xmlNodeTypeToNodeName;
 		_xmlConcurrencyTypeToName = p_xmlConcurrencyTypeToName;
 		_xmlStateTypeToName = p_xmlStateTypeToName;
@@ -289,6 +289,7 @@ class GameClassValidator implements IGameClassValidator
 	inline private function _createTypeNodeRule():Rule
 	{
 		var l_children:Rule = RData(FEnum([
+								_xmlStateTypeToName[EStateType.EXPRESSION],
 								_xmlStateTypeToName[EStateType.DYNAMIC],
 								_xmlStateTypeToName[EStateType.INTEGER],
 								_xmlStateTypeToName[EStateType.DECIMAL],

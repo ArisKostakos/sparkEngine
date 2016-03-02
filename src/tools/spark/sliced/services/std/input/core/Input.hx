@@ -31,7 +31,7 @@ class Input extends AService implements IInput
 	
 	private function _init():Void
 	{
-		Console.info("Init Input std Service...");
+		Console.log("Init Input std Service...");
 		
 		keyboard = new KeyboardDevice();
 		pointer = new PointerDevice();

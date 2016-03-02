@@ -57,7 +57,7 @@ import flambe.util.Signal0;
 	
 	public function new() 
 	{
-		Console.info("Creating Level Manager");
+		Console.log("Creating Level Manager");
 		
 		_init();
 	}
@@ -128,7 +128,7 @@ import flambe.util.Signal0;
 				//Asset not even loaded. Load it, then create it..
 				else
 				{
-					//Console.info("Level.egc not loaded.. Loading it now..");
+					//Console.log("Level.egc not loaded.. Loading it now..");
 					
 					//All this... needs to go.. the whole adding a file at runtime code should go somewhere deeper... into a loader somewhere..
 					//or at the very least, as a Logic.helper.. but i think to a loader is better
@@ -219,27 +219,33 @@ import flambe.util.Signal0;
 				p_level.addChild(testEventSheet);
 			}
 			
-			//Create Level's view references (right now, it always assumes exactly 1 view reference)
-			var viewReferences:Array<IGameEntity> = p_level.getState('viewReferences');
+			//Create Level's view references
+			var l_viewReferences:Array<IGameEntity> = p_level.getState('viewReferences');
 			var l_views:Array<IGameEntity> = [];
 			
-			var testView:IGameEntity = Sliced.logic.create(viewReferences[0].getState('url'));
-			l_views.push(testView);
-			//Console.warn("View Created: " + testView.getState('name'));
+			for (f_viewReference in l_viewReferences)
+			{
+				var f_view:IGameEntity = Sliced.logic.create(f_viewReference.getState('url'));
+				//Console.warn("View Created: " + testView.getState('name'));
+				
+				//Store this view
+				l_views.push(f_view);
+				
+				var f_scene:IGameEntity = Sliced.logic.create(f_view.getState('initSceneUrl'));
+				//Console.warn("Scene Created: " + testScene.getState('name'));
+				
+				var f_camera:IGameEntity = Sliced.logic.create(f_view.getState('initCameraUrl'));
+				//Console.warn("Camera Created: " + testCamera.getState('name'));
+				
+				//Set it up so it's ready to be used
+				f_view.setState('scene', f_scene);
+				f_view.setState('camera', f_camera);
+				
+				//Add Scene and Camera to this level
+				p_level.addChild(f_scene);
+				p_level.addChild(f_camera);
+			}
 			
-			var testScene:IGameEntity = Sliced.logic.create(testView.getState('initSceneName'));
-			//Console.warn("Scene Created: " + testScene.getState('name'));
-			
-			var testCamera:IGameEntity = Sliced.logic.create(testView.getState('initCameraName'));
-			//Console.warn("Camera Created: " + testCamera.getState('name'));
-			
-			//Set it up so it's ready to be used
-			testView.setState('scene', testScene);
-			testView.setState('camera', testCamera);
-			
-			//Add Scene and Camera to this level
-			p_level.addChild(testScene);
-			p_level.addChild(testCamera);
 			
 			p_level.setState('created', true);
 			p_level.setState('views', l_views);
@@ -274,12 +280,14 @@ import flambe.util.Signal0;
 				_preLoaderActive = false;
 			}
 			
-			//Add Level's views (right now, it always assumes exactly 1 views)
+			//Add Level's views
 			var l_views:Array<IGameEntity> = p_level.getState('views');
 			
 			//Adding things to active Space/Stage
 			Sliced.display.projectActiveSpaceReference.spaceEntity.addChild(p_level);
-			Sliced.display.projectActiveSpaceReference.activeStageReference.stageEntity.addChild(l_views[0]);
+			
+			for (f_view in l_views)
+				Sliced.display.projectActiveSpaceReference.activeStageReference.stageEntity.addChild(f_view);
 			
 			currentLevel[p_runSlot] = p_level;
 			
@@ -295,11 +303,13 @@ import flambe.util.Signal0;
 	//Only removes, doesn't unload
 	private function _removeLevel(p_level:IGameEntity):Void
 	{
-		//Add Level's views (right now, it always assumes exactly 1 views)
+		//Add Level's views
 		var l_views:Array<IGameEntity> = p_level.getState('views');
 		
 		//Remove things from active Space/Stage
 		p_level.remove();
-		l_views[0].remove();
+		
+		for (f_view in l_views)
+			f_view.remove();
 	}
 }

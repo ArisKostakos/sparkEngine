@@ -43,7 +43,7 @@ class ABatchLoader implements IBatchLoader
 		}
 		//END OF Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
 		
-		Console.info("BatchLoader: Requesting file " + p_url);
+		Console.log("BatchLoader: Requesting file " + p_url);
 		_addFile(p_name, p_url, p_forceLoadAsData, p_bytes);
 	}
 	

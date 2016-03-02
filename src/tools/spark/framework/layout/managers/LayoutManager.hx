@@ -32,7 +32,7 @@ class LayoutManager
 	{
 		if (!validated)
 		{
-			Console.info("Validating Layout...");
+			Console.log("Validating Layout...");
 			measure(rootLayoutElement);
 			//logPreffered(rootLayoutElement);
 			updateDisplayList(rootLayoutElement);

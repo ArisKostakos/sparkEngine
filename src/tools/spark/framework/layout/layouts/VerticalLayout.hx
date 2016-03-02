@@ -320,6 +320,8 @@ class VerticalLayout extends ALayoutBase
 		//aris addition so things start make some sense... not good ofc. without it results are same so far
 		target.measuredMaxWidth = 999999;
 		target.measuredMaxHeight = 999999;
+		//target.measuredMaxWidth = target.measuredWidth;
+		//target.measuredMaxHeight = target.measuredHeight;
 	}
 	
 	override public function updateDisplayList(p_unscaledWidth:Float, p_unscaledHeight:Float):Void

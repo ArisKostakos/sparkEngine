@@ -27,7 +27,7 @@ class Away3DFlashRenderer extends AAway3DRenderer implements IPlatformSpecificRe
 	
 	inline private function _away3DFlashRendererInit():Void
 	{
-		Console.info("Creating Away3D Flash Renderer...");
+		Console.log("Creating Away3D Flash Renderer...");
 	}
 	
 	

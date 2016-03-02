@@ -36,7 +36,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 	
 	public function new() 
 	{
-		Console.info("Creating Game Factory");
+		Console.log("Creating Game Factory");
 		
 		_init();
 	}
@@ -93,12 +93,12 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 					//Console.debug(l_gameNode.toString());
 					if (p_gameClassName != null)
 					{
-						//Console.info("Created Game Entity: " + instancesCreated + ", name: " + p_gameClassName);
+						//Console.log("Created Game Entity: " + instancesCreated + ", name: " + p_gameClassName);
 						if (_cache.exists(p_gameClassName))
 						{
 							if (_cache.get(p_gameClassName) == null)
 							{
-								//Console.info("Game Entity exists and is null. Cloning for cache...");
+								//Console.log("Game Entity exists and is null. Cloning for cache...");
 								_cache.set(p_gameClassName, l_gameEntity.clone());
 							}
 							else
@@ -108,14 +108,14 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 						}
 						else
 						{
-							//Console.info("Game Entity does not exist, so doing nothing(this is normal)");
+							//Console.log("Game Entity does not exist, so doing nothing(this is normal)");
 							_cache.set(p_gameClassName, null);
 						}
 					}
 					/*
 					else
 					{
-						Console.info("Created Game Entity: " + instancesCreated + ", By Xml");
+						Console.log("Created Game Entity: " + instancesCreated + ", By Xml");
 					}*/
 					
 					return l_gameEntity;

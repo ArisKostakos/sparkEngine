@@ -53,7 +53,7 @@ class Event extends AService implements IEvent
 	
 	private function _init():Void
 	{
-		Console.info("Init Event std Service...");
+		Console.log("Init Event std Service...");
 		
 		_eventTypeRegisteredTriggers = new Map < EEventType, StringMap < Array<IGameTrigger> >> ();
 		
@@ -130,9 +130,9 @@ class Event extends AService implements IEvent
 	public function raiseEvent(p_eventType:EEventType, ?p_eventTarget:IGameEntity, ?p_eventParameter:Dynamic):Void
 	{
 		/*
-		Console.info("Considering raising event for: " + p_eventType + ", eventParameter: " + p_eventParameter);
+		Console.log("Considering raising event for: " + p_eventType + ", eventParameter: " + p_eventParameter);
 		if (p_eventTarget!=null) 
-			Console.info("Id: " + p_eventTarget.uid + ", name: " + p_eventTarget.getState('name'));
+			Console.log("Id: " + p_eventTarget.uid + ", name: " + p_eventTarget.getState('name'));
 		*/
 			
 		//ONLY RAISE EVENT, IF WE HAVE A REGISTERED TRIGGER FOR THIS COMBINATION

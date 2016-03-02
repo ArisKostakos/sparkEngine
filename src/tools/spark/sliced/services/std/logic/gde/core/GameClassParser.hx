@@ -55,7 +55,7 @@ class GameClassParser implements IGameClassParser
 	
 	public function new() 
 	{
-		Console.info("Creating Game Class Parser");
+		Console.log("Creating Game Class Parser");
 		
 		_init();
 	}
@@ -310,6 +310,7 @@ class GameClassParser implements IGameClassParser
 	{
 		_xmlStateTypeToName = new Map<EStateType,String>();
 		
+		_xmlStateTypeToName[EStateType.EXPRESSION] = "Expression";
 		_xmlStateTypeToName[EStateType.DYNAMIC] = "Dynamic";
 		_xmlStateTypeToName[EStateType.BOOLEAN] = "Boolean";
 		_xmlStateTypeToName[EStateType.DECIMAL] = "Decimal";
@@ -321,6 +322,7 @@ class GameClassParser implements IGameClassParser
 	{
 		_xmlStateNameToType = new Map<String,EStateType>();
 		
+		_xmlStateNameToType[_xmlStateTypeToName[EStateType.EXPRESSION]] = EStateType.EXPRESSION;
 		_xmlStateNameToType[_xmlStateTypeToName[EStateType.DYNAMIC]] = EStateType.DYNAMIC;
 		_xmlStateNameToType[_xmlStateTypeToName[EStateType.BOOLEAN]] = EStateType.BOOLEAN;
 		_xmlStateNameToType[_xmlStateTypeToName[EStateType.DECIMAL]] = EStateType.DECIMAL;
@@ -334,28 +336,28 @@ class GameClassParser implements IGameClassParser
 	public function parseGameNode(p_gameNode:Xml):Bool
 	{
 		//extend
-		//Console.info('Extending ' + p_gameNode.nodeName + ' Node...');
+		//Console.log('Extending ' + p_gameNode.nodeName + ' Node...');
 		if (_extendGameNode(p_gameNode))
 		{
 			//Display the full Node after extending it
 			//Console.debug(p_gameNode.toString());
-			//Console.info('Extending ' + p_gameNode.nodeName + ' Node COMPLETED');
+			//Console.log('Extending ' + p_gameNode.nodeName + ' Node COMPLETED');
 			
 			//merge
-			//Console.info('Merging ' + p_gameNode.nodeName + ' Node...');
+			//Console.log('Merging ' + p_gameNode.nodeName + ' Node...');
 			_mergeGameNode(p_gameNode);
 
 			//Display the full Node after merging it
 			//Console.debug(p_gameNode.toString());
-			//Console.info('Merging ' + p_gameNode.nodeName + ' Node COMPLETED');
+			//Console.log('Merging ' + p_gameNode.nodeName + ' Node COMPLETED');
 			
 			//Validate
-			//Console.info('Validating ' + p_gameNode.nodeName + ' Node...');
+			//Console.log('Validating ' + p_gameNode.nodeName + ' Node...');
 			if (_validateGameNode(p_gameNode))
 			{
 				//Display the full Node after validating it
 				//Console.debug(p_gameNode.toString());
-				//Console.info('Validating ' + p_gameNode.nodeName + ' Node COMPLETED');
+				//Console.log('Validating ' + p_gameNode.nodeName + ' Node COMPLETED');
 				
 				return true;
 			}

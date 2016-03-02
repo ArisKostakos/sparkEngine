@@ -43,7 +43,7 @@ class Config
 		var l_configNode:Xml;
 		
 		//Parse
-		Console.info('Config: Parsing...');
+		Console.log('Config: Parsing...');
 		try 
 		{
 			l_configNode=Xml.parse(_configFile.toString());
@@ -67,7 +67,7 @@ class Config
 		
 		
 		//Validate
-		Console.info('Config: Validating...');
+		Console.log('Config: Validating...');
 		
 		//Init Validation (construct rules for either client or server config)
 		_configValidator.init(p_rootNodeType);
@@ -80,8 +80,8 @@ class Config
 		
 		
 		//Instantiate
-		Console.info('Config: Instantiating...');
-		//Console.info(l_configNode.toString());
+		Console.log('Config: Instantiating...');
+		//Console.log(l_configNode.toString());
 
 		//Init
 		_configInstantiator.init(l_configNode, p_rootNodeType);
@@ -101,7 +101,7 @@ class Config
 		//mostly here in Assets, but maybe above as well (non-validation problems that is..) logical problems that validation cannot catch
 		_configInstantiator.instantiateAssets();
 		
-		Console.info('Config: Completed!');
+		Console.log('Config: Completed!');
 		return true;
 	}
 	

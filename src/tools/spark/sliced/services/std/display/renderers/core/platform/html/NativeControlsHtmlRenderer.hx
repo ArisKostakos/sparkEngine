@@ -46,7 +46,7 @@ class NativeControlsHtmlRenderer extends ANativeControls2_5DRenderer implements 
 	
 	inline private function _nativeControlsHtmlRendererInit():Void
 	{
-		Console.info("Creating Native Controls Html (DOM) Renderer...");
+		Console.log("Creating Native Controls Html (DOM) Renderer...");
 		
 		//@THINK: keep this? or just one map to rule them all??
 		_views = new Map<IGameEntity,DomView2_5D>();

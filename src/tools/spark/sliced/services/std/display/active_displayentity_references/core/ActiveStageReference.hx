@@ -6,6 +6,7 @@
 
 package tools.spark.sliced.services.std.display.active_displayentity_references.core;
 
+import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageAreaReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveViewReference;
@@ -62,16 +63,16 @@ class ActiveStageReference implements IActiveStageReference
 
 		//Console.error("*****WIDTH******: " + layoutRoot.explicitWidth);
 		//Console.error("*****HEIGHT******: " + layoutRoot.explicitHeight);
-		layoutManager.validated = false;
+		Sliced.display.invalidateLayout();
 	}
 	
 	public function logViewReferences():Void
 	{
-		Console.info("Printing Active Views");
-		Console.info("---------------------");
+		Console.log("Printing Active Views");
+		Console.log("---------------------");
 		for (activeViewReference in activeViewReferences)
 		{
-			Console.info("View " + activeViewReference.viewEntity.getState('name') + " Index: " + activeViewReference.viewEntity.getState('zIndex'));
+			Console.log("View " + activeViewReference.viewEntity.getState('name') + " Index: " + activeViewReference.viewEntity.getState('zIndex'));
 		}
 	}
 	

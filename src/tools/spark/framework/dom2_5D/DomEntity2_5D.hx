@@ -59,6 +59,7 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['borderColor'] = _updateBorderColor;
 		
 		_queryFunctions['globalPosition'] = _queryGlobalPosition;
+		_queryFunctions['groupObject'] = _queryGroupObject;
 	}
 	
 	
@@ -81,6 +82,8 @@ class DomEntity2_5D extends AEntity2_5D
 			case "Ace":
 				_instances[p_view2_5D] = Browser.document.createDivElement();
 			case "Tree":
+				_instances[p_view2_5D] = Browser.document.createDivElement();
+			case "Scroller":
 				_instances[p_view2_5D] = Browser.document.createDivElement();
 			default:
 				//@fixme: If this element was not meant to be rendered at all, don't let it create a DomEntity at all!!!
@@ -426,6 +429,8 @@ class DomEntity2_5D extends AEntity2_5D
 				_updateAceProperties(p_view2_5D);
 			case 'Tree':
 				_updateTreeProperties(p_view2_5D);
+			case 'Scroller':
+				_updateScrollerProperties(p_view2_5D);
 			case 'Undefined':
 				Console.warn('Undefined NCmeshType value');
 			default:
@@ -490,6 +495,43 @@ class DomEntity2_5D extends AEntity2_5D
 		l_instance.style.overflowY = "scroll";
 		
 		gameEntity.setState('treeObject', tree);
+	}
+	
+	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
+	private function _updateScrollerProperties( p_view2_5D:IView2_5D):Void
+	{
+		//Get the instance we're updating
+		var l_instance:DivElement = _instances[p_view2_5D];
+		
+		//CSS
+		//l_instance.className = "mCustomScrollbar";
+		//l_instance.setAttribute('data-mcs-theme', 'dark');
+		//l_instance.style.overflowX = "hidden";
+		l_instance.style.overflowY = "auto";
+		
+		//JS
+		//So apparently, I need to re-retrieve the div with jquery for some reason...
+		//The random thing is so we can do this on many elements (do it for tree and ace too)
+		var l_randomId:String = Std.string(Std.random(999999));
+		l_instance.id = l_randomId;
+		var l_element:Dynamic = untyped $('#'+l_randomId);
+		
+		//SPECIFIC API
+		l_element.mCustomScrollbar({
+			theme:"light-thick",
+			scrollButtons:{
+			  enable:true
+			},
+			autoHideScrollbar: true,
+			autoExpandScrollbar: true
+		  });
+		
+		  var l_containerElement:Element = l_instance.firstElementChild.firstElementChild;
+		  l_containerElement.style.marginRight = "0";
+		
+		//STORE OBJECTS
+		gameEntity.setState('scrollerObject', l_element);
+		gameEntity.setState('scrollerContainerObject', l_containerElement);
 	}
 	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void
@@ -620,6 +662,12 @@ class DomEntity2_5D extends AEntity2_5D
 	
 		return new Point(l_left, l_top);
 	}
+	
+	inline private function _queryGroupObject(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		return groupInstances[p_view2_5D];
+	}
+	
 	
 	private function _onDragStart(p_event:Dynamic):Void
 	{

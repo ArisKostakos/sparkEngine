@@ -29,6 +29,6 @@ class Flambe2_5DFlashRenderer extends AFlambe2_5DRenderer implements IPlatformSp
 	
 	inline private function _flambe2DFlashRendererInit():Void
 	{
-		Console.info("Creating Flambe 2_5D Flash Renderer...");
+		Console.log("Creating Flambe 2_5D Flash Renderer...");
 	}
 }

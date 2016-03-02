@@ -12,6 +12,7 @@ package tools.spark.sliced.services.std.logic.gde.interfaces;
  */
 enum EStateType 
 {
+	EXPRESSION;
 	DYNAMIC;
 	INTEGER;
 	DECIMAL;

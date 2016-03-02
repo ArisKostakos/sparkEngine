@@ -27,7 +27,7 @@ class RootComponent extends Component
 		}
 		else
 		{
-			Console.info("Root Game Entity was created successfully!");
+			Console.log("Root Game Entity was created successfully!");
 		}
 		*/
 	}

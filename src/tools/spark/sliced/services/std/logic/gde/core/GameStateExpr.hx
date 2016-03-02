@@ -5,6 +5,7 @@
  */
 
 package tools.spark.sliced.services.std.logic.gde.core;
+import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameState;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EStateType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
@@ -13,13 +14,15 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
  * ...
  * @author Aris Kostakos
  */
-class GameState extends AGameBase implements IGameState
+class GameStateExpr extends AGameBase implements IGameState
 {
 	//Properties
 	public var id( default, default ):String;
 	public var type( default, default ):EStateType;
 	public var value( get, set ):Dynamic;
-	private var _value:Dynamic;
+	public var actualValue( get, set ):Int;
+	
+	private var _value:Int; //Hash Id
 	
 	//Constructor
 	
@@ -34,10 +37,20 @@ class GameState extends AGameBase implements IGameState
 	//Getters
 	private function get_value():Dynamic 
 	{
+		return Sliced.logic.scriptInterpreter.runExpr(_value, parentEntity, parentEntity.parentEntity, this);
+	}
+	
+	private function set_value(p_value:String):Int
+	{
+		return _value = Sliced.logic.scriptInterpreter.hashExpr(p_value);
+	}
+	
+	private function get_actualValue():Int 
+	{
 		return _value;
 	}
 	
-	private function set_value(p_value:Dynamic):Dynamic
+	private function set_actualValue(p_value:Int):Int
 	{
 		return _value = p_value;
 	}
@@ -51,7 +64,7 @@ class GameState extends AGameBase implements IGameState
 	
 	public function clone(?p_parentEntity:IGameEntity):IGameState
 	{
-		var l_clonedState:IGameState =  new GameState();
+		var l_clonedState:GameStateExpr =  new GameStateExpr();
 		
 		//Parent
 		l_clonedState.parentEntity = p_parentEntity;
@@ -63,7 +76,7 @@ class GameState extends AGameBase implements IGameState
 		l_clonedState.type = type;
 		
 		//Clone the State's Value
-		l_clonedState.value = value; //Good for freshly created states, not good for Dynamic Object States, that will be copied by reference(which we don't want)
+		l_clonedState.actualValue = actualValue; //Copying the hash id..
 		
 		return l_clonedState;
 	}

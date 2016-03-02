@@ -30,7 +30,7 @@ class Sound extends AService implements ISound
 	
 	private function _init():Void
 	{
-		Console.info("Init Sound std Service...");
+		Console.log("Init Sound std Service...");
 		_playBacks = new Map<String,Playback>();
 		iOSPlayedBlankSound = false;
 	}

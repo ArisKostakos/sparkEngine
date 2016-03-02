@@ -33,7 +33,7 @@ class GameClassInstantiator implements IGameClassInstantiator
 	
 	public function new(p_xmlNodeTypeToNodeName:Map<ENodeType,String>, p_xmlConcurrencyNameToType:Map<String,EConcurrencyType>, p_xmlStateNameToType:Map<String,EStateType>) 
 	{
-		Console.info("Creating Game Class Instantiator");
+		Console.log("Creating Game Class Instantiator");
 		_xmlNodeTypeToNodeName = p_xmlNodeTypeToNodeName;
 		_xmlConcurrencyNameToType = p_xmlConcurrencyNameToType;
 		_xmlStateNameToType = p_xmlStateNameToType;
@@ -149,7 +149,17 @@ class GameClassInstantiator implements IGameClassInstantiator
 	
 	public function instantiateState(p_gameNode:Xml, ?p_parentEntity:IGameEntity):IGameState
 	{
-		var l_gameState:IGameState = new GameState();
+		//We need the state's type before we create it
+		
+		//Create the State's Type
+		var l_gameStateType:EStateType = _xmlStateNameToType[p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TYPE]).next().firstChild().nodeValue];
+		
+		var l_gameState:IGameState;
+		
+		if (l_gameStateType == EXPRESSION)
+			l_gameState= new GameStateExpr();
+		else
+			l_gameState= new GameState();
 		
 		//Parent Entity
 		l_gameState.parentEntity = p_parentEntity;
@@ -158,23 +168,39 @@ class GameClassInstantiator implements IGameClassInstantiator
 		l_gameState.id = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.ID]).next().firstChild().nodeValue;
 		
 		//Create the State's Type
-		l_gameState.type = _xmlStateNameToType[p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.TYPE]).next().firstChild().nodeValue];
+		l_gameState.type = l_gameStateType;
 		
 		//Create the State's Value
 		var l_valueInString:String = p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.VALUE]).next().firstChild().nodeValue;
-		//Typecast it
-		switch(l_gameState.type)
+		
+		//Check if it's an inline expression
+		if (l_valueInString.charAt(0)==';')  //if it starts with..   note: REAL Expression States cannot start with ;, but I don't want to check for that for performance..
 		{
-			case EStateType.BOOLEAN:
-				l_gameState.value = (l_valueInString == "true" || l_valueInString == "True" || l_valueInString == "t" || l_valueInString == "T");
-			case EStateType.DECIMAL:
-				l_gameState.value = Std.parseFloat(l_valueInString);
-			case EStateType.INTEGER:
-				l_gameState.value = Std.parseInt(l_valueInString);
-			case EStateType.TEXT:
-				l_gameState.value = l_valueInString;
-			case EStateType.DYNAMIC:
-				l_gameState.value = null;
+			//Evalute expression now
+			l_gameState.value = Sliced.logic.scriptInterpreter.runExpr(Sliced.logic.scriptInterpreter.hashExpr(l_valueInString.substr(1)), p_parentEntity, p_parentEntity.parentEntity, l_gameState);
+		}
+		else
+		{
+			//Typecast it
+			switch(l_gameState.type)
+			{
+				case EStateType.BOOLEAN:
+					l_gameState.value = (l_valueInString == "true" || l_valueInString == "True" || l_valueInString == "t" || l_valueInString == "T");
+				case EStateType.DECIMAL:
+					l_gameState.value = Std.parseFloat(l_valueInString);
+				case EStateType.INTEGER:
+					l_gameState.value = Std.parseInt(l_valueInString);
+				case EStateType.TEXT:
+					l_gameState.value = l_valueInString;
+				case EStateType.DYNAMIC:
+					//So.. A dynamic can basically only be initialized as an inline expression.. so ';' is not required here
+					if (l_valueInString != 'null') //if it's null, don't bother doing all the legwork parsing it..
+						l_gameState.value = Sliced.logic.scriptInterpreter.runExpr(Sliced.logic.scriptInterpreter.hashExpr(l_valueInString), p_parentEntity, p_parentEntity.parentEntity, l_gameState);
+					else
+						l_gameState.value = null;
+				case EStateType.EXPRESSION:
+					l_gameState.value = l_valueInString;
+			}
 		}
 		
 		

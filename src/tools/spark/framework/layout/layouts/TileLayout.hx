@@ -5,6 +5,7 @@
  */
 
 package tools.spark.framework.layout.layouts;
+import flambe.System;
 import tools.spark.framework.layout.containers.Group;
 import tools.spark.framework.layout.interfaces.EColumnAlign;
 import tools.spark.framework.layout.interfaces.EHorizontalAlign;
@@ -60,9 +61,11 @@ class TileLayout extends ALayoutBase
 		if (p_width <= 0) p_width = null;
 		if (p_height <= 0) p_height = null;
 		
+		//p_width = 800;
+		//p_height = null;
 		
         if (-1 != target.requestedColumnCount || -1 != target.requestedRowCount)
-        {
+        {//Console.warn("I am at 1");
             if (-1 != target.requestedRowCount)
                 target.rowCount = Std.int(Math.max(1, target.requestedRowCount));
 
@@ -71,21 +74,27 @@ class TileLayout extends ALayoutBase
         }
         // Figure out number of columns or rows based on the explicit size along one of the axes
         else if (p_width!=null && (target.orientation == ETileOrientation.ROWS || p_height==null))
-        {
+        {//Console.warn("I am at 2");
+			//Console.warn("p_width: " + p_width);
+			//Console.warn("p_height: " + p_height);
+			//Console.warn("target.explicitHorizontalGap: " + target.explicitHorizontalGap);
+			//Console.warn("target.columnWidth: " + target.columnWidth);
             if (target.columnWidth + target.explicitHorizontalGap > 0)
                 target.columnCount = Std.int(Math.max(1, Math.floor((p_width + target.explicitHorizontalGap) / (target.columnWidth + target.explicitHorizontalGap))));
             else
                 target.columnCount = 1;
+				
+			//Console.warn("result: target.columnCount: " + target.columnCount);
         }
         else if (p_height!=null && (target.orientation == ETileOrientation.COLUMNS || p_width==null))
-        {
+        {//Console.warn("I am at 3");
             if (target.rowHeight + target.explicitVerticalGap > 0)
                 target.rowCount = Std.int(Math.max(1, Math.floor((p_height + target.explicitVerticalGap) / (target.rowHeight + target.explicitVerticalGap))));
             else
                 target.rowCount = 1;
         }
         else // Figure out the number of columns and rows so that pixels area occupied is as square as possible
-        {
+        {//Console.warn("I am at 4");
             // Calculate number of rows and columns so that
             // pixel area is as square as possible
             var l_hGap:Float = target.explicitHorizontalGap;
@@ -159,6 +168,9 @@ class TileLayout extends ALayoutBase
             target.rowCount = Std.int(Math.max(1, Math.ceil(p_elementCount / target.columnCount)));
         if (-1 == target.columnCount)
             target.columnCount = Std.int(Math.max(1, Math.ceil(p_elementCount / target.rowCount)));
+			
+		//Console.warn("target.rowCount: " + target.rowCount);
+		//Console.warn("target.columnCount: " + target.columnCount);
     }
 	
 	
@@ -477,6 +489,13 @@ class TileLayout extends ALayoutBase
 	
 	override public function measure():Void
 	{
+		//Console.de('PRE target.width: ' + target.width);
+		//Console.de('PRE target.measuredWidth: ' + target.measuredWidth);
+		//Console.de('PRE target.measuredMaxWidth: ' + target.measuredMaxWidth);
+		//Console.de('PRE target.explicitWidth: ' + target.explicitWidth);
+		//Console.de('PRE target.explicitHeight: ' + target.explicitHeight);
+		//System.external.call("console.log", [target]);
+		
 		// Save and restore these values so they're not modified 
         // as a sideeffect of measure().
         var l_savedColumnCount:Int = target.columnCount;
@@ -515,15 +534,42 @@ class TileLayout extends ALayoutBase
         var l_hPadding:Float = target.paddingLeft + target.paddingRight;
         var l_vPadding:Float = target.paddingTop + target.paddingBottom;
 
+		//l_measuredWidth = 501;
         target.measuredWidth = l_measuredWidth + l_hPadding;
         target.measuredMinWidth = l_measuredMinWidth + l_hPadding;
         target.measuredHeight = l_measuredHeight + l_vPadding;
         target.measuredMinHeight = l_measuredMinHeight + l_vPadding;
 
 		//aris addition so things start make some sense... not good ofc. without it results are same so far
-		target.measuredMaxWidth = 999999;	//comment out?
-		target.measuredMaxHeight = 999999;	//comment out?
-
+		target.measuredMaxWidth =  999999;
+		target.measuredMaxHeight = 999999;
+		
+		//HACKING TO DEATH
+			//target.measuredMaxWidth = 100;// target.measuredWidth;
+			//target.measuredMaxHeight = 100;// target.measuredHeight;
+			
+			//target.measuredMaxWidth = 800;
+			//target.measuredWidth = target.width;//800;
+			//target.measuredWidth = target.width;
+			//target.measuredMinWidth = target.width;
+			//target.explicitWidth = target.width;
+			//Console.de('target.width: ' + target.width);
+			//Console.de('target.measuredWidth: ' + target.measuredWidth);
+			//Console.de('target.columnWidth: ' + target.columnWidth);
+			
+			//if (target.requestedColumnCount == -1)
+			//{
+				target.measuredWidth = 0;
+				target.measuredMinWidth = 0;
+				target.requestedColumnCount = Std.int(Math.max(1, Math.floor((target.width + target.explicitHorizontalGap) / (target.columnWidth + target.explicitHorizontalGap))));
+			//}
+			//Console.de('target.measuredWidth: ' + target.measuredWidth);
+			//Console.de('target.measuredMaxWidth: ' + target.measuredMaxWidth);
+			//Console.de('target.requestedColumnCount: ' + target.requestedColumnCount);
+			//System.external.call("console.log", [target]);
+			
+			//target.measuredHeight = 10000;
+		//END OF HAKING TO DEATH
         target.columnCount = l_savedColumnCount;
         target.rowCount = l_savedRowCount;
         target.horizontalGap = l_savedHorizontalGap;
@@ -534,6 +580,8 @@ class TileLayout extends ALayoutBase
 	
 	override public function updateDisplayList(p_unscaledWidth:Float, p_unscaledHeight:Float):Void
     {
+		//Console.de('target.width: ' + target.width);
+		//Console.de('p_unscaledWidth: ' + p_unscaledWidth);
         _calculateDisplayParameters(Std.int(p_unscaledWidth), Std.int(p_unscaledHeight));
         
         // Upper right hand corner of first (visibleStartIndex) tile/cell
