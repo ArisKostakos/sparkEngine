@@ -124,19 +124,44 @@ class GameEntity extends AGameBase implements IGameEntity
 		return possibleActionSet.get(p_actionId);
 	}
 	
-	//Beta feature, not sure. Runs an action, once, immediately.
-	public function forceAction(p_actionId:String):Void
+	//getAction Shortcut.. 
+	@:keep public function a(p_actionId:String):IGameAction
 	{
-		possibleActionSet.get(p_actionId).doPass();
+		return possibleActionSet.get(p_actionId);
 	}
 	
-	public function startAction(actionId:String):Bool
+	//Beta feature, not sure. Runs an action, once, immediately.
+	public function forceAction(p_actionId:String, p_args:Dynamic=null):Void
+	{
+		//Get Action Object
+		var gameAction:IGameAction = possibleActionSet[p_actionId];
+		
+		//Set arguements (if any)
+		if (p_args != null)
+			for (f_field in Reflect.fields(p_args))
+				gameAction.setState(f_field, Reflect.field(p_args, f_field));
+					
+		gameAction.doPass();
+	}
+	
+	//forceAction Shortcut.. 
+	@:keep public function fa(p_actionId:String, p_args:Dynamic=null):Void
+	{
+		forceAction(p_actionId, p_args);
+	}
+	
+	public function startAction(actionId:String, p_args:Dynamic=null):Bool
 	{
 		//Get Action Object
 		var gameAction:IGameAction = possibleActionSet[actionId];
 		
 		if (gameAction != null)
 		{
+			//Set arguements (if any)
+			if (p_args != null)
+				for (f_field in Reflect.fields(p_args))
+					gameAction.setState(f_field, Reflect.field(p_args, f_field));
+			
 			switch (gameAction.concurrency)
 			{
 				case EConcurrencyType.PARALLEL:
@@ -158,6 +183,12 @@ class GameEntity extends AGameBase implements IGameEntity
 		}
 	}
 	
+	//startAction Shortcut.. 
+	@:keep public function sa(actionId:String, p_args:Dynamic=null):Bool
+	{
+		return startAction(actionId, p_args);
+	}
+	
 	public function stopAction(actionId:String):Bool
 	{
 		if (currentActionSet.exists(actionId))
@@ -170,6 +201,12 @@ class GameEntity extends AGameBase implements IGameEntity
 			Console.warn("Action with id '" + actionId + "' could not be stopped.");
 			return false;
 		}
+	}
+	
+	//stopAction Shortcut.. 
+	@:keep public function ta(actionId:String):Bool
+	{
+		return stopAction(actionId);
 	}
 	
 	// Set/Get State Value

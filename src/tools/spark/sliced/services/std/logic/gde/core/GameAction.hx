@@ -103,6 +103,13 @@ class GameAction extends AGameBase implements IGameAction
 		else return gameStateSet.get(p_stateId).value;
 	}
 	
+	//Shortcut.. I would call getState, but performance... i would inline the one above, but too much reprocations, bigger file js size. sooo..
+	@:keep public function s(p_stateId:String):Dynamic
+	{
+		if (gameStateSet.get(p_stateId) == null) return null;
+		else return gameStateSet.get(p_stateId).value;
+	}
+	
 	public function setState(p_stateId:String, p_value:Dynamic):Dynamic
 	{
 		gameStateSet.get(p_stateId).value = p_value;

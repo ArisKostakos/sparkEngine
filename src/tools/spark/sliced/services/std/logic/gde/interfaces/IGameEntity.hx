@@ -35,9 +35,9 @@ interface IGameEntity extends IGameBase
 	function addTrigger(gameTrigger:IGameTrigger):Void;
 	
 	function getAction(p_actionId:String):IGameAction;
-	function forceAction(p_actionId:String):Void;
+	function forceAction(p_actionId:String, p_args:Dynamic=null):Void;
 	
-	function startAction(actionId:String):Bool;
+	function startAction(actionId:String, p_args:Dynamic = null):Bool;
 	function stopAction(actionId:String):Bool;
 	
 	// Set/Get State Value
