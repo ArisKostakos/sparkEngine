@@ -14,6 +14,7 @@ import tools.spark.sliced.interfaces.ILogic;
 import tools.spark.sliced.core.AService;
 import tools.spark.sliced.services.std.logic.gde.core.GameFactory;
 import tools.spark.sliced.services.std.logic.gde.interfaces.EventType;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameBase;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameFactory;
 import tools.spark.sliced.services.std.logic.interpreter.core.GmlInterpreter;
@@ -122,6 +123,15 @@ class Logic extends AService implements ILogic
 	{
 		//Create GameEntity
 		return gameFactory.createGameEntity(p_gameEntityUrl);
+	}
+	
+	public function interpet(p_script:String, p_gameEntity:IGameEntity=null, p_gameBase:IGameBase=null):Dynamic
+	{
+		var l_parentEntity:IGameEntity = null;
+		if (p_gameEntity != null)
+			l_parentEntity = p_gameEntity.parentEntity;
+			
+		return scriptInterpreter.runExpr(scriptInterpreter.hashExpr(p_script), p_gameEntity, l_parentEntity, p_gameBase);
 	}
 	
 	public function getAllEntitiesByName(p_stateName:String):Array<IGameEntity>

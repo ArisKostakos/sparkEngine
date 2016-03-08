@@ -116,4 +116,23 @@ class GameAction extends AGameBase implements IGameAction
 		
 		return gameStateSet.get(p_stateId).value;
 	}
+	
+	@:keep public function addToState(p_stateId:String, p_value:Dynamic):Dynamic
+	{
+		gameStateSet.get(p_stateId).value += p_value;
+		
+		return gameStateSet.get(p_stateId).value;
+	}
+	
+	@:keep public function subtractFromState(p_stateId:String, p_value:Dynamic):Dynamic
+	{
+		gameStateSet.get(p_stateId).value -= p_value;
+		
+		return gameStateSet.get(p_stateId).value;
+	}
+	
+	@:keep public function stop():Void
+	{
+		parentEntity.stopAction(id);
+	}
 }
