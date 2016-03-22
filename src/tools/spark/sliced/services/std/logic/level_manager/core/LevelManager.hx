@@ -140,7 +140,7 @@ import flambe.util.Signal0;
 					loader.start();
 					
 					var l_loader:IBatchLoader = Assets.initiateBatch();
-					l_loader.addFile("assets/scripts/" + l_assetPathName, l_assetPathName);
+					l_loader.addFile("assets/scripts/" + l_assetPathName, l_assetPathName); //this sucks
 					l_loader.successSignal.connect(function () {
 						l_level = Sliced.logic.create(p_levelEntity);
 						_loadLevel_end(l_level);
