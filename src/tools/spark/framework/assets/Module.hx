@@ -6,8 +6,8 @@ package tools.spark.framework.assets;
  */
 class Module
 {
-	public var requiresModules( default, null ):Array<String>;
-	public var assets( default, null ):Map< String, Asset>;
+	public var requiresModules( default, default ):Array<String>;
+	public var assets( default, default ):Map< String, Asset>;
 	public var id(default, null):String;
 	public var executeEntity(default, default):String;
 	
