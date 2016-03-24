@@ -9,6 +9,7 @@ import flambe.util.SignalConnection;
 import flambe.util.Signal0;
 import flambe.util.Signal1;
 import flambe.util.Signal2;
+import tools.spark.framework.assets.Asset;
 import tools.spark.framework.assets.interfaces.IBatchLoader;
 import tools.spark.framework.assets.Module;
 import tools.spark.framework.assets.EModuleState;
@@ -156,6 +157,75 @@ import tools.spark.sliced.core.Sliced;
 				return false;
 			case RUNNING, PAUSED:
 				return true;
+		}
+	}
+	
+	public static function createNewModule(p_id:String, ?p_requiresModules:Array<String>, ?p_executeEntity:String, ?p_assets:Map< String, Asset>):Module
+	{
+		if (Project.main.modules.exists(p_id) == false)
+		{
+			var l_module:Module = new Module(p_id);
+			
+			if (p_requiresModules != null)
+				l_module.requiresModules = p_requiresModules;
+			
+			if (p_executeEntity != null)
+				l_module.executeEntity = p_executeEntity;
+				
+			if (p_assets != null)
+				l_module.assets = p_assets;
+			
+			//Add it to Project
+			Project.main.modules.set(p_id, l_module);
+			
+			return l_module;
+		}
+		else
+		{
+			Console.warn("Project " + p_id + " already exists! Ignoring...");
+			return null;
+		}
+	}
+	
+	public static function createNewAsset(p_id:String, ?p_url:String, ?p_type:String, ?p_subtype:String, ?p_location:String, ?p_bytes:String, ?p_condition:String, ?p_forceLoadAsData:String):Asset
+	{
+		var l_asset:Asset = new Asset(p_id);
+			
+		if (p_url != null)
+			l_asset.url = p_url;
+		
+		if (p_type != null)
+			l_asset.type = p_type;
+			
+		if (p_subtype != null)
+			l_asset.subtype = p_subtype;
+			
+		if (p_location != null)
+			l_asset.location = p_location;
+			
+		if (p_bytes != null)
+			l_asset.bytes = p_bytes;
+			
+		if (p_condition != null)
+			l_asset.condition = p_condition;
+			
+		if (p_forceLoadAsData != null)
+			l_asset.forceLoadAsData = p_forceLoadAsData;
+		
+		return l_asset;
+	}
+	
+	public static function addAssetToModule(p_asset:Asset, p_module:Module):Bool
+	{
+		if (p_module.assets.exists(p_asset.id) == false)
+		{
+			p_module.assets.set(p_asset.id, p_asset);
+			return true;
+		}
+		else
+		{
+			Console.warn("Asset " + p_asset.id + " already exists in module " + p_module.id +". Ignoring...");
+			return false;
 		}
 	}
 	
