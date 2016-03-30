@@ -297,7 +297,7 @@ class ConfigValidator
 											Attrib.Att("type"),
 											Attrib.Att("bytes"),
 											Attrib.Att("subtype",null,"none"),
-											Attrib.Att("id",null,"useUrl"),
+											Attrib.Att("id",null,"auto"),
 											Attrib.Att("condition",null,"always"),
 											Attrib.Att("forceLoadAsData",null,"false")
 										 ];

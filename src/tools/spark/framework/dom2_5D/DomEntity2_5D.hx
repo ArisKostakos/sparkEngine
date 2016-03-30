@@ -244,9 +244,16 @@ class DomEntity2_5D extends AEntity2_5D
 			 //hack.. for full length dom image urls //CHECK IF THIS HACK NO LONGER REQUIRED. I DONT THINK I USE ../ FOR ANYTHING ANYMORE!!!
 			if (p_src.indexOf('assets/') == -1)
 			{
-				//Normal loading (but not quite, still there's the DoNotLoad hacky thing, for Dom stuff..)
-				var l_asset:Asset = Project.main.modules["DoNotLoad"].assets[p_src];
-				l_instance.src = Project.main.getPath(l_asset.location, l_asset.type) + l_asset.url;
+				if (p_src.indexOf('http') == -1)
+				{
+					//Normal loading (but not quite, still there's the SparkEditor:References hacky thing, for Dom stuff..)
+					var l_asset:Asset = Project.main.modules["SparkEditor:References"].assets[p_src];
+					l_instance.src = Project.main.getPath(l_asset.location, l_asset.type) +'/' + l_asset.url;
+				}
+				else
+				{
+					l_instance.src = p_src;
+				}
 			}
 			else
 			{

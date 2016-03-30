@@ -6,6 +6,7 @@
 
 package tools.spark.sliced.services.std.logic.core;
 
+import flambe.asset.File;
 import flambe.subsystem.ExternalSystem;
 import flambe.System;
 import flambe.subsystem.StorageSystem;
@@ -348,6 +349,11 @@ class Logic extends AService implements ILogic
 		}
 	}
 	
+	public function xml_getState(p_xml:Xml, p_stateId:String, p_merge:Bool):Dynamic
+	{
+		return xml_getAllStates(p_xml, p_merge).get(p_stateId);
+	}
+	
 	public function xml_getAllMStates(p_xml:Xml, p_merge:Bool):Map<String, Dynamic>
 	{
 		var l_states:Map<String, Dynamic> = new Map<String, Dynamic>();
@@ -379,9 +385,24 @@ class Logic extends AService implements ILogic
 		}
 	}
 	
+	public function xml_getMState(p_xml:Xml, p_mStateId:String, p_merge:Bool):Dynamic
+	{
+		return xml_getAllMStates(p_xml, p_merge).get(p_mStateId);
+	}
+	
 	public function xml_parseAsset(p_asset:Dynamic):Xml
 	{
 		return Xml.parse(Assets.getFile(p_asset.dir + '/' + p_asset.fileName + '.' + p_asset.fileExtension).toString()).firstElement();
+	}
+	
+	public function xml_parseScript(p_script:File):Xml
+	{
+		return Xml.parse(p_script.toString()).firstElement();
+	}
+	
+	public function xml_parseScriptName(p_scriptName:String):Xml
+	{
+		return xml_parseScript(Assets.getScript(p_scriptName));
 	}
 	
 	public function xml_getElement(p_xml:Xml, p_xmlNode:String):Xml

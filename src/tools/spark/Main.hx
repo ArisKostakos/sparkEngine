@@ -70,7 +70,9 @@ class Main
 		try
 		{
 			var l_urlPars:Dynamic = System.external.call("getMainSparkClientUrl");
-			if (l_urlPars.user != null && l_urlPars.project != null)
+			if (l_urlPars.url != null)
+				return l_urlPars.url;
+			else if (l_urlPars.user != null && l_urlPars.project != null)
 				return "/assets/" + l_urlPars.user + "/project/" + l_urlPars.project + "/main.skc";
 			else
 				return "main.skc";

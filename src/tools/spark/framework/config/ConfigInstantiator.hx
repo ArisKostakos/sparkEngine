@@ -131,11 +131,17 @@ class ConfigInstantiator
 	
 	private function _instantiateAsset(p_assetNode:Xml):Asset
 	{
-		var l_assetId:String = p_assetNode.get("id")=="useUrl"?p_assetNode.firstChild().nodeValue:p_assetNode.get("id");
+		var l_assetId:String;
+		var l_assetUrl = p_assetNode.firstChild().nodeValue;
+		
+		if (p_assetNode.get("id") == "auto")
+			l_assetId = p_assetNode.get("type") + ':' + StringTools.replace(l_assetUrl.substring(0, l_assetUrl.lastIndexOf(".")), "/", ".");
+		else
+			l_assetId = p_assetNode.get("id");
 		
 		var l_asset:Asset = new Asset(l_assetId);
 		
-		l_asset.url = p_assetNode.firstChild().nodeValue;
+		l_asset.url = l_assetUrl;
 		l_asset.type =  p_assetNode.get("type");
 		l_asset.subtype =  p_assetNode.get("subtype");
 		l_asset.location =  p_assetNode.get("location");

@@ -14,6 +14,7 @@ import tools.spark.framework.assets.interfaces.IBatchLoader;
 import tools.spark.framework.assets.Module;
 import tools.spark.framework.assets.EModuleState;
 import tools.spark.sliced.core.Sliced;
+import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
  * ...
@@ -58,6 +59,8 @@ import tools.spark.sliced.core.Sliced;
 		return l_totalBytes;
 	}
 	
+	//WARNING! This handler will immediately try to execute the module it just loaded.. If I want the public loadModule function to work properly
+	//I should specify a static var that tells this function what the desired action is to proceed (execute, just load, throw Comms request, etc..)
 	private static function _onLoaderSuccess():Void
 	{
 		_disposeBatchLoaderSignals();
@@ -159,6 +162,15 @@ import tools.spark.sliced.core.Sliced;
 				return true;
 		}
 	}
+
+	public static function createAllPaths(p_location:String, p_url:String):Void
+	{
+		Project.main.setPath(p_location, "script", p_url + 'script');
+		Project.main.setPath(p_location, "image", p_url + 'image');
+		Project.main.setPath(p_location, "model", p_url + 'model');
+		Project.main.setPath(p_location, "sound", p_url + 'sound');
+		Project.main.setPath(p_location, "data", p_url + 'data');
+	}
 	
 	public static function createNewModule(p_id:String, ?p_requiresModules:Array<String>, ?p_executeEntity:String, ?p_assets:Map< String, Asset>):Module
 	{
@@ -171,6 +183,8 @@ import tools.spark.sliced.core.Sliced;
 			
 			if (p_executeEntity != null)
 				l_module.executeEntity = p_executeEntity;
+			else
+				l_module.executeEntity = "none";
 				
 			if (p_assets != null)
 				l_module.assets = p_assets;
@@ -187,7 +201,7 @@ import tools.spark.sliced.core.Sliced;
 		}
 	}
 	
-	public static function createNewAsset(p_id:String, ?p_url:String, ?p_type:String, ?p_subtype:String, ?p_location:String, ?p_bytes:String, ?p_condition:String, ?p_forceLoadAsData:String):Asset
+	public static function createNewAsset(?p_id:String, ?p_url:String, ?p_type:String, ?p_subtype:String, ?p_location:String, ?p_bytes:String, ?p_condition:String, ?p_forceLoadAsData:String):Asset
 	{
 		var l_asset:Asset = new Asset(p_id);
 			
@@ -226,6 +240,25 @@ import tools.spark.sliced.core.Sliced;
 		{
 			Console.warn("Asset " + p_asset.id + " already exists in module " + p_module.id +". Ignoring...");
 			return false;
+		}
+	}
+	
+	public static function loadModule(p_moduleName:String, ?p_callbackEntity:IGameEntity):Void  //We don't use p_callbackEntity yet.. we do it with flambe signals for now, not Comms
+	{
+		if (Project.main.modules.exists(p_moduleName))
+		{
+			if (getModuleState(p_moduleName) == NOT_LOADED)
+			{
+				_loadModule(p_moduleName);
+			}
+			else
+			{
+				Console.de("Over here, we send a comm reply that the module is loaded, same as in _loadModule");
+			}
+		}
+		else
+		{
+			Console.error("Module Manager: Error Loading Module! Module [" + p_moduleName+"] not found!");
 		}
 	}
 	
@@ -321,7 +354,7 @@ import tools.spark.sliced.core.Sliced;
 			for (asset in Project.main.modules[l_moduleName].assets)
 			{
 				//Console.log("adding file: " + asset.id);
-				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+asset.url, asset.id, asset.forceLoadAsData == "true", Std.parseInt(asset.bytes));
+				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+'/'+asset.url, asset.id, asset.forceLoadAsData == "true", Std.parseInt(asset.bytes));
 			}
 			
 			//Start Loading

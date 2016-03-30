@@ -91,6 +91,9 @@ class DomView2_5D extends AView2_5D
 		_instanceView = Browser.document.createDivElement();
 		_instanceView.style.position = "absolute";
 		
+		_instanceView.style.setProperty('pointer-events', 'none');
+		
+		
 		//Add to 'stage'
 		content.insertBefore(_instanceView, content.firstElementChild);
 	}

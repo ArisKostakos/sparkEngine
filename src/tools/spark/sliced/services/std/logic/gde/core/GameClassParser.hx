@@ -34,7 +34,7 @@ class GameClassParser implements IGameClassParser
 	private var _xmlNodeNameToNodeType:Map<String,ENodeType>;
 	private var _xmlGameTypeToNodeName:Map<EGameType,String>;
 	private var _xmlNodeTypeToGameType:Map<ENodeType,EGameType>;
-	private var _xmlGameTypeToFileExtension:Map<EGameType,String>;
+	//private var _xmlGameTypeToFileExtension:Map<EGameType,String>;
 	private var _xmlConcurrencyTypeToName:Map<EConcurrencyType,String>;
 	private var _xmlConcurrencyNameToType:Map<String,EConcurrencyType>;
 	private var _xmlStateTypeToName:Map<EStateType,String>;
@@ -66,7 +66,7 @@ class GameClassParser implements IGameClassParser
 		_initNodeTypesMap();
 		_initGameTypesMap();
 		_initNodeToGameMap();
-		_initFileExtensionsMap();
+		//_initFileExtensionsMap();
 		_initExtendableNodesMap();
 		_initMergableNodesMap();
 		_initTargetMergableNodesMap();
@@ -163,6 +163,7 @@ class GameClassParser implements IGameClassParser
 		_xmlNodeTypeToGameType[ENodeType.TRIGGER] = EGameType.TRIGGER;
 	}
 	
+	/* Don't need it anymore.. but maybe we will later
 	private function _initFileExtensionsMap():Void
 	{
 		_xmlGameTypeToFileExtension = new Map<EGameType,String>();
@@ -174,7 +175,7 @@ class GameClassParser implements IGameClassParser
 		_xmlGameTypeToFileExtension[EGameType.ACTION] = "agc";
 		_xmlGameTypeToFileExtension[EGameType.TRIGGER] = "tgc";
 	}
-	
+	*/
 
 	private function _initExtendableNodesMap():Void
 	{
@@ -735,7 +736,7 @@ class GameClassParser implements IGameClassParser
 	{
 		try 
 		{
-			return Xml.parse(Assets.getFile(p_stringAssetUrl).toString());
+			return Xml.parse(Assets.getScript(p_stringAssetUrl).toString());
 		}
 		catch (err:Dynamic) 
 		{
@@ -745,10 +746,12 @@ class GameClassParser implements IGameClassParser
 		}
 	}
 
+	//DEPRECATED
+	/*
 	inline private function _getClassUrl(p_gameEntityClassName:String, p_fileExtension:String):String
 	{
 		return StringTools.replace(p_gameEntityClassName,".","/") + "." + p_fileExtension;
-	}
+	}*/
 	
 	inline public function getGameNode(p_expectedGameType:EGameType, ?p_gameClassName:String, ?p_gameClassNode:Xml):Xml
 	{
@@ -762,8 +765,9 @@ class GameClassParser implements IGameClassParser
 		else if (p_gameClassName != null)
 		{
 			//@todo: _the function below may throw an exception(no it won't). in this case, throw one here too, and a trace saying the class file is not well-formed. Also, return null.
-			l_gameClassNode = _parseEmbeddedStringAsset(_getClassUrl(p_gameClassName, _xmlGameTypeToFileExtension[p_expectedGameType]));
-
+			//l_gameClassNode = _parseEmbeddedStringAsset(_getClassUrl(p_gameClassName, _xmlGameTypeToFileExtension[p_expectedGameType]));
+			l_gameClassNode = _parseEmbeddedStringAsset(p_gameClassName);
+			
 			if (l_gameClassNode != null) l_gameClassNode = l_gameClassNode.firstElement();
 		}
 		else if (p_gameClassNode != null)

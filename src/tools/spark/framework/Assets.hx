@@ -85,7 +85,7 @@ class Assets
 		}
 	}
 	
-	public static function assetLoaded(p_name:String):Bool
+	public static function fileLoaded(p_name:String):Bool
 	{
 		return _loader.assetLoaded(p_name);
 	}
@@ -103,6 +103,29 @@ class Assets
 		}
 	}
 	
+	public static function scriptLoaded(p_name:String):Bool
+	{
+		return _loader.assetLoaded('script:'+p_name);
+	}
+	
+	public static function getScript(p_name:String):File
+	{
+		try 
+		{
+			return _loader.getFile('script:'+p_name);
+		}
+		catch (e:Dynamic)
+		{
+			Console.error("ERROR: Could not find script: " + p_name);
+			return null;
+		}
+	}
+	
+	public static function textureLoaded(p_name:String):Bool
+	{
+		return _loader.assetLoaded(p_name);
+	}
+	
 	public static function getTexture(p_name:String):Texture
 	{
 		try 
@@ -114,6 +137,11 @@ class Assets
 			Console.error("ERROR: Could not find texture: " + p_name);
 			return null;
 		}
+	}
+	
+	public static function soundLoaded(p_name:String):Bool
+	{
+		return _loader.assetLoaded(p_name);
 	}
 	
 	public static function getSound(p_name:String):Sound

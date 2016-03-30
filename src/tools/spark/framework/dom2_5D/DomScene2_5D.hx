@@ -35,6 +35,7 @@ class DomScene2_5D extends AScene2_5D
 	{
 		_instances[p_view2_5D] = Browser.document.createDivElement();
 		_instances[p_view2_5D].style.position = "absolute";
+		_instances[p_view2_5D].style.setProperty('pointer-events', 'auto');
 
 		return super.createInstance(p_view2_5D);
 	}

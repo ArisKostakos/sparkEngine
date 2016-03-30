@@ -120,16 +120,20 @@ import flambe.util.Signal0;
 				//Console.warn("Level is not created and given as url");
 				
 				//Get file path to determine if file is loaded
-				var l_assetPathName:String = StringTools.replace(p_levelEntity,".","/") + ".egc";
+				//var l_assetPathName:String = StringTools.replace(p_levelEntity,".","/") + ".egc";
 				
 				//Asset loaded. Create it
-				if (Assets.assetLoaded(l_assetPathName))
+				if (Assets.scriptLoaded(p_levelEntity))
 					l_level = Sliced.logic.create(p_levelEntity);
 				//Asset not even loaded. Load it, then create it..
 				else
 				{
 					//Console.log("Level.egc not loaded.. Loading it now..");
+					Console.error("Level Manager->Level " + p_levelEntity + " has not been loaded, and dynamic loaded has been deprecated! Quitting...");
+					return;
 					
+					
+					/*
 					//All this... needs to go.. the whole adding a file at runtime code should go somewhere deeper... into a loader somewhere..
 					//or at the very least, as a Logic.helper.. but i think to a loader is better
 					
@@ -149,9 +153,9 @@ import flambe.util.Signal0;
 					l_loader.start();
 					
 					return; //careful of this return..
+					*/
 				}
 			}
-			//what about Level.egc not even been loaded? why not load it for me here..
 		}
 		else
 		{
