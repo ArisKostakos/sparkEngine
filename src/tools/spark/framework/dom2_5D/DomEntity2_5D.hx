@@ -57,6 +57,7 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['backgroundColor'] = _updateBackgroundColor;
 		_updateStateFunctions['border'] = _updateBorder;
 		_updateStateFunctions['borderColor'] = _updateBorderColor;
+		_updateStateFunctions['pointerEvents'] = _updatePointerEvents;
 		
 		_queryFunctions['globalPosition'] = _queryGlobalPosition;
 		_queryFunctions['groupObject'] = _queryGroupObject;
@@ -138,6 +139,9 @@ class DomEntity2_5D extends AEntity2_5D
 		
 		//Update Touchable Stuff
 		_updateState('touchable', p_view2_5D);
+		
+		//Update pointerEvents Stuff
+		_updateState('pointerEvents', p_view2_5D);
 		
 		//Update Accepts Keyboard Input Stuff
 		_updateState('acceptsKeyboardInput', p_view2_5D);
@@ -649,6 +653,17 @@ class DomEntity2_5D extends AEntity2_5D
 				//@todo: should really consider actually removing those listeners, here....
 			}
 			
+		}
+	}
+	
+	private function _updatePointerEvents(p_arguement:String, p_view2_5D:IView2_5D):Void
+	{
+		//Gt Mesh
+		var l_instance:Element = _instances[p_view2_5D];
+		
+		if (l_instance != null)
+		{
+			l_instance.style.setProperty('pointer-events', p_arguement);
 		}
 	}
 	
