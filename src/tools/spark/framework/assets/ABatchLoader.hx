@@ -6,6 +6,7 @@
 
 package tools.spark.framework.assets;
 
+import flambe.asset.AssetEntry.AssetFormat;
 import flambe.util.Signal0;
 import flambe.util.Signal1;
 import flambe.util.Signal2;
@@ -32,20 +33,21 @@ class ABatchLoader implements IBatchLoader
 		progressSignal = new Signal2<Float,Float>();
 	}
 	
-	public function addFile(p_url:String, ?p_name:String, p_forceLoadAsData:Bool=false, p_bytes:Int = 50000/*assume 50k*/):Void
+	public function addFile(p_url:String, ?p_name:String, ?p_fileFormat:AssetFormat, p_bytes:Int = 50000/*assume 50k*/):Void
 	{
 		if (p_name == null) p_name = p_url;
 		
 		//Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
-		if (p_url.indexOf('/assets') != -1)
-		{
-			p_url = "http://130.211.172.86" + p_url;
-		}
+		#if debug
+			if (p_url.indexOf('/assets') != -1)
+				p_url = "http://130.211.172.86" + p_url;
+		#end
 		//END OF Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
 		
 		Console.log("BatchLoader: Requesting file " + p_url);
 		
-		_addFile(p_name, p_url, p_forceLoadAsData, p_bytes);
+		//Add The file
+		_addFile(p_name, p_url, p_fileFormat, p_bytes);
 	}
 	
 	public function start():Void
@@ -54,7 +56,7 @@ class ABatchLoader implements IBatchLoader
 		
 	}
 	
-	private function _addFile(p_name:String, p_url:String, p_forceLoadAsData:Bool, p_bytes:Int):Void
+	private function _addFile(p_name:String, p_url:String, p_fileFormat:AssetFormat, p_bytes:Int):Void
 	{
 		//override me
 		

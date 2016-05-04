@@ -47,6 +47,7 @@ import flambe.util.Signal0;
 	//helper vars to pass arguments through the load function callback. ALWAYS set them, when loading a level
 	private var _actionAfterLoad:EActionAfterLoad; //always set this one when calling _loadLevel
 	private var _levelRunSlot:String;  //always set this one when calling _loadLevel
+	private var _levelParentStage:String;  //always set this one when calling _runLevel (can also be set before that, like before _loadlevel...)
 	private var _levelLoading:IGameEntity; //set at _loadLevel
 	private var _preLoaderActive:Bool;
 	
@@ -82,10 +83,11 @@ import flambe.util.Signal0;
 		Console.error("loadLevel...");
 	}
 	
-	public function runLevel(p_levelEntity:Dynamic, p_runSlot:String="Main"):Void
+	public function runLevel(p_levelEntity:Dynamic, p_runSlot:String="Main", p_parentStage:String="Implicit"):Void
 	{
 		_actionAfterLoad = RUN;
 		_levelRunSlot = p_runSlot;
+		_levelParentStage = p_parentStage;
 		_loadLevel_start(p_levelEntity);
 	}
 	
@@ -172,6 +174,7 @@ import flambe.util.Signal0;
 		var moduleReferences = [];
 		var viewReferences = [];
 		var eventSheetReferences = [];
+		var stageAreaReferences = [];
 		
 		for (child in p_level.children)
 		{
@@ -181,12 +184,15 @@ import flambe.util.Signal0;
 				viewReferences.push(child);
 			else if (child.getState('type') == 'EventSheet')
 				eventSheetReferences.push(child);
+			else if (child.getState('type') == 'StageArea')
+				stageAreaReferences.push(child);
 		}
 		
 		//Store later, break this function to tiny private ones ofc..
 		p_level.setState('moduleReferences', moduleReferences);
 		p_level.setState('viewReferences', viewReferences);
 		p_level.setState('eventSheetReferences', eventSheetReferences);
+		p_level.setState('stageAreaReferences', stageAreaReferences);
 		
 		
 		//Load all modules (for now assume always exactly 1 module reference exists)
@@ -215,18 +221,29 @@ import flambe.util.Signal0;
 	{
 		if (p_level.getState('created') == false)
 		{
-			//Create Level's eventSheet references (right now, it always assumes 0 or 1 eventSheet reference)
-			var eventSheetReferences:Array<IGameEntity> = p_level.getState('eventSheetReferences');
-			if (eventSheetReferences.length > 0)
+			//Create Level's eventSheet references
+			var l_eventSheetReferences:Array<IGameEntity> = p_level.getState('eventSheetReferences');
+			for (f_eventSheetReference in l_eventSheetReferences)
 			{
-				var testEventSheet:IGameEntity = Sliced.logic.create(eventSheetReferences[0].getState('url'));
-				p_level.addChild(testEventSheet);
+				var f_eventSheet:IGameEntity = Sliced.logic.create(f_eventSheetReference.getState('url'));
+				p_level.addChild(f_eventSheet);
+			}
+			
+			//Array used for views and stageAreas
+			var l_views:Array<IGameEntity> = [];
+			
+			//Create Level's stageArea references
+			var l_stageAreaReferences:Array<IGameEntity> = p_level.getState('stageAreaReferences');
+			for (f_stageAreaReference in l_stageAreaReferences)
+			{
+				var f_stageArea:IGameEntity = Sliced.logic.create(f_stageAreaReference.getState('url'));
+				
+				//Store this stageArea
+				l_views.push(f_stageArea);
 			}
 			
 			//Create Level's view references
 			var l_viewReferences:Array<IGameEntity> = p_level.getState('viewReferences');
-			var l_views:Array<IGameEntity> = [];
-			
 			for (f_viewReference in l_viewReferences)
 			{
 				var f_view:IGameEntity = Sliced.logic.create(f_viewReference.getState('url'));
@@ -291,7 +308,10 @@ import flambe.util.Signal0;
 			Sliced.display.projectActiveSpaceReference.spaceEntity.addChild(p_level);
 			
 			for (f_view in l_views)
+			{
+				f_view.setState('parent', _levelParentStage); //The explicit rule to set views of a level to a specific parent(e.g. a StageArea)
 				Sliced.display.projectActiveSpaceReference.activeStageReference.stageEntity.addChild(f_view);
+			}
 			
 			currentLevel[p_runSlot] = p_level;
 			

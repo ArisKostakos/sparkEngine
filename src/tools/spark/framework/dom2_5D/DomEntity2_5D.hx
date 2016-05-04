@@ -58,6 +58,7 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['border'] = _updateBorder;
 		_updateStateFunctions['borderColor'] = _updateBorderColor;
 		_updateStateFunctions['pointerEvents'] = _updatePointerEvents;
+		_updateStateFunctions['command_zOrder'] = _updateZOrder;
 		
 		_queryFunctions['globalPosition'] = _queryGlobalPosition;
 		_queryFunctions['groupObject'] = _queryGroupObject;
@@ -246,9 +247,11 @@ class DomEntity2_5D extends AEntity2_5D
 		if (p_src != "Undefined")
 		{
 			 //hack.. for full length dom image urls //CHECK IF THIS HACK NO LONGER REQUIRED. I DONT THINK I USE ../ FOR ANYTHING ANYMORE!!!
+			#if debug
 			if (p_src.indexOf('assets/') == -1)
 			{
-				if (p_src.indexOf('http') == -1)
+			#end
+				if (p_src.indexOf('http') == -1 && p_src.indexOf('//') == -1)
 				{
 					//Normal loading (but not quite, still there's the SparkEditor:References hacky thing, for Dom stuff..)
 					var l_asset:Asset = Project.main.modules["SparkEditor:References"].assets[p_src];
@@ -258,6 +261,7 @@ class DomEntity2_5D extends AEntity2_5D
 				{
 					l_instance.src = p_src;
 				}
+			#if debug
 			}
 			else
 			{
@@ -267,6 +271,7 @@ class DomEntity2_5D extends AEntity2_5D
 				l_instance.src = "http://130.211.172.86" + p_src;
 				//END OF //Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
 			}
+			#end
 		}
 	}
 	
@@ -665,6 +670,18 @@ class DomEntity2_5D extends AEntity2_5D
 		{
 			l_instance.style.setProperty('pointer-events', p_arguement);
 		}
+	}
+	
+	
+	//COMMANDS
+	private function _updateZOrder(p_zOrder:Int, p_view2_5D:IView2_5D):Void
+	{
+		//Center Anchor State doesn't exist yet, we do it for everyone
+		var l_instance:Element = _instances[p_view2_5D];
+		Console.de("Updating z order of DOM element to: " + p_zOrder);
+		Console.de("Current zIndex: " + l_instance.style.zIndex);
+		l_instance.style.zIndex = Std.string(p_zOrder);
+		//l_instance.setZOrder(p_zOrder);
 	}
 	
 	//QUERIES

@@ -5,6 +5,7 @@
  */
 
 package tools.spark.framework.assets.interfaces;
+import flambe.asset.AssetEntry.AssetFormat;
 import flambe.util.Signal0;
 import flambe.util.Signal1;
 import flambe.util.Signal2;
@@ -19,6 +20,6 @@ interface IBatchLoader
 	var errorSignal:Signal1<String>;
 	var progressSignal:Signal2<Float,Float>;
 	
-	function addFile(p_url:String, ?p_name:String, p_forceLoadAsData:Bool = false, p_bytes:Int = 50000/*assume 50k*/):Void;
+	function addFile(p_url:String, ?p_name:String, ?p_fileFormat:AssetFormat, p_bytes:Int = 50000/*assume 50k*/):Void;
 	function start():Void;
 }

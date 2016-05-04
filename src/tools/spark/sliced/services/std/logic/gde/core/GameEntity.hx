@@ -247,6 +247,22 @@ class GameEntity extends AGameBase implements IGameEntity
 		}
 	}
 	
+	//We created a different function, to spare the ifs on the normal setState
+	public function setStateSilent(p_stateId:String, p_value:Dynamic):Dynamic
+	{
+		try //Remove this try for optimization reasons at some point...
+		{
+			gameStateSet.get(p_stateId).value = p_value;
+			
+			return gameStateSet.get(p_stateId).value;
+		}
+		catch (e:Dynamic) 
+		{ 
+			Console.error("Could not Silently Set State " + p_stateId + " to: " + p_value + ", for entity: " + getState("name")); 
+			return null;
+		}
+	}
+	
 	public function addToState(p_stateId:String, p_value:Dynamic):Dynamic
 	{
 		gameStateSet.get(p_stateId).value += p_value;
@@ -299,7 +315,10 @@ class GameEntity extends AGameBase implements IGameEntity
 		}
 		
 		//Following line is the weak connection between Logic and Display
-		setState('command_zOrder', parentEntity.children.indexOf(this));
+		for (child in parentEntity.children)
+			child.setState('command_zOrder', parentEntity.children.indexOf(child));
+		
+		//setState('command_zOrder', parentEntity.children.indexOf(this));
 	}
 	
 	public function get_zIndex():Int

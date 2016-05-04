@@ -187,8 +187,8 @@ class FlambeView2_5D extends AView2_5D
 		
 		if (p_x != null) l_viewSprite.x._ = p_x;
 		if (p_y != null) l_viewSprite.y._ = p_y;
-		//if (p_width != null) l_viewSprite.scissor.width = p_width;
-		//if (p_height != null) l_viewSprite.scissor.height = p_height;
+		if (p_width != null && p_height != null)
+			l_viewSprite.scissor = new Rectangle(0, 0, p_width, p_height);
 		
 		super.setPosSize(p_x,p_y,p_width,p_height,p_view);
 	}

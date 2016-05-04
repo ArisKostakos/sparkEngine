@@ -155,7 +155,12 @@ class Comms extends AService implements IComms
 		//Using Closures to preserve request id
 		var l_serverEventCallback:Dynamic->Void = function (p_data:Dynamic) 
 		{
-			_serverEventsData[p_serverEventIdentifier] = p_data;
+			Console.de("Engine data: " + p_data);
+			//Allow multiple incoming server events in a single frame hack
+			if (!_serverEventsData.exists(p_serverEventIdentifier))
+				_serverEventsData[p_serverEventIdentifier] = [];
+			
+			_serverEventsData[p_serverEventIdentifier].push(p_data);
 			Sliced.event.raiseEvent(NETWORK_SERVER_EVENT, p_gameEntity, p_serverEventIdentifier);
 		}
 		

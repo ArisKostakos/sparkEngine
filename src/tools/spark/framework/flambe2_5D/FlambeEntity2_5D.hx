@@ -6,6 +6,8 @@
 
 package tools.spark.framework.flambe2_5D;
 
+import flambe.display.EmitterMold;
+import flambe.display.EmitterSprite;
 import flambe.display.FillSprite;
 import flambe.display.Font;
 import flambe.display.ImageSprite;
@@ -62,14 +64,24 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['scaleX'] = _updateSizeX; //for pure 2d.. for 3d coordinates, its not that simple..
 		_updateStateFunctions['scaleY'] = _updateSizeY; //for pure 2d.. for 3d coordinates, its not that simple..
 		_updateStateFunctions['rotation'] = _updateRotation;
+		
+		_updateStateFunctions['animate_x'] = _updateAnimateX;
+		_updateStateFunctions['animate_y'] = _updateAnimateY;
+		_updateStateFunctions['animate_scaleX'] = _updateAnimateScaleX;
+		_updateStateFunctions['animate_scaleY'] = _updateAnimateScaleY;
+		_updateStateFunctions['animate_rotation'] = _updateAnimateRotation;
+		
 		_updateStateFunctions['touchable'] = _updateTouchable;
 		_updateStateFunctions['visible'] = _updateVisible;
 		_updateStateFunctions['opacity'] = _updateOpacity;
+		_updateStateFunctions['animate_opacity'] = _updateAnimateOpacity;
+		
 		_updateStateFunctions['velocityX'] = _updateVelocityX;
 		_updateStateFunctions['velocityY'] = _updateVelocityY;
 		_updateStateFunctions['velocityAng'] = _updateVelocityAng;
 		_updateStateFunctions['applyImpulseX'] = _updateApplyImpulseX;
 		_updateStateFunctions['applyImpulseY'] = _updateApplyImpulseY;
+		_updateStateFunctions['applyImpulseAngle'] = _updateApplyImpulseAngle;
 		_updateStateFunctions['centerAnchor'] = _centerAnchor;
 		_updateStateFunctions['physicsEntity'] = _updatePhysics;
 		_updateStateFunctions['spaceWidth'] = _updateSpaceWidth;	//this is iffy.. should do it with forms instead
@@ -78,9 +90,15 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['2DMeshTextForm'] = _update2DMeshTextForm;
 		_updateStateFunctions['2DMeshSpriterForm'] = _update2DMeshSpriterForm;
 		_updateStateFunctions['2DMeshSpritesheetForm'] = _update2DMeshSpritesheetForm;
+		_updateStateFunctions['2DMeshParticleEmitterForm'] = _update2DMeshParticleEmitterForm;
 		_updateStateFunctions['2DMeshFillRectForm'] = _update2DMeshFillRectForm;
 		_updateStateFunctions['2DMeshSpriteForm'] = _update2DMeshSpriteForm;
 		_updateStateFunctions['2DMeshSpriterAnimForm'] = _update2DMeshSpriterAnimForm;
+		_updateStateFunctions['action_fire'] = _updateFireParticle;
+		_updateStateFunctions['emitX'] = _updateEmitX;
+		_updateStateFunctions['emitY'] = _updateEmitY;
+		_updateStateFunctions['particleEnabled'] = _updateParticleEnabled;
+		_updateStateFunctions['particleDuration'] = _updateParticleDuration;
 		_updateStateFunctions['text'] = _updateText;
 		_updateStateFunctions['font'] = _updateFont;
 		_updateStateFunctions['align'] = _updateAlign;
@@ -94,6 +112,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_queryFunctions['realHeight'] = _queryRealHeight;
 		_queryFunctions['x'] = _queryRealX;
 		_queryFunctions['y'] = _queryRealY;
+		_queryFunctions['angle'] = _queryRealRotation;
 	}
 	
 	
@@ -127,6 +146,9 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			_updateState('spaceX',p_view2_5D);
 			_updateState('spaceY', p_view2_5D);
+			
+			_updateState('animate_x', p_view2_5D);
+			_updateState('animate_y', p_view2_5D);
 		}
 		//_updateState('spaceZ', p_view2_5D);
 		
@@ -134,13 +156,18 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateState('scaleY',p_view2_5D);
 		//_updateState('scaleZ', p_view2_5D);
 		
-		_updateState('rotation',p_view2_5D);
+		_updateState('rotation', p_view2_5D);
+		
+		_updateState('animate_scaleX', p_view2_5D);
+		_updateState('animate_scaleY', p_view2_5D);
+		_updateState('animate_rotation', p_view2_5D);
 		
 		_updateState('touchable', p_view2_5D);
 		
 		_updateState('visible', p_view2_5D);
 		
 		_updateState('opacity', p_view2_5D);
+		_updateState('animate_opacity', p_view2_5D);
 		//_updateState('2DMeshImageForm', p_view2_5D); //this is nested.. not for global update i think
 		//_updateState('2DMeshSpriterForm', p_view2_5D); //this is nested.. not for global update i think
 		//more spriter nested things exist also don't update them
@@ -180,6 +207,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 				_updateStateOfInstance('2DMeshSpriterForm', p_view2_5D);
 			case 'Spritesheet':
 				_updateStateOfInstance('2DMeshSpritesheetForm', p_view2_5D);
+			case 'Particle Emitter':
+				_updateStateOfInstance('2DMeshParticleEmitterForm', p_view2_5D);
 			case 'FillRect':
 				_updateStateOfInstance('2DMeshFillRectForm', p_view2_5D);
 			case 'Sprite':
@@ -226,17 +255,23 @@ class FlambeEntity2_5D extends AEntity2_5D
 		else
 			l_mesh = null;
 			
+		//Get Image Url
+		var l_imageUrl:String;
+		if (p_2DMeshImageForm.charAt(0) == '[')
+			l_imageUrl = gameEntity.gameForm.getState( p_2DMeshImageForm.substring(1, p_2DMeshImageForm.length-1) );
+		else
+			l_imageUrl = p_2DMeshImageForm;
 			
 		if (l_mesh == null)
 		{
-			l_mesh = new ImageSprite(Assets.getTexture(gameEntity.gameForm.getState( p_2DMeshImageForm )));
+			l_mesh = new ImageSprite(Assets.getTexture(l_imageUrl));
 			l_mesh.blendMode = BlendMode.Copy;
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
 		}
 		else
 		{
-			l_mesh.texture = Assets.getTexture(gameEntity.gameForm.getState( p_2DMeshImageForm ));	
+			l_mesh.texture = Assets.getTexture(l_imageUrl);	
 		}
 	}
 	
@@ -263,7 +298,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 			
 		if (l_mesh == null)
 		{
-			var l_fontName:String = gameEntity.gameForm.getState( p_2DMeshTextForm );
+			var l_fontName:String;
+			
+			if (p_2DMeshTextForm.charAt(0) == '[')
+				l_fontName = gameEntity.gameForm.getState( p_2DMeshTextForm.substring(1, p_2DMeshTextForm.length-1) );
+			else
+				l_fontName = p_2DMeshTextForm;
 			
 			var l_font:Font = new Font(Assets.getAssetPackOf(l_fontName+".fnt"), l_fontName);
 			
@@ -271,6 +311,58 @@ class FlambeEntity2_5D extends AEntity2_5D
 			//l_mesh.wrapWidth._ = 100;
 			//l_mesh.
 			l_mesh.blendMode = BlendMode.Copy;
+			l_instance.add(l_mesh);
+			_instancesMesh[p_view2_5D] = l_mesh;
+		}
+		else
+		{
+			//l_mesh.texture = Assets.getTexture(gameEntity.gameForm.getState( p_2DMeshImageForm ));	
+		}
+	}
+	
+	private function _update2DMeshParticleEmitterForm(p_2DMeshParticleEmitterForm:String, p_view2_5D:IView2_5D):Void
+	{
+		//If the Entity's mesh type is not image, ignore this update
+		if (gameEntity.getState('2DmeshType') != 'Particle Emitter')
+			return;
+			
+		//If the Form Name is Undefined, ignore this update
+		if (p_2DMeshParticleEmitterForm == 'Undefined')
+			return;
+			
+		//Get the instance we're updating
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		var l_mesh:EmitterSprite;
+		
+		if (_instancesMesh[p_view2_5D]!=null)	//Get it's existing mesh, if any
+			l_mesh= cast(_instancesMesh[p_view2_5D],EmitterSprite); //(the cast should always work due to logic.. but not very sure..)
+		else
+			l_mesh = null;
+			
+			
+		if (l_mesh == null)
+		{
+			var l_moldName:String;
+			
+			if (p_2DMeshParticleEmitterForm.charAt(0) == '[')
+				l_moldName = gameEntity.gameForm.getState( p_2DMeshParticleEmitterForm.substring(1, p_2DMeshParticleEmitterForm.length-1) );
+			else
+				l_moldName = p_2DMeshParticleEmitterForm;
+			
+			//Emitter Mold
+			var l_mold:EmitterMold = new EmitterMold(Assets.getAssetPackOf(l_moldName+".pex"), l_moldName);
+			gameEntity.setState("feedback_mold", l_mold);
+			
+			//Emitter Sprite
+			l_mesh = l_mold.createEmitter();
+			l_mesh.enabled = gameEntity.getState("particleEnabled");
+			l_mesh.duration = gameEntity.getState("particleDuration");
+			//l_mesh.wrapWidth._ = 100;
+			//l_mesh.
+			//l_mesh.blendMode = BlendMode.Copy; //so.. COPY don't respect transparency and does no blending.. but its the only one that worked when mixing away3d and flambe..
+			l_mesh.emitX._ = gameEntity.getState("emitX");
+			l_mesh.emitY._ = gameEntity.getState("emitY");
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
 		}
@@ -339,8 +431,18 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			l_mesh = new Sprite();
 			
-			var l_SpritesheetFormName:String = gameEntity.gameForm.getState( p_2DMeshSpritesheetForm );
+			var l_SpritesheetFormName:String;
+			
+			if (p_2DMeshSpritesheetForm.charAt(0) == '[')
+				l_SpritesheetFormName = gameEntity.gameForm.getState( p_2DMeshSpritesheetForm.substring(1, p_2DMeshSpritesheetForm.length-1) );
+			else
+				l_SpritesheetFormName = p_2DMeshSpritesheetForm;
+			
+			
 			var l_spritesheetPlayer:SpriteSheetPlayer = new SpriteSheetPlayer(Assets.getAssetPackOf(l_SpritesheetFormName), l_SpritesheetFormName);
+			
+			//Store
+			gameEntity.setState('obj_player', l_spritesheetPlayer);
 			
 			l_mesh.blendMode = BlendMode.Copy;
 			l_instance.add(l_mesh);
@@ -383,7 +485,14 @@ class FlambeEntity2_5D extends AEntity2_5D
 		else
 			l_mesh = null;
 			
-			
+		
+		//Get Image Url
+		var l_color:Int;
+		if (p_2DMeshFillRectForm.charAt(0) == '[')
+			l_color = gameEntity.gameForm.getState( p_2DMeshFillRectForm.substring(1, p_2DMeshFillRectForm.length-1) );
+		else
+			l_color = Std.parseInt(p_2DMeshFillRectForm);
+		
 		if (l_mesh == null)
 		{
 			//do Layout Call??????????????
@@ -391,7 +500,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 			
 			//if (gameEntity.getState('layoutable') == true)
 				//l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),groupInstances[p_view2_5D].width, groupInstances[p_view2_5D].height);
-			l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),gameEntity.getState( 'spaceWidth' ), gameEntity.getState( 'spaceHeight' ));
+			l_mesh = new FillSprite(l_color,gameEntity.getState( 'spaceWidth' ), gameEntity.getState( 'spaceHeight' ));
 			l_mesh.scissor = new Rectangle(0, 0, gameEntity.getState( 'spaceWidth' ), gameEntity.getState( 'spaceHeight' ));
 			l_mesh.blendMode = BlendMode.Copy;
 			l_instance.add(l_mesh);
@@ -400,7 +509,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		else
 		{
 			
-			l_mesh.color = gameEntity.gameForm.getState( p_2DMeshFillRectForm );
+			l_mesh.color = l_color;
 			//l_mesh.setSize = 
 		}
 	}
@@ -493,7 +602,109 @@ class FlambeEntity2_5D extends AEntity2_5D
 		}
 	}
 	
-
+	inline private function _updateAnimateX(p_animate:Dynamic, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (p_animate != null)
+		{
+			if (gameEntity.getState('physicsEntity')==null || gameEntity.getState('physicsEntity')==false)
+			{
+				if (p_animate.type==null  || p_animate.type=="normal")
+					l_mesh.x.animate(p_animate.from, p_animate.to, p_animate.seconds, p_animate.easing);
+				else if (p_animate.type == "to")
+					l_mesh.x.animateTo(p_animate.to, p_animate.seconds, p_animate.easing);
+				else if (p_animate.type == "by")
+					l_mesh.x.animateBy(p_animate.by, p_animate.seconds, p_animate.easing);
+				else
+					Console.warn("Unknown animate method");
+			}
+		}
+	}
+	
+	inline private function _updateAnimateY(p_animate:Dynamic, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (p_animate != null)
+		{
+			if (gameEntity.getState('physicsEntity')==null || gameEntity.getState('physicsEntity')==false)
+			{
+				if (p_animate.type==null  || p_animate.type=="normal")
+					l_mesh.y.animate(p_animate.from, p_animate.to, p_animate.seconds, p_animate.easing);
+				else if (p_animate.type == "to")
+					l_mesh.y.animateTo(p_animate.to, p_animate.seconds, p_animate.easing);
+				else if (p_animate.type == "by")
+					l_mesh.y.animateBy(p_animate.by, p_animate.seconds, p_animate.easing);
+				else
+					Console.warn("Unknown animate method");
+			}
+		}
+	}
+	
+	inline private function _updateAnimateScaleX(p_animate:Dynamic, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (p_animate != null)
+		{
+			if (p_animate.type==null  || p_animate.type=="normal")
+				l_mesh.scaleX.animate(p_animate.from, p_animate.to, p_animate.seconds, p_animate.easing);
+			else if (p_animate.type == "to")
+				l_mesh.scaleX.animateTo(p_animate.to, p_animate.seconds, p_animate.easing);
+			else if (p_animate.type == "by")
+				l_mesh.scaleX.animateBy(p_animate.by, p_animate.seconds, p_animate.easing);
+			else
+				Console.warn("Unknown animate method");
+		}
+		
+		//Must Also Update Physics component, if entity is physics enabled
+	}
+	
+	inline private function _updateAnimateScaleY(p_animate:Dynamic, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (p_animate != null)
+		{
+			if (p_animate.type==null  || p_animate.type=="normal")
+				l_mesh.scaleY.animate(p_animate.from, p_animate.to, p_animate.seconds, p_animate.easing);
+			else if (p_animate.type == "to")
+				l_mesh.scaleY.animateTo(p_animate.to, p_animate.seconds, p_animate.easing);
+			else if (p_animate.type == "by")
+				l_mesh.scaleY.animateBy(p_animate.by, p_animate.seconds, p_animate.easing);
+			else
+				Console.warn("Unknown animate method");
+		}
+		
+		//Must Also Update Physics component, if entity is physics enabled
+	}
+	
+	inline private function _updateAnimateRotation(p_animate:Dynamic, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (p_animate != null)
+		{
+			if (gameEntity.getState('physicsEntity')==null || gameEntity.getState('physicsEntity')==false)
+			{
+				if (p_animate.type==null  || p_animate.type=="normal")
+					l_mesh.rotation.animate(p_animate.from, p_animate.to, p_animate.seconds, p_animate.easing);
+				else if (p_animate.type == "to")
+					l_mesh.rotation.animateTo(p_animate.to, p_animate.seconds, p_animate.easing);
+				else if (p_animate.type == "by")
+					l_mesh.rotation.animateBy(p_animate.by, p_animate.seconds, p_animate.easing);
+				else
+					Console.warn("Unknown animate method");
+			}
+		}
+	}
+		
 	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
 	inline private function _updatePositionX(p_newPos:Int, p_view2_5D:IView2_5D):Void
 	{
@@ -540,6 +751,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		{
 			l_mesh.scaleX._ = p_newScale;
 		}
+		
+		//Must Also Update Physics component, if entity is physics enabled
 	}
 	
 	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
@@ -550,6 +763,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		if (l_mesh != null)
 			l_mesh.scaleY._ = p_newScale;
+			
+		//Must Also Update Physics component, if entity is physics enabled
 	}
 	
 	//@todo: for pure 2d.. for 3d coordinates, its not that simple..
@@ -590,6 +805,86 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_mesh != null)
 		{
 			l_mesh.setAlpha(p_opacity);
+		}
+	}
+	
+	private function _updateAnimateOpacity(p_animate:Dynamic, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (p_animate != null)
+		{
+			if (p_animate.type==null  || p_animate.type=="normal")
+				l_mesh.alpha.animate(p_animate.from, p_animate.to, p_animate.seconds, p_animate.easing);
+			else if (p_animate.type == "to")
+				l_mesh.alpha.animateTo(p_animate.to, p_animate.seconds, p_animate.easing);
+			else if (p_animate.type == "by")
+				l_mesh.alpha.animateBy(p_animate.by, p_animate.seconds, p_animate.easing);
+			else
+				Console.warn("Unknown animate method");
+		}
+	}
+	
+	private function _updateFireParticle(p_par:Bool, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:EmitterSprite = cast(_instancesMesh[p_view2_5D],EmitterSprite);
+		
+		if (l_mesh != null)
+		{
+			if (p_par == true)
+			{
+				//Fire Particle
+				l_mesh.restart();
+				
+				//Toggle action flag OFF
+				gameEntity.setStateSilent("action_fire", false);
+			}
+		}
+	}
+	
+	private function _updateEmitX(p_par:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:EmitterSprite = cast(_instancesMesh[p_view2_5D],EmitterSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.emitX._ = p_par;
+		}
+	}
+	
+	private function _updateEmitY(p_par:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:EmitterSprite = cast(_instancesMesh[p_view2_5D],EmitterSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.emitY._ = p_par;
+		}
+	}
+	
+	private function _updateParticleEnabled(p_par:Bool, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:EmitterSprite = cast(_instancesMesh[p_view2_5D],EmitterSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.enabled = p_par;
+		}
+	}
+	
+	private function _updateParticleDuration(p_par:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:EmitterSprite = cast(_instancesMesh[p_view2_5D],EmitterSprite);
+		
+		if (l_mesh != null)
+		{
+			l_mesh.duration = p_par;
 		}
 	}
 	
@@ -935,6 +1230,18 @@ class FlambeEntity2_5D extends AEntity2_5D
 		body.applyImpulse(Vec2.weak(0, p_newVel));
 	}
 	
+	inline private function _updateApplyImpulseAngle(p_newVel:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		//var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_instance.get(BodyComponent) == null) return;
+		
+		var body:Body = l_instance.get(BodyComponent).body;
+		
+		body.applyAngularImpulse(p_newVel);
+	}
 	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void
 	{
@@ -1027,20 +1334,20 @@ class FlambeEntity2_5D extends AEntity2_5D
 	{
 		//Get Mesh
 		var l_mesh:Sprite = _instancesMesh[p_view];
-		Console.error("RESIZING: " + gameEntity.getState('name') + '. x: ' + p_x + ', y: ' + p_y);
-		Console.error("RESIZING: " + gameEntity.getState('name') + '. width: ' + p_width + ', height: ' + p_height);
+		Console.de("RESIZING: " + gameEntity.getState('name') + '. x: ' + p_x + ', y: ' + p_y);
+		Console.de("RESIZING: " + gameEntity.getState('name') + '. width: ' + p_width + ', height: ' + p_height);
 		
 		if (l_mesh != null)		
 		{
 			if (p_x != null)
 			{
 				l_mesh.x._ = p_x;
-				Console.error("wtfXX");
+				Console.de("wtfXX");
 			}
 			if (p_y != null)
 			{
 				l_mesh.y._ = p_y;
-				Console.error("wtfYY");
+				Console.de("wtfYY");
 			}
 			//if (p_width != null) l_mesh.scissor.width = p_width;
 			//if (p_height != null) l_mesh.scissor.height = p_height;
@@ -1051,7 +1358,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		if (l_fillSprite != null) 
 		{
-			l_fillSprite.setSize(p_width,p_height);
+			l_fillSprite.setSize(p_width, p_height);
+			Console.de("wtfsetSize");
 		}
 		
 		super.setPosSize(p_x,p_y,p_width,p_height,p_view);
@@ -1140,5 +1448,13 @@ class FlambeEntity2_5D extends AEntity2_5D
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
 		return l_mesh.y._;
+	}
+	
+	inline private function _queryRealRotation(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		return l_mesh.rotation;
 	}
 }

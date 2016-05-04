@@ -48,8 +48,7 @@ class GameClassInstantiator implements IGameClassInstantiator
 		//Parent Entity
 		l_gameEntity.parentEntity = p_parentEntity;
 		
-		//Create the Entity's Form
-		l_gameEntity.gameForm = instantiateForm(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.FORM]).next(),l_gameEntity);
+		//Create the Entity's Form (OLD LOCATION)
 		
 		//Create the Entity's States
 		//@todo: //when i check whether the array xml element exists, and then access the first node it found (the hasNext and next functions),
@@ -93,6 +92,9 @@ class GameClassInstantiator implements IGameClassInstantiator
 		
 		//Register Entity By Name (watch here, if we dispose this entity we will need to remove it's reference from here as well)
 		Sliced.logic.registerEntityByName(l_gameEntity);
+		
+		//Create the Entity's Form
+		l_gameEntity.gameForm = instantiateForm(p_gameNode.elementsNamed(_xmlNodeTypeToNodeName[ENodeType.FORM]).next(), l_gameEntity);
 		
 		//Trigger Event
 		Sliced.event.raiseEvent(EEventType.CREATED, l_gameEntity);

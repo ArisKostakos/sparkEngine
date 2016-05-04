@@ -5,6 +5,7 @@
  */
 
 package tools.spark.framework;
+import flambe.asset.AssetEntry.AssetFormat;
 import flambe.util.SignalConnection;
 import flambe.util.Signal0;
 import flambe.util.Signal1;
@@ -354,7 +355,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 			for (asset in Project.main.modules[l_moduleName].assets)
 			{
 				//Console.log("adding file: " + asset.id);
-				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+'/'+asset.url, asset.id, asset.forceLoadAsData == "true", Std.parseInt(asset.bytes));
+				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+'/'+asset.url, asset.id, (asset.forceLoadAsData=="true")?AssetFormat.Data:null, Std.parseInt(asset.bytes));
 			}
 			
 			//Start Loading

@@ -110,11 +110,21 @@ class Display extends AService implements IDisplay
 		
 		_renderStateNames['rotation'] = true;
 		
+		//animate actions
+		_renderStateNames['animate_x'] = true;
+		_renderStateNames['animate_y'] = true;
+		_renderStateNames['animate_scaleX'] = true;
+		_renderStateNames['animate_scaleY'] = true;
+		_renderStateNames['animate_rotation'] = true;
+		_renderStateNames['animate_opacity'] = true;
+		
 		_renderStateNames['velocityX'] = true; //physics
 		_renderStateNames['velocityY'] = true; //physics
 		_renderStateNames['velocityAng'] = true; //physics
 		_renderStateNames['applyImpulseX'] = true; //physics
 		_renderStateNames['applyImpulseY'] = true; //physics
+		_renderStateNames['applyImpulseAngle'] = true; //physics
+		
 		
 		_renderStateNames['captureAreaX'] = true; //camera
 		_renderStateNames['captureAreaY'] = true; //camera
@@ -124,6 +134,14 @@ class Display extends AService implements IDisplay
 		
 		_renderStateNames['spaceWidth'] = true;	//just for fillsprites
 		_renderStateNames['spaceHeight'] = true;	//just for fillsprites
+		
+		//particle
+		_renderStateNames['action_fire'] = true;
+		_renderStateNames['emitX'] = true;
+		_renderStateNames['emitY'] = true;
+		_renderStateNames['particleEnabled'] = true;
+		_renderStateNames['particleDuration'] = true;
+		
 		
 		_renderStateNames['stage'] = true;
 		_renderStateNames['view'] = true;

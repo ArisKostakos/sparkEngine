@@ -71,6 +71,8 @@ class EventType
 		eventTypesMap[SOUND_COMPLETED] = "SoundCompleted";
 		
 		eventTypesMap[LAYOUT_INVALIDATED] = "LayoutInvalidated";
+		eventTypesMap[STAGE_RESIZED] = "StageResized";
+		
 		
 		//Reverse Map
 		for (eventType in eventTypesMap.keys())

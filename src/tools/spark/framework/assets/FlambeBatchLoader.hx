@@ -39,18 +39,9 @@ class FlambeBatchLoader extends ABatchLoader
 	}
 	
 	//Interface function for ServerLoader as well
-	override private function _addFile(p_name:String, p_url:String, p_forceLoadAsData:Bool, p_bytes:Int):Void
+	override private function _addFile(p_name:String, p_url:String, p_fileFormat:AssetFormat, p_bytes:Int):Void
 	{
-		if (p_forceLoadAsData)
-		{
-			//_manifest.add(p_name, p_url +"?" + Std.random(10000), 1, AssetFormat.Data);
-			_manifest.add(p_name, p_url, p_bytes, AssetFormat.Data);
-		}
-		else
-		{
-			//_manifest.add(p_name, p_url +"?" + Std.random(10000), 1);
-			_manifest.add(p_name, p_url, p_bytes);
-		}
+		_manifest.add(p_name, p_url, p_bytes, p_fileFormat);
 		
 		_flambeLoader.registerAsset(_manifest, p_name);
 	}

@@ -49,7 +49,6 @@
 		right: 0;
 		bottom: 0;
 		left: 0;
-		width: 400px;
 		height: 250px;
 	}
 	
@@ -60,29 +59,19 @@
 		right: 0;
 		bottom: 0;
 		left: 0;
-		width:350px;
-	}
-	
-	#loadingCircle {
-		position: absolute;
-		margin: auto;
-		top: 30px;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		width:50px;
 	}
 	
 	#loadingText {
 		position: absolute;
 		margin: auto;
-		top: 200px;
+		top: 180px;
 		right: 0;
 		bottom: 0;
 		left: 0;
+		width: 100%;
 		text-align:center;
-		color: white;
-		font-size: 17px;
+		color: rgb(18,83,105);
+		font-size: 24px;
 		font-family: ubuntu;
 	}
   </style>
@@ -95,12 +84,9 @@
 <div id="loadingDiv">
 	<!-- Loading Image -->
 	<img id="loadingImg" src="Loading.png"/>
-
-	<!-- Loading Circle -->
-	<img id="loadingCircle" src="loadCircle.gif"/>
 	
 	<!-- Loading Text -->
-	<div id="loadingText">Booting up the engine...</div>
+	<div id="loadingText">Please wait...</div>
 </div>
 
 <!-- remote skc url -->
@@ -117,6 +103,7 @@ if (element!=null)
 	element.parentNode.removeChild(element);
 }
 function setPreloaderText(message){
+return;
 var element = document.getElementById("loadingText");
 if (element!=null)
 	element.innerHTML = message;

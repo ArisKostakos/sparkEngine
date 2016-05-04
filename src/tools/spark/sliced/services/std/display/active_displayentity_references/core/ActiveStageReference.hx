@@ -10,6 +10,7 @@ import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveStageAreaReference;
 import tools.spark.sliced.services.std.display.active_displayentity_references.interfaces.IActiveViewReference;
+import tools.spark.sliced.services.std.logic.gde.interfaces.EEventType;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 import tools.spark.framework.layout.containers.Group;
 import tools.spark.framework.layout.managers.LayoutManager;
@@ -53,6 +54,7 @@ class ActiveStageReference implements IActiveStageReference
 	private function _onResize()
 	{
 		//this is a new low of sloppiness.. fix plzz... soon
+		//for one, window is terribly terribly wrong.. need to be content div's size
 		#if html
 			layoutRoot.explicitWidth = js.Browser.window.innerWidth;
 			layoutRoot.explicitHeight = js.Browser.window.innerHeight;
@@ -64,6 +66,9 @@ class ActiveStageReference implements IActiveStageReference
 		//Console.error("*****WIDTH******: " + layoutRoot.explicitWidth);
 		//Console.error("*****HEIGHT******: " + layoutRoot.explicitHeight);
 		Sliced.display.invalidateLayout();
+		
+		//Trigger Event
+		Sliced.event.raiseEvent(EEventType.STAGE_RESIZED);
 	}
 	
 	public function logViewReferences():Void

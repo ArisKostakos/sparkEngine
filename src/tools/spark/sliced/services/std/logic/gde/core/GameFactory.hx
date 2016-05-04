@@ -135,7 +135,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 		}
 		else
 		{
-			Console.error('Game Entity Class is not well-formed or not found!');
+			Console.error('Game Entity Class ['+p_gameClassName+'] is not well-formed or not found!');
 			return null;
 		}
 	}

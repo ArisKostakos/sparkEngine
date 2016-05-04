@@ -7,6 +7,7 @@
 package tools.spark.framework.flambe2_5D;
 
 import flambe.Component;
+import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.display.BlendMode;
 import flambe.Entity;
@@ -56,6 +57,7 @@ class FlambeScene2_5D extends AScene2_5D
 	private function _initFlambeScene2_5D()
 	{
 		_updateStateFunctions['physicsScene'] = _updatePhysics;
+		_updateStateFunctions['backgroundColor'] = _updateBackgroundColor;
 		
 		_queryFunctions['zoomX'] = _queryZoomX;
 		_queryFunctions['zoomY'] = _queryZoomY;
@@ -64,10 +66,8 @@ class FlambeScene2_5D extends AScene2_5D
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
 		_instances[p_view2_5D] = new Entity();
-
+		
 		//The Sprite component is added, in case we want to move/scale the entire scene by doing camera transformations
-		//Might become deprecated if the camera affects only individual 'layer entities' instead of the entire scene..
-		//If that happens, remove the sprite component from here..
 		var l_sceneSprite:Sprite = new Sprite();
 		l_sceneSprite.blendMode = BlendMode.Copy;
 		l_sceneSprite.centerAnchor();//hmm
@@ -84,6 +84,7 @@ class FlambeScene2_5D extends AScene2_5D
 		//_updateState('spaceZ', p_view2_5D);
 		
 		_updateState('physicsScene', p_view2_5D);
+		_updateState('backgroundColor', p_view2_5D);
 		
 		//Update Children
 		for (f_childEntity in children)
@@ -145,6 +146,7 @@ class FlambeScene2_5D extends AScene2_5D
 		
 		//Clusterfuck hack to move background indepentantly
 		//until layers are implemented..
+		/*
 		if (p_view.scene.gameEntity.getState('backgroundEntity') != null && p_camera.gameEntity.getState('name')!="Editor Scene Edit Camera")
 		{
 			var background:IGameEntity = cast(p_view.scene.gameEntity.getState('backgroundEntity'), IGameEntity);
@@ -170,6 +172,7 @@ class FlambeScene2_5D extends AScene2_5D
 			//Console.error("CAMERA cameraXMin: " + cameraXMin+ ", cameraXMax: " + cameraXMax + ", _tempX: " + cameraCurrent);
 			//Console.error("CAMERA coveredPercent: " + coveredPercent);
 		}
+		*/
 	}
 	
 	private function _updatePhysics(p_physicsFlag:Bool, p_view2_5D:IView2_5D):Void
@@ -184,6 +187,22 @@ class FlambeScene2_5D extends AScene2_5D
 			var spaceComponent:SpaceComponent = new SpaceComponent(gameEntity.getState('gravityX'),gameEntity.getState('gravityY'));
 			l_instance.add(spaceComponent);
 			_scenePhysicsInit(spaceComponent.space);
+		}
+	}
+	
+	private function _updateBackgroundColor(p_value:String, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		if (p_value!="Transparent")
+		{
+			Console.error("UPDATING Background Color of: " + gameEntity.getState('name'));
+			
+			var l_color:Int = Std.parseInt(p_value);
+			var l_backgroundSprite:FillSprite = new FillSprite(l_color,gameEntity.getState( 'boundsWidth' ), gameEntity.getState( 'boundsHeight' ));
+			//l_mesh.blendMode = BlendMode.Copy;
+			l_instance.add(l_backgroundSprite);
 		}
 	}
 	

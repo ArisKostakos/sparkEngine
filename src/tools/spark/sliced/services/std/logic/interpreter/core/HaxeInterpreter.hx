@@ -6,6 +6,8 @@
 
 package tools.spark.sliced.services.std.logic.interpreter.core;
 import flambe.System;
+import flambe.animation.Ease;
+import flambe.asset.AssetEntry.AssetFormat;
 import tools.spark.framework.assets.Asset;
 import tools.spark.framework.assets.Module;
 import tools.spark.framework.ModuleManager;
@@ -52,9 +54,12 @@ import haxe.ds.ObjectMap;
 		var dummy2:Dynamic = System.storage;
 		dummy2 = System.storage.supported;
 		dummy2 = System.storage.clear;
-		dummy2 = System.storage.get;
-		dummy2 = System.storage.remove;
-		dummy2 = System.storage.set;
+		dummy2 = System.storage.get; dummy2 = System.storage.remove; dummy2 = System.storage.set; dummy2 = Ease.backIn; dummy2 = Ease.backInOut; dummy2 = Ease.backOut;
+		dummy2 = Ease.bounceIn; dummy2 = Ease.bounceInOut; dummy2 = Ease.bounceOut; dummy2 = Ease.circIn; dummy2 = Ease.circInOut; dummy2 = Ease.circOut; dummy2 = Ease.circOutIn;
+		dummy2 = Ease.cubeIn; dummy2 = Ease.cubeInOut; dummy2 = Ease.cubeOut; dummy2 = Ease.cubeOutIn; dummy2 = Ease.elasticIn; dummy2 = Ease.elasticInOut; dummy2 = Ease.elasticOut;
+		dummy2 = Ease.expoIn; dummy2 = Ease.expoInOut; dummy2 = Ease.expoOut; dummy2 = Ease.expoOutIn; dummy2 = Ease.linear; dummy2 = Ease.quadIn; dummy2 = Ease.quadInOut;
+		dummy2 = Ease.quadOut; dummy2 = Ease.quadOutIn; dummy2 = Ease.quartIn; dummy2 = Ease.quartInOut; dummy2 = Ease.quartOut; dummy2 = Ease.quartOutIn; dummy2 = Ease.quintIn;
+		dummy2 = Ease.quintInOut; dummy2 = Ease.quintOut; dummy2 = Ease.quintOutIn; dummy2 = Ease.sineIn; dummy2 = Ease.sineInOut; dummy2 = Ease.sineOut; dummy2 = Ease.sineOutIn;
 		//end of DCE prevention
 		
 		_hashTable = new Map<Int,Expr>();
@@ -75,8 +80,11 @@ import haxe.ds.ObjectMap;
 		_interpreter.variables.set("Project", Project); // share the Project class
 		_interpreter.variables.set("Module", Module); // share the Module class
 		_interpreter.variables.set("Asset", Asset); // share the Asset class
+		_interpreter.variables.set("AssetFormat", AssetFormat); // share the AssetFormat class
+		
 		
 		_interpreter.variables.set("Key", Key); // share the Key enum
+		_interpreter.variables.set("Ease", Ease); // share the Ease enum
 		_interpreter.variables.set("Console", Console); // share the Console
 		_interpreter.variables.set("Math", Math); // share the Math
 		_interpreter.variables.set("Std", Std); // share the Std

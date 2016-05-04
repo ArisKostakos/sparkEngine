@@ -793,7 +793,7 @@ class GameClassParser implements IGameClassParser
 		}
 		else
 		{
-			Console.error('Class $p_expectedGameType is not well-formed or not found!');
+			Console.error('Class $p_expectedGameType ['+p_gameClassName+'] is not well-formed or not found!');
 			return null;
 		}
 	}
