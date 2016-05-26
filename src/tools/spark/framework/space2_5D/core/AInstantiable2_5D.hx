@@ -174,11 +174,11 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 				_createChildOfInstance(p_entity2_5D, f_view);
 				p_entity2_5D.update(f_view);
 			}
-		}
+		}/*
 		else
 		{
 			Console.warn("Child Already exists!");
-		}
+		}*/
 		
 		return true;
 	}
@@ -194,11 +194,11 @@ class AInstantiable2_5D extends AObjectContainer2_5D implements IInstantiable2_5
 				_createChildOfInstance(p_entity2_5D, f_view, p_index);
 				p_entity2_5D.update(f_view);
 			}
-		}
+		}/*
 		else
 		{
 			Console.warn("Child Already exists!");
-		}
+		}*/
 		
 		return true;
 	}

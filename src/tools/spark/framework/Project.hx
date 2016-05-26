@@ -32,6 +32,11 @@ import tools.spark.sliced.core.Sliced;
 		_initNodeNamesMap(); //temp
 	}
 	
+	@:keep public static function getModules():Map< String, Module>
+	{
+		return main.modules;
+	}
+	
 	public function new() 
 	{
 		executeModules = new Array< String>();

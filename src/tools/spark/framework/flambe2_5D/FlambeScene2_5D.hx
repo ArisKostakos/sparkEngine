@@ -61,6 +61,7 @@ class FlambeScene2_5D extends AScene2_5D
 		
 		_queryFunctions['zoomX'] = _queryZoomX;
 		_queryFunctions['zoomY'] = _queryZoomY;
+		_queryFunctions['zoomScale'] = _queryZoomScale;
 	}
 	
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
@@ -143,6 +144,8 @@ class FlambeScene2_5D extends AScene2_5D
 		//Console.error("UPDATING CAMERA X: " + _tempX);
 		//Console.error("UPDATING CAMERA Y: " + _tempY);
 		//Console.error("UPDATING CAMERA Scale: " + _scaleX);
+		
+		Sliced.event.raiseEvent(EEventType.CHANGED,gameEntity);
 		
 		//Clusterfuck hack to move background indepentantly
 		//until layers are implemented..
@@ -320,11 +323,15 @@ class FlambeScene2_5D extends AScene2_5D
 	//QUERIES
 	inline private function _queryZoomX(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
 	{
-		return _scaleX;
+		return _tempX;
 	}
 	
 	inline private function _queryZoomY(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
 	{
-		return _scaleY;
+		return _tempY;
+	}
+	inline private function _queryZoomScale(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		return _scaleX;
 	}
 }

@@ -7,6 +7,7 @@
 package tools.spark.sliced.services.std.logic.interpreter.core;
 import flambe.System;
 import flambe.animation.Ease;
+import flambe.animation.Tween;
 import flambe.asset.AssetEntry.AssetFormat;
 import tools.spark.framework.assets.Asset;
 import tools.spark.framework.assets.Module;
@@ -103,6 +104,7 @@ import haxe.ds.ObjectMap;
 		_interpreter.variables.set("EEventType", EEventType); // share the EEventType
 		_interpreter.variables.set("System", System); // share the System
 		_interpreter.variables.set("ModuleManager", ModuleManager); // share the ModuleManager
+		_interpreter.variables.set("Tween", Tween); // share the Tween
 		
 		
 		//Shortcuts

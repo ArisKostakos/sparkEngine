@@ -80,7 +80,26 @@ class GameForm extends AGameBase implements IGameForm
 		else return gameStateSet.get(p_stateId).value;
 	}
 	
+	//Shortcut.. I would call getState, but performance... i would inline the one above, but too much reprocations, bigger file js size. sooo..
+	@:keep public function get(p_stateId:String):Dynamic
+	{
+		if (gameStateSet.get(p_stateId) == null) return null;
+		else return gameStateSet.get(p_stateId).value;
+	}
+	
 	public function setState(p_stateId:String, p_value:Dynamic):Dynamic
+	{
+		gameStateSet.get(p_stateId).value = p_value;
+		
+		/*  ****************************FORM STATE UPDATE DEPRECATED*************************
+		//Following line is the weak connection between Logic and Display
+		Sliced.display.updateDisplayObjectFormState(this.parentEntity,p_stateId);	
+		*/
+		
+		return gameStateSet.get(p_stateId).value;
+	}
+	
+	public function set(p_stateId:String, p_value:Dynamic):Dynamic
 	{
 		gameStateSet.get(p_stateId).value = p_value;
 		

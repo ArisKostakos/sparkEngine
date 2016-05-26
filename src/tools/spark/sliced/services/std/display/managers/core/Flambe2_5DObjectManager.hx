@@ -104,7 +104,11 @@ class Flambe2_5DObjectManager implements IDisplayObjectManager
 	
 	public function removeFrom(p_objectChild:Dynamic, p_objectParent:Dynamic):Void
 	{
-		//typecast?
+		//typecast
+		var l_entity2_5D:FlambeEntity2_5D = cast(p_objectParent, FlambeEntity2_5D);
 		
+		//objetChild may be null if it failed to be typeasted as a display object when being created
+		if (p_objectChild!=null)
+			l_entity2_5D.removeChild(p_objectChild);
 	}
 }

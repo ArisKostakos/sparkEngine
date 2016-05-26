@@ -123,7 +123,15 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 	
 	public static function execute(p_moduleName:String):Void
 	{
-		if (isModuleLoaded(p_moduleName)) _executeModule(p_moduleName);
+		if (isModuleLoaded(p_moduleName))
+		{
+			Console.log("Module " + p_moduleName + " already loaded");
+			
+			//All done!
+			successSignal.emit();
+			
+			_executeModule(p_moduleName);
+		}
 		else
 		{
 			_percDone = 0;
@@ -235,6 +243,11 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 		if (p_module.assets.exists(p_asset.id) == false)
 		{
 			p_module.assets.set(p_asset.id, p_asset);
+			
+			//We just added a new Asset entry and we don't know if that Asset Entry has been loaded or not..
+			//So we mark the module as NOT LOADED, so if we need to use it again, it will need to be reloaded again
+			_moduleStates[p_module.id] = NOT_LOADED;
+			
 			return true;
 		}
 		else
@@ -254,7 +267,10 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 			}
 			else
 			{
-				Console.de("Over here, we send a comm reply that the module is loaded, same as in _loadModule");
+				Console.log("Module " + p_moduleName + " already loaded");
+				
+				//All done!
+				successSignal.emit();
 			}
 		}
 		else
@@ -355,13 +371,24 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 			for (asset in Project.main.modules[l_moduleName].assets)
 			{
 				//Console.log("adding file: " + asset.id);
-				l_loader.addFile(Project.main.getPath(asset.location,asset.type)+'/'+asset.url, asset.id, (asset.forceLoadAsData=="true")?AssetFormat.Data:null, Std.parseInt(asset.bytes));
+				//The one and only .addFile!
+				
+				if (!Assets.assetLoaded(asset.id))
+				{
+					Console.log("adding file: " + asset.id);
+					l_loader.addFile(Project.main.getPath(asset.location, asset.type) + '/' + asset.url, asset.id, (asset.forceLoadAsData == "true")?AssetFormat.Data:null, Std.parseInt(asset.bytes));
+				}
+				else
+				{
+					Console.log("file already loaded: " + asset.id);
+				}
 			}
+			
+			//Before Starting to load..
+			_loadingBatch = true;
 			
 			//Start Loading
 			l_loader.start();
-			
-			_loadingBatch = true;
 		}
 		else
 		{

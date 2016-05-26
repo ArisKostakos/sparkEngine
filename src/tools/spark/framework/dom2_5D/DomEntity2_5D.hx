@@ -50,6 +50,7 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['fontSize'] = _updateFontSize;
 		_updateStateFunctions['fontWeight'] = _updateFontWeight;
 		_updateStateFunctions['overflow'] = _updateOverflow;
+		_updateStateFunctions['whiteSpace'] = _updateWhiteSpace;
 		_updateStateFunctions['width'] = _updateWidth;
 		_updateStateFunctions['height'] = _updateHeight;
 		_updateStateFunctions['top'] = _updateTop;
@@ -60,7 +61,11 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['pointerEvents'] = _updatePointerEvents;
 		_updateStateFunctions['command_zOrder'] = _updateZOrder;
 		
+		_updateStateFunctions['transform'] = _updateTransform;
+		_updateStateFunctions['transformScale'] = _updateTransformScale;
+		
 		_queryFunctions['globalPosition'] = _queryGlobalPosition;
+		_queryFunctions['absoluteRect'] = _queryAbsoluteRect;
 		_queryFunctions['groupObject'] = _queryGroupObject;
 	}
 	
@@ -130,6 +135,7 @@ class DomEntity2_5D extends AEntity2_5D
 			_updateState('fontWeight', p_view2_5D);
 			_updateState('fontColor', p_view2_5D);
 			_updateState('overflow', p_view2_5D);
+			_updateState('whiteSpace', p_view2_5D);
 			_updateState('backgroundColor', p_view2_5D);
 			_updateState('border', p_view2_5D);
 			_updateState('borderColor', p_view2_5D);
@@ -214,9 +220,6 @@ class DomEntity2_5D extends AEntity2_5D
 			
 		if (gameEntity.getState('cursor') != null && gameEntity.getState('cursor')!="Undefined")
 			_instances[p_view2_5D].style.cursor = gameEntity.getState('cursor');
-			
-		if (gameEntity.getState('white-space') != null && gameEntity.getState('white-space')!="Undefined")
-			_instances[p_view2_5D].style.whiteSpace = gameEntity.getState('white-space');
 			
 		if (gameEntity.getState('selectable') != null)
 		{
@@ -310,6 +313,20 @@ class DomEntity2_5D extends AEntity2_5D
 		}
 	}
 	
+	
+	inline private function _updateTransform(p_value:String, p_view2_5D:IView2_5D):Void
+	{
+		_instances[p_view2_5D].style.setProperty("-ms-transform", p_value); /* IE 9 */
+		_instances[p_view2_5D].style.setProperty("-webkit-transform", p_value); /* Safari */
+		_instances[p_view2_5D].style.setProperty("transform", p_value);
+	}
+	
+	inline private function _updateTransformScale(p_value:String, p_view2_5D:IView2_5D):Void
+	{
+		_instances[p_view2_5D].style.setProperty("zoom", p_value); /* All */
+		_instances[p_view2_5D].style.setProperty("-moz-transform", "scale("+p_value+")"); /* Mozila */
+	}
+	
 	inline private function _updateTop(p_top:String, p_view2_5D:IView2_5D):Void
 	{
 		if (gameEntity.getState('layoutable') == true)
@@ -348,6 +365,14 @@ class DomEntity2_5D extends AEntity2_5D
 		if (p_overflow!="Undefined")
 			_instances[p_view2_5D].style.overflow = p_overflow;
 	}
+	
+	//much better way.. should be done for everything
+	inline private function _updateWhiteSpace(p_whiteSpace:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_whiteSpace!="Undefined")
+			_instances[p_view2_5D].style.whiteSpace = p_whiteSpace;
+	}
+	
 	
 	//much better way.. should be done for everything
 	inline private function _updateFontSize(p_fontSize:String, p_view2_5D:IView2_5D):Void
@@ -644,6 +669,7 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		//Gt Mesh
 		var l_instance:Element = _instances[p_view2_5D];
+		l_instance.draggable = true;
 		
 		if (l_instance != null)
 		{
@@ -701,6 +727,14 @@ class DomEntity2_5D extends AEntity2_5D
 	
 		return new Point(l_left, l_top);
 	}
+	
+	inline private function _queryAbsoluteRect(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		var l_instance:Element = _instances[p_view2_5D];
+		
+		return l_instance.getBoundingClientRect();
+	}
+	
 	
 	inline private function _queryGroupObject(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
 	{

@@ -49,11 +49,21 @@ class FlambeBatchLoader extends ABatchLoader
 	//Interface function for ServerLoader as well.
 	override public function start():Void
 	{
-		_promise = System.loadAssetPack(_manifest);
-		
-		_promiseSignalSuccess = _promise.success.connect(_onPromiseSuccess);
-		_promiseSignalError = _promise.error.connect(_onPromiseError);
-		_promiseSignalProgress = _promise.progressChanged.connect(_onPromiseProgress);
+		if (_manifest.iterator().hasNext())
+		{
+			_promise = System.loadAssetPack(_manifest);
+			
+			_promiseSignalSuccess = _promise.success.connect(_onPromiseSuccess);
+			_promiseSignalError = _promise.error.connect(_onPromiseError);
+			_promiseSignalProgress = _promise.progressChanged.connect(_onPromiseProgress);
+		}
+		else
+		{
+			Console.log("Manifest is empty. Nothing loaded");
+			
+			//Emit Success for this Batch loader
+			successSignal.emit();
+		}
 	}
 	
 	private function _onPromiseSuccess(p_assetPack:AssetPack):Void

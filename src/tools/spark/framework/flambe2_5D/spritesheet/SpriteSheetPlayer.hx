@@ -132,7 +132,7 @@ class SpriteSheetPlayer extends Component
 		}
 	}
 	
-	public function setCurrentFrame(index : Int) {
+	@:keep public function setCurrentFrame(index : Int) {
 		currentIndex = index;
 		currentFrame = sprites[index];
 	}

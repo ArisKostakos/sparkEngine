@@ -20,7 +20,7 @@ extra_paths:
 #   libs: dir1 dir2
 #  src: C:\HaxeToolkit\haxe\lib\away3d-html
   src: C:\HaxeToolkit\haxe\lib\SpriterHaxeEngine-flambe
-  web: ["web_html_memory"]
+  web: ["web_html_shapes"]
 # web: ["web_html_editor", "vendor"]
 
 # The initial orientation and fullscreen state

@@ -126,9 +126,14 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 	{
 		if (p_objectEntity.getState('displayType')=="Entity")
 		{
+			/*
 			if (_objects[p_objectEntity] != null)
+			{
 				Console.warn("Object " + p_objectEntity.getState('name') + " has already been added to this Flambe2_5DRenderer. Ignoring...");
+			}
 			else
+			*/
+			if (_objects[p_objectEntity] == null) //removed the console.warning
 				_objects[p_objectEntity] = cast(_objectManager.create(p_objectEntity),AObjectContainer2_5D);
 			
 			return _objects[p_objectEntity];
@@ -180,8 +185,7 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 					
 			case "Entity":
 				if (_objects[p_parentEntity] != null)
-					//_objectManager.addTo(createObject(p_childEntity), _objects[p_parentEntity]);
-					Console.warn("FLAMBE RENDERER: REMOVING A CHILD FROM AN OBJECT NOT YET IMPLEMENTED");
+					_objectManager.removeFrom(_objects[p_childEntity], _objects[p_parentEntity]);
 			default:
 				Console.warn("AFlambe2_5DRenderer: Unhandled remove child request: " + p_parentEntity.getState('displayType'));
 		}

@@ -7,6 +7,7 @@
 package tools.spark.sliced.services.std.logic.interpreter.core.platform.html;
 
 import flambe.animation.Ease;
+import flambe.animation.Tween;
 import flambe.asset.AssetEntry.AssetFormat;
 import haxe.io.Bytes;
 import haxe.crypto.Crc32;
@@ -85,6 +86,7 @@ import flambe.input.Key;
 		untyped window.Ease = Ease;
 		untyped window.System = System;
 		untyped window.ModuleManager = ModuleManager;
+		untyped window.Tween = Tween;
 		
 		//Shortcuts
 		untyped window.expr = runExpr;

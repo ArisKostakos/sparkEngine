@@ -5,6 +5,7 @@
  */
 
 package tools.spark.sliced.services.std.logic.level_manager.core;
+import flambe.util.Signal1;
 import tools.spark.framework.Assets;
 import tools.spark.framework.assets.interfaces.IBatchLoader;
 import tools.spark.framework.ModuleManager;
@@ -52,7 +53,7 @@ import flambe.util.Signal0;
 	private var _preLoaderActive:Bool;
 	
 	//Signals for ExternalCaller<-LevelManager
-	public var levelLoaded:Signal0;
+	public var levelLoaded:Signal1<Dynamic>;
 	public var levelCreated:Signal0;
 	public var levelRan:Signal0;
 	
@@ -68,7 +69,7 @@ import flambe.util.Signal0;
 		//levelEntities = new Map<String, IGameEntity>();
 		currentLevel = new Map<String, IGameEntity>();
 		_preLoaderActive = true;
-		levelLoaded = new Signal0();
+		levelLoaded = new Signal1<Dynamic>();
 		levelCreated = new Signal0();
 		levelRan = new Signal0();
 	}
@@ -80,7 +81,8 @@ import flambe.util.Signal0;
 	
 	public function loadLevel(p_levelEntity:Dynamic):Void
 	{
-		Console.error("loadLevel...");
+		_actionAfterLoad = DO_NOTHING;
+		_loadLevel_start(p_levelEntity);
 	}
 	
 	public function runLevel(p_levelEntity:Dynamic, p_runSlot:String="Main", p_parentStage:String="Implicit"):Void
@@ -206,10 +208,10 @@ import flambe.util.Signal0;
 	//if something else calls modulemanager other than this levelLoader at the same time, everything is royaly screwed
 	private function _onLevelLoaded()
 	{
-		//Console.warn("LEVEL LOADED!! yaayyyyee");
+		Console.warn("LEVEL LOADED!! yaayyyyee");
 		
 		//Send the good news
-		levelLoaded.emit();
+		levelLoaded.emit(_levelLoading);
 		
 		if (_actionAfterLoad==CREATE)
 			_createLevel(_levelLoading);

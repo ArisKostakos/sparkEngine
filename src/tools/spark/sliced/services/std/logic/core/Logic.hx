@@ -126,6 +126,12 @@ class Logic extends AService implements ILogic
 		return gameFactory.createGameEntity(p_gameEntityUrl);
 	}
 	
+	public function createFromXml(p_xml:Xml):IGameEntity
+	{
+		//Create GameEntity
+		return gameFactory.createGameEntity(p_xml);
+	}
+	
 	public function interpet(p_script:String, p_gameEntity:IGameEntity=null, p_gameBase:IGameBase=null):Dynamic
 	{
 		var l_parentEntity:IGameEntity = null;
@@ -223,6 +229,12 @@ class Logic extends AService implements ILogic
 	{
 		return System.external;
 	}
+	
+	public function getTime():Float
+	{
+		return System.time;
+	}
+	
 	
 	public function random(p_from:Int, p_to:Int):Int
 	{
@@ -390,7 +402,8 @@ class Logic extends AService implements ILogic
 		return xml_getAllMStates(p_xml, p_merge).get(p_mStateId);
 	}
 	
-	public function xml_parseAsset(p_asset:Dynamic):Xml
+	//XML parsing functions
+	public function xml_parseAsset(p_asset:Dynamic):Xml //deprecated?
 	{
 		return Xml.parse(Assets.getFile(p_asset.dir + '/' + p_asset.fileName + '.' + p_asset.fileExtension).toString()).firstElement();
 	}

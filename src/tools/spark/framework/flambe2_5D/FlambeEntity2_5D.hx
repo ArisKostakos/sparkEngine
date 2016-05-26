@@ -6,6 +6,7 @@
 
 package tools.spark.framework.flambe2_5D;
 
+import flambe.Component;
 import flambe.display.EmitterMold;
 import flambe.display.EmitterSprite;
 import flambe.display.FillSprite;
@@ -135,6 +136,23 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		super._createChildOfInstance(p_childEntity, p_view2_5D, p_index);
 	}
+	
+	
+	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
+	{
+		//This is an 'instance' removeChild... a flambe removeChild..
+		var l_flambeEntity:Entity = cast(p_childEntity.getInstance(p_view2_5D), Entity);
+		
+		//Remove Physics Body
+		var l_bodyComponent:Component = l_flambeEntity.get(BodyComponent);
+		if (l_bodyComponent!=null) l_flambeEntity.remove(l_bodyComponent);
+		
+		//Remove the child
+		_instances[p_view2_5D].removeChild(l_flambeEntity);
+		
+		super._removeChildOfInstance(p_childEntity, p_view2_5D);
+	}
+	
 
 	override public function update(?p_view2_5D:IView2_5D):Void
 	{
@@ -393,7 +411,6 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_mesh == null)
 		{
 			l_mesh = new Sprite();
-			
 			var l_SpriterFormName:String = gameEntity.gameForm.getState( p_2DMeshSpriterForm );
 			var l_spriterMovie:SpriterMovie = new SpriterMovie(Assets.getAssetPackOf(l_SpriterFormName), l_SpriterFormName, null); //this null thing is supposed to be character name (string).. doesn't work though... always plays first character found
 			l_mesh.blendMode = BlendMode.Copy;
@@ -1276,7 +1293,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 				//@todo: should really consider actually removing those listeners, here.... use the disposer component thing
 				//if you don't want to store the signal Connections..and retrieve disposer here, from the entity. Disposer way looks better anyway...
 				l_mesh.pointerEnabled = false;
-				Console.error("POINTER DISABLED");
+				//Console.error("POINTER DISABLED");
 			}
 			
 		}
