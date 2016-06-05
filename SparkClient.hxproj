@@ -51,15 +51,15 @@
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand>xcopy /S /Y $(CompilerPath)\lib\aris-hacks\flambe $(CompilerPath)\lib\flambe\4,1,0\flambe
-cmd /c flambe --config flambe_html_multiplayer.yaml build --$(BuildConfig)</preBuildCommand>
+cmd /c flambe --config flambe_html_editor.yaml build --$(BuildConfig)</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False">xcopy /E /Y "C:\Users\Aris\Dropbox\Spark_Projects\StandardLib" "C:\Users\Aris\spark\build\web"
-xcopy /E /Y "C:\Users\Aris\Dropbox\Spark_Projects\RTMultiplayerDemo" "C:\Users\Aris\spark\build\web"</postBuildCommand>
+xcopy /E /Y "C:\Users\Aris\Dropbox\Spark_Projects\SparkEditor" "C:\Users\Aris\spark\build\web"</postBuildCommand>
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="True" />
     <option testMovie="Custom" />
-    <option testMovieCommand="flambe --config flambe_html_multiplayer.yaml run --$(BuildConfig) --no-build --no-fdb || pause" />
+    <option testMovieCommand="flambe --config flambe_html_editor.yaml run --$(BuildConfig) --no-build --no-fdb || pause" />
   </options>
   <!-- Plugin storage -->
   <storage />
