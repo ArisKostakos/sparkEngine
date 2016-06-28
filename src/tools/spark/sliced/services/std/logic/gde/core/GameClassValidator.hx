@@ -100,6 +100,7 @@ class GameClassValidator implements IGameClassValidator
 		catch (m:String) 
 		{
 			Console.error(m);
+			Console.error(p_gameNode.toString());
 			return false;
 		}
 	}

@@ -12,6 +12,7 @@ import flambe.asset.AssetEntry.AssetFormat;
 import haxe.io.Bytes;
 import haxe.crypto.Crc32;
 import tools.spark.framework.ModuleManager;
+import tools.spark.framework.assets.EModuleState;
 import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameBase;
 import tools.spark.sliced.services.std.logic.interpreter.interfaces.IInterpreter;
@@ -71,7 +72,6 @@ import flambe.input.Key;
 		untyped window.Module = Module;
 		untyped window.Asset = Asset;
 		
-		
 		untyped window.Std = Std;
 		untyped window.StringMap = StringMap;
 		untyped window.IntMap = IntMap;
@@ -82,6 +82,7 @@ import flambe.input.Key;
 		untyped window.Xml = Xml;
 		untyped window.MouseButton = MouseButton;
 		untyped window.EEventType = EEventType;
+		untyped window.EModuleState = EModuleState;
 		untyped window.Key = Key;
 		untyped window.Ease = Ease;
 		untyped window.System = System;

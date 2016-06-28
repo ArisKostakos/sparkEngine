@@ -126,11 +126,22 @@ class Logic extends AService implements ILogic
 		return gameFactory.createGameEntity(p_gameEntityUrl);
 	}
 	
-	public function createFromXml(p_xml:Xml):IGameEntity
+	public function createFromXml(p_xml:Xml, p_cloneFirst:Bool=true):IGameEntity
 	{
-		//Create GameEntity
-		return gameFactory.createGameEntity(p_xml);
+		//Create GameEntity From Xml
+		
+		//To make this function NOT modify the p_xml passed as an arguement, I will clone the xml (gameFactory flattens the xmls it creates)
+		
+		//Best way to clone an xml (that i know of), is to reparse it:(
+		if (p_cloneFirst)
+		{
+			var _clonedXml:Xml = xml_clone(p_xml);		
+			return gameFactory.createGameEntity(_clonedXml);
+		}
+		else
+			return gameFactory.createGameEntity(p_xml);
 	}
+	
 	
 	public function interpet(p_script:String, p_gameEntity:IGameEntity=null, p_gameBase:IGameBase=null):Dynamic
 	{
@@ -262,6 +273,11 @@ class Logic extends AService implements ILogic
 		return Reflect.getProperty(Reflect.getProperty(p_object, p_field), p_field2); 
 	}
 	
+	public function copyObject(p_object:Dynamic):Dynamic
+	{
+		return Reflect.copy(p_object);
+	}
+	
 	public function insertStr(a:String, b:String, position:Int):String
 	{
 		return a.substr(0, position) + b + a.substr(position);
@@ -299,6 +315,11 @@ class Logic extends AService implements ILogic
 		return p_string;
 	}
 	
+	public function getDbaFlambeId(p_asset:Dynamic):String
+	{
+		return p_asset.type + ':' + p_asset.name;
+	}
+	
 	//Intepreter's toString() doesn't work well for Xml objects on Release mode.
 	public function xmlToString(p_object:Xml):String
 	{
@@ -314,6 +335,11 @@ class Logic extends AService implements ILogic
 	public function xml_clone(p_xml:Xml):Xml
 	{
 		return Xml.parse(xmlToString(p_xml)).firstElement();
+	}
+	
+	public function xml_from_file(p_file:File):Xml
+	{
+		return Xml.parse(p_file.toString()).firstElement();
 	}
 	
 	public function xml_getElements(p_xml:Xml, p_xmlNodes:Array<String>):Dynamic
@@ -546,6 +572,31 @@ class Logic extends AService implements ILogic
 		return l_array;
 	}
 	
+	public function xml_entity_getExtendsEntities(p_EntityXml:Xml):Array<Dynamic>
+	{
+		var l_array:Array<Dynamic> = new Array<Dynamic>();
+		
+		var l_groupName:String = "Extends";
+		
+		//Check if group exists
+		var l_group:Xml = null;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		
+		if (l_group != null)
+		{
+			var l_entities:Iterator<Xml> = l_group.elementsNamed("Entity");
+			for (entity in l_entities)
+			{
+				l_array.push({ext:entity.get("extends"), meta_editor:entity.get("meta_editor")});
+			}
+		}
+		
+		return l_array;
+	}
+	
 	public function xml_entity_addFormState(p_EntityXml:Xml, p_State:Dynamic, p_mergeForm:Bool, p_mergeStates:Bool):Xml
 	{
 		var l_groupName:String;
@@ -710,6 +761,42 @@ class Logic extends AService implements ILogic
 		}
 		
 		return l_state;
+	}
+	
+	public function xml_entity_updateMState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Bool
+	{
+		var l_groupName:String;
+		if (p_merge) l_groupName = "_States";
+			else l_groupName = "States";
+		
+		//Check if group exists, else quit
+		var l_group:Xml;
+		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
+		
+		if (l_elements.hasNext())
+			l_group = l_elements.next();
+		else
+		{
+			return false;
+		}
+		
+		//Look for MState
+		for (stateNode in l_group.elements()) //warning.. i should really do this elementsNamed("_States") instead..
+		{
+			var f_id:String = stateNode.get("id");
+			
+			if (f_id == p_State.id)
+			{
+				var f_valueNode:Xml = xml_getElement(stateNode, "Value");
+				f_valueNode.removeChild(f_valueNode.firstChild());
+				f_valueNode.addChild(Xml.createCData(p_State.value));
+				return true;
+			}
+			
+		}
+		
+		//Didn't found it
+		return false;
 	}
 	
 	public function xml_entity_addTrigger(p_EntityXml:Xml, p_Trigger:Dynamic, p_merge:Bool):Xml

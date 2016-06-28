@@ -581,6 +581,11 @@ class GameClassParser implements IGameClassParser
 				if (_validateGameNode(elt) == false)
 				{
 					Console.error('Failed to validate node ' + elt.nodeName);
+					
+					//for when you can't find what the problem is, maybe this will help
+					//if (elt.nodeName=="Entity") 
+					//	Console.error(p_gameNode.toString());
+						
 					return false;
 				}
 			}

@@ -198,6 +198,9 @@ class GameClassInstantiator implements IGameClassInstantiator
 					//So.. A dynamic can basically only be initialized as an inline expression.. so ';' is not required here
 					if (l_valueInString != 'null') //if it's null, don't bother doing all the legwork parsing it..
 						l_gameState.value = Sliced.logic.scriptInterpreter.runExpr(Sliced.logic.scriptInterpreter.hashExpr(l_valueInString), p_parentEntity, p_parentEntity.parentEntity, l_gameState);
+						//there might be a bug here. if i try to create an Entity egc TWO OR MORE TIMES on the SAME frame, and it has a Dynamic like this: 'new StringMap()', they will both share the same object:(
+						//Just figured out... the bug is not here.. you know why it will do that. cause the egc is CAAAAAACHED!!!!!!!!!!! DUUUUDE
+						//so.. either dont rely on dynamics for making new objects.. or whatever.. but yeah its not even a same frame thing.. with 2 objects its fine.. with a third one.. PROBLEMS!!! amazing
 					else
 						l_gameState.value = null;
 				case EStateType.EXPRESSION:

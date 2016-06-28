@@ -8,6 +8,7 @@ package tools.spark.framework.space2_5D.core;
 
 import tools.spark.framework.space2_5D.interfaces.IObjectContainer2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
+import tools.spark.sliced.core.Sliced;
 import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 
 /**
@@ -32,6 +33,10 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 		{
 			children.push(p_entity2_5D);
 			childrenMap.set(p_entity2_5D, true);
+			
+			//I hope this doesn't cause to much drain
+			if (gameEntity.getState('layoutable') == true)
+				Sliced.display.invalidateLayout();
 			return true;
 		}
 		else
@@ -44,6 +49,10 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 		{
 			children.insert(p_index, p_entity2_5D);
 			childrenMap.set(p_entity2_5D, true);
+			
+			//I hope this doesn't cause to much drain
+			if (gameEntity.getState('layoutable') == true)
+				Sliced.display.invalidateLayout();
 			return true;
 		}
 		else
@@ -54,5 +63,9 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 	{
 		children.remove(p_entity2_5D);
 		childrenMap.remove(p_entity2_5D);
+		
+		//I hope this doesn't cause to much drain
+		if (gameEntity.getState('layoutable') == true)
+			Sliced.display.invalidateLayout();
 	}
 }

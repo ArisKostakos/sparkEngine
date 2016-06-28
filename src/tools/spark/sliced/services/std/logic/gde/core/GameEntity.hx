@@ -203,6 +203,7 @@ class GameEntity extends AGameBase implements IGameEntity
 		}
 	}
 	
+	
 	//stopAction Shortcut.. 
 	@:keep public function ta(actionId:String):Bool
 	{

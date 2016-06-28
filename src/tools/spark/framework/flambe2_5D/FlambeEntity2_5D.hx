@@ -283,7 +283,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_mesh == null)
 		{
 			l_mesh = new ImageSprite(Assets.getTexture(l_imageUrl));
-			l_mesh.blendMode = BlendMode.Copy;
+			//l_mesh.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
 		}
@@ -328,7 +328,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 			l_mesh = new TextSprite(l_font, gameEntity.getState('text'));
 			//l_mesh.wrapWidth._ = 100;
 			//l_mesh.
-			l_mesh.blendMode = BlendMode.Copy;
+			//l_mesh.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
 		}
@@ -413,7 +413,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 			l_mesh = new Sprite();
 			var l_SpriterFormName:String = gameEntity.gameForm.getState( p_2DMeshSpriterForm );
 			var l_spriterMovie:SpriterMovie = new SpriterMovie(Assets.getAssetPackOf(l_SpriterFormName), l_SpriterFormName, null); //this null thing is supposed to be character name (string).. doesn't work though... always plays first character found
-			l_mesh.blendMode = BlendMode.Copy;
+			//l_mesh.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 			l_instance.add(l_mesh);
 			l_instance.add( l_spriterMovie);
 			_instancesMesh[p_view2_5D] = l_mesh;
@@ -461,7 +461,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 			//Store
 			gameEntity.setState('obj_player', l_spritesheetPlayer);
 			
-			l_mesh.blendMode = BlendMode.Copy;
+			//l_mesh.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 			l_instance.add(l_mesh);
 			l_instance.add( l_spritesheetPlayer);
 			_instancesMesh[p_view2_5D] = l_mesh;
@@ -519,7 +519,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 				//l_mesh = new FillSprite(gameEntity.gameForm.getState( p_2DMeshFillRectForm ),groupInstances[p_view2_5D].width, groupInstances[p_view2_5D].height);
 			l_mesh = new FillSprite(l_color,gameEntity.getState( 'spaceWidth' ), gameEntity.getState( 'spaceHeight' ));
 			l_mesh.scissor = new Rectangle(0, 0, gameEntity.getState( 'spaceWidth' ), gameEntity.getState( 'spaceHeight' ));
-			l_mesh.blendMode = BlendMode.Copy;
+			//l_mesh.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 			l_instance.add(l_mesh);
 			_instancesMesh[p_view2_5D] = l_mesh;
 		}
@@ -576,7 +576,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_mesh == null)
 		{
 			l_mesh = new Sprite();
-			l_mesh.blendMode = BlendMode.Copy;
+			//l_mesh.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 			//do Layout Call??????????????
 			//...
 			//if (gameEntity.getState('layoutable') == true)
@@ -1317,6 +1317,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 	
 	private function _onPointerDown(p_pointerEvent:PointerEvent):Void
 	{
+		Sliced.input.pointer.submitPointerEvent(MOUSE_DOWN, gameEntity); //hmm
+		
 		//if (Sliced.input.mouse.isDown(flambe.input.MouseButton.Right))
 		//	Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
 		
@@ -1333,6 +1335,9 @@ class FlambeEntity2_5D extends AEntity2_5D
 	
 	private function _onPointerUp(p_pointerEvent:PointerEvent):Void
 	{
+		Sliced.input.pointer.submitPointerEvent(MOUSE_UP, gameEntity); //hmm
+		
+		
 		if (p_pointerEvent.source.getName() == "Mouse")
 			if (Sliced.input.mouse.lastMouseButton==flambe.input.MouseButton.Right)
 				Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);

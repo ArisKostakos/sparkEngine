@@ -47,7 +47,7 @@ class FlambeView2_5D extends AView2_5D
 		
 		//var l_viewSprite:FillSprite = new FillSprite(0x00ff00,1024,580);
 		var l_viewSprite:Sprite = new Sprite();
-		l_viewSprite.blendMode = BlendMode.Copy;
+		//l_viewSprite.blendMode = BlendMode.Copy; //so... without resetingVars in WebGL Renderer, this now can't be copy.. COPY IS WAY MORE EXPENSIVE THAN NORMAL!!!!!!!!
 		//l_viewSprite.scissor = new Rectangle(0, 0, 640, 480);
 		//l_viewSprite.x._ = 100;
 		//l_viewSprite.y._ = 0;

@@ -82,7 +82,7 @@ import flambe.util.Signal0;
 	public function loadLevel(p_levelEntity:Dynamic):Void
 	{
 		_actionAfterLoad = DO_NOTHING;
-		_loadLevel_start(p_levelEntity);
+		_loadLevel(p_levelEntity);
 	}
 	
 	public function runLevel(p_levelEntity:Dynamic, p_runSlot:String="Main", p_parentStage:String="Implicit"):Void
@@ -90,11 +90,11 @@ import flambe.util.Signal0;
 		_actionAfterLoad = RUN;
 		_levelRunSlot = p_runSlot;
 		_levelParentStage = p_parentStage;
-		_loadLevel_start(p_levelEntity);
+		_loadLevel(p_levelEntity);
 	}
 	
 	
-	private function _loadLevel_start(p_levelEntity:Dynamic):Void
+	private function _loadLevel(p_levelEntity:Dynamic):Void
 	{
 		var l_level:IGameEntity;
 		
@@ -167,41 +167,25 @@ import flambe.util.Signal0;
 			return;
 		}
 		
-		_loadLevel_end(l_level);
+		//Level Entity Created, Find it's references
+		l_level.forceAction("Find References");
+		
+		//Get the Module References (to load the firt one)
+		var moduleReferences = l_level.getState('moduleReferences');
+		
+		if (moduleReferences != null)
+		{
+			//Load all modules (for now assume always exactly 1 module reference exists)
+			_levelLoading = l_level;
+			ModuleManager.successSignal.connect(_onLevelLoaded).once();
+			ModuleManager.execute(moduleReferences[0].getState('url'));
+		}
+		else
+		{
+			Console.error("No Modules Found for level");
+		}
 	}
 	
-	private function _loadLevel_end(p_level:IGameEntity):Void
-	{
-		//Figure out References here
-		var moduleReferences = [];
-		var viewReferences = [];
-		var eventSheetReferences = [];
-		var stageAreaReferences = [];
-		
-		for (child in p_level.children)
-		{
-			if (child.getState('type') == 'Module')
-				moduleReferences.push(child);
-			else if (child.getState('type') == 'View')
-				viewReferences.push(child);
-			else if (child.getState('type') == 'EventSheet')
-				eventSheetReferences.push(child);
-			else if (child.getState('type') == 'StageArea')
-				stageAreaReferences.push(child);
-		}
-		
-		//Store later, break this function to tiny private ones ofc..
-		p_level.setState('moduleReferences', moduleReferences);
-		p_level.setState('viewReferences', viewReferences);
-		p_level.setState('eventSheetReferences', eventSheetReferences);
-		p_level.setState('stageAreaReferences', stageAreaReferences);
-		
-		
-		//Load all modules (for now assume always exactly 1 module reference exists)
-		_levelLoading = p_level;
-		ModuleManager.successSignal.connect(_onLevelLoaded).once();
-		ModuleManager.execute(moduleReferences[0].getState('url'));
-	}
 	
 	//So remember.. this class is a singleton.. and only one level is loaded at any time.. and all that..
 	//I say this since this signal will only work if we only load one module at a time.. and all that
@@ -294,6 +278,9 @@ import flambe.util.Signal0;
 			{
 				//Just remove from stage, or completely unload? for now, just remove from stage..
 				_removeLevel(currentLevel[p_runSlot]);
+				
+				//clear the runSlot flag
+				currentLevel.remove(p_runSlot);
 			}
 			
 			//If Preloader was active, remove it..
@@ -326,10 +313,53 @@ import flambe.util.Signal0;
 		}
 	}
 	
+	
+	@:keep public function clearRunSlot(p_runSlot:String="Main"):Void //meh
+	{
+		//Current Level (if any)
+		if (currentLevel[p_runSlot] != null)
+		{
+			currentLevel.remove(p_runSlot);
+		}
+	}
+	
+	@:keep public function addRunSlotToStage(p_runSlot:String="Main"):Void //meh
+	{
+		//add Current Level (if any)
+		if (currentLevel[p_runSlot] != null)
+		{
+			//Just add to stage
+			_addLevel(currentLevel[p_runSlot]);
+		}
+	}
+	
+	@:keep public function removeRunSlotFromStage(p_runSlot:String="Main"):Void //meh
+	{
+		//remove Current Level (if any)
+		if (currentLevel[p_runSlot] != null)
+		{
+			//Just remove from stage
+			_removeLevel(currentLevel[p_runSlot]);
+		}
+	}
+	
+	//Only adds, doesn't create
+	private function _addLevel(p_level:IGameEntity):Void
+	{
+		//Get Level's views
+		var l_views:Array<IGameEntity> = p_level.getState('views');
+		
+		//Adding things to active Space/Stage
+		Sliced.display.projectActiveSpaceReference.spaceEntity.addChild(p_level);
+		
+		for (f_view in l_views)
+			Sliced.display.projectActiveSpaceReference.activeStageReference.stageEntity.addChild(f_view);
+	}
+	
 	//Only removes, doesn't unload
 	private function _removeLevel(p_level:IGameEntity):Void
 	{
-		//Add Level's views
+		//Get Level's views
 		var l_views:Array<IGameEntity> = p_level.getState('views');
 		
 		//Remove things from active Space/Stage

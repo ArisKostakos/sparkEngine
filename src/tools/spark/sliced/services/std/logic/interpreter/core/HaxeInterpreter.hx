@@ -10,6 +10,7 @@ import flambe.animation.Ease;
 import flambe.animation.Tween;
 import flambe.asset.AssetEntry.AssetFormat;
 import tools.spark.framework.assets.Asset;
+import tools.spark.framework.assets.EModuleState;
 import tools.spark.framework.assets.Module;
 import tools.spark.framework.ModuleManager;
 import tools.spark.framework.Project;
@@ -102,10 +103,10 @@ import haxe.ds.ObjectMap;
 		_interpreter.variables.set("IntMap", IntMap); // share the IntMap
 		_interpreter.variables.set("ObjectMap", ObjectMap); // share the ObjectMap
 		_interpreter.variables.set("EEventType", EEventType); // share the EEventType
+		_interpreter.variables.set("EModuleState", EModuleState); // share the EModuleState
 		_interpreter.variables.set("System", System); // share the System
 		_interpreter.variables.set("ModuleManager", ModuleManager); // share the ModuleManager
 		_interpreter.variables.set("Tween", Tween); // share the Tween
-		
 		
 		//Shortcuts
 		_interpreter.variables.set("expr", runExpr);

@@ -86,6 +86,9 @@ class Comms extends AService implements IComms
 	
 	public function update():Void
 	{
+		//I think creating new objects might be costly...
+		//it should be faster to do an if it's empty before creating a new Map
+		
 		_requestsData = new Map<String, Dynamic>();
 		_serverEventsData = new Map<String, Dynamic>();
 		_file_requestsData = new Map<String, Dynamic>();
@@ -98,7 +101,7 @@ class Comms extends AService implements IComms
 	
 	public function getServerEventData(p_serverEventName:String):Dynamic
 	{
-		return _serverEventsData[p_serverEventName];
+		return _serverEventsData[p_serverEventName];  //PUT THE .shift(); HERE!!!! AND DO IT FOR EVERYTHING!!!!
 	}
 	
 	public function connectTo(p_hostname:String, p_port:String, ?p_serverIdentifier:String, ?p_gameEntity:IGameEntity):Void
@@ -198,7 +201,7 @@ class Comms extends AService implements IComms
 	
 	public function file_getSendFileRequestData(p_fileRequestName:String):Dynamic
 	{
-		return _file_requestsData[p_fileRequestName];
+		return _file_requestsData[p_fileRequestName];  //PUT THE .shift(); HERE!!!! AND DO IT FOR EVERYTHING!!!! and maybe make 'p_fileRequestName' local to target's name... ehh
 	}
 	
 	public function file_disconnect():Void
@@ -231,7 +234,11 @@ class Comms extends AService implements IComms
 				
 				p_data.progressPercent = Math.round((clsr_progressBytes / p_fileMeta.size)* 100);
 				
-				_file_requestsData[p_fileRequestIdentifier] = p_data;
+				//Allow multiple incoming server file request events in a single frame hack
+				if (!_file_requestsData.exists(p_fileRequestIdentifier))
+					_file_requestsData[p_fileRequestIdentifier] = [];
+				
+				_file_requestsData[p_fileRequestIdentifier].push(p_data);
 				Sliced.event.raiseEvent(FILETRANSFER_SENDREQUEST, p_gameEntity, p_fileRequestIdentifier);
 			}
 			

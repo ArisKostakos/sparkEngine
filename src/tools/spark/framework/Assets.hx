@@ -58,6 +58,51 @@ import tools.spark.framework.assets.interfaces.IBatchLoader;
 		return _loader.startNewBatchLoad();
 	}
 	
+	//I load an orphan DBA (orphan meaning it's not meant to be loaded in a module)
+	//If Asset already loaded, return null instead
+	//This function loads thing from Spark Servers "/assets/user/type" structure...
+	//p_owner is either a user DBO or a team DBO
+	public static function loadOrphanAsset(p_asset:Dynamic, p_owner:Dynamic, p_callBack:Dynamic=null):Bool //in scripts, i always get return==false (dont know why) so we treat this function as :Void
+	{
+		//Flambe Asset Id
+		var p_assetId:String = p_asset.type + ':' + p_asset.name;
+		
+		//Is File already loaded?
+		if (!Assets.fileLoaded(p_assetId))
+		{
+			//Create Batck Loader
+			var p_batchLoader:IBatchLoader = initiateBatch();
+			
+			//Get Asset Url
+			var p_assetUrl:String = '/assets/' + p_owner.name + '/' + p_asset.type + '/' + p_asset.dir + '/' + p_asset.fileName + '.' + p_asset.fileExtension;
+			
+			//Add File
+			Console.log("Adding Orphan File ["+p_assetId+"]...");
+			p_batchLoader.addFile(p_assetUrl, p_assetId);
+			
+			//Add CallBack
+			if (p_callBack!=null)
+				p_batchLoader.successSignal.connect(p_callBack).once();
+			
+			//Start Loading
+			p_batchLoader.start();
+			
+			//Started Loading (expect news from your callback)
+			return true; //doesn't work?
+		}
+		else
+		{
+			//Nothing will Load. File exists
+			Console.warn("File [" + p_assetId + "] is already loaded. Ignoring...");
+			
+			//Callback
+			if (p_callBack != null)
+				p_callBack();
+				
+			return false;
+		}
+	}
+	
 	//Right now, these will never trigger because flambe Loader never emits anything itself
 	private static function _onLoaderSuccess():Void
 	{

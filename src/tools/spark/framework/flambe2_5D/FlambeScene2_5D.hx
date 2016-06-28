@@ -70,7 +70,7 @@ class FlambeScene2_5D extends AScene2_5D
 		
 		//The Sprite component is added, in case we want to move/scale the entire scene by doing camera transformations
 		var l_sceneSprite:Sprite = new Sprite();
-		l_sceneSprite.blendMode = BlendMode.Copy;
+		//l_sceneSprite.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 		l_sceneSprite.centerAnchor();//hmm
 		_instances[p_view2_5D].add(l_sceneSprite);
 		
