@@ -43,7 +43,11 @@ class FlambeView2_5D extends AView2_5D
 	
 	private inline function _initFlambeView2_5D():Void
 	{
+		Console.error("Creating View: " + gameEntity.getState('name'));
+		//flambe.System.external.call("console.log", [_instances[p_view2_5D]]);
+		
 		_instanceView = new Entity();
+		
 		
 		//var l_viewSprite:FillSprite = new FillSprite(0x00ff00,1024,580);
 		var l_viewSprite:Sprite = new Sprite();
@@ -56,6 +60,12 @@ class FlambeView2_5D extends AView2_5D
 		//Add flambe views that are active on root, for mouse listeners, physics, etc.. make sure you remove them if hidden, not active. remember this is for physics/event listeners only.. view will still render and be visible even if removed from the root
 		if (gameEntity.getState('visible'))
 			System.root.addChild(_instanceView);
+	}
+	
+	//some dirty fixing.. trying to not create new views each time i add/remove them from Stage/StageArea
+	public function enableCachedViewBack():Void
+	{
+		System.root.addChild(_instanceView);
 	}
 	
 	override public function destroy():Void
@@ -178,7 +188,7 @@ class FlambeView2_5D extends AView2_5D
 		_instanceScene = null;
 		
 		//remove it from view
-		_instanceView.disposeChildren();
+		_instanceView.disposeChildren(); //COMMENT THIS OUT??? 29-6-2016 , I'm trying to keep scenes for getting destroyed between tabs.. too hard! I give up for now..
 	}
 	
 	override public function setPosSize(?p_x:Null<Float>, ?p_y:Null<Float>, ?p_width:Null<Float>, ?p_height:Null<Float>, ?p_view:IView2_5D):Void

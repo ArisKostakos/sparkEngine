@@ -120,10 +120,10 @@ class Logic extends AService implements ILogic
 		rootGameEntitiesPaused[p_gameEntityUrl] = gameFactory.createGameEntity(p_gameEntityUrl);
 	}
 	
-	public function create(p_gameEntityUrl:String):IGameEntity
+	public function create(p_gameEntityUrl:String, p_dontCache:Bool=false):IGameEntity
 	{
 		//Create GameEntity
-		return gameFactory.createGameEntity(p_gameEntityUrl);
+		return gameFactory.createGameEntity(p_gameEntityUrl, p_dontCache);
 	}
 	
 	public function createFromXml(p_xml:Xml, p_cloneFirst:Bool=true):IGameEntity
@@ -377,13 +377,13 @@ class Logic extends AService implements ILogic
 				var f_type:String = xml_getElement(f_state, "Type").firstChild().nodeValue;
 				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
 				
-				l_states.set(f_id,{id: f_id, type: f_type, value: f_value});
+				l_states.set(f_id,{id: f_id, type: f_type, value: f_value, kind: "Normal"});
 			}
 			return l_states;
 		}
 		else
 		{
-			return null;
+			return l_states;
 		}
 	}
 	
@@ -413,19 +413,80 @@ class Logic extends AService implements ILogic
 				var f_id:String = f_state.get("id");
 				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
 				
-				l_states.set(f_id,{id: f_id, value: f_value});
+				l_states.set(f_id,{id: f_id, value: f_value, kind: "Merge"});
 			}
 			return l_states;
 		}
 		else
 		{
-			return null;
+			return l_states;
 		}
 	}
 	
 	public function xml_getMState(p_xml:Xml, p_mStateId:String, p_merge:Bool):Dynamic
 	{
 		return xml_getAllMStates(p_xml, p_merge).get(p_mStateId);
+	}
+	
+	public function xml_getEveryState(p_xml:Xml, p_merge:Bool):Map<String, Dynamic>
+	{
+		var l_allStates:Map<String, Dynamic> = xml_getAllStates(p_xml, p_merge);
+		var l_mStates:Map<String, Dynamic> = xml_getAllMStates(p_xml, p_merge);
+		
+		for (f_mState in l_mStates)
+		{
+			if (l_allStates.exists(f_mState.id))
+				l_allStates.get(f_mState.id).value = f_mState.value; //update value (shouldn't really happen, like ever..)
+			else
+				l_allStates.set(f_mState.id, f_mState); //add to map
+		}
+		
+		return l_allStates;
+	}
+	
+	public function xml_getEveryState_Array(p_xml:Xml, p_merge:Bool):Array<Dynamic> //Never tried this..but it should work..
+	{
+		var l_states:Array<Dynamic> = new Array<Dynamic>();
+		
+		var l_groupName:String;
+		if (p_merge) l_groupName = "_States";
+			else l_groupName = "States";
+			
+		var l_statesNode:Xml = xml_getElement(p_xml, l_groupName);
+		
+		if (l_statesNode != null)
+		{
+			var l_statesChildren:Iterator<Xml> = l_statesNode.elementsNamed('State');
+			//for each [entity] in [form.space.entities]
+			while (l_statesChildren.hasNext())
+			{
+				var f_state:Xml = l_statesChildren.next();
+				
+				var f_id:String = xml_getElement(f_state, "Id").firstChild().nodeValue;
+				var f_type:String = xml_getElement(f_state, "Type").firstChild().nodeValue;
+				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
+				
+				l_states.push({id: f_id, type: f_type, value: f_value, kind: "Normal"});
+			}
+			
+			var l_statesChildren:Iterator<Xml> = l_statesNode.elementsNamed('_State');
+			//for each [entity] in [form.space.entities]
+			while (l_statesChildren.hasNext())
+			{
+				var f_state:Xml = l_statesChildren.next();
+				
+				var f_id:String = f_state.get("id");
+				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
+				
+				l_states.push({id: f_id, value: f_value, kind: "Merge"});
+			}
+			
+			return l_states;
+		}
+		else
+		{
+			return l_states;
+		}
 	}
 	
 	//XML parsing functions
@@ -590,7 +651,7 @@ class Logic extends AService implements ILogic
 			var l_entities:Iterator<Xml> = l_group.elementsNamed("Entity");
 			for (entity in l_entities)
 			{
-				l_array.push({ext:entity.get("extends"), meta_editor:entity.get("meta_editor")});
+				l_array.push({ext:entity.get("extends"), meta_editor:entity.get("meta_editor"), xml:entity});
 			}
 		}
 		
@@ -688,7 +749,7 @@ class Logic extends AService implements ILogic
 		return l_state;
 	}
 	
-	public function xml_entity_updateState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Bool
+	public function xml_entity_updateState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool, p_forceCreate:Bool=false):Bool //for forceCreate to work here, p_State.type must be given
 	{
 		var l_groupName:String;
 		if (p_merge) l_groupName = "_States";
@@ -702,7 +763,14 @@ class Logic extends AService implements ILogic
 			l_group = l_elements.next();
 		else
 		{
-			return false;
+			//Create it
+			if (p_forceCreate)
+			{
+				xml_entity_addState(p_EntityXml, p_State, p_merge);
+				return true;
+			}
+			else //Give up
+				return false;
 		}
 		
 		//Look for State
@@ -721,7 +789,15 @@ class Logic extends AService implements ILogic
 		}
 		
 		//Didn't found it
-		return false;
+		
+		//Create it
+		if (p_forceCreate)
+		{
+			xml_entity_addState(p_EntityXml, p_State, p_merge);
+			return true;
+		}
+		else //Give up
+			return false;
 	}
 	
 	public function xml_entity_addMState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Xml
@@ -763,21 +839,28 @@ class Logic extends AService implements ILogic
 		return l_state;
 	}
 	
-	public function xml_entity_updateMState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool):Bool
+	public function xml_entity_updateMState(p_EntityXml:Xml, p_State:Dynamic, p_merge:Bool, p_forceCreate:Bool=false):Bool
 	{
 		var l_groupName:String;
 		if (p_merge) l_groupName = "_States";
 			else l_groupName = "States";
 		
-		//Check if group exists, else quit
+		//Check if group exists,
 		var l_group:Xml;
 		var l_elements:Iterator<Xml> = p_EntityXml.elementsNamed(l_groupName);
 		
 		if (l_elements.hasNext())
 			l_group = l_elements.next();
-		else
+		else //Group not found
 		{
-			return false;
+			//Create it
+			if (p_forceCreate)
+			{
+				xml_entity_addMState(p_EntityXml, p_State, p_merge);
+				return true;
+			}
+			else //Give up
+				return false;
 		}
 		
 		//Look for MState
@@ -796,7 +879,15 @@ class Logic extends AService implements ILogic
 		}
 		
 		//Didn't found it
-		return false;
+		
+		//Create it
+		if (p_forceCreate)
+		{
+			xml_entity_addMState(p_EntityXml, p_State, p_merge);
+			return true;
+		}
+		else //Give up
+			return false;
 	}
 	
 	public function xml_entity_addTrigger(p_EntityXml:Xml, p_Trigger:Dynamic, p_merge:Bool):Xml

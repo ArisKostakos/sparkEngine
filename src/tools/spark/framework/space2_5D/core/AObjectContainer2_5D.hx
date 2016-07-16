@@ -40,7 +40,9 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 	
 	public function insertChild( p_entity2_5D:IEntity2_5D, p_index:Int):Bool

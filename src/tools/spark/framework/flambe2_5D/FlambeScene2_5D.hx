@@ -66,15 +66,29 @@ class FlambeScene2_5D extends AScene2_5D
 	
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
-		_instances[p_view2_5D] = new Entity();
+		//If this works, do it for EEEEVERYTHING ELSE
+		//The idea here is, we don't destroy instances on remove, so re-add them here if available
+		Console.error("Creating Scene: " + gameEntity.getState('name'));
+		flambe.System.external.call("console.log", [_instances[p_view2_5D]]);
 		
-		//The Sprite component is added, in case we want to move/scale the entire scene by doing camera transformations
-		var l_sceneSprite:Sprite = new Sprite();
-		//l_sceneSprite.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
-		l_sceneSprite.centerAnchor();//hmm
-		_instances[p_view2_5D].add(l_sceneSprite);
 		
-		return super.createInstance(p_view2_5D);
+		//instances (and group instances I guess) will only be deleted when explicitly requested to be deleted.. not by a removeChild
+		if (_instances[p_view2_5D] != null)
+		{
+			return _instances[p_view2_5D];
+		}
+		else
+		{
+			_instances[p_view2_5D] = new Entity();
+			
+			//The Sprite component is added, in case we want to move/scale the entire scene by doing camera transformations
+			var l_sceneSprite:Sprite = new Sprite();
+			//l_sceneSprite.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
+			l_sceneSprite.centerAnchor();//hmm
+			_instances[p_view2_5D].add(l_sceneSprite);
+			
+			return super.createInstance(p_view2_5D);
+		}
 	}
 	
 	override public function update(?p_view2_5D:IView2_5D):Void

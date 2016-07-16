@@ -81,7 +81,11 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 	public function createView ( p_viewEntity:IGameEntity):Dynamic
 	{
 		if (_views[p_viewEntity] != null)
+		{
 			Console.warn("View " + p_viewEntity.getState('name') + " has already been added to this Flambe2_5DRenderer. Ignoring...");
+			//So, in this case, add me back to revert what you did on the 'destroy' function below..
+			//_views[p_viewEntity].enableCachedViewBack();  //UNCOMMENT THIS!!!!! MAKE VIEW ADD REMOVE CHILD WORK WITHOUT CREATING NEW VIEWS/SCENES ALL THE TIME!!
+		}
 		else
 			_views[p_viewEntity] = cast(_viewManager.create(p_viewEntity),FlambeView2_5D);
 		
@@ -97,8 +101,9 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 			Console.warn("View " + p_viewEntity.getState('name') + " has not been added to this Flambe2_5DRenderer. Ignoring destroyView...");
 		else
 		{
+			//call me removeFrom Stage or smth... we will create a destroyView later on, that explicity destroys something.. but this is just a removeChild thing..
 			_viewManager.destroy(_views[p_viewEntity]);
-			_views[p_viewEntity] = null;
+			/*COMMENT THIS LINE OUTTTT,, listen to the comment on the end of this line it's good! */_views[p_viewEntity] = null; //no.. keep it cached... in case we add it again.. like i do with all instances of all other Space2_5D objects.. 
 		}
 	}
 	

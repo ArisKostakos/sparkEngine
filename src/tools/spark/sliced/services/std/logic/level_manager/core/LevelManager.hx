@@ -192,7 +192,7 @@ import flambe.util.Signal0;
 	//if something else calls modulemanager other than this levelLoader at the same time, everything is royaly screwed
 	private function _onLevelLoaded()
 	{
-		Console.warn("LEVEL LOADED!! yaayyyyee");
+		Console.log("LEVEL LOADED!");
 		
 		//Send the good news
 		levelLoaded.emit(_levelLoading);
@@ -207,22 +207,30 @@ import flambe.util.Signal0;
 	{
 		if (p_level.getState('created') == false)
 		{
-			//Create Level's eventSheet references
-			var l_eventSheetReferences:Array<IGameEntity> = p_level.getState('eventSheetReferences');
-			for (f_eventSheetReference in l_eventSheetReferences)
+			//Create Level's camera references
+			var l_cameraReferences:Array<IGameEntity> = p_level.getState('cameraReferences');
+			var l_levelCamera:IGameEntity=null;
+			
+			for (f_cameraReference in l_cameraReferences) //we assume 0 or 1, not more. later use level reference's refName to distinguish cameras, and which to use for each view
 			{
-				var f_eventSheet:IGameEntity = Sliced.logic.create(f_eventSheetReference.getState('url'));
-				p_level.addChild(f_eventSheet);
+				l_levelCamera = Sliced.logic.create(f_cameraReference.getState('url')); //, true);? probably (noCache)
+				p_level.addChild(l_levelCamera);
 			}
 			
 			//Array used for views and stageAreas
 			var l_views:Array<IGameEntity> = [];
 			
+			//Array used for levelCameras and viewCameras
+			var l_cameras:Array<IGameEntity> = [];
+			
+			if (l_levelCamera != null)
+				l_cameras.push(l_levelCamera);
+			
 			//Create Level's stageArea references
 			var l_stageAreaReferences:Array<IGameEntity> = p_level.getState('stageAreaReferences');
 			for (f_stageAreaReference in l_stageAreaReferences)
 			{
-				var f_stageArea:IGameEntity = Sliced.logic.create(f_stageAreaReference.getState('url'));
+				var f_stageArea:IGameEntity = Sliced.logic.create(f_stageAreaReference.getState('url')); //, true);? probably (noCache)
 				
 				//Store this stageArea
 				l_views.push(f_stageArea);
@@ -232,30 +240,42 @@ import flambe.util.Signal0;
 			var l_viewReferences:Array<IGameEntity> = p_level.getState('viewReferences');
 			for (f_viewReference in l_viewReferences)
 			{
-				var f_view:IGameEntity = Sliced.logic.create(f_viewReference.getState('url'));
+				var f_view:IGameEntity = Sliced.logic.create(f_viewReference.getState('url')); //, true);? probably (noCache)
 				//Console.warn("View Created: " + testView.getState('name'));
 				
 				//Store this view
 				l_views.push(f_view);
 				
-				var f_scene:IGameEntity = Sliced.logic.create(f_view.getState('initSceneUrl'));
-				//Console.warn("Scene Created: " + testScene.getState('name'));
+				var f_scene:IGameEntity = Sliced.logic.create(f_view.getState('initSceneUrl'), true); //noCache==true
+				//Console.warn("Scene Created: " + f_scene.getState('name'));
 				
-				var f_camera:IGameEntity = Sliced.logic.create(f_view.getState('initCameraUrl'));
+				var f_camera:IGameEntity = null;
+				if (f_view.getState('initCameraUrl') != "Level Camera")
+				{
+					f_camera = Sliced.logic.create(f_view.getState('initCameraUrl')); //, true);? probably (noCache)
+					l_cameras.push(f_camera);
+				}
 				//Console.warn("Camera Created: " + testCamera.getState('name'));
 				
 				//Set it up so it's ready to be used
 				f_view.setState('scene', f_scene);
-				f_view.setState('camera', f_camera);
+				
+				if (f_camera!=null)
+					f_view.setState('camera', f_camera);
+				else
+					f_view.setState('camera', l_levelCamera);
 				
 				//Add Scene and Camera to this level
 				p_level.addChild(f_scene);
-				p_level.addChild(f_camera);
+				
+				if (f_camera!=null)
+					p_level.addChild(f_camera);
 			}
 			
 			
 			p_level.setState('created', true);
 			p_level.setState('views', l_views);
+			p_level.setState('cameras', l_cameras);
 			
 			//Send the good news
 			levelCreated.emit();

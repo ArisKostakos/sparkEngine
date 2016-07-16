@@ -134,6 +134,7 @@ class Display extends AService implements IDisplay
 		_renderStateNames['captureAreaY'] = true; //camera
 		_renderStateNames['captureAreaWidth'] = true; //camera
 		_renderStateNames['captureAreaHeight'] = true; //camera
+		_renderStateNames['command_updateCamera'] = true; //camera new
 		
 		
 		_renderStateNames['spaceWidth'] = true;	//just for fillsprites

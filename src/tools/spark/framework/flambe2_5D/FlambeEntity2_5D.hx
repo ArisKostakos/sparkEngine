@@ -18,6 +18,8 @@ import flambe.Entity;
 import flambe.input.PointerEvent;
 import flambe.math.Rectangle;
 import flambe.math.FMath;
+import flambe.swf.Library;
+import flambe.swf.MoviePlayer;
 import nape.shape.Shape;
 import tools.spark.framework.flambe2_5D.components.PlanetComponent;
 import tools.spark.framework.flambe2_5D.spritesheet.SpriteSheetPlayer;
@@ -91,6 +93,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['2DMeshTextForm'] = _update2DMeshTextForm;
 		_updateStateFunctions['2DMeshSpriterForm'] = _update2DMeshSpriterForm;
 		_updateStateFunctions['2DMeshSpritesheetForm'] = _update2DMeshSpritesheetForm;
+		_updateStateFunctions['2DMeshAdobeAnimationForm'] = _update2DMeshAdobeAnimationForm;
 		_updateStateFunctions['2DMeshParticleEmitterForm'] = _update2DMeshParticleEmitterForm;
 		_updateStateFunctions['2DMeshFillRectForm'] = _update2DMeshFillRectForm;
 		_updateStateFunctions['2DMeshSpriteForm'] = _update2DMeshSpriteForm;
@@ -119,9 +122,24 @@ class FlambeEntity2_5D extends AEntity2_5D
 	
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
-		_instances[p_view2_5D] = new Entity();
+		//If this works, do it for EEEEVERYTHING ELSE
+		//The idea here is, we don't destroy instances on remove, so re-add them here if available
+		Console.error("Creating: " + gameEntity.getState('name'));
+		flambe.System.external.call("console.log", [_instances[p_view2_5D]]);
 		
-		return super.createInstance(p_view2_5D);
+		
+		//instances (and group instances I guess) will only be deleted when explicitly requested to be deleted.. not by a removeChild
+		if (_instances[p_view2_5D] != null)
+		{
+			return _instances[p_view2_5D];
+		}
+		else
+		{
+			_instances[p_view2_5D] = new Entity();
+			
+			return super.createInstance(p_view2_5D);
+		}
+		
 	}
 
 	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D, p_index:Int=-1):Void
@@ -225,6 +243,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 				_updateStateOfInstance('2DMeshSpriterForm', p_view2_5D);
 			case 'Spritesheet':
 				_updateStateOfInstance('2DMeshSpritesheetForm', p_view2_5D);
+			case 'AdobeAnimation':
+				_updateStateOfInstance('2DMeshAdobeAnimationForm', p_view2_5D);
 			case 'Particle Emitter':
 				_updateStateOfInstance('2DMeshParticleEmitterForm', p_view2_5D);
 			case 'FillRect':
@@ -480,6 +500,68 @@ class FlambeEntity2_5D extends AEntity2_5D
 			l_spritesheetPlayeTemp.play();
 		l_spritesheetPlayeTemp.setSpeed(gameEntity.getState('AnimationSpeed'));
 	}
+	
+	private function _update2DMeshAdobeAnimationForm(p_2DMeshAdobeAnimationForm:String, p_view2_5D:IView2_5D):Void
+	{
+		//If the Entity's mesh type is not an AdobeAnimation, ignore this update
+		if (gameEntity.getState('2DmeshType') != 'AdobeAnimation')
+			return;
+			
+		//If the Form Name is Undefined, ignore this update
+		if (p_2DMeshAdobeAnimationForm == 'Undefined')
+			return;
+			
+		//Get the instance we're updating
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		//Get it's existing mesh, if any. Not sure if this mesh is guaranteed to be a mesh used previously by Spritesheet, or something else.
+		//should be fine due to logic but not sure. by logic i mean, if we update 2dmeshtype it will always reset mesh and stuff
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh == null)
+		{
+			l_mesh = new Sprite();
+			
+			var l_AdobeAnimationFormName:String;
+			
+			if (p_2DMeshAdobeAnimationForm.charAt(0) == '[')
+				l_AdobeAnimationFormName = gameEntity.gameForm.getState( p_2DMeshAdobeAnimationForm.substring(1, p_2DMeshAdobeAnimationForm.length-1) );
+			else
+				l_AdobeAnimationFormName = p_2DMeshAdobeAnimationForm;
+			
+			var l_library = new Library(Assets.getAssetPackOf(l_AdobeAnimationFormName), gameEntity.getState('Library Name'));
+			var l_moviePlayer:MoviePlayer = new MoviePlayer(l_library);
+			l_moviePlayer.loop(gameEntity.getState('Init Animation'));
+			
+			
+			var l_movieEntity:Entity = new Entity().add(l_moviePlayer);
+			
+			//Store
+			gameEntity.setState('obj_player', l_moviePlayer);
+			
+			//l_mesh.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
+			l_instance.add(l_mesh);
+			
+			l_instance.addChild(l_movieEntity);
+			
+			_instancesMesh[p_view2_5D] = l_mesh;
+		}
+		else
+		{
+			//l_mesh.texture = Assets.getTexture(gameEntity.gameForm.getState( l_imageForm ));	
+		}
+		/*
+		//Play Animation (nesting)
+		//_updateStateOfInstance('2DMeshSpriterAnimForm', p_view2_5D);
+		var l_spritesheetPlayeTemp:SpriteSheetPlayer = l_instance.get(SpriteSheetPlayer);
+		if (gameEntity.getState('AnimationLoop') == true)
+			l_spritesheetPlayeTemp.loop();
+		else
+			l_spritesheetPlayeTemp.play();
+		l_spritesheetPlayeTemp.setSpeed(gameEntity.getState('AnimationSpeed'));
+		*/
+	}
+	
 	
 	private function _update2DMeshFillRectForm(p_2DMeshFillRectForm:String, p_view2_5D:IView2_5D):Void
 	

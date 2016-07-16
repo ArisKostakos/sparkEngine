@@ -62,7 +62,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 		return createGameEntity(null, p_gameClassNode);
 	}
 	
-	public function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml):IGameEntity
+	public function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml, p_dontCache:Bool=false):IGameEntity
 	{
 		instancesCreated += 1;
 		
@@ -72,7 +72,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 			{
 				if (_cache.get(p_gameClassName) != null)
 				{
-					//Console.warn("Game Entity exists and not null. CLONING FROM CACHE!!!!");
+					//Console.warn("Game Entity ["+p_gameClassName+"] exists and not null. CLONING FROM CACHE!!!!");
 					return _cache.get(p_gameClassName).clone();
 				}
 			}
@@ -98,18 +98,19 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.EGameType;
 						{
 							if (_cache.get(p_gameClassName) == null)
 							{
-								//Console.log("Game Entity exists and is null. Cloning for cache...");
+								//Console.log("Game Entity ["+p_gameClassName+"] exists and is null. Cloning for cache...");
 								_cache.set(p_gameClassName, l_gameEntity.clone());
 							}
 							else
 							{
-								Console.warn("Game Entity exists and is not null. WE SHOULDN'T BE HERE! SOMETHING IS WRONG!!!!!!!!!!!!!!!!!!!");
+								Console.warn("Game Entity ["+p_gameClassName+"] exists and is not null. WE SHOULDN'T BE HERE! SOMETHING IS WRONG!!!!!!!!!!!!!!!!!!!");
 							}
 						}
 						else
 						{
-							//Console.log("Game Entity does not exist, so doing nothing(this is normal)");
-							_cache.set(p_gameClassName, null);
+							//Console.log("Game Entity [" + p_gameClassName+"] does not exist, so doing nothing(this is normal). Dont cache: " + p_dontCache);
+							if (!p_dontCache)
+								_cache.set(p_gameClassName, null);
 						}
 					}
 					/*

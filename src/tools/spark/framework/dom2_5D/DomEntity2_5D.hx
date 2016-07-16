@@ -72,35 +72,46 @@ class DomEntity2_5D extends AEntity2_5D
 	
 	override public function createInstance (p_view2_5D:IView2_5D):Dynamic
 	{
-		switch (gameEntity.getState( 'NCmeshType' ))
-		{
-			case "Div":
-				_instances[p_view2_5D] = Browser.document.createDivElement();
-			case "Input":
-				_instances[p_view2_5D] = Browser.document.createInputElement();
-				_instances[p_view2_5D].onchange = _onChange;
-				_instances[p_view2_5D].style.outline = "0"; //remove blue border when selected.. it's a hack, fix me
-			case "Button":
-				//_instances[p_view2_5D] = Browser.document.createButtonElement();
-				_instances[p_view2_5D] = Browser.document.createDivElement();
-				_instances[p_view2_5D].style.outline = "0"; //remove blue border when selected.. it's a hack, fix me
-			case "Image":
-				_instances[p_view2_5D] = Browser.document.createImageElement();
-			case "Ace":
-				_instances[p_view2_5D] = Browser.document.createDivElement();
-			case "Tree":
-				_instances[p_view2_5D] = Browser.document.createDivElement();
-			case "Scroller":
-				_instances[p_view2_5D] = Browser.document.createDivElement();
-			default:
-				//@fixme: If this element was not meant to be rendered at all, don't let it create a DomEntity at all!!!
-				Console.error("Unrecognised NCMeshType input. Creating a Div By Default.");
-				_instances[p_view2_5D] = Browser.document.createDivElement();
-		}
+		//If this works, do it for EEEEVERYTHING ELSE
+		//The idea here is, we don't destroy instances on remove, so re-add them here if available
 		
-		_instances[p_view2_5D].style.position = "absolute";
-
-		return super.createInstance(p_view2_5D);
+		//instances (and group instances I guess) will only be deleted when explicitly requested to be deleted.. not by a removeChild
+		if (_instances[p_view2_5D] != null)
+		{
+			return _instances[p_view2_5D];
+		}
+		else
+		{
+			switch (gameEntity.getState( 'NCmeshType' ))
+			{
+				case "Div":
+					_instances[p_view2_5D] = Browser.document.createDivElement();
+				case "Input":
+					_instances[p_view2_5D] = Browser.document.createInputElement();
+					_instances[p_view2_5D].onchange = _onChange;
+					_instances[p_view2_5D].style.outline = "0"; //remove blue border when selected.. it's a hack, fix me
+				case "Button":
+					//_instances[p_view2_5D] = Browser.document.createButtonElement();
+					_instances[p_view2_5D] = Browser.document.createDivElement();
+					_instances[p_view2_5D].style.outline = "0"; //remove blue border when selected.. it's a hack, fix me
+				case "Image":
+					_instances[p_view2_5D] = Browser.document.createImageElement();
+				case "Ace":
+					_instances[p_view2_5D] = Browser.document.createDivElement();
+				case "Tree":
+					_instances[p_view2_5D] = Browser.document.createDivElement();
+				case "Scroller":
+					_instances[p_view2_5D] = Browser.document.createDivElement();
+				default:
+					//@fixme: If this element was not meant to be rendered at all, don't let it create a DomEntity at all!!!
+					Console.error("Unrecognised NCMeshType input. Creating a Div By Default.");
+					_instances[p_view2_5D] = Browser.document.createDivElement();
+			}
+			
+			_instances[p_view2_5D].style.position = "absolute";
+			
+			return super.createInstance(p_view2_5D);
+		}
 	}
 
 	override private function _createChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D, p_index:Int=-1):Void
@@ -115,7 +126,12 @@ class DomEntity2_5D extends AEntity2_5D
 	override private function _removeChildOfInstance(p_childEntity:IEntity2_5D, p_view2_5D:IView2_5D):Void
 	{
 		//This is an 'instance' removeChild... a dom removeChild..
-		_instances[p_view2_5D].removeChild(cast(p_childEntity.getInstance(p_view2_5D), Element));
+		var l_childElement:Element = cast(p_childEntity.getInstance(p_view2_5D), Element);
+		
+		if (_instances[p_view2_5D] == l_childElement.parentElement)
+			_instances[p_view2_5D].removeChild(l_childElement);
+		else
+			Console.warn("Could not remove DOM Element. Element was not a child of parent");
 		
 		super._removeChildOfInstance(p_childEntity, p_view2_5D);
 	}
@@ -440,17 +456,18 @@ class DomEntity2_5D extends AEntity2_5D
 	//much better way.. should be done for everything (also visibility should be for all dom elements not just ncStylables
 	inline private function _updateText(p_text:String, p_view2_5D:IView2_5D):Void
 	{
-		if (p_text!="Undefined")
-			switch (gameEntity.getState( 'NCmeshType' ))
-			{
-				case "Div":
+		switch (gameEntity.getState( 'NCmeshType' ))
+		{
+			case "Div":
+				if (p_text!="Undefined")
 					_instances[p_view2_5D].innerHTML = p_text;
-				case "Input":
-					_instances[p_view2_5D].value = p_text;
-				case "Button":
+			case "Input":
+				_instances[p_view2_5D].value = p_text;
+			case "Button":
+				if (p_text!="Undefined")
 					_instances[p_view2_5D].innerHTML = p_text;
-				default:
-			}
+			default:
+		}
 	}
 	
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
@@ -513,19 +530,26 @@ class DomEntity2_5D extends AEntity2_5D
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
 	private function _updateAceProperties( p_view2_5D:IView2_5D):Void
 	{
-		//Get the instance we're updating
-		var l_instance:DivElement = _instances[p_view2_5D];
-
-		l_instance.id = "editor";
-		var editor:Dynamic = untyped ace.edit("editor");
-		editor.setTheme("ace/theme/merbivore_soft");
-		editor.getSession().setMode("ace/mode/xml");
-		
-		gameEntity.setState('aceObject', editor);
+		if (gameEntity.getState('aceObject') == null)
+		{
+			//Get the instance we're updating
+			var l_instance:DivElement = _instances[p_view2_5D];
+			
+			l_instance.id = "editor" + Std.string(Std.random(999999999)); //lame way to get unique id
+			var editor:Dynamic = untyped ace.edit(l_instance.id);
+			editor.setTheme("ace/theme/merbivore_soft");
+			editor.getSession().setMode("ace/mode/xml");
+			//resize?
+			gameEntity.setState('aceObject', editor);
+		}
+		else
+		{
+			//resize?
+		}
 	}
 	
 	//Temp way to batch everything together.. not good for updating individual properties, but good for implementing shit faast
-	private function _updateTreeProperties( p_view2_5D:IView2_5D):Void
+	private function _updateTreeProperties( p_view2_5D:IView2_5D):Void //deprecate this.. i dont need it anymore.. ever..
 	{
 		//Get the instance we're updating
 		var l_instance:DivElement = _instances[p_view2_5D];
@@ -602,6 +626,7 @@ class DomEntity2_5D extends AEntity2_5D
 				l_instance.onmouseup = _onMouseUp;
 				l_instance.onmouseenter = _onMouseEnter;
 				l_instance.onmouseleave = _onMouseLeave;
+				l_instance.onmousemove = _onMouseMove;
 				l_instance.onwheel = _onScroll;
 			}
 			else
@@ -669,7 +694,6 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		//Gt Mesh
 		var l_instance:Element = _instances[p_view2_5D];
-		l_instance.draggable = true;
 		
 		if (l_instance != null)
 		{
@@ -678,6 +702,7 @@ class DomEntity2_5D extends AEntity2_5D
 				l_instance.ondragstart = _onDragStart;
 				l_instance.ondrag = _onDrag;
 				l_instance.ondragend = _onDragEnd;
+				l_instance.draggable = true;
 			}
 			else
 			{
@@ -744,13 +769,18 @@ class DomEntity2_5D extends AEntity2_5D
 	
 	private function _onDragStart(p_event:Dynamic):Void
 	{
+		//quick hack that disabled ghost image (there's still a ghost image on library stuff, which is fine.. but why??)
+		var img:ImageElement = js.Browser.document.createImageElement();
+		p_event.dataTransfer.setDragImage(img, 0, 0);
+		//quick hack that disabled ghost image
+		
 		gameEntity.setState('eventObject', p_event);
 		Sliced.event.raiseEvent(ON_DRAG_START, gameEntity);
 	}
 	
 	private function _onDrag(p_event:Dynamic):Void
 	{
-		gameEntity.setState('eventObject', p_event);
+		gameEntity.setState('eventObjectOnDrag', p_event);
 		Sliced.event.raiseEvent(ON_DRAG, gameEntity);
 	}
 	
@@ -851,6 +881,10 @@ class DomEntity2_5D extends AEntity2_5D
 	
 	private function _onPointerClick(p_event:Dynamic):Void
 	{
+		//consider a gameState that turns bubbling on and off.. this sucks
+		p_event.cancelBubble = true;
+		if (p_event.stopPropagation) p_event.stopPropagation();
+		
 		gameEntity.setState('eventObject', p_event);
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
 	}
@@ -888,7 +922,13 @@ class DomEntity2_5D extends AEntity2_5D
 		Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT, gameEntity);
 	}
 	
-		private function _onScroll(p_event:Dynamic):Void
+	private function _onMouseMove(p_event:Dynamic):Void
+	{
+		gameEntity.setState('eventObjectMouseMove', p_event);
+		Sliced.input.pointer.submitPointerEvent(MOUSE_MOVED, gameEntity);
+	}
+	
+	private function _onScroll(p_event:Dynamic):Void
 	{
 		gameEntity.setState('eventObject', p_event);
 		Sliced.input.pointer.submitPointerEvent(MOUSE_SCROLL, gameEntity);

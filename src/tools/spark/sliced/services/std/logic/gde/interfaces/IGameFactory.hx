@@ -12,7 +12,7 @@ package tools.spark.sliced.services.std.logic.gde.interfaces;
  */
 interface IGameFactory
 {
-	function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml):IGameEntity;
+	function createGameEntity(?p_gameClassName:String, ?p_gameClassNode:Xml, p_dontCache:Bool=false):IGameEntity;
 	function createGameEntityExtended(p_gameClassName:String, p_extendGameClassName:String):IGameEntity;
 	function issueUID():Int;
 	/*
