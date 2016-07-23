@@ -11,6 +11,7 @@ import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.display.BlendMode;
 import flambe.Entity;
+import flambe.math.Rectangle;
 import tools.spark.framework.space2_5D.core.AScene2_5D;
 import tools.spark.framework.space2_5D.interfaces.ICamera2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
@@ -83,6 +84,7 @@ class FlambeScene2_5D extends AScene2_5D
 			
 			//The Sprite component is added, in case we want to move/scale the entire scene by doing camera transformations
 			var l_sceneSprite:Sprite = new Sprite();
+			//l_sceneSprite.scissor = new Rectangle(0, 0, 100, 100);
 			//l_sceneSprite.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 			l_sceneSprite.centerAnchor();//hmm
 			_instances[p_view2_5D].add(l_sceneSprite);
@@ -137,7 +139,8 @@ class FlambeScene2_5D extends AScene2_5D
 		if (l_bodyComponent!=null) l_flambeEntity.remove(l_bodyComponent);
 		
 		//Remove the child
-		_instances[p_view2_5D].removeChild(l_flambeEntity);
+		if (l_flambeEntity.parent!=null) //just a check to not let it crash on weird circumstances.. not too crazy about it..
+			_instances[p_view2_5D].removeChild(l_flambeEntity);
 		
 		super._removeChildOfInstance(p_childEntity, p_view2_5D);
 	}
@@ -212,13 +215,31 @@ class FlambeScene2_5D extends AScene2_5D
 		//Get Mesh
 		var l_instance:Entity = _instances[p_view2_5D];
 		
-		if (p_value!="Transparent")
+		if (gameEntity.getState('editorMode') == false)
 		{
-			Console.error("UPDATING Background Color of: " + gameEntity.getState('name'));
+			if (p_value!="Transparent")
+			{
+				Console.error("UPDATING Background Color of: " + gameEntity.getState('name'));
+				//var l_bgEntity = new Entity();
+				
+				var l_color:Int = Std.parseInt(p_value);
+				var l_backgroundSprite:FillSprite = new FillSprite(l_color, gameEntity.getState( 'boundsWidth' ), gameEntity.getState( 'boundsHeight' ));
+				//l_backgroundSprite.x._ = gameEntity.getState( 'boundsX' );
+				//l_backgroundSprite.y._ = gameEntity.getState( 'boundsY' );
+				
+				//l_mesh.blendMode = BlendMode.Copy;
+				//l_bgEntity.add(l_backgroundSprite);
+				l_instance.add(l_backgroundSprite);
+				//l_instance.addChild(l_bgEntity);
+			}
 			
-			var l_color:Int = Std.parseInt(p_value);
-			var l_backgroundSprite:FillSprite = new FillSprite(l_color,gameEntity.getState( 'boundsWidth' ), gameEntity.getState( 'boundsHeight' ));
-			//l_mesh.blendMode = BlendMode.Copy;
+			var l_sceneSprite:Sprite = l_instance.get(Sprite);
+			l_sceneSprite.scissor = new Rectangle(180, 80, 1920, 1280);
+		}
+		//if in editor mode, don't scissor, and always show white background (yes this is a hack)
+		else
+		{
+			var l_backgroundSprite:FillSprite = new FillSprite(0xFFFFFF, gameEntity.getState( 'boundsWidth' ), gameEntity.getState( 'boundsHeight' ));
 			l_instance.add(l_backgroundSprite);
 		}
 	}

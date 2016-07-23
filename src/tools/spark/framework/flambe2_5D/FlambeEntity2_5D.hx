@@ -114,6 +114,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		_queryFunctions['realWidth'] = _queryRealWidth;
 		_queryFunctions['realHeight'] = _queryRealHeight;
+		_queryFunctions['boundsWidth'] = _queryBoundsWidth;
+		_queryFunctions['boundsHeight'] = _queryBoundsHeight;
 		_queryFunctions['x'] = _queryRealX;
 		_queryFunctions['y'] = _queryRealY;
 		_queryFunctions['angle'] = _queryRealRotation;
@@ -166,7 +168,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_bodyComponent!=null) l_flambeEntity.remove(l_bodyComponent);
 		
 		//Remove the child
-		_instances[p_view2_5D].removeChild(l_flambeEntity);
+		if (l_flambeEntity.parent!=null) //just a check to not let it crash on weird circumstances.. not too crazy about it..
+			_instances[p_view2_5D].removeChild(l_flambeEntity);
 		
 		super._removeChildOfInstance(p_childEntity, p_view2_5D);
 	}
@@ -310,6 +313,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		else
 		{
 			l_mesh.texture = Assets.getTexture(l_imageUrl);	
+			l_mesh.centerAnchor(); //recenter anchor
 		}
 	}
 	
@@ -476,7 +480,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 				l_SpritesheetFormName = p_2DMeshSpritesheetForm;
 			
 			
-			var l_spritesheetPlayer:SpriteSheetPlayer = new SpriteSheetPlayer(Assets.getAssetPackOf(l_SpritesheetFormName), l_SpritesheetFormName);
+			var l_spritesheetPlayer:SpriteSheetPlayer = new SpriteSheetPlayer(Assets.getAssetPackOf(l_SpritesheetFormName), l_SpritesheetFormName, gameEntity.getState('Atlas File'));
 			
 			//Store
 			gameEntity.setState('obj_player', l_spritesheetPlayer);
@@ -529,9 +533,15 @@ class FlambeEntity2_5D extends AEntity2_5D
 			else
 				l_AdobeAnimationFormName = p_2DMeshAdobeAnimationForm;
 			
-			var l_library = new Library(Assets.getAssetPackOf(l_AdobeAnimationFormName), gameEntity.getState('Library Name'));
+			var l_library = new Library(Assets.getAssetPackOf(l_AdobeAnimationFormName), l_AdobeAnimationFormName, gameEntity.getState('Atlas Folder'));
 			var l_moviePlayer:MoviePlayer = new MoviePlayer(l_library);
-			l_moviePlayer.loop(gameEntity.getState('Init Animation'));
+			
+			if (gameEntity.getState('Init Animation Loop')==true)
+				l_moviePlayer.loop(gameEntity.getState('Init Animation'));
+			else
+				l_moviePlayer.play(gameEntity.getState('Init Animation')); //Actually this will result in an error, cause apparently you can't play an anim without a looping anim first. But dont remove me to prevent DCE from killing .play()
+			
+			
 			
 			
 			var l_movieEntity:Entity = new Entity().add(l_moviePlayer);
@@ -1156,6 +1166,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 									l_shape = new Circle(l_radious, l_material);
 								case "Polygon":
 									l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
+								case "Triangle":
+									var l_verts : Array<Vec2> = Polygon.regular( l_meshWidth * .5, l_meshHeight, 4, -Math.PI * .5 );
+									l_verts.splice( 2, 1 );
+									for (f_vert in l_verts)
+										f_vert.y += l_meshHeight/2;
+									l_shape = new Polygon( l_verts );
 								default:
 									l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
 							}
@@ -1216,8 +1232,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 
 						l_instance.add(new BodyComponent(body));
 						
-						if (gameEntity.getState('physicsPlanet') == true)
-							l_instance.add(new PlanetComponent(body));
+						//if (gameEntity.getState('physicsPlanet') == true)
+						//	l_instance.add(new PlanetComponent(body));
 							
 						//var childEntity:Entity = new Entity().add(new BodyComponent(body));
 						//childEntity.add(new FillSprite(0x00ff00, 64, 64).centerAnchor());
@@ -1232,6 +1248,16 @@ class FlambeEntity2_5D extends AEntity2_5D
 				{
 					gameEntity.setState('physicsEntity', false);
 					Console.warn("Entity " + gameEntity.getState('name') + " failed to become a physics object. ParentScene null");
+				}
+			}
+			else //physics flag is false
+			{
+				if (gameEntity.getState('physicsBody') != null)
+				{
+					Console.de('Removing physics body thing');
+					gameEntity.setState('physicsBody', null);
+					
+					l_instance.remove(l_instance.get(BodyComponent));
 				}
 			}
 		}
@@ -1536,6 +1562,22 @@ class FlambeEntity2_5D extends AEntity2_5D
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
 		return l_mesh.getNaturalHeight();
+	}
+	
+	inline private function _queryBoundsWidth(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Entity
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		return Sprite.getBounds(l_instance).width;
+	}
+	
+	inline private function _queryBoundsHeight(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Entity
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		return Sprite.getBounds(l_instance).height;
 	}
 	
 	inline private function _queryRealX(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic

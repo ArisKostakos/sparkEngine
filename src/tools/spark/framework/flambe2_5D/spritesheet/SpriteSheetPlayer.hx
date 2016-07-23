@@ -31,7 +31,7 @@ class SpriteSheetPlayer extends Component
 	var curTime : Float;
 	var speed : Float;
 	
-	public function new(pack : AssetPack, plistName : String) 
+	public function new(pack : AssetPack, plistName : String, textureName:String) //Aris
 	{
 		var xmlDoc : Xml = Xml.parse(pack.getFile(plistName).toString());
 		
@@ -40,7 +40,7 @@ class SpriteSheetPlayer extends Component
 		sprites = new Array<SpriteSheet>();
 		
 		if (texture == null) {
-			var name:String = plistName + "_sheet";
+			var name:String = textureName; //aris
 			texture = pack.getTexture(name);
 		}
 		

@@ -93,6 +93,7 @@ class Display extends AService implements IDisplay
 		_renderStateNames['border'] = true;
 		_renderStateNames['borderColor'] = true;
 		_renderStateNames['command_zOrder'] = true;
+		_renderStateNames['physicsEntity'] = true;
 		
 		_renderStateNames['transform'] = true;
 		_renderStateNames['transformScale'] = true;

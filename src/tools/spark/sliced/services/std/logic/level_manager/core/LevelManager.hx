@@ -92,8 +92,24 @@ import flambe.util.Signal0;
 		_levelParentStage = p_parentStage;
 		_loadLevel(p_levelEntity);
 	}
-	
-	
+	/*
+	public function restartCurrentLevel(p_runSlot:String="Main", p_parentStage:String="Implicit"):Void
+	{
+		_levelRunSlot = p_runSlot;
+		_levelParentStage = p_parentStage;
+		
+		if (currentLevel[p_runSlot] != null)
+		{
+			//Just remove from stage, or completely unload? for now, just remove from stage..
+			_removeLevel(currentLevel[p_runSlot]);
+			
+			//clear the runSlot flag
+			currentLevel.remove(p_runSlot);
+			
+			
+		}
+	}
+	*/
 	private function _loadLevel(p_levelEntity:Dynamic):Void
 	{
 		var l_level:IGameEntity;

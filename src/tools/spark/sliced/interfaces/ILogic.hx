@@ -35,6 +35,7 @@ interface ILogic extends IService
 	function getEntityByName(p_stateName:String):IGameEntity;
 	function getAllEntitiesByName(p_stateName:String):Array<IGameEntity>;
 	function registerEntityByName(p_entity:IGameEntity):Void;
+	function queryGameEntity(p_gameEntity:IGameEntity, p_query:String, ?queryArgument:Dynamic, p_bAllRenderers:Bool = false, p_bAllInstances:Bool = false):Dynamic;
 	
 	//Helper Functions
 	function replace(p_source:String, p_regex:String, p_regexParameters:String, p_replaceWith:String):String;

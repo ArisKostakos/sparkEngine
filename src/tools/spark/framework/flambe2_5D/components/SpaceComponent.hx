@@ -27,6 +27,6 @@ class SpaceComponent extends Component
 
     override public function onUpdate (dt :Float)
     {
-        space.step(dt);
+        space.step(Math.min(dt, 0.06));
     }
 }

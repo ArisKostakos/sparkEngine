@@ -86,6 +86,7 @@ class DomEntity2_5D extends AEntity2_5D
 			{
 				case "Div":
 					_instances[p_view2_5D] = Browser.document.createDivElement();
+					_instances[p_view2_5D].style.outline = "0"; //remove blue border when selected.. it's a hack, fix me
 				case "Input":
 					_instances[p_view2_5D] = Browser.document.createInputElement();
 					_instances[p_view2_5D].onchange = _onChange;
@@ -102,6 +103,8 @@ class DomEntity2_5D extends AEntity2_5D
 					_instances[p_view2_5D] = Browser.document.createDivElement();
 				case "Scroller":
 					_instances[p_view2_5D] = Browser.document.createDivElement();
+				case "Video":
+					_instances[p_view2_5D] = Browser.document.createVideoElement();
 				default:
 					//@fixme: If this element was not meant to be rendered at all, don't let it create a DomEntity at all!!!
 					Console.error("Unrecognised NCMeshType input. Creating a Div By Default.");
@@ -489,6 +492,8 @@ class DomEntity2_5D extends AEntity2_5D
 				_updateTreeProperties(p_view2_5D);
 			case 'Scroller':
 				_updateScrollerProperties(p_view2_5D);
+			case 'Video':
+				_updateVideoProperties(p_view2_5D);
 			case 'Undefined':
 				Console.warn('Undefined NCmeshType value');
 			default:
@@ -512,8 +517,14 @@ class DomEntity2_5D extends AEntity2_5D
 			l_instance.type = gameEntity.getState('type');
 			
 		if (gameEntity.getState('type') == "file")
+		{
+			//Accept
 			if (gameEntity.getState('accept') != null && gameEntity.getState('accept')!="Undefined")
 				l_instance.accept = gameEntity.getState('accept');
+				
+			//Multiple Files
+			l_instance.multiple = gameEntity.getState('multiple');
+		}
 	}
 	
 	
@@ -598,6 +609,17 @@ class DomEntity2_5D extends AEntity2_5D
 		gameEntity.setState('scrollerObject', l_element);
 		gameEntity.setState('scrollerContainerObject', l_containerElement);
 	}
+	
+	private function _updateVideoProperties( p_view2_5D:IView2_5D):Void
+	{
+		//Get the instance we're updating
+		var l_instance:Dynamic = _instances[p_view2_5D]; //Video Element
+		
+		//STORE OBJECTS
+		gameEntity.setState('videoObject', l_instance);
+		Console.error("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+	}
+	
 	
 	private function _updateTouchable(p_touchableFlag:Bool, p_view2_5D:IView2_5D):Void
 	{
@@ -940,7 +962,7 @@ class DomEntity2_5D extends AEntity2_5D
 		if (gameEntity.getState('type') == "file")
 		{
 			gameEntity.setState('files', p_changeEvent.target.files);
-			Sliced.input.pointer.submitPointerEvent(MOUSE_LEFT_CLICK, gameEntity);
+			Sliced.event.raiseEvent(CHANGED, gameEntity);
 		}
 		else
 		{
