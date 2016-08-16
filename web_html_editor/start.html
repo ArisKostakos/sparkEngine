@@ -57,10 +57,18 @@ location.search.substr(1).split("&").forEach(function(item) {queryDict[item.spli
 return queryDict;} </script>
 
 <!-- remove Loading Image -->
-<script>function hidePreloader(){
-var element = document.getElementById("loadingImg");
-element.parentNode.removeChild(element);
-} </script>
+<script>
+function hidePreloader(){
+var element = document.getElementById("loadingDiv");
+if (element!=null)
+	element.parentNode.removeChild(element);
+}
+function setPreloaderText(message){
+var element = document.getElementById("loadingText");
+if (element!=null)
+	element.innerHTML = message;
+}
+</script>
 
 <!-- Flambe -->
 <script src="flambe.js"></script>

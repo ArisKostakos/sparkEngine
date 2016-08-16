@@ -97,10 +97,14 @@
 </div>
 
 <!-- remote skc url -->
-<script>function getMainSparkClientUrl(){
-var queryDict = {};
-location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
-return queryDict.skc;} </script>
+<script>
+function getMainSparkClientUrl(){
+	var queryDict = {};
+	location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
+	console.log('getMainSparkClientUrl',queryDict);
+	return queryDict;
+} 
+</script>
 
 <!-- remove Loading Image -->
 <script>

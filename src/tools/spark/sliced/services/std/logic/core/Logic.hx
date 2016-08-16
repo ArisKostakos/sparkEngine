@@ -236,7 +236,7 @@ class Logic extends AService implements ILogic
 		return System.storage;
 	}
 	
-	public function getExternal():ExternalSystem
+	@:keep public function getExternal():ExternalSystem
 	{
 		return System.external;
 	}

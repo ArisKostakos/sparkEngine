@@ -73,6 +73,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['animate_scaleX'] = _updateAnimateScaleX;
 		_updateStateFunctions['animate_scaleY'] = _updateAnimateScaleY;
 		_updateStateFunctions['animate_rotation'] = _updateAnimateRotation;
+		_updateStateFunctions['blendMode'] = _updateBlendMode;
 		
 		_updateStateFunctions['touchable'] = _updateTouchable;
 		_updateStateFunctions['visible'] = _updateVisible;
@@ -196,6 +197,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//_updateState('scaleZ', p_view2_5D);
 		
 		_updateState('rotation', p_view2_5D);
+		_updateState('blendMode', p_view2_5D);
 		
 		_updateState('animate_scaleX', p_view2_5D);
 		_updateState('animate_scaleY', p_view2_5D);
@@ -435,12 +437,26 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_mesh == null)
 		{
 			l_mesh = new Sprite();
-			var l_SpriterFormName:String = gameEntity.gameForm.getState( p_2DMeshSpriterForm );
-			var l_spriterMovie:SpriterMovie = new SpriterMovie(Assets.getAssetPackOf(l_SpriterFormName), l_SpriterFormName, null); //this null thing is supposed to be character name (string).. doesn't work though... always plays first character found
+			var l_SpriterFormName:String;
+			
+			if (p_2DMeshSpriterForm.charAt(0) == '[')
+				l_SpriterFormName = gameEntity.gameForm.getState( p_2DMeshSpriterForm.substring(1, p_2DMeshSpriterForm.length-1) );
+			else
+				l_SpriterFormName = p_2DMeshSpriterForm;
+				
+			//gameEntity.getState('Atlas Folder')
+			var l_spriterMovie:SpriterMovie = new SpriterMovie(Assets.getAssetPackOf(l_SpriterFormName), l_SpriterFormName, gameEntity.getState('Atlas Folder'), null, gameEntity.getState('Animation Speed')); //this null thing is supposed to be character name (string).. doesn't work though... always plays first character found
 			//l_mesh.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
 			l_instance.add(l_mesh);
 			l_instance.add( l_spriterMovie);
 			_instancesMesh[p_view2_5D] = l_mesh;
+			
+			//Store
+			gameEntity.setState('obj_player', l_spriterMovie);
+			
+			//Play Animation
+			if (gameEntity.getState('Init Animation') != "Undefined")
+				l_spriterMovie.playAnim(gameEntity.getState('Init Animation'));
 		}
 		else
 		{
@@ -448,7 +464,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		}
 		
 		//Play Animation (nesting)
-		_updateStateOfInstance('2DMeshSpriterAnimForm', p_view2_5D);
+		//_updateStateOfInstance('2DMeshSpriterAnimForm', p_view2_5D);
 	}
 	
 	private function _update2DMeshSpritesheetForm(p_2DMeshSpritesheetForm:String, p_view2_5D:IView2_5D):Void
@@ -917,6 +933,31 @@ class FlambeEntity2_5D extends AEntity2_5D
 		}
 	}
 	
+	private function _updateBlendMode(p_blendMode:String, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
+		
+		if (l_mesh != null)
+		{
+			if (p_blendMode != "Undefined")
+			{
+				if (p_blendMode == "Mask")
+					l_mesh.blendMode = BlendMode.Mask;
+				else if (p_blendMode == "Normal")
+					l_mesh.blendMode = BlendMode.Normal;
+				else if (p_blendMode == "Add")
+					l_mesh.blendMode = BlendMode.Add;
+				else if (p_blendMode == "Copy")
+					l_mesh.blendMode = BlendMode.Copy;
+				else if (p_blendMode == "Multiply")
+					l_mesh.blendMode = BlendMode.Multiply;
+				else if (p_blendMode == "Screen")
+					l_mesh.blendMode = BlendMode.Screen;
+			}
+		}
+	}
+	
 	private function _updateAnimateOpacity(p_animate:Dynamic, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
@@ -1087,6 +1128,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 		if (l_mesh != null)
 		{
 			l_mesh.centerAnchor();
+			
+			if (gameEntity.getState('anchorX') != null && gameEntity.getState('anchorX') != "Undefined")
+				l_mesh.anchorX._ = gameEntity.getState('anchorX');
+				
+			if (gameEntity.getState('anchorY') != null && gameEntity.getState('anchorY') != "Undefined")
+				l_mesh.anchorY._ = gameEntity.getState('anchorY');
 		}
 	}
 	
@@ -1429,6 +1476,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		//if (Sliced.input.mouse.isDown(flambe.input.MouseButton.Right))
 		//	Sliced.input.pointer.submitPointerEvent(MOUSE_RIGHT_CLICK, gameEntity);
+		
+		gameEntity.setState('feedback_touchEvent', p_pointerEvent.clone());
 		
 		if (p_pointerEvent.source.getName() == "Mouse")
 		{

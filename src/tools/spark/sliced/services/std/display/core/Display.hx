@@ -104,6 +104,7 @@ class Display extends AService implements IDisplay
 		_renderStateNames['letterSpacing'] = true;
 		_renderStateNames['lineSpacing'] = true;
 		_renderStateNames['scissorRect'] = true;
+		_renderStateNames['pointerEvents'] = true;
 		
 		_renderStateNames['spaceX'] = true;
 		_renderStateNames['spaceY'] = true;
@@ -114,6 +115,7 @@ class Display extends AService implements IDisplay
 		_renderStateNames['scaleZ'] = true;
 		
 		_renderStateNames['rotation'] = true;
+		_renderStateNames['blendMode'] = true;
 		
 		//animate actions
 		_renderStateNames['animate_x'] = true;
