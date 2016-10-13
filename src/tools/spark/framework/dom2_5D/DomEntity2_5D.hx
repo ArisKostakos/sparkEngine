@@ -417,13 +417,15 @@ class DomEntity2_5D extends AEntity2_5D
 	//much better way.. should be done for everything (also visibility should be for all dom elements not just ncStylables
 	inline private function _updateVisibility(p_visibility:String, p_view2_5D:IView2_5D):Void
 	{
-		_instances[p_view2_5D].style.visibility = p_visibility;
+		if (p_visibility!="Undefined")
+			_instances[p_view2_5D].style.visibility = p_visibility;
 	}
 	
 	//much better way.. should be done for everything
 	inline private function _updateOpacity(p_opacity:String, p_view2_5D:IView2_5D):Void
 	{
-		_instances[p_view2_5D].style.opacity= p_opacity;
+		if (p_opacity!="Undefined")
+			_instances[p_view2_5D].style.opacity= p_opacity;
 	}
 	
 	//much better way.. should be done for everything
@@ -606,6 +608,7 @@ class DomEntity2_5D extends AEntity2_5D
 		  l_containerElement.style.marginRight = "0";
 		
 		//STORE OBJECTS
+		gameEntity.setState('scrollerId', l_randomId);
 		gameEntity.setState('scrollerObject', l_element);
 		gameEntity.setState('scrollerContainerObject', l_containerElement);
 	}

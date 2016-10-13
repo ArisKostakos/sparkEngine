@@ -263,6 +263,7 @@ import flambe.util.Signal0;
 				l_views.push(f_view);
 				
 				var f_scene:IGameEntity = Sliced.logic.create(f_view.getState('initSceneUrl'), true); //noCache==true
+				f_scene.setState('parentLevel', p_level);
 				//Console.warn("Scene Created: " + f_scene.getState('name'));
 				
 				var f_camera:IGameEntity = null;

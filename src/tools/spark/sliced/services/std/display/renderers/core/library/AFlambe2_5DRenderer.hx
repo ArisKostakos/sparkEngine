@@ -213,10 +213,15 @@ class AFlambe2_5DRenderer extends A2_5DRenderer implements ILibrarySpecificRende
 		{
 			_viewManager.updateState(_views[p_objectEntity], p_objectEntity, p_state);
 		}
-		//else if it's view, do this:
+		//else if it's camera, do this:
 		else if (_cameras[p_objectEntity] != null)
 		{
 			_cameraManager.updateState(_cameras[p_objectEntity], p_objectEntity, p_state);
+		}
+		//else if it's scene, do this:
+		else if (_scenes[p_objectEntity] != null)
+		{
+			_sceneManager.updateState(_scenes[p_objectEntity], p_objectEntity, p_state);
 		}
 	}
 	

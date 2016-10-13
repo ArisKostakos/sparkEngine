@@ -370,6 +370,9 @@ class GameEntity extends AGameBase implements IGameEntity
 		//Remove from children
 		children.remove(p_gameEntity);
 		
+		//Set child's parent to null
+		p_gameEntity.parentEntity = null;
+		
 		//Following line is the weak connection between Logic and Display
 		Sliced.display.removeDisplayObjectChild(this,p_gameEntity);
 	}

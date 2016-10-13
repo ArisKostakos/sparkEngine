@@ -90,10 +90,15 @@ class Display extends AService implements IDisplay
 		_renderStateNames['overflow'] = true;
 		_renderStateNames['whiteSpace'] = true;
 		_renderStateNames['backgroundColor'] = true;
+		_renderStateNames['boundsWidth'] = true;
+		_renderStateNames['boundsHeight'] = true;
 		_renderStateNames['border'] = true;
 		_renderStateNames['borderColor'] = true;
 		_renderStateNames['command_zOrder'] = true;
 		_renderStateNames['physicsEntity'] = true;
+		
+		_renderStateNames['Animation'] = true;
+		_renderStateNames['Animation Speed'] = true;
 		
 		_renderStateNames['transform'] = true;
 		_renderStateNames['transformScale'] = true;

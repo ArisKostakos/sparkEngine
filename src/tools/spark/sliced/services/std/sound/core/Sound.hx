@@ -90,10 +90,20 @@ class Sound extends AService implements ISound
 				else
 				{
 					l_playback.volume.animateTo(0, p_fadeOut);
+					_playBacks[p_soundName] = null;
 					//Warning.. this will never actually dispose the playback!!!!
 				}
 			}
 		}
+	}
+	
+	public function setVolume(p_soundName:String, p_soundVolume:Float):Void
+	{
+		//Get playback
+		var l_playback:Playback = _playBacks[p_soundName];
+		
+		if (l_playback != null)
+			l_playback.volume._ = p_soundVolume;
 	}
 	
 	public function isPlaying(p_soundName:String):Bool

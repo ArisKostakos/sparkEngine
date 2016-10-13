@@ -63,8 +63,10 @@ class Flambe2_5DSceneManager implements IDisplayObjectManager
 	
 	public function updateState(p_object:Dynamic, p_gameEntity:IGameEntity, p_state:String):Void 
 	{
-		//typecast?
+		//typecast
+		var l_scene2_5D:FlambeScene2_5D = cast(p_object, FlambeScene2_5D);
 		
+		l_scene2_5D.updateState(p_state);
 	}
 	
 	public function updateFormState(p_object:Dynamic, p_gameForm:IGameForm, p_state:String):Void 

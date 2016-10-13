@@ -21,7 +21,7 @@ import flambe.math.FMath;
 import flambe.swf.Library;
 import flambe.swf.MoviePlayer;
 import nape.shape.Shape;
-import tools.spark.framework.flambe2_5D.components.PlanetComponent;
+import tools.spark.framework.flambe2_5D.components.PreBodyComponent;
 import tools.spark.framework.flambe2_5D.spritesheet.SpriteSheetPlayer;
 import tools.spark.framework.space2_5D.core.AEntity2_5D;
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
@@ -99,6 +99,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['2DMeshFillRectForm'] = _update2DMeshFillRectForm;
 		_updateStateFunctions['2DMeshSpriteForm'] = _update2DMeshSpriteForm;
 		_updateStateFunctions['2DMeshSpriterAnimForm'] = _update2DMeshSpriterAnimForm;
+		_updateStateFunctions['Animation'] = _updateAnimation;
+		_updateStateFunctions['Animation Speed'] = _updateAnimationSpeed;
 		_updateStateFunctions['action_fire'] = _updateFireParticle;
 		_updateStateFunctions['emitX'] = _updateEmitX;
 		_updateStateFunctions['emitY'] = _updateEmitY;
@@ -115,6 +117,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		_queryFunctions['realWidth'] = _queryRealWidth;
 		_queryFunctions['realHeight'] = _queryRealHeight;
+		_queryFunctions['boundsX'] = _queryBoundsX;
+		_queryFunctions['boundsY'] = _queryBoundsY;
 		_queryFunctions['boundsWidth'] = _queryBoundsWidth;
 		_queryFunctions['boundsHeight'] = _queryBoundsHeight;
 		_queryFunctions['x'] = _queryRealX;
@@ -128,7 +132,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//If this works, do it for EEEEVERYTHING ELSE
 		//The idea here is, we don't destroy instances on remove, so re-add them here if available
 		Console.error("Creating: " + gameEntity.getState('name'));
-		flambe.System.external.call("console.log", [_instances[p_view2_5D]]);
+		//flambe.System.external.call("console.log", [_instances[p_view2_5D]]);
 		
 		
 		//instances (and group instances I guess) will only be deleted when explicitly requested to be deleted.. not by a removeChild
@@ -455,8 +459,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 			gameEntity.setState('obj_player', l_spriterMovie);
 			
 			//Play Animation
-			if (gameEntity.getState('Init Animation') != "Undefined")
-				l_spriterMovie.playAnim(gameEntity.getState('Init Animation'));
+			if (gameEntity.getState('Animation') != "Undefined")
+				l_spriterMovie.playAnim(gameEntity.getState('Animation'));
+				
+			//figure out size
+			//flambe.System.external.call("console.log", [ 'lookatMeeeeeeeee', Sprite.getBounds(l_instance.get(SpriterMovie).container) ]);
 		}
 		else
 		{
@@ -466,6 +473,37 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//Play Animation (nesting)
 		//_updateStateOfInstance('2DMeshSpriterAnimForm', p_view2_5D);
 	}
+	
+	private function _updateAnimation(p_animation:String, p_view2_5D:IView2_5D):Void
+	{
+		//If it's a Spriter entity
+		if (gameEntity.getState('2DmeshType') == 'Spriter')
+		{
+			//Get the instance we're updating
+			var l_instance:Entity = _instances[p_view2_5D];
+				
+			if (l_instance.has(SpriterMovie))
+				l_instance.get(SpriterMovie).playAnim(gameEntity.getState('Animation'));
+		}
+		//implement for adobeAnimation and other types here
+		//..
+	}
+	
+	private function _updateAnimationSpeed(p_animationSpeed:Float, p_view2_5D:IView2_5D):Void
+	{
+		//If it's a Spriter entity
+		if (gameEntity.getState('2DmeshType') == 'Spriter')
+		{
+			//Get the instance we're updating
+			var l_instance:Entity = _instances[p_view2_5D];
+				
+			if (l_instance.has(SpriterMovie))
+				l_instance.get(SpriterMovie).spriter.playbackSpeed = p_animationSpeed;
+		}
+		//implement for adobeAnimation and other types here
+		//..
+	}
+	
 	
 	private function _update2DMeshSpritesheetForm(p_2DMeshSpritesheetForm:String, p_view2_5D:IView2_5D):Void
 	{
@@ -552,10 +590,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 			var l_library = new Library(Assets.getAssetPackOf(l_AdobeAnimationFormName), l_AdobeAnimationFormName, gameEntity.getState('Atlas Folder'));
 			var l_moviePlayer:MoviePlayer = new MoviePlayer(l_library);
 			
-			if (gameEntity.getState('Init Animation Loop')==true)
-				l_moviePlayer.loop(gameEntity.getState('Init Animation'));
+			if (gameEntity.getState('Animation Loop')==true)
+				l_moviePlayer.loop(gameEntity.getState('Animation'));
 			else
-				l_moviePlayer.play(gameEntity.getState('Init Animation')); //Actually this will result in an error, cause apparently you can't play an anim without a looping anim first. But dont remove me to prevent DCE from killing .play()
+				l_moviePlayer.play(gameEntity.getState('Animation')); //Actually this will result in an error, cause apparently you can't play an anim without a looping anim first. But dont remove me to prevent DCE from killing .play()
 			
 			
 			
@@ -834,11 +872,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 	inline private function _updatePositionX(p_newPos:Int, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
 		//if (l_mesh != null) //this really nesseccery?
 		//{
-			if (gameEntity.getState('physicsEntity'))
+			if (l_instance.has(BodyComponent)) //not sure if this is faster of if gameEntity.getState('physicsBody')!=null is faster
 			{
 				if (gameEntity.getState('physicsType')!="Static")
 					cast(gameEntity.getState('physicsBody'), Body).position.x = p_newPos; //should also check if NOT Static
@@ -852,11 +891,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 	inline private function _updatePositionY(p_newPos:Int, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 	
 		//if (l_mesh != null) //this really nesseccery?
 		//{
-			if (gameEntity.getState('physicsEntity'))
+			if (l_instance.has(BodyComponent)) //not sure if this is faster of if gameEntity.getState('physicsBody')!=null is faster
 			{
 				if (gameEntity.getState('physicsType')!="Static")
 					cast(gameEntity.getState('physicsBody'), Body).position.y = p_newPos; //should also check if NOT Static
@@ -896,11 +936,12 @@ class FlambeEntity2_5D extends AEntity2_5D
 	inline private function _updateRotation(p_newRotation:Float, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
 		var l_mesh:Sprite = _instancesMesh[p_view2_5D];
 		
 		//if (l_mesh != null) //this really nesseccery?
 		//{
-			if (gameEntity.getState('physicsEntity'))
+			if (l_instance.has(BodyComponent)) //not sure if this is faster of if gameEntity.getState('physicsBody')!=null is faster
 			{
 				if (gameEntity.getState('physicsType')!="Static")
 					cast(gameEntity.getState('physicsBody'), Body).rotation = FMath.toRadians(p_newRotation); //should also check if NOT Static
@@ -1154,136 +1195,166 @@ class FlambeEntity2_5D extends AEntity2_5D
 					//Console.error("update2");
 					if (parentScene.gameEntity.getState('physicsScene'))
 					{
-						//Console.error("update3");
-						var l_sceneInstance:Entity = parentScene.getInstance(p_view2_5D);
-						
-						//Center Anchor (Only for physics objects)
-						//l_mesh.centerAnchor();
-						
-						//Add a child
-						var bodyType:BodyType;
-						if (gameEntity.getState('physicsType') == "Static")
-							bodyType = BodyType.STATIC;
-						else if (gameEntity.getState('physicsType') == "Kinematic")
-							bodyType = BodyType.KINEMATIC;
-						else if (gameEntity.getState('physicsType') == "Dynamic")
-							bodyType = BodyType.DYNAMIC;
-						else
-							bodyType = BodyType.STATIC;
-							
-						var body:Body = new Body(bodyType);
-						
-						var l_material:Material;
-						
-						switch (gameEntity.getState('physicsMaterial'))
+						if (_queryBoundsWidth('boundsWidth',p_view2_5D)>0)
 						{
-							case "Glass":
-								l_material = Material.glass();
-							case "Ice":
-								l_material = Material.ice();
-							case "Rubber":
-								l_material = Material.rubber();
-							case "Sand":
-								l_material = Material.sand();
-							case "Steel":
-								l_material = Material.steel();
-							case "Wood":
-								l_material = Material.wood();
-							case "Ellastic":
-								l_material = new Material(1, 0, 0, 1, 0);
-							case "Biped":
-								l_material = new Material(0, 1, 2, 10, 0.001);
-							default:
-								l_material = Material.wood();
-						}
-						//(elasticity:Float=0.0,dynamicFriction:Float=1.0,staticFriction:Float=2.0,density:Float=1,rollingFriction:Float=0.001)
-						
-						var l_meshWidth:Float = Sprite.getBounds(l_instance).width*gameEntity.getState('scaleX');	// l_mesh.getNaturalWidth();
-						var l_meshHeight:Float = Sprite.getBounds(l_instance).height*gameEntity.getState('scaleY');	// l_mesh.getNaturalHeight();
-						//get bounds gets scaled mesh, so no need to multiply scale below
-						
-						if (gameEntity.getState('2DmeshType') != 'Spriter')
-						{
-							var l_shape:Shape;
-							switch (gameEntity.getState('physicsShape'))
-							{
-								case "Circle":
-									//I take the medium between width and hight (w+h)/2 and then divide by 2 cause we need radius which is half
-									var l_radious = (l_meshWidth + l_meshHeight ) / 4;
-									l_shape = new Circle(l_radious, l_material);
-								case "Polygon":
-									l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
-								case "Triangle":
-									var l_verts : Array<Vec2> = Polygon.regular( l_meshWidth * .5, l_meshHeight, 4, -Math.PI * .5 );
-									l_verts.splice( 2, 1 );
-									for (f_vert in l_verts)
-										f_vert.y += l_meshHeight/2;
-									l_shape = new Polygon( l_verts );
-								default:
-									l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
-							}
+							//Console.error("update3");
+							var l_sceneInstance:Entity = parentScene.getInstance(p_view2_5D);
 							
-							//IsSensor
-							l_shape.sensorEnabled = gameEntity.getState('physicsSensorFlag');
-						
-							body.shapes.add(l_shape);
+							//Center Anchor (Only for physics objects)
+							//l_mesh.centerAnchor();
 							
-							body.allowRotation = gameEntity.getState('allowRotation');
-						}
-						else
-						{
-							if (gameEntity.getState('physicsShape') == "Biped")
-							{	
-								Console.error("LOOOK AT l_mesh.scaleX._: " + l_mesh.scaleX._);
-								body.shapes.add(new Polygon(Polygon.rect(0,0,203, 573), l_material));
-								//we multiply with scale here, since we don't use the getBounds method
-								//_appendPhysicsBipedShapes(body, 263, 573, l_mesh.scaleX._, 0, -0.49, l_material);
+							//Add a child
+							var bodyType:BodyType;
+							if (gameEntity.getState('physicsType') == "Static")
+								bodyType = BodyType.STATIC;
+							else if (gameEntity.getState('physicsType') == "Kinematic")
+								bodyType = BodyType.KINEMATIC;
+							else if (gameEntity.getState('physicsType') == "Dynamic")
+								bodyType = BodyType.DYNAMIC;
+							else
+								bodyType = BodyType.STATIC;
 								
-								body.allowRotation = false;
+							var body:Body = new Body(bodyType);
+							
+							var l_material:Material;
+							
+							switch (gameEntity.getState('physicsMaterial'))
+							{
+								case "Glass":
+									l_material = Material.glass();
+								case "Ice":
+									l_material = Material.ice();
+								case "Rubber":
+									l_material = Material.rubber();
+								case "Sand":
+									l_material = Material.sand();
+								case "Steel":
+									l_material = Material.steel();
+								case "Wood":
+									l_material = Material.wood();
+								case "Ellastic":
+									l_material = new Material(1, 0, 0, 1, 0);
+								case "Biped":
+									l_material = new Material(0, 1, 2, 10, 0.001);
+								default:
+									l_material = Material.wood();
 							}
+							//(elasticity:Float=0.0,dynamicFriction:Float=1.0,staticFriction:Float=2.0,density:Float=1,rollingFriction:Float=0.001)
+							
+							var l_meshWidth:Float = _queryBoundsWidth('boundsWidth',p_view2_5D)*gameEntity.getState('scaleX');	// l_mesh.getNaturalWidth();
+							var l_meshHeight:Float = _queryBoundsHeight('boundsHeight',p_view2_5D)*gameEntity.getState('scaleY');	// l_mesh.getNaturalHeight();
+							//get bounds gets scaled mesh, so no need to multiply scale below
+							
+							//if (gameEntity.getState('2DmeshType') != 'Spriter')
+							//{
+								var l_shape:Shape=null;
+								switch (gameEntity.getState('physicsShape'))
+								{
+									case "Circle":
+										//I take the medium between width and hight (w+h)/2 and then divide by 2 cause we need radius which is half
+										var l_radious = (l_meshWidth + l_meshHeight ) / 4;
+										l_shape = new Circle(l_radious, l_material);
+									case "Polygon":
+										Console.warn("("+gameEntity.getState('name')+") l_meshWidth: " + l_meshWidth);
+										Console.warn("(" + gameEntity.getState('name') + ") l_meshHeight: " + l_meshHeight);
+										
+										if (gameEntity.getState('2DmeshType') == 'Spriter')
+										{
+											Console.warn("("+gameEntity.getState('name')+") boundsX: " +  _queryBoundsX('boundsX',p_view2_5D));
+											Console.warn("(" + gameEntity.getState('name') + ") boundsY: " +  _queryBoundsY('boundsY', p_view2_5D));
+											l_shape = new Polygon(Polygon.rect( _queryBoundsX('boundsX',p_view2_5D),  _queryBoundsY('boundsY', p_view2_5D), l_meshWidth, l_meshHeight), l_material);
+										}
+										else
+										{
+											l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
+										}
+									case "Triangle":
+										var l_verts : Array<Vec2> = Polygon.regular( l_meshWidth * .5, l_meshHeight, 4, -Math.PI * .5 );
+										l_verts.splice( 2, 1 );
+										for (f_vert in l_verts)
+											f_vert.y += l_meshHeight/2;
+										l_shape = new Polygon( l_verts );
+									case "Biped":
+										//body.shapes.add(new Polygon(Polygon.rect(0,0,203, 573), l_material)); //something like that?
+										Console.warn("NOT YET IMPLEMENTED. Look below");
+									default:
+										l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
+								}
+								
+								if (l_shape != null) //stop things from fail for biped
+								{
+									//IsSensor
+									l_shape.sensorEnabled = gameEntity.getState('physicsSensorFlag');
+								
+									body.shapes.add(l_shape);
+								}
+								
+								body.allowRotation = gameEntity.getState('allowRotation');
+							//}
+							/*
 							else
 							{
-								//Default..
-								body.shapes.add(new Polygon(Polygon.box(100, 100), l_material));
-							}
-						}
-						
-						
-						//Inertia
-						if (gameEntity.getState('inertia') != 12345)
-							body.inertia = gameEntity.getState('inertia');
-						
-						//Body CbType
-						//body.cbTypes.add
-						
-						//Store body
-						gameEntity.setState('physicsBody', body);
-						
-						//Position
-						//body.position = new Vec2(l_mesh.x._, l_mesh.y._);
-						body.position = new Vec2(gameEntity.getState('spaceX'), gameEntity.getState('spaceY')); //My only chance to set position of a static object
-						body.rotation = FMath.toRadians(gameEntity.getState('rotation'));
-						
-						//Initial Velocity
-						if (gameEntity.getState('physicsType') == "Dynamic" || gameEntity.getState('physicsType') == "Kinematic")
-						{
-							body.velocity = new Vec2(gameEntity.getState('velocityX'), gameEntity.getState('velocityY'));
-							body.angularVel = FMath.toRadians(gameEntity.getState('velocityAng'));
-						}
-						
-						//body.rotation = Math.random() * 2*FMath.PI;
-						body.space = l_sceneInstance.get(SpaceComponent).space;
-						
-						body.userData.gameEntity = gameEntity;
-						
-
-						l_instance.add(new BodyComponent(body));
-						
-						//if (gameEntity.getState('physicsPlanet') == true)
-						//	l_instance.add(new PlanetComponent(body));
+								if (gameEntity.getState('physicsShape') == "Biped")
+								{	
+									Console.error("LOOOK AT l_mesh.scaleX._: " + l_mesh.scaleX._);
+									body.shapes.add(new Polygon(Polygon.rect(0,0,203, 573), l_material));
+									//we multiply with scale here, since we don't use the getBounds method
+									//_appendPhysicsBipedShapes(body, 263, 573, l_mesh.scaleX._, 0, -0.49, l_material);
+									
+									body.allowRotation = false;
+								}
+								else
+								{
+									//Default..
+									body.shapes.add(new Polygon(Polygon.box(100, 100), l_material));
+								}
+							}*/
 							
-						//var childEntity:Entity = new Entity().add(new BodyComponent(body));
-						//childEntity.add(new FillSprite(0x00ff00, 64, 64).centerAnchor());
+							
+							//Inertia
+							if (gameEntity.getState('inertia') != 12345)
+								body.inertia = gameEntity.getState('inertia');
+							
+							//Body CbType
+							//body.cbTypes.add
+							
+							//Store body
+							gameEntity.setState('physicsBody', body);
+							
+							//Position
+							//body.position = new Vec2(l_mesh.x._, l_mesh.y._);
+							body.position = new Vec2(gameEntity.getState('spaceX'), gameEntity.getState('spaceY')); //My only chance to set position of a static object
+							body.rotation = FMath.toRadians(gameEntity.getState('rotation'));
+							
+							
+							//Initial Velocity
+							if (gameEntity.getState('physicsType') == "Dynamic" || gameEntity.getState('physicsType') == "Kinematic")
+							{
+								body.velocity = new Vec2(gameEntity.getState('velocityX'), gameEntity.getState('velocityY'));
+								body.angularVel = FMath.toRadians(gameEntity.getState('velocityAng'));
+							}
+							
+							//body.rotation = Math.random() * 2*FMath.PI;
+							body.space = l_sceneInstance.get(SpaceComponent).space;
+							
+							body.userData.gameEntity = gameEntity;
+							
+							l_instance.add(new BodyComponent(body));
+							
+							if (l_instance.has(PreBodyComponent))
+								l_instance.remove(l_instance.get(PreBodyComponent));
+							
+							//if (gameEntity.getState('physicsPlanet') == true)
+							//	l_instance.add(new PlanetComponent(body));
+								
+							//var childEntity:Entity = new Entity().add(new BodyComponent(body));
+							//childEntity.add(new FillSprite(0x00ff00, 64, 64).centerAnchor());
+						}
+						else
+						{
+							l_instance.add(new PreBodyComponent(gameEntity));
+							Console.warn("Entity " + gameEntity.getState('name') + " failed to become a physics object. But will try again next frame"); //preBody component will handle this
+						}
 					}
 					else
 					{
@@ -1618,7 +1689,10 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//Get Entity
 		var l_instance:Entity = _instances[p_view2_5D];
 		
-		return Sprite.getBounds(l_instance).width;
+		if (l_instance.has(SpriterMovie))
+			return Sprite.getBounds(l_instance.get(SpriterMovie).container).width * l_instance.get(Sprite).scaleX._;
+		else
+			return Sprite.getBounds(l_instance).width;
 	}
 	
 	inline private function _queryBoundsHeight(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
@@ -1626,7 +1700,32 @@ class FlambeEntity2_5D extends AEntity2_5D
 		//Get Entity
 		var l_instance:Entity = _instances[p_view2_5D];
 		
-		return Sprite.getBounds(l_instance).height;
+		if (l_instance.has(SpriterMovie))
+			return Sprite.getBounds(l_instance.get(SpriterMovie).container).height * l_instance.get(Sprite).scaleY._;
+		else
+			return Sprite.getBounds(l_instance).height;
+	}
+	
+	inline private function _queryBoundsX(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Entity
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		if (l_instance.has(SpriterMovie))
+			return Sprite.getBounds(l_instance.get(SpriterMovie).container).x * l_instance.get(Sprite).scaleX._;
+		else
+			return Sprite.getBounds(l_instance).x;
+	}
+	
+	inline private function _queryBoundsY(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Entity
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		if (l_instance.has(SpriterMovie))
+			return Sprite.getBounds(l_instance.get(SpriterMovie).container).y * l_instance.get(Sprite).scaleY._;
+		else
+			return Sprite.getBounds(l_instance).y;
 	}
 	
 	inline private function _queryRealX(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic

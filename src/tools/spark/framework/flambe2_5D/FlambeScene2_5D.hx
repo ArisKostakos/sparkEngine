@@ -59,6 +59,8 @@ class FlambeScene2_5D extends AScene2_5D
 	{
 		_updateStateFunctions['physicsScene'] = _updatePhysics;
 		_updateStateFunctions['backgroundColor'] = _updateBackgroundColor;
+		_updateStateFunctions['boundsWidth'] = _updateBoundsWidth;
+		_updateStateFunctions['boundsHeight'] = _updateBoundsHeight;
 		
 		_queryFunctions['zoomX'] = _queryZoomX;
 		_queryFunctions['zoomY'] = _queryZoomY;
@@ -70,7 +72,7 @@ class FlambeScene2_5D extends AScene2_5D
 		//If this works, do it for EEEEVERYTHING ELSE
 		//The idea here is, we don't destroy instances on remove, so re-add them here if available
 		Console.error("Creating Scene: " + gameEntity.getState('name'));
-		flambe.System.external.call("console.log", [_instances[p_view2_5D]]);
+		//flambe.System.external.call("console.log", [_instances[p_view2_5D]]);
 		
 		
 		//instances (and group instances I guess) will only be deleted when explicitly requested to be deleted.. not by a removeChild
@@ -82,12 +84,7 @@ class FlambeScene2_5D extends AScene2_5D
 		{
 			_instances[p_view2_5D] = new Entity();
 			
-			//The Sprite component is added, in case we want to move/scale the entire scene by doing camera transformations
-			var l_sceneSprite:Sprite = new Sprite();
-			//l_sceneSprite.scissor = new Rectangle(0, 0, 100, 100);
-			//l_sceneSprite.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
-			l_sceneSprite.centerAnchor();//hmm
-			_instances[p_view2_5D].add(l_sceneSprite);
+			_initScene(p_view2_5D);
 			
 			return super.createInstance(p_view2_5D);
 		}
@@ -152,11 +149,11 @@ class FlambeScene2_5D extends AScene2_5D
 		
 		//Get Mesh
 		var l_instance:Entity = _instances[p_view];
-		var l_instanceSprite:Sprite = l_instance.get(Sprite);
+		var l_sceneSprite:Sprite = l_instance.get(Sprite); //This will either be Sprite, or FillSprite.. we don't really care here
 		
 		//Apply temp values
-		l_instanceSprite.setXY(_tempX, _tempY);
-		l_instanceSprite.setScaleXY(_scaleX, _scaleY);
+		l_sceneSprite.setXY(_tempX, _tempY);
+		l_sceneSprite.setScaleXY(_scaleX, _scaleY);
 		
 		//Console.error("UPDATING CAMERA X: " + _tempX);
 		//Console.error("UPDATING CAMERA Y: " + _tempY);
@@ -195,6 +192,22 @@ class FlambeScene2_5D extends AScene2_5D
 		*/
 	}
 	
+	private function _initScene(p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		//The Sprite component is added, in case we want to move/scale the entire scene by doing camera transformations
+		var l_sceneSprite:Sprite = new Sprite(); //This may be replaced by FillSprite, if we want a background
+		//l_sceneSprite.scissor = new Rectangle(0, 0, 100, 100);
+		//l_sceneSprite.blendMode = BlendMode.Copy;  //so... without resetingVars in WebGL Renderer, this now can't be copy..
+		l_sceneSprite.centerAnchor();//hmm
+		l_instance.add(l_sceneSprite);
+		
+		//Create background and scissor here
+		//or not..
+	}
+	
 	private function _updatePhysics(p_physicsFlag:Bool, p_view2_5D:IView2_5D):Void
 	{
 		//Get Mesh
@@ -204,7 +217,7 @@ class FlambeScene2_5D extends AScene2_5D
 		{
 			//Console.error("UPDATING PHYSICS SCENE: " + gameEntity.getState('name'));
 			//BodyComponent
-			var spaceComponent:SpaceComponent = new SpaceComponent(gameEntity.getState('gravityX'),gameEntity.getState('gravityY'));
+			var spaceComponent:SpaceComponent = new SpaceComponent(gameEntity.getState('gravityX'),gameEntity.getState('gravityY'), gameEntity);
 			l_instance.add(spaceComponent);
 			_scenePhysicsInit(spaceComponent.space);
 		}
@@ -215,34 +228,74 @@ class FlambeScene2_5D extends AScene2_5D
 		//Get Mesh
 		var l_instance:Entity = _instances[p_view2_5D];
 		
-		if (gameEntity.getState('editorMode') == false)
-		{
-			if (p_value!="Transparent")
-			{
-				Console.error("UPDATING Background Color of: " + gameEntity.getState('name'));
-				//var l_bgEntity = new Entity();
-				
-				var l_color:Int = Std.parseInt(p_value);
-				var l_backgroundSprite:FillSprite = new FillSprite(l_color, gameEntity.getState( 'boundsWidth' ), gameEntity.getState( 'boundsHeight' ));
-				//l_backgroundSprite.x._ = gameEntity.getState( 'boundsX' );
-				//l_backgroundSprite.y._ = gameEntity.getState( 'boundsY' );
-				
-				//l_mesh.blendMode = BlendMode.Copy;
-				//l_bgEntity.add(l_backgroundSprite);
-				l_instance.add(l_backgroundSprite);
-				//l_instance.addChild(l_bgEntity);
-			}
+		Console.error("UPDATING Background Color of: " + gameEntity.getState('name'));
+		
+		//Get scene sprite (as a sprite)
+		var l_sceneSprite = l_instance.get(Sprite);
 			
-			var l_sceneSprite:Sprite = l_instance.get(Sprite);
-			l_sceneSprite.scissor = new Rectangle(180, 80, 1920, 1280);
+		if (p_value!="Transparent")
+		{
+			//Parse color
+			var l_color:Int = Std.parseInt(p_value);
+			
+			if (l_instance.has(FillSprite))
+			{
+				l_instance.get(FillSprite).color = l_color;
+			}
+			else
+			{
+				//switcheru (from Sprite to FillSprite)
+				l_instance.remove(l_sceneSprite);
+				
+				var l_newSceneSprite:FillSprite = new FillSprite(l_color, gameEntity.getState( 'boundsWidth' ), gameEntity.getState( 'boundsHeight' ));
+				l_newSceneSprite.setXY(l_sceneSprite.x._, l_sceneSprite.y._);
+				l_newSceneSprite.setScaleXY(l_sceneSprite.scaleX._, l_sceneSprite.scaleY._);
+				l_instance.add(l_newSceneSprite);
+			}
 		}
-		//if in editor mode, don't scissor, and always show white background (yes this is a hack)
 		else
 		{
-			var l_backgroundSprite:FillSprite = new FillSprite(0xFFFFFF, gameEntity.getState( 'boundsWidth' ), gameEntity.getState( 'boundsHeight' ));
-			l_instance.add(l_backgroundSprite);
+			if (l_instance.has(FillSprite))
+			{
+				//switcheru (from fillSprite to Sprite)
+				l_instance.remove(l_sceneSprite);
+				
+				var l_newSceneSprite:Sprite = new Sprite();
+				l_newSceneSprite.setXY(l_sceneSprite.x._, l_sceneSprite.y._);
+				l_newSceneSprite.setScaleXY(l_sceneSprite.scaleX._, l_sceneSprite.scaleY._);
+				l_instance.add(l_newSceneSprite);
+			}
 		}
+		
+		//Temp Scissoring THIS GOES TO CAMERA!
+		/*
+		if (gameEntity.getState('editorMode') == true)
+		{
+			var l_sceneSprite:Sprite = l_instance.get(Sprite);
+			l_sceneSprite.scissor = new Rectangle(180, 80, 1920, 1280);
+		}*/
 	}
+	
+	private function _updateBoundsWidth(p_value:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		//If SceneSprite is a FillSprite
+		if (l_instance.has(FillSprite))
+			l_instance.get(FillSprite).width._ = p_value;
+	}
+	
+	private function _updateBoundsHeight(p_value:Float, p_view2_5D:IView2_5D):Void
+	{
+		//Get Mesh
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		//If SceneSprite is a FillSprite
+		if (l_instance.has(FillSprite))
+			l_instance.get(FillSprite).height._ = p_value;
+	}
+	
 	
 	private function _scenePhysicsInit(p_space:Space):Void
 	{

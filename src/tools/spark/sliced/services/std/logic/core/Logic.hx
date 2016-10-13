@@ -377,7 +377,7 @@ class Logic extends AService implements ILogic
 				var f_type:String = xml_getElement(f_state, "Type").firstChild().nodeValue;
 				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
 				
-				l_states.set(f_id,{id: f_id, type: f_type, value: f_value, kind: "Normal"});
+				l_states.set(f_id,{id: f_id, type: f_type, value: f_value, kind: "Normal", objectSpecific: f_state.get('objectSpecific'), visibleOnEditor: f_state.get('visibleOnEditor'), live: f_state.get('live')});
 			}
 			return l_states;
 		}
@@ -413,7 +413,7 @@ class Logic extends AService implements ILogic
 				var f_id:String = f_state.get("id");
 				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
 				
-				l_states.set(f_id,{id: f_id, value: f_value, kind: "Merge"});
+				l_states.set(f_id,{id: f_id, value: f_value, kind: "Merge", objectSpecific: f_state.get('objectSpecific'), visibleOnEditor: f_state.get('visibleOnEditor'), live: f_state.get('live')});
 			}
 			return l_states;
 		}
@@ -746,6 +746,16 @@ class Logic extends AService implements ILogic
 			l_xml.addChild(Xml.createCData(p_State.value));
 		}
 		
+		//Check for meta stuff
+		if (p_State.visibleOnEditor != null)
+			l_state.set("visibleOnEditor", p_State.visibleOnEditor);
+			
+		if (p_State.objectSpecific != null)
+			l_state.set("objectSpecific", p_State.objectSpecific);
+			
+		if (p_State.live != null)
+			l_state.set("live", p_State.live);
+			
 		return l_state;
 	}
 	
@@ -835,6 +845,16 @@ class Logic extends AService implements ILogic
 			
 			l_xml.addChild(Xml.createCData(p_State.value));
 		}
+		
+		//Check for meta stuff
+		if (p_State.visibleOnEditor != null)
+			l_state.set("visibleOnEditor", p_State.visibleOnEditor);
+			
+		if (p_State.objectSpecific != null)
+			l_state.set("objectSpecific", p_State.objectSpecific);
+			
+		if (p_State.live != null)
+			l_state.set("live", p_State.live);
 		
 		return l_state;
 	}

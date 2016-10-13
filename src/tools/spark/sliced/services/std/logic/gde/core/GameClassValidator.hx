@@ -150,7 +150,7 @@ class GameClassValidator implements IGameClassValidator
 			false
 		);
 
-		return RNode(_xmlNodeTypeToNodeName[ENodeType.STATE], [], l_children);
+		return RNode(_xmlNodeTypeToNodeName[ENodeType.STATE], [Attrib.Att("objectSpecific",null,"false"), Attrib.Att("visibleOnEditor",null,"true"), Attrib.Att("live",null,"false")], l_children);
 	}
 	
 	inline private function _createActionNodeRule():Rule
