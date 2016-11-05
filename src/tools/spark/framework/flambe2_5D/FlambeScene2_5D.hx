@@ -274,6 +274,9 @@ class FlambeScene2_5D extends AScene2_5D
 			var l_sceneSprite:Sprite = l_instance.get(Sprite);
 			l_sceneSprite.scissor = new Rectangle(180, 80, 1920, 1280);
 		}*/
+		
+		//var l_sceneSprite:Sprite = l_instance.get(Sprite);
+		//l_sceneSprite.scissor = new Rectangle(180, 80, 1920, 1280);
 	}
 	
 	private function _updateBoundsWidth(p_value:Float, p_view2_5D:IView2_5D):Void

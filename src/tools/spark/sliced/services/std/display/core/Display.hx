@@ -80,6 +80,10 @@ class Display extends AService implements IDisplay
 		_renderStateNames['height'] = true;
 		_renderStateNames['top'] = true;
 		_renderStateNames['left'] = true;
+		_renderStateNames['paddingLeft'] = true;
+		_renderStateNames['paddingRight'] = true;
+		_renderStateNames['paddingTop'] = true;
+		_renderStateNames['paddingBottom'] = true;
 		_renderStateNames['opacity'] = true;
 		_renderStateNames['display'] = true;
 		_renderStateNames['text'] = true;
@@ -94,6 +98,11 @@ class Display extends AService implements IDisplay
 		_renderStateNames['boundsHeight'] = true;
 		_renderStateNames['border'] = true;
 		_renderStateNames['borderColor'] = true;
+		_renderStateNames['borderLeft'] = true;
+		_renderStateNames['borderRight'] = true;
+		_renderStateNames['borderTop'] = true;
+		_renderStateNames['borderBottom'] = true;
+		_renderStateNames['zIndex'] = true;
 		_renderStateNames['command_zOrder'] = true;
 		_renderStateNames['physicsEntity'] = true;
 		

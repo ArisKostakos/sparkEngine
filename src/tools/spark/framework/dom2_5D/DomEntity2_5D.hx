@@ -55,10 +55,19 @@ class DomEntity2_5D extends AEntity2_5D
 		_updateStateFunctions['height'] = _updateHeight;
 		_updateStateFunctions['top'] = _updateTop;
 		_updateStateFunctions['left'] = _updateLeft;
+		_updateStateFunctions['paddingLeft'] = _updatePaddingLeft;
+		_updateStateFunctions['paddingRight'] = _updatePaddingRight;
+		_updateStateFunctions['paddingTop'] = _updatePaddingTop;
+		_updateStateFunctions['paddingBottom'] = _updatePaddingBottom;
 		_updateStateFunctions['backgroundColor'] = _updateBackgroundColor;
 		_updateStateFunctions['border'] = _updateBorder;
 		_updateStateFunctions['borderColor'] = _updateBorderColor;
+		_updateStateFunctions['borderLeft'] = _updateBorderLeft;
+		_updateStateFunctions['borderRight'] = _updateBorderRight;
+		_updateStateFunctions['borderTop'] = _updateBorderTop;
+		_updateStateFunctions['borderBottom'] = _updateBorderBottom;
 		_updateStateFunctions['pointerEvents'] = _updatePointerEvents;
+		_updateStateFunctions['zIndex'] = _updateZindex; //this is for dom only
 		_updateStateFunctions['command_zOrder'] = _updateZOrder;
 		
 		_updateStateFunctions['transform'] = _updateTransform;
@@ -113,6 +122,8 @@ class DomEntity2_5D extends AEntity2_5D
 			
 			_instances[p_view2_5D].style.position = "absolute";
 			
+			gameEntity.setState('displayObject', _instances[p_view2_5D]);
+			
 			return super.createInstance(p_view2_5D);
 		}
 	}
@@ -158,6 +169,11 @@ class DomEntity2_5D extends AEntity2_5D
 			_updateState('backgroundColor', p_view2_5D);
 			_updateState('border', p_view2_5D);
 			_updateState('borderColor', p_view2_5D);
+			_updateState('borderLeft', p_view2_5D);
+			_updateState('borderRight', p_view2_5D);
+			_updateState('borderTop', p_view2_5D);
+			_updateState('borderBottom', p_view2_5D);
+			_updateState('zIndex', p_view2_5D);
 		}
 		
 		//Update display Stuff
@@ -294,6 +310,19 @@ class DomEntity2_5D extends AEntity2_5D
 				//END OF //Temp thing for Cross Domain requests during TESTING //REMOVE ME ON RELEASE
 			}
 			#end
+			
+			/* Unfortunatelly, it's null. (it needs a frame to load it.) so i do this from egc level instead :(
+			Console.dw('(' + gameEntity.getState('name') + ')' +' REAL SIZE OF IMAGE WIDTH: ' + _instances[p_view2_5D].naturalWidth);
+			
+			//Width
+			if (gameEntity.getState('width') == 'Implicit')
+				gameEntity.setState('width', Std.string( l_instance.naturalWidth ) );
+			
+			//Height
+			if (gameEntity.getState('height') == 'Implicit')
+				gameEntity.setState('height', Std.string( l_instance.naturalHeight ) );
+			*/
+			
 		}
 	}
 	
@@ -378,6 +407,68 @@ class DomEntity2_5D extends AEntity2_5D
 		}
 	}
 	
+	inline private function _updatePaddingLeft(p_value:Float, p_view2_5D:IView2_5D):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			groupInstances[p_view2_5D].updateState('paddingLeft');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.invalidateLayout();
+		}
+		else
+		{
+			//..
+		}
+	}
+	inline private function _updatePaddingRight(p_value:Float, p_view2_5D:IView2_5D):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			groupInstances[p_view2_5D].updateState('paddingRight');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.invalidateLayout();
+		}
+		else
+		{
+			//..
+		}
+	}
+	inline private function _updatePaddingTop(p_value:Float, p_view2_5D:IView2_5D):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			groupInstances[p_view2_5D].updateState('paddingTop');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.invalidateLayout();
+		}
+		else
+		{
+			//..
+		}
+	}
+	inline private function _updatePaddingBottom(p_value:Float, p_view2_5D:IView2_5D):Void
+	{
+		if (gameEntity.getState('layoutable') == true)
+		{
+			//This is bad.. put it in Space2_5D for everyone..
+			groupInstances[p_view2_5D].updateState('paddingBottom');
+			
+			//Invalidate Layout (hack?)
+			Sliced.display.invalidateLayout();
+		}
+		else
+		{
+			//..
+		}
+	}
+	
+	
 	//much better way.. should be done for everything
 	inline private function _updateOverflow(p_overflow:String, p_view2_5D:IView2_5D):Void
 	{
@@ -447,6 +538,33 @@ class DomEntity2_5D extends AEntity2_5D
 			_instances[p_view2_5D].style.borderColor = p_borderColor;
 	}
 	
+	inline private function _updateBorderLeft(p_borderX:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_borderX!="Undefined")
+			_instances[p_view2_5D].style.borderLeft = p_borderX;
+	}
+	
+	inline private function _updateBorderRight(p_borderX:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_borderX!="Undefined")
+			_instances[p_view2_5D].style.borderRight = p_borderX;
+	}
+	
+	inline private function _updateBorderTop(p_borderX:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_borderX!="Undefined")
+			_instances[p_view2_5D].style.borderTop = p_borderX;
+	}
+	
+	inline private function _updateBorderBottom(p_borderX:String, p_view2_5D:IView2_5D):Void
+	{
+		if (p_borderX != "Undefined")
+		{
+			Console.warn("YOYYO FUUUUUCKED");
+			_instances[p_view2_5D].style.borderBottom = p_borderX;
+		}
+	}
+	
 	//much better way.. should be done for everything
 	inline private function _updateDisplay(p_display:String, p_view2_5D:IView2_5D):Void
 	{
@@ -472,6 +590,20 @@ class DomEntity2_5D extends AEntity2_5D
 				if (p_text!="Undefined")
 					_instances[p_view2_5D].innerHTML = p_text;
 			default:
+		}
+		
+		//After you update the text, if width/height was not set explicity, update group layout from REAL size
+		if (p_text != "Undefined")
+		{
+			var l_boundingBox:Dynamic = _instances[p_view2_5D].getBoundingClientRect();
+			
+			//Width
+			if (gameEntity.getState('width') == 'Implicit')
+				gameEntity.setState('width', Std.string( l_boundingBox.width ) );
+			
+			//Height
+			if (gameEntity.getState('height') == 'Implicit')
+				gameEntity.setState('height', Std.string( l_boundingBox.height ) );
 		}
 	}
 	
@@ -748,6 +880,14 @@ class DomEntity2_5D extends AEntity2_5D
 		}
 	}
 	
+	private function _updateZindex(p_zOrder:Int, p_view2_5D:IView2_5D):Void
+	{
+		if (p_zOrder != 0)
+		{
+			var l_instance:Element = _instances[p_view2_5D];
+			l_instance.style.zIndex = Std.string(p_zOrder);
+		}
+	}
 	
 	//COMMANDS
 	private function _updateZOrder(p_zOrder:Int, p_view2_5D:IView2_5D):Void

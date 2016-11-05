@@ -136,12 +136,19 @@ class GameEntity extends AGameBase implements IGameEntity
 		//Get Action Object
 		var gameAction:IGameAction = possibleActionSet[p_actionId];
 		
-		//Set arguements (if any)
-		if (p_args != null)
-			for (f_field in Reflect.fields(p_args))
-				gameAction.setState(f_field, Reflect.field(p_args, f_field));
-					
-		gameAction.doPass();
+		if (gameAction != null)
+		{
+			//Set arguements (if any)
+			if (p_args != null)
+				for (f_field in Reflect.fields(p_args))
+					gameAction.setState(f_field, Reflect.field(p_args, f_field));
+						
+			gameAction.doPass();
+		}
+		else
+		{
+			Console.warn("Action with id '" + p_actionId + "' could not be forced. (not found)");
+		}
 	}
 	
 	//forceAction Shortcut.. 
