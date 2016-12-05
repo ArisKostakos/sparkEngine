@@ -292,6 +292,11 @@ class Logic extends AService implements ILogic
 		return (end - start) * percent + start;
 	}
 	
+	public function inverseLerp(start:Float, end:Float, middle:Float):Float
+	{
+		return (middle - start) / (end - start);
+	}
+	
 	public function formatStr(p_par:Dynamic):String
 	{
 		var p_string:String = Std.string(p_par);
@@ -377,7 +382,7 @@ class Logic extends AService implements ILogic
 				var f_type:String = xml_getElement(f_state, "Type").firstChild().nodeValue;
 				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
 				
-				l_states.set(f_id,{id: f_id, type: f_type, value: f_value, kind: "Normal", objectSpecific: f_state.get('objectSpecific'), visibleOnEditor: f_state.get('visibleOnEditor'), live: f_state.get('live')});
+				l_states.set(f_id,{id: f_id, type: f_type, value: f_value, kind: "Normal", nick: f_state.get('nick'), objectSpecific: f_state.get('objectSpecific'), visible: f_state.get('visible'), onChange: f_state.get('onChange'), live: f_state.get('live'), control: f_state.get('control')});
 			}
 			return l_states;
 		}
@@ -413,7 +418,7 @@ class Logic extends AService implements ILogic
 				var f_id:String = f_state.get("id");
 				var f_value:String = xml_getElement(f_state, "Value").firstChild().nodeValue;
 				
-				l_states.set(f_id,{id: f_id, value: f_value, kind: "Merge", objectSpecific: f_state.get('objectSpecific'), visibleOnEditor: f_state.get('visibleOnEditor'), live: f_state.get('live')});
+				l_states.set(f_id,{id: f_id, value: f_value, kind: "Merge", nick: f_state.get('nick'), objectSpecific: f_state.get('objectSpecific'), visible: f_state.get('visible'), onChange: f_state.get('onChange'), live: f_state.get('live'), control: f_state.get('control')});
 			}
 			return l_states;
 		}
@@ -747,14 +752,23 @@ class Logic extends AService implements ILogic
 		}
 		
 		//Check for meta stuff
-		if (p_State.visibleOnEditor != null)
-			l_state.set("visibleOnEditor", p_State.visibleOnEditor);
+		if (p_State.visible != null)
+			l_state.set("visible", p_State.visible);
+			
+		if (p_State.onChange != null)
+			l_state.set("onChange", p_State.onChange);
+			
+		if (p_State.nick != null)
+			l_state.set("nick", p_State.nick);
 			
 		if (p_State.objectSpecific != null)
 			l_state.set("objectSpecific", p_State.objectSpecific);
 			
 		if (p_State.live != null)
 			l_state.set("live", p_State.live);
+			
+		if (p_State.control != null)
+			l_state.set("control", p_State.control);
 			
 		return l_state;
 	}
@@ -846,15 +860,24 @@ class Logic extends AService implements ILogic
 			l_xml.addChild(Xml.createCData(p_State.value));
 		}
 		
-		//Check for meta stuff
-		if (p_State.visibleOnEditor != null)
-			l_state.set("visibleOnEditor", p_State.visibleOnEditor);
+		//Check for meta stuff /edit 28-11-16: WE THE FUCK DO I HAVE TO ADD THE META TO THE MSTATES? Can't I get these shit from their parent states somehow??
+		if (p_State.visible != null)
+			l_state.set("visible", p_State.visible);
+		
+		if (p_State.onChange != null)
+			l_state.set("onChange", p_State.onChange);
+			
+		if (p_State.nick != null)
+			l_state.set("nick", p_State.nick);
 			
 		if (p_State.objectSpecific != null)
 			l_state.set("objectSpecific", p_State.objectSpecific);
 			
 		if (p_State.live != null)
 			l_state.set("live", p_State.live);
+			
+		if (p_State.control != null)
+			l_state.set("control", p_State.control);
 		
 		return l_state;
 	}

@@ -559,10 +559,7 @@ class DomEntity2_5D extends AEntity2_5D
 	inline private function _updateBorderBottom(p_borderX:String, p_view2_5D:IView2_5D):Void
 	{
 		if (p_borderX != "Undefined")
-		{
-			Console.warn("YOYYO FUUUUUCKED");
 			_instances[p_view2_5D].style.borderBottom = p_borderX;
-		}
 	}
 	
 	//much better way.. should be done for everything
