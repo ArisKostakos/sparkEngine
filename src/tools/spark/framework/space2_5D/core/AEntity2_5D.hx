@@ -7,6 +7,8 @@
 package tools.spark.framework.space2_5D.core;
 
 import tools.spark.framework.space2_5D.interfaces.IEntity2_5D;
+import tools.spark.framework.space2_5D.interfaces.IInstantiable2_5D;
+import tools.spark.framework.space2_5D.interfaces.IObjectContainer2_5D;
 import tools.spark.framework.space2_5D.interfaces.IScene2_5D;
 import tools.spark.framework.space2_5D.interfaces.IView2_5D;
 import tools.spark.framework.layout.containers.Group;
@@ -19,6 +21,7 @@ import tools.spark.sliced.services.std.logic.gde.interfaces.IGameEntity;
 class AEntity2_5D extends AInstantiable2_5D implements IEntity2_5D
 {
 	public var parentScene( default, default ):IScene2_5D;
+	public var parent( default, default ):IObjectContainer2_5D;
 	
 	private function new(p_gameEntity:IGameEntity) 
 	{

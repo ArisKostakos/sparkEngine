@@ -241,11 +241,6 @@ class Logic extends AService implements ILogic
 		return System.external;
 	}
 	
-	public function getTime():Float
-	{
-		return System.time;
-	}
-	
 	
 	public function random(p_from:Int, p_to:Int):Int
 	{
@@ -258,6 +253,13 @@ class Logic extends AService implements ILogic
 		return l_regEx.replace(p_source, p_replaceWith);
 	}
 	
+	//Make this one Safe
+	public function getTime():Float
+	{
+		return Math.min(Sliced.dt, 0.06);
+	}
+	
+	//Do I use this one? Make it Raw
 	public function getDt():Float
 	{
 		return Sliced.dt;

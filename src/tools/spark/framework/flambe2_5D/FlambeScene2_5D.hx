@@ -116,7 +116,7 @@ class FlambeScene2_5D extends AScene2_5D
 		
 		//This is an 'instance' addChild... a flambe addChild..
 		
-		//Console.warn("Insert Child at: " + p_index);
+		Console.warn("->Insert Child at: " + p_index);
 		
 		if (p_index == -1)
 			_instances[p_view2_5D].addChild(cast(p_childEntity.createInstance(p_view2_5D), Entity));

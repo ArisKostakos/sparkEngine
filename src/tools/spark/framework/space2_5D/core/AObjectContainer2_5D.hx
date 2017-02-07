@@ -33,7 +33,7 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 		{
 			children.push(p_entity2_5D);
 			childrenMap.set(p_entity2_5D, true);
-			
+			p_entity2_5D.parent = this;
 			//I hope this doesn't cause to much drain
 			if (gameEntity.getState('layoutable') == true)
 				Sliced.display.invalidateLayout();
@@ -51,7 +51,7 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 		{
 			children.insert(p_index, p_entity2_5D);
 			childrenMap.set(p_entity2_5D, true);
-			
+			p_entity2_5D.parent = this;
 			//I hope this doesn't cause to much drain
 			if (gameEntity.getState('layoutable') == true)
 				Sliced.display.invalidateLayout();
@@ -65,7 +65,7 @@ class AObjectContainer2_5D extends AObject2_5D implements IObjectContainer2_5D
 	{
 		children.remove(p_entity2_5D);
 		childrenMap.remove(p_entity2_5D);
-		
+		p_entity2_5D.parent = null;
 		//I hope this doesn't cause to much drain
 		if (gameEntity.getState('layoutable') == true)
 			Sliced.display.invalidateLayout();

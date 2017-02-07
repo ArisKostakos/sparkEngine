@@ -124,6 +124,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 		_queryFunctions['x'] = _queryRealX;
 		_queryFunctions['y'] = _queryRealY;
 		_queryFunctions['angle'] = _queryRealRotation;
+		_queryFunctions['zOrder'] = _queryZOrder;
 	}
 	
 	
@@ -880,7 +881,7 @@ class FlambeEntity2_5D extends AEntity2_5D
 			if (l_instance.has(BodyComponent)) //not sure if this is faster of if gameEntity.getState('physicsBody')!=null is faster
 			{
 				if (gameEntity.getState('physicsType')!="Static")
-					cast(gameEntity.getState('physicsBody'), Body).position.x = p_newPos; //should also check if NOT Static
+					cast(gameEntity.getState('physicsBody'), Body).position.x = p_newPos;
 			}
 			else
 				l_mesh.x._ = p_newPos;
@@ -1158,6 +1159,11 @@ class FlambeEntity2_5D extends AEntity2_5D
 		var l_instance:Entity = _instances[p_view2_5D];
 		
 		l_instance.setZOrder(p_zOrder);
+		Console.dw('Updating z Order: ' + p_zOrder);
+		
+		//update children array of parent
+		parent.children.remove(this);
+		parent.children.insert(p_zOrder, this);
 	}
 
 	private function _centerAnchor(p_centerAnchorFlag:Dynamic, p_view2_5D:IView2_5D):Void
@@ -1234,8 +1240,8 @@ class FlambeEntity2_5D extends AEntity2_5D
 									l_material = Material.wood();
 								case "Ellastic":
 									l_material = new Material(1, 0, 0, 1, 0);
-								case "Biped":
-									l_material = new Material(0, 1, 2, 10, 0.001);
+								case "Character":
+									l_material = new Material(-0.3, 1, 2, gameEntity.getState('physicsDensity'), 0.001); //new Material(0, 1, 2, 10, 0.001);
 								default:
 									l_material = Material.wood();
 							}
@@ -1245,70 +1251,60 @@ class FlambeEntity2_5D extends AEntity2_5D
 							var l_meshHeight:Float = _queryBoundsHeight('boundsHeight',p_view2_5D)*gameEntity.getState('scaleY');	// l_mesh.getNaturalHeight();
 							//get bounds gets scaled mesh, so no need to multiply scale below
 							
-							//if (gameEntity.getState('2DmeshType') != 'Spriter')
-							//{
-								var l_shape:Shape=null;
-								switch (gameEntity.getState('physicsShape'))
-								{
-									case "Circle":
-										//I take the medium between width and hight (w+h)/2 and then divide by 2 cause we need radius which is half
-										var l_radious = (l_meshWidth + l_meshHeight ) / 4;
-										l_shape = new Circle(l_radious, l_material);
-									case "Polygon":
-										Console.warn("("+gameEntity.getState('name')+") l_meshWidth: " + l_meshWidth);
-										Console.warn("(" + gameEntity.getState('name') + ") l_meshHeight: " + l_meshHeight);
-										
-										if (gameEntity.getState('2DmeshType') == 'Spriter')
-										{
-											Console.warn("("+gameEntity.getState('name')+") boundsX: " +  _queryBoundsX('boundsX',p_view2_5D));
-											Console.warn("(" + gameEntity.getState('name') + ") boundsY: " +  _queryBoundsY('boundsY', p_view2_5D));
-											l_shape = new Polygon(Polygon.rect( _queryBoundsX('boundsX',p_view2_5D),  _queryBoundsY('boundsY', p_view2_5D), l_meshWidth, l_meshHeight), l_material);
-										}
-										else
-										{
-											l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
-										}
-									case "Triangle":
-										var l_verts : Array<Vec2> = Polygon.regular( l_meshWidth * .5, l_meshHeight, 4, -Math.PI * .5 );
-										l_verts.splice( 2, 1 );
-										for (f_vert in l_verts)
-											f_vert.y += l_meshHeight/2;
-										l_shape = new Polygon( l_verts );
-									case "Biped":
-										//body.shapes.add(new Polygon(Polygon.rect(0,0,203, 573), l_material)); //something like that?
-										Console.warn("NOT YET IMPLEMENTED. Look below");
-									default:
-										l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
-								}
-								
-								if (l_shape != null) //stop things from fail for biped
-								{
-									//IsSensor
-									l_shape.sensorEnabled = gameEntity.getState('physicsSensorFlag');
-								
-									body.shapes.add(l_shape);
-								}
-								
-								body.allowRotation = gameEntity.getState('allowRotation');
-							//}
-							/*
-							else
+							var l_shape:Shape=null;
+							switch (gameEntity.getState('physicsShape'))
 							{
-								if (gameEntity.getState('physicsShape') == "Biped")
-								{	
-									Console.error("LOOOK AT l_mesh.scaleX._: " + l_mesh.scaleX._);
-									body.shapes.add(new Polygon(Polygon.rect(0,0,203, 573), l_material));
-									//we multiply with scale here, since we don't use the getBounds method
-									//_appendPhysicsBipedShapes(body, 263, 573, l_mesh.scaleX._, 0, -0.49, l_material);
+								case "Circle":
+									//I take the medium between width and hight (w+h)/2 and then divide by 2 cause we need radius which is half
+									var l_radious = (l_meshWidth + l_meshHeight ) / 4;
+									l_shape = new Circle(l_radious, l_material);
+								case "Polygon":
+									Console.warn("("+gameEntity.getState('name')+") l_meshWidth: " + l_meshWidth);
+									Console.warn("(" + gameEntity.getState('name') + ") l_meshHeight: " + l_meshHeight);
 									
-									body.allowRotation = false;
-								}
-								else
-								{
-									//Default..
-									body.shapes.add(new Polygon(Polygon.box(100, 100), l_material));
-								}
-							}*/
+									if (gameEntity.getState('2DmeshType') == 'Spriter')
+									{
+										//Console.warn("("+gameEntity.getState('name')+") Polygon:boundsX: " +  _queryBoundsX('boundsX',p_view2_5D)*gameEntity.getState('scaleX'));
+										//Console.warn("(" + gameEntity.getState('name') + ") Polygon:boundsY: " +  _queryBoundsY('boundsY', p_view2_5D)*gameEntity.getState('scaleY'));
+										l_shape = new Polygon(Polygon.rect( _queryBoundsX('boundsX',p_view2_5D),  _queryBoundsY('boundsY', p_view2_5D), l_meshWidth/gameEntity.getState('scaleX'), l_meshHeight/gameEntity.getState('scaleY')), l_material);
+									}
+									else
+									{
+										l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
+									}
+								case "Triangle":
+									var l_verts : Array<Vec2> = Polygon.regular( l_meshWidth * .5, l_meshHeight, 4, -Math.PI * .5 );
+									l_verts.splice( 2, 1 );
+									for (f_vert in l_verts)
+										f_vert.y += l_meshHeight/2;
+									l_shape = new Polygon( l_verts );
+								case "Character":
+									//body.shapes.add(new Polygon(Polygon.rect(0,0,203, 573), l_material)); //something like that?
+									Console.warn("("+gameEntity.getState('name')+") l_meshWidth: " + l_meshWidth);
+									Console.warn("(" + gameEntity.getState('name') + ") l_meshHeight: " + l_meshHeight);
+									//Console.error("Biped: LOOOK AT l_mesh.scaleX._: " + l_mesh.scaleX._);
+									//body.shapes.add(new Polygon(Polygon.rect(0,0,203, 573), l_material));
+									//we multiply with scale here, since we don't use the getBounds method
+									//_appendPhysicsBipedShapes(body, l_meshWidth, l_meshHeight, l_mesh.scaleX._, 0, 0, l_material); //image, not spriter
+									Console.warn("("+gameEntity.getState('name')+") boundsX: " +  _queryBoundsX('boundsX',p_view2_5D));
+									Console.warn("(" + gameEntity.getState('name') + ") boundsY: " +  _queryBoundsY('boundsY', p_view2_5D));
+									
+									if (gameEntity.getState('2DmeshType') == 'Spriter')
+										_appendPhysicsBipedShapes(body, l_meshWidth/gameEntity.getState('scaleX'), l_meshHeight/gameEntity.getState('scaleY'), 1, _queryBoundsX('boundsX',p_view2_5D), _queryBoundsY('boundsY',p_view2_5D), l_material); //spriter
+									else
+										_appendPhysicsBipedShapes(body, l_meshWidth, l_meshHeight, 1, 0, 0, l_material); //image, not spriter
+								default:
+									l_shape = new Polygon(Polygon.box(l_meshWidth, l_meshHeight), l_material);
+							}
+							
+							if (l_shape != null) //stop things from fail for biped
+							{
+								//IsSensor
+								l_shape.sensorEnabled = gameEntity.getState('physicsSensorFlag');
+								body.shapes.add(l_shape);
+							}
+							
+							body.allowRotation = gameEntity.getState('allowRotation');
 							
 							
 							//Inertia
@@ -1385,26 +1381,39 @@ class FlambeEntity2_5D extends AEntity2_5D
 	{
 		var l_widthScaled:Float = p_width*p_scale;
 		var l_heightScaled:Float = p_height*p_scale;
-		var l_offsetXScaled:Float = p_offsetX *l_widthScaled;
-		var l_offsetYScaled:Float = p_offsetY * l_heightScaled;
+		var l_offsetXScaled:Float =  0;  
+		var l_offsetYScaled:Float = 0;
+		
+		//So, offsets will not be zero ONLY in a spriter situation.. in simple images, we need the offsetScaled to STAY at 0
+		if (p_offsetX != 0)
+			l_offsetXScaled = p_offsetX + l_widthScaled / 2;
+		if (p_offsetY != 0)
+			l_offsetYScaled = p_offsetY + l_heightScaled / 2;
+		
+		Console.warn("l_offsetXScaled): " +  l_offsetXScaled);
+		Console.warn("l_offsetYScaled): " +  l_offsetYScaled);
 		
 		var l_circleRadious:Float = l_widthScaled / 2;
 		var l_rectHeight:Float = l_heightScaled - l_circleRadious * 2;
+		
 		
 		var l_head:Circle = new Circle(l_circleRadious, new Vec2(l_offsetXScaled, -l_rectHeight / 2 + l_offsetYScaled), p_bodyMaterial);
 		var l_main:Polygon = new Polygon(Polygon.rect( -l_widthScaled / 2 + l_offsetXScaled, -l_rectHeight / 2 + l_offsetYScaled, l_widthScaled, l_rectHeight), p_bodyMaterial);
 		var l_feet:Circle = new Circle(l_circleRadious, new Vec2(l_offsetXScaled, l_rectHeight / 2 + l_offsetYScaled), p_bodyMaterial);
 		var l_feetSensor:Polygon = new Polygon(Polygon.rect( -l_widthScaled/2 / 2 + l_offsetXScaled, l_rectHeight / 2 + l_offsetYScaled + l_circleRadious - l_heightScaled*0.05/2, l_widthScaled/2, l_heightScaled*0.05), p_bodyMaterial);
 		
+		l_head.sensorEnabled = gameEntity.getState('physicsSensorFlag');
+		l_main.sensorEnabled = gameEntity.getState('physicsSensorFlag');
+		l_feet.sensorEnabled = gameEntity.getState('physicsSensorFlag');
 		l_feetSensor.sensorEnabled = true;
 		l_feetSensor.cbTypes.add(FlambeScene2_5D.BIPED_FEET);
+		
+		
 		
 		p_body.shapes.add(l_head);
 		p_body.shapes.add(l_main);
 		p_body.shapes.add(l_feet);
 		p_body.shapes.add(l_feetSensor);
-		
-		//gameEntity.setState('physicsBody', p_body);
 	}
 	
 	
@@ -1751,4 +1760,13 @@ class FlambeEntity2_5D extends AEntity2_5D
 		
 		return l_mesh.rotation;
 	}
+	
+	inline private function _queryZOrder(p_queryArgument:Dynamic, p_view2_5D:IView2_5D):Dynamic
+	{
+		//Get Entity
+		var l_instance:Entity = _instances[p_view2_5D];
+		
+		return l_instance.zOrder;
+	}
+	
 }

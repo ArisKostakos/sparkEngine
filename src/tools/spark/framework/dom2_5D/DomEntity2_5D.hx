@@ -132,7 +132,25 @@ class DomEntity2_5D extends AEntity2_5D
 	{
 		//This is an 'instance' addChild... a dom addChild..
 		//@todo: do a insertBefore(this.children[p_index]) something, if p_index is not -1
+		//harder than i thought.. will try again another time..
+		
+		
 		_instances[p_view2_5D].appendChild(cast(p_childEntity.createInstance(p_view2_5D), Element));
+		/*
+		if (p_index==-1)
+			_instances[p_view2_5D].appendChild(cast(p_childEntity.createInstance(p_view2_5D), Element));
+		else
+			_instances[p_view2_5D].appendChild(cast(p_childEntity.createInstance(p_view2_5D), Element));
+		*/
+			
+		/*
+		var l_newInstance:Element = cast(p_childEntity.createInstance(p_view2_5D), Element);
+		_instances[p_view2_5D].appendChild(l_newInstance);
+		if (p_index!=-1)
+			l_newInstance.style.zIndex = Std.string(p_index);
+		Console.dw('soososo dom shity thing: ' + l_newInstance.style.zIndex);
+		*/
+		
 		
 		super._createChildOfInstance(p_childEntity, p_view2_5D, p_index);
 	}
